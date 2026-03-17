@@ -7,6 +7,7 @@ using NavTour.Server.Infrastructure.Auth;
 using NavTour.Server.Infrastructure.Data;
 using NavTour.Server.Infrastructure.MultiTenancy;
 using NavTour.Server.Services;
+using NavTour.Client.Services;
 using Radzen;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -85,6 +86,22 @@ builder.Services.AddScoped<IAnnotationService, AnnotationService>();
 builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 builder.Services.AddScoped<ILeadService, LeadService>();
 
+// Client Services (needed for SSR pre-rendering of Blazor components)
+// HttpClient with BaseAddress for server-side rendering context
+builder.Services.AddScoped(sp =>
+{
+    var httpContext = sp.GetService<IHttpContextAccessor>()?.HttpContext;
+    var baseAddress = httpContext != null
+        ? $"{httpContext.Request.Scheme}://{httpContext.Request.Host}"
+        : "http://localhost:5017";
+    return new HttpClient { BaseAddress = new Uri(baseAddress) };
+});
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<DemoApiService>();
+builder.Services.AddScoped<PlayerApiService>();
+builder.Services.AddScoped<AnalyticsApiService>();
+
 var app = builder.Build();
 
 // Seed database
@@ -95,8 +112,10 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 app.UseAntiforgery();
 
 app.UseCors("PlayerCors");
@@ -104,6 +123,7 @@ app.UseAuthentication();
 app.UseMiddleware<ApiKeyMiddleware>();
 app.UseAuthorization();
 
+app.MapStaticAssets();
 app.MapControllers();
 app.MapRazorComponents<NavTour.Server.Components.App>()
     .AddInteractiveServerRenderMode()
