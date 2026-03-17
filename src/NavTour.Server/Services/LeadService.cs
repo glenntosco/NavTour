@@ -15,14 +15,17 @@ public class LeadService : ILeadService
 
     public async Task<List<LeadResponse>> GetAllAsync()
     {
-        return await _db.Leads
+        var leads = await _db.Leads
             .Include(l => l.Session)
-            .Select(l => new LeadResponse(
-                l.Id, l.Email, l.Name, l.Company, l.CustomData,
-                l.Session.DemoId,
-                _db.Demos.Where(d => d.Id == l.Session.DemoId).Select(d => d.Name).FirstOrDefault() ?? "",
-                l.CreatedAt))
-            .OrderByDescending(l => l.CapturedAt)
+                .ThenInclude(s => s.Demo)
+            .OrderByDescending(l => l.CreatedAt)
             .ToListAsync();
+
+        return leads.Select(l => new LeadResponse(
+            l.Id, l.Email, l.Name, l.Company, l.CustomData,
+            l.Session.DemoId,
+            l.Session.Demo?.Name ?? "",
+            l.CreatedAt
+        )).ToList();
     }
 }

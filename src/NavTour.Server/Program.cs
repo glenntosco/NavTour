@@ -58,6 +58,13 @@ builder.Services.AddRazorComponents()
     .AddHubOptions(options => options.MaximumReceiveMessageSize = 10 * 1024 * 1024)
     .AddInteractiveWebAssemblyComponents();
 
+// Extend circuit timeout for dev
+builder.Services.AddServerSideBlazor().AddCircuitOptions(options =>
+{
+    options.DisconnectedCircuitRetentionPeriod = TimeSpan.FromMinutes(10);
+    options.DetailedErrors = builder.Environment.IsDevelopment();
+});
+
 // Controllers + Radzen
 builder.Services.AddControllers();
 builder.Services.AddRadzenComponents();
