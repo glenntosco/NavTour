@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Navattic: Interactive Product Demo Platform — Complete Analysis</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1B2A4A;
+    --teal: #0FA0CE;
+    --teal-light: #E8F7FC;
+    --dark: #1a1a2e;
+    --text: #2d3748;
+    --text-light: #64748b;
+    --bg: #ffffff;
+    --bg-alt: #f8fafc;
+    --border: #e2e8f0;
+    --accent-gold: #f59e0b;
+    --accent-gold-light: #fef3c7;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-lg: 0 10px 40px rgba(0,0,0,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.72;
+    font-size: 16.5px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Article Container ── */
+  .article {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, #2d4a7a 50%, var(--teal) 100%);
+    padding: 80px 24px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 70%, rgba(15,160,206,0.15) 0%, transparent 50%),
+                radial-gradient(circle at 70% 30%, rgba(255,255,255,0.05) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .hero-inner { max-width: 720px; margin: 0 auto; position: relative; z-index: 1; }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 28px;
+  }
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    color: #fff;
+    font-size: 52px;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    font-weight: 400;
+  }
+  .hero h1 span { color: var(--teal); }
+  .hero .subtitle {
+    color: rgba(255,255,255,0.75);
+    font-size: 18px;
+    line-height: 1.6;
+    max-width: 580px;
+    margin: 0 auto 24px;
+  }
+  .hero-meta {
+    color: rgba(255,255,255,0.5);
+    font-size: 14px;
+    margin-top: 32px;
+  }
+
+  /* ── Section Headers ── */
+  .section-num {
+    display: inline-block;
+    background: var(--teal);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    border-radius: 8px;
+    margin-right: 12px;
+    vertical-align: middle;
+  }
+
+  h2.section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 34px;
+    color: var(--navy);
+    margin: 64px 0 12px;
+    padding-top: 32px;
+    border-top: 2px solid var(--border);
+    font-weight: 400;
+    line-height: 1.25;
+  }
+  h2.section-title:first-of-type { border-top: none; margin-top: 48px; }
+
+  h3 {
+    font-size: 22px;
+    color: var(--navy);
+    margin: 36px 0 12px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  h4 {
+    font-size: 17px;
+    color: var(--teal);
+    font-weight: 700;
+    margin: 28px 0 8px;
+  }
+
+  p { margin-bottom: 16px; }
+
+  /* ── Images ── */
+  .img-block {
+    margin: 28px 0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border);
+    background: var(--bg-alt);
+  }
+  .img-block img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .img-block figcaption {
+    padding: 12px 20px;
+    font-size: 13px;
+    color: var(--text-light);
+    background: var(--bg-alt);
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-style: italic;
+  }
+
+  /* ── Callout Box ── */
+  .callout {
+    background: var(--teal-light);
+    border-left: 4px solid var(--teal);
+    border-radius: 0 10px 10px 0;
+    padding: 20px 24px;
+    margin: 24px 0;
+  }
+  .callout-title {
+    font-weight: 700;
+    color: var(--navy);
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+  .callout p { margin-bottom: 0; font-size: 15px; color: var(--text); }
+
+  .callout-gold {
+    background: var(--accent-gold-light);
+    border-left-color: var(--accent-gold);
+  }
+
+  /* ── Metric Cards ── */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin: 28px 0;
+  }
+  .metric-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 16px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s;
+  }
+  .metric-card:hover { transform: translateY(-2px); }
+  .metric-val {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: var(--teal);
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  .metric-label { font-size: 13px; color: var(--text-light); line-height: 1.4; }
+  .metric-co { font-size: 11px; color: var(--teal); font-weight: 600; margin-top: 4px; }
+
+  /* ── Lists ── */
+  ul.feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0;
+  }
+  ul.feature-list li {
+    padding: 8px 0 8px 28px;
+    position: relative;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  ul.feature-list li:last-child { border-bottom: none; }
+  ul.feature-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 16px;
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    background: var(--teal);
+    opacity: 0.6;
+  }
+  ul.feature-list li strong { color: var(--navy); }
+
+  /* ── Step blocks ── */
+  .steps { margin: 24px 0; }
+  .step {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+  }
+  .step-num {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    background: var(--navy);
+    color: #fff;
+    font-weight: 700;
+    font-size: 15px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+  }
+  .step-content { flex: 1; }
+  .step-content strong { color: var(--navy); }
+
+  /* ── Tables ── */
+  .table-wrap {
+    overflow-x: auto;
+    margin: 24px 0;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14.5px;
+  }
+  thead th {
+    background: var(--navy);
+    color: #fff;
+    padding: 14px 16px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+  }
+  tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tbody tr:nth-child(even) { background: var(--bg-alt); }
+  tbody tr:last-child td { border-bottom: none; }
+
+  /* ── Pricing Grid ── */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin: 28px 0;
+  }
+  .pricing-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 14px;
+    text-align: center;
+    background: var(--bg);
+    box-shadow: var(--shadow);
+    transition: transform 0.2s;
+  }
+  .pricing-card:hover { transform: translateY(-2px); }
+  .pricing-card.featured {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 2px var(--teal), var(--shadow-lg);
+  }
+  .pricing-name {
+    font-weight: 700;
+    color: var(--navy);
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+  .pricing-price {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: var(--teal);
+    margin-bottom: 12px;
+  }
+  .pricing-features {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+    font-size: 12.5px;
+    color: var(--text-light);
+    line-height: 1.7;
+  }
+  .pricing-features li { padding: 2px 0; }
+  .pricing-features li::before { content: '✓ '; color: var(--teal); font-weight: 700; }
+
+  /* ── Two-column feature blocks ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 24px 0;
+  }
+  .feat-card {
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .feat-card h4 { margin-top: 0; }
+
+  /* ── Footer ── */
+  .article-footer {
+    margin: 64px 0 48px;
+    padding: 32px;
+    background: var(--navy);
+    border-radius: 16px;
+    color: rgba(255,255,255,0.8);
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.8;
+  }
+  .article-footer strong { color: #fff; }
+  .article-footer a { color: var(--teal); text-decoration: none; }
+  .article-footer a:hover { text-decoration: underline; }
+
+  /* ── Print styles ── */
+  @media print {
+    .hero { padding: 40px 24px; }
+    .hero h1 { font-size: 36px; }
+    .img-block { box-shadow: none; }
+    .metrics { grid-template-columns: repeat(2, 1fr); }
+    .pricing-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 34px; }
+    .metrics { grid-template-columns: repeat(2, 1fr); }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ HERO ═══════════════════════════════ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">Platform Analysis &bull; March 2026</div>
+    <h1>Navattic<br><span>Interactive Product Demo Platform</span></h1>
+    <p class="subtitle">How the Chrome Extension works, full feature breakdown, pricing tiers, and the go-to-market integration ecosystem</p>
+    <div class="hero-meta">navattic.com &bull; 4.8★ on G2 (700+ reviews)</div>
+  </div>
+</header>
+
+<div class="article">
+
+<!-- ═══════════════════════ 1. EXECUTIVE SUMMARY ═══════════════════════ -->
+<h2 class="section-title"><span class="section-num">1</span> Executive Summary</h2>
+
+<p>Navattic is a demo automation platform purpose-built for B2B SaaS companies that want to put their product at the center of every buyer interaction. Rather than relying on static screenshots, pre-recorded video walkthroughs, or expensive live demo sessions, Navattic enables marketing, sales, and solution engineering teams to create pixel-perfect, interactive replicas of their web applications and share them at every stage of the buyer journey.</p>
+
+<figure class="img-block">
+  <img src="https://www.navattic.com/_next/image?url=%2Fimg%2Fscreenshots%2Fhome-interactive-demos.png&w=3840&q=100" alt="Navattic Interactive Demos — Platform Overview">
+  <figcaption>Navattic Interactive Demos — The flagship product builder interface</figcaption>
+</figure>
+
+<p>The platform is trusted by major enterprise brands including Ramp, Dropbox, Brex, Intuit, Datadog, Gusto, Mixpanel, Fivetran, and Front. Navattic's product suite consists of four core pillars: <strong>Interactive Demos</strong> (HTML-capture), <strong>Copilot</strong> (AI-powered generation), <strong>Launchpad</strong> (sales automation), and <strong>Agent Demos</strong> (autonomous AI demos). Each is supported by a Chrome extension ecosystem and a deep integration layer spanning 25+ go-to-market tools.</p>
+
+<div class="metrics">
+  <div class="metric-card">
+    <div class="metric-val">$10M</div>
+    <div class="metric-label">ARR influenced</div>
+    <div class="metric-co">Coupa</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-val">450%</div>
+    <div class="metric-label">Trial signup increase</div>
+    <div class="metric-co">Trainual</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-val">15%</div>
+    <div class="metric-label">of website leads</div>
+    <div class="metric-co">Ramp</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-val">1,000s</div>
+    <div class="metric-label">High-intent leads</div>
+    <div class="metric-co">InsiderOne</div>
+  </div>
+</div>
+
+<!-- ═══════════════════ 2. CHROME EXTENSION ═══════════════════ -->
+<h2 class="section-title"><span class="section-num">2</span> The Navattic Chrome Extension Ecosystem</h2>
+
+<p>Navattic ships <strong>two distinct Chrome extensions</strong>, each serving a different function. Understanding both is essential to grasping the platform's full value.</p>
+
+<h3>2.1 — The Capture Extension (Navattic Staging)</h3>
+
+<p>The primary Navattic Chrome extension — sometimes called the <strong>Navattic Staging</strong> extension — is the foundational tool powering the entire platform. It captures the front-end HTML and CSS of any web application directly from the browser, creating a pixel-perfect clone that becomes an interactive demo.</p>
+
+<figure class="img-block">
+  <img src="https://www.navattic.com/img/product/interactive-demo/capture.png" alt="Navattic Capture — Pixel-perfect application capture">
+  <figcaption>The capture extension clones HTML/CSS from any web application, preserving hover states, animations, and dynamic interactions</figcaption>
+</figure>
+
+<h4>How the Capture Process Works</h4>
+
+<div class="steps">
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content"><strong>Navigate to Your Application.</strong> With the extension installed, a user navigates to the live web application they want to demo — a SaaS dashboard, admin panel, reporting interface, or mobile-responsive web app.</div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content"><strong>Activate the Extension.</strong> Clicking the Navattic icon initiates a capture session. The extension reads the page's DOM, copying the full HTML structure and all CSS styling. This is not a screenshot — it's a true structural clone of the rendered page.</div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content"><strong>Preserve Interactive State.</strong> Navattic captures hover states, animations, scroll behaviors, and other dynamic CSS interactions. Dropdown menus, tooltips, loading animations, and responsive layouts are all preserved.</div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-content"><strong>Transfer to the Navattic Editor.</strong> The captured page becomes an editable screen in the demo builder. Users capture multiple screens and link them together to create multi-step guided tours.</div>
+  </div>
+</div>
+
+<div class="callout">
+  <div class="callout-title">No Direct Installation Required</div>
+  <p>Navattic's capture extension works entirely from the browser. There is no need to install any JavaScript library, SDK, or code snippet into your production application. The extension loads navattic.js in a sandboxed context to capture the page without modifying the application itself.</p>
+</div>
+
+<h4>What Gets Captured</h4>
+
+<ul class="feature-list">
+  <li><strong>Full HTML structure</strong> — every DOM element, including nested components, iframes, and shadow DOM where accessible</li>
+  <li><strong>CSS styling</strong> — inline styles, external stylesheets, computed styles, and CSS variables</li>
+  <li><strong>Dynamic visual states</strong> — hover effects, active states, focus rings, CSS animations and transitions</li>
+  <li><strong>Scroll regions</strong> — scrollable containers maintain their scroll behavior in the demo</li>
+  <li><strong>Responsive layouts</strong> — media queries are preserved for desktop, tablet, and mobile viewports</li>
+  <li><strong>Charts and table data</strong> — SVG charts, canvas elements, and HTML tables are captured in their rendered state</li>
+</ul>
+
+<h4>Supported Application Types</h4>
+
+<p>The capture extension works with web applications built on virtually any front-end framework — React, Angular, Vue, Blazor, Svelte, or plain HTML/CSS/JS. Since the capture operates at the rendered HTML/CSS level, the underlying framework is transparent to the extension.</p>
+
+<h3>2.2 — The Launchpad Extension</h3>
+
+<p>The second Chrome extension is the <strong>Navattic Launchpad</strong> extension, designed for sales representatives who need quick access to share demos with prospects — not for building demos.</p>
+
+<figure class="img-block">
+  <img src="https://mintcdn.com/navattic-app/npON59s9Ysg9r7EJ/images/launchpad-extension.png?fit=max&auto=format&n=npON59s9Ysg9r7EJ&q=85" alt="Navattic Launchpad Extension">
+  <figcaption>The Launchpad extension gives sales reps frictionless access to the demo library directly from Chrome</figcaption>
+</figure>
+
+<h4>What the Launchpad Extension Does</h4>
+
+<ul class="feature-list">
+  <li><strong>Frictionless Demo Access</strong> — Browse and access the entire team demo library directly from the extension, without logging into the Navattic platform</li>
+  <li><strong>One-Click Sharing</strong> — Generate personalized share links for any demo and send them to prospects in seconds</li>
+  <li><strong>Salesforce Integration</strong> — On Account and Opportunity pages, a "+ Share demo" button appears. Links are automatically associated with the relevant record, and engagement data flows back</li>
+  <li><strong>LinkedIn Integration</strong> — A "+ Share demo" button on LinkedIn company pages, with automatic company metadata enrichment</li>
+  <li><strong>Gmail Integration</strong> — A "+ Share demo" button in the Gmail compose window for embedding demo links in outbound emails</li>
+</ul>
+
+<div class="two-col">
+  <figure class="img-block" style="margin:0">
+    <img src="https://mintcdn.com/navattic-app/X_En9YFaQPnGBJkK/images/extension-integration-salesforce.jpg?fit=max&auto=format&n=X_En9YFaQPnGBJkK&q=85" alt="Launchpad Salesforce Integration">
+    <figcaption>Salesforce: "+ Share demo" on Account &amp; Opportunity pages</figcaption>
+  </figure>
+  <figure class="img-block" style="margin:0">
+    <img src="https://mintcdn.com/navattic-app/X_En9YFaQPnGBJkK/images/extension-integration-linkedin.jpg?fit=max&auto=format&n=X_En9YFaQPnGBJkK&q=85" alt="Launchpad LinkedIn Integration">
+    <figcaption>LinkedIn: "+ Share demo" on company pages</figcaption>
+  </figure>
+</div>
+
+<figure class="img-block" style="margin-top:20px">
+  <img src="https://mintcdn.com/navattic-app/eEo16-sBVsd0fYuf/images/gmail-email.png?fit=max&auto=format&n=eEo16-sBVsd0fYuf&q=85" alt="Launchpad Gmail Integration">
+  <figcaption>Gmail: "+ Share demo" button in the compose window</figcaption>
+</figure>
+
+<!-- ═══════════════════ 3. INTERACTIVE DEMOS ═══════════════════ -->
+<h2 class="section-title"><span class="section-num">3</span> Core Product: Interactive Demos</h2>
+
+<p>Interactive demos are the heart of Navattic. Once a page is captured via the Chrome extension, it enters the editor where it transforms from a static HTML clone into a rich, guided, interactive experience.</p>
+
+<h3>3.1 — Demo Editing Capabilities</h3>
+
+<figure class="img-block">
+  <img src="https://www.navattic.com/img/product/interactive-demo/edit-capture.png" alt="Navattic Demo Editor — Editing captured screens">
+  <figcaption>The Navattic editor: edit text, images, blur sensitive data, global find &amp; replace, and personalization variables</figcaption>
+</figure>
+
+<ul class="feature-list">
+  <li><strong>Text and Image Editing</strong> — Change any text element, swap images, replace logos, modify data values to match the prospect's context</li>
+  <li><strong>Blur and Delete Elements</strong> — Sensitive data, irrelevant sections, or distracting elements can be blurred or removed</li>
+  <li><strong>Global Find and Replace</strong> — Bulk text changes across an entire demo, useful for rebranding across verticals</li>
+  <li><strong>Date Replacements</strong> — Automatically update date-sensitive content so demos never look stale</li>
+  <li><strong>Personalization Variables</strong> — Dynamic variables (company name, contact name, industry) populated at share time or via URL parameters</li>
+  <li><strong>Table AI</strong> — AI-powered bulk editing of table data via natural-language prompts</li>
+  <li><strong>Chart AI</strong> — Modify chart data using simple text instructions</li>
+</ul>
+
+<h3>3.2 — Demo Navigation and Guided Flows</h3>
+
+<ul class="feature-list">
+  <li><strong>Tooltips and Hotspots</strong> — Numbered step callouts attached to specific UI elements, walking viewers through the product</li>
+  <li><strong>Modals and Overlays</strong> — Full-screen or partial overlays to introduce sections or explain concepts</li>
+  <li><strong>Checklists</strong> — Task lists that track viewer progress through the demo</li>
+  <li><strong>Interest-Level Routing</strong> — Route viewers to different demo flows based on persona or use-case selection</li>
+  <li><strong>Branching Logic</strong> — Non-linear flows where viewer choices determine which screens appear next</li>
+</ul>
+
+<h3>3.3 — Distribution and Embedding</h3>
+
+<figure class="img-block">
+  <img src="https://www.navattic.com/img/product/interactive-demo/embed.png" alt="Navattic Embed Options">
+  <figcaption>Embed inline, as a lightbox popup, or as a floating CTA — responsive across desktop, tablet, and mobile</figcaption>
+</figure>
+
+<ul class="feature-list">
+  <li><strong>Website Embed</strong> — Inline, lightbox popup, or floating CTA with lazy loading support</li>
+  <li><strong>Custom Share Links</strong> — Unique URLs with personalization variables, tracking parameters, and lead forms</li>
+  <li><strong>Responsive Rendering</strong> — Correct rendering on desktop, tablet, and mobile</li>
+  <li><strong>Offline Mode</strong> — (Enterprise) Download demos for conferences and trade shows</li>
+  <li><strong>Multilingual Translation</strong> — Translate and share demos in any language</li>
+  <li><strong>Custom Domains</strong> — Host demos on your own domain for brand consistency</li>
+</ul>
+
+<!-- ═══════════════════ 4. COPILOT ═══════════════════ -->
+<h2 class="section-title"><span class="section-num">4</span> Navattic Copilot (AI Engine)</h2>
+
+<p>Copilot is Navattic's AI layer that accelerates every phase of demo creation. It was trained on patterns from high-performing demos built on the platform, giving it contextual intelligence about what makes a demo effective.</p>
+
+<figure class="img-block">
+  <img src="https://www.navattic.com/img/product/copilot-product-hero.png" alt="Navattic Copilot — AI Demo Generation">
+  <figcaption>Copilot: generate demos in seconds by entering your app URL and clicking through your product</figcaption>
+</figure>
+
+<div class="two-col">
+  <div class="feat-card">
+    <h4>Copilot Generate</h4>
+    <p>Instantly create a full demo draft by clicking through your product while the extension records. Copilot structures screens into logical flows and applies best practices.</p>
+  </div>
+  <div class="feat-card">
+    <h4>Copilot Prompt</h4>
+    <p>Natural-language editing — rewrite step text to match brand tone, simplify technical language, or adjust messaging for different audiences.</p>
+  </div>
+  <div class="feat-card">
+    <h4>Copilot Review</h4>
+    <p>AI analysis surfaces suggestions: missing CTAs, overly long steps, unclear language, poor data storytelling. One-click apply.</p>
+  </div>
+  <div class="feat-card">
+    <h4>Copilot Use Cases</h4>
+    <p>Preset or custom prompt templates for different personas, industries, or product lines. Repurpose one demo for many audiences.</p>
+  </div>
+</div>
+
+<figure class="img-block">
+  <img src="https://www.navattic.com/img/copilot/features/review/copilot-review.png" alt="Copilot Review — AI Suggestions">
+  <figcaption>Copilot Review analyzes demo quality, clarity, and tone with on-click suggestions</figcaption>
+</figure>
+
+<ul class="feature-list">
+  <li><strong>Brand &amp; Tone Context</strong> — Persistent brand guidelines (voice, vocabulary, tone) applied across all demo generation</li>
+  <li><strong>Table AI + Chart AI</strong> — Bulk-edit demo data via natural-language prompts</li>
+  <li><strong>AI Voiceovers</strong> — Pre-recorded or AI-generated voice narration for any demo step</li>
+  <li><strong>AI Avatars</strong> — Video avatars that present alongside the demo; avatar cloning on Growth+</li>
+  <li><strong>Copilot Editing (Beta)</strong> — Transform large amounts of demo data or product elements with prompt-based AI</li>
+</ul>
+
+<!-- ═══════════════════ 5. LAUNCHPAD ═══════════════════ -->
+<h2 class="section-title"><span class="section-num">5</span> Launchpad: Demo Automation for Sales</h2>
+
+<p>Launchpad is the sales-enablement arm of Navattic, designed to let reps share interactive demos earlier in the sales cycle and free up presales/SE time.</p>
+
+<figure class="img-block">
+  <img src="https://www.navattic.com/img/product/solutions/demo-library.png" alt="Navattic Launchpad — Demo Library">
+  <figcaption>The demo library: SEs build demos organized by use case, persona, and vertical for reps to browse and share</figcaption>
+</figure>
+
+<div class="two-col">
+  <div class="feat-card">
+    <h4>Sandbox Demos</h4>
+    <p>Turn captured apps into lightweight sandboxes for live calls. Hover states, animations, and interactions preserved in a safe environment.</p>
+  </div>
+  <div class="feat-card">
+    <h4>Interest-Level Demos</h4>
+    <p>Share demos pre-call to understand what prospects care about. Navattic tracks which sections they viewed and for how long.</p>
+  </div>
+  <div class="feat-card">
+    <h4>Buyer Circle Discovery</h4>
+    <p>When prospects share demos internally, Navattic detects new viewers and surfaces hidden buying committee members.</p>
+  </div>
+  <div class="feat-card">
+    <h4>Engagement Alerts</h4>
+    <p>Real-time email or Slack notifications when a prospect opens, completes, or shares a demo. Time your follow-up precisely.</p>
+  </div>
+</div>
+
+<figure class="img-block">
+  <img src="https://www.navattic.com/img/screenshots/interest-levels-form.png" alt="Navattic Interest Levels Form">
+  <figcaption>Interest-level form: route prospects to personalized demo flows based on their selection</figcaption>
+</figure>
+
+<figure class="img-block">
+  <img src="https://www.navattic.com/img/product/solutions/real-time.png" alt="Navattic Real-Time Engagement Alerts">
+  <figcaption>Real-time engagement data: see when prospects interact and share demos with their team</figcaption>
+</figure>
+
+<!-- ═══════════════════ 6. AGENT DEMOS ═══════════════════ -->
+<h2 class="section-title"><span class="section-num">6</span> Agent Demos: Autonomous AI Presentations</h2>
+
+<p>Agent Demos represent Navattic's newest product line, leveraging AI agents to run fully autonomous live product demonstrations.</p>
+
+<figure class="img-block">
+  <img src="https://www.navattic.com/img/product/agent-demos-product-hero.png" alt="Navattic Agent Demos">
+  <figcaption>Agent Demos: AI agents run autonomous live demos, guiding prospects and answering questions in real time</figcaption>
+</figure>
+
+<p>An AI agent operates inside a live demo environment or controlled sandbox, delivering accurate and repeatable product stories. Teams configure the agent with <strong>product context</strong> (what to say), <strong>guardrails</strong> (what not to say), and <strong>objectives</strong> (what outcomes to drive). The agent autonomously guides prospects through the demo, answering questions in real time.</p>
+
+<div class="two-col">
+  <figure class="img-block" style="margin:0">
+    <img src="https://www.navattic.com/img/product/agent-demos/multilingual.png" alt="Agent Demos — Multilingual">
+    <figcaption>Multilingual conversations across every time zone and language</figcaption>
+  </figure>
+  <figure class="img-block" style="margin:0">
+    <img src="https://www.navattic.com/img/product/agent-demos/analytics.png" alt="Agent Demos — Analytics">
+    <figcaption>Session tracking, talk-time comparison, and transcript recording</figcaption>
+  </figure>
+</div>
+
+<div class="callout callout-gold">
+  <div class="callout-title">Use Case</div>
+  <p>Agent Demos are especially valuable for companies fielding high volumes of inbound demo requests across global markets, where staffing live presenters for every time zone and language is impractical.</p>
+</div>
+
+<!-- ═══════════════════ 7. BUYER JOURNEY ═══════════════════ -->
+<h2 class="section-title"><span class="section-num">7</span> Demos Across the Buyer Journey</h2>
+
+<p>Navattic positions demos for use at every stage of the B2B buyer journey:</p>
+
+<ul class="feature-list">
+  <li><strong>Retargeting Campaigns</strong> — Add a "Take a Tour" CTA to LinkedIn, Google, and Reddit ad campaigns to move early-stage visitors down funnel</li>
+  <li><strong>Website Embeds</strong> — Persona-specific or use-case-specific demos on product, solution, and pricing pages</li>
+  <li><strong>Pre-Call Discovery</strong> — Share demos before a live call to qualify deals earlier and understand buyer interest</li>
+  <li><strong>Champion Enablement</strong> — Custom post-demo assets with personalized data and rep contact info for internal sharing</li>
+  <li><strong>Upsell Campaigns</strong> — Demos of premium features in lifecycle emails and in-app promotions</li>
+  <li><strong>Conference Enablement</strong> — Present on monitors, tablets, or as keynote elements, optionally in offline mode</li>
+</ul>
+
+<!-- ═══════════════════ 8. INTEGRATIONS ═══════════════════ -->
+<h2 class="section-title"><span class="section-num">8</span> Integration Ecosystem</h2>
+
+<p>Navattic integrates with more than 25 go-to-market tools across CRM, analytics, sales engagement, calendar scheduling, sales enablement, and intent data platforms.</p>
+
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr><th>Category</th><th>Integrations</th><th>Function</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>CRM</strong></td><td>Salesforce, HubSpot, Marketo</td><td>Sync engagement data to Leads, Contacts, Accounts, Programs</td></tr>
+    <tr><td><strong>Analytics</strong></td><td>Google Analytics, Segment, Mixpanel, Mutiny</td><td>Track visitor conversion, dropoff, and completion events</td></tr>
+    <tr><td><strong>Sales Engagement</strong></td><td>Outreach, Salesloft</td><td>Embed interactive demos in outbound sequences</td></tr>
+    <tr><td><strong>Sales Enablement</strong></td><td>Seismic, Highspot, Aligned</td><td>Push demos to content hubs and digital sales rooms</td></tr>
+    <tr><td><strong>Calendar</strong></td><td>Chili Piper, Calendly, RevenueHero, Default</td><td>Embed scheduling widgets for meeting booking</td></tr>
+    <tr><td><strong>Intent Data</strong></td><td>Pocus, Unify, ZoomInfo</td><td>Use demo engagement as buyer intent signal</td></tr>
+    <tr><td><strong>Email</strong></td><td>Salesforce, Gmail, Outlook, Gong</td><td>Create and share demo links from email compose</td></tr>
+    <tr><td><strong>Alerts</strong></td><td>Slack, Email</td><td>Real-time notifications on prospect engagement</td></tr>
+    <tr><td><strong>Custom</strong></td><td>Navattic JS, Webhooks</td><td>Custom tracking scripts, data warehouses, CDPs</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ═══════════════════ 9. PRICING ═══════════════════ -->
+<h2 class="section-title"><span class="section-num">9</span> Pricing Tiers</h2>
+
+<p>Navattic offers five tiers, from a free Starter plan to custom Enterprise. The primary differentiators are seat count, Copilot AI capabilities, Launchpad access, and analytics depth.</p>
+
+<div class="pricing-grid">
+  <div class="pricing-card">
+    <div class="pricing-name">Starter</div>
+    <div class="pricing-price">Free</div>
+    <ul class="pricing-features">
+      <li>1 seat</li>
+      <li>1 HTML demo</li>
+      <li>Basic Copilot</li>
+      <li>Unlimited views</li>
+      <li>Basic analytics</li>
+    </ul>
+  </div>
+  <div class="pricing-card">
+    <div class="pricing-name">Starter Plus</div>
+    <div class="pricing-price">Paid</div>
+    <ul class="pricing-features">
+      <li>1 seat</li>
+      <li>Unlimited media demos</li>
+      <li>Copilot Write + Voice</li>
+      <li>Slack + Webhook</li>
+      <li>Custom themes</li>
+    </ul>
+  </div>
+  <div class="pricing-card featured">
+    <div class="pricing-name">Base</div>
+    <div class="pricing-price">Paid</div>
+    <ul class="pricing-features">
+      <li>5 seats</li>
+      <li>Unlimited HTML demos</li>
+      <li>Full Copilot + Review</li>
+      <li>25+ integrations</li>
+      <li>Dedicated CSM</li>
+    </ul>
+  </div>
+  <div class="pricing-card">
+    <div class="pricing-name">Growth</div>
+    <div class="pricing-price">Paid</div>
+    <ul class="pricing-features">
+      <li>10 seats</li>
+      <li>AI Avatars + Cloning</li>
+      <li>Launchpad full suite</li>
+      <li>A/B testing</li>
+      <li>SSO + Teams</li>
+    </ul>
+  </div>
+  <div class="pricing-card">
+    <div class="pricing-name">Enterprise</div>
+    <div class="pricing-price">Custom</div>
+    <ul class="pricing-features">
+      <li>Custom seats</li>
+      <li>Offline demos</li>
+      <li>HTML capture translation</li>
+      <li>Audit logs</li>
+      <li>Priority support</li>
+    </ul>
+  </div>
+</div>
+
+<p style="font-style:italic;color:var(--text-light);font-size:14px;">Note: Paid plans are billed annually. Exact pricing for Starter Plus, Base, and Growth requires contacting Navattic or signing up through the platform.</p>
+
+<!-- ═══════════════════ 10. SECURITY ═══════════════════ -->
+<h2 class="section-title"><span class="section-num">10</span> Security and Compliance</h2>
+
+<p>Navattic maintains a public Trust Center and provides enterprise-grade security at its higher tiers:</p>
+
+<ul class="feature-list">
+  <li><strong>SSO and directory sync</strong> — Growth and Enterprise tiers</li>
+  <li><strong>Audit logs</strong> — Enterprise tier</li>
+  <li><strong>Teams and role-based access</strong> — Growth and above</li>
+  <li><strong>Custom domains</strong> — Host demos on your own domain</li>
+  <li><strong>Data Processing Agreement (DPA)</strong> — Available for compliance requirements</li>
+  <li><strong>DUNS-registered entity</strong> — Per EU trader requirements</li>
+</ul>
+
+<!-- ═══════════════════ 11. COMPETITIVE CONTEXT ═══════════════════ -->
+<h2 class="section-title"><span class="section-num">11</span> Competitive Context</h2>
+
+<p>Navattic operates in the interactive demo category alongside Arcade, Storylane, Supademo, Walnut, Demostack, and Tourial. Its primary differentiation is the depth of HTML capture fidelity, the sophistication of its AI Copilot, the sales-focused Launchpad product, and the newly launched Agent Demos capability.</p>
+
+<p>Customer reviews consistently highlight the platform's ability to handle complex, multi-step product workflows where other tools struggle. The trade-off noted by some users is a steeper initial learning curve when setting up the first demo, though most report the process becomes second nature quickly.</p>
+
+<!-- ═══════════════════ 12. CONCLUSION ═══════════════════ -->
+<h2 class="section-title"><span class="section-num">12</span> Conclusion</h2>
+
+<p>Navattic has evolved from a straightforward interactive demo builder into a full demo automation platform. The Chrome extension ecosystem — comprising both the <strong>HTML Capture extension</strong> for demo creators and the <strong>Launchpad extension</strong> for sales teams — forms the foundation of a product that touches every stage of the B2B buyer journey.</p>
+
+<p>For SaaS companies looking to accelerate their sales cycle, reduce reliance on live SE-led demos, and empower both marketing and sales teams to leverage the product itself as a selling tool, Navattic represents one of the most comprehensive and mature solutions in the market today.</p>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<div class="article-footer">
+  <strong>Further Information</strong><br>
+  Website: <a href="https://www.navattic.com">navattic.com</a> &bull;
+  Documentation: <a href="https://docs.navattic.com">docs.navattic.com</a> &bull;
+  Chrome Extension: <a href="https://chromewebstore.google.com/detail/navattic/lbecioncobbndebbfdopnpinnibemoon">Chrome Web Store</a> &bull;
+  Trust Center: <a href="https://trust.navattic.com">trust.navattic.com</a>
+</div>
+
+</div><!-- .article -->
+
+</body>
+</html>

@@ -61,6 +61,13 @@ public class DemoApiService
         return response.IsSuccessStatusCode ? await response.Content.ReadFromJsonAsync<FrameResponse>() : null;
     }
 
+    public async Task<bool> PatchFrameContentAsync(Guid frameId, string htmlContent)
+    {
+        var response = await _http.PatchAsJsonAsync($"api/v1/frames/{frameId}/content",
+            new PatchFrameContentRequest(htmlContent, null));
+        return response.IsSuccessStatusCode;
+    }
+
     public async Task<bool> DeleteFrameAsync(Guid frameId)
     {
         var response = await _http.DeleteAsync($"api/v1/frames/{frameId}");
@@ -87,6 +94,12 @@ public class DemoApiService
     public async Task<AnnotationResponse?> CreateAnnotationAsync(Guid stepId, CreateAnnotationRequest request)
     {
         var response = await _http.PostAsJsonAsync($"api/v1/steps/{stepId}/annotations", request);
+        return response.IsSuccessStatusCode ? await response.Content.ReadFromJsonAsync<AnnotationResponse>() : null;
+    }
+
+    public async Task<AnnotationResponse?> UpdateAnnotationAsync(Guid stepId, Guid annotationId, CreateAnnotationRequest request)
+    {
+        var response = await _http.PutAsJsonAsync($"api/v1/steps/{stepId}/annotations/{annotationId}", request);
         return response.IsSuccessStatusCode ? await response.Content.ReadFromJsonAsync<AnnotationResponse>() : null;
     }
 

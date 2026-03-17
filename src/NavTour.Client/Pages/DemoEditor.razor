@@ -11,10 +11,16 @@
         Style="padding:8px 12px;border-bottom:1px solid var(--rz-border-color)">
         <RadzenText TextStyle="TextStyle.H6" class="rz-m-0">@(demo?.Name ?? "Loading...")</RadzenText>
         <div style="flex:1"></div>
-        <RadzenButton Text="Save" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" Click="SaveSteps" IsBusy="saving" />
+        <RadzenButton Text="Find & Replace" Icon="find_replace" ButtonStyle="ButtonStyle.Light"
+            Size="ButtonSize.Small" Click="() => showFindReplace = !showFindReplace" />
+        <RadzenButton Text="Save Edits" Icon="save_alt" ButtonStyle="ButtonStyle.Warning"
+            Size="ButtonSize.Small" Click="SaveFrameEdits" Visible="@(frameEditor?.HasUnsavedEdits == true)" />
+        <RadzenButton Text="Save" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small"
+            Click="SaveSteps" IsBusy="saving" />
         <RadzenButton Text="Preview" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
-            Click='() => Nav.NavigateTo($"/demo/{demo?.Slug}", true)' />
-        <RadzenButton Text="Publish" ButtonStyle="ButtonStyle.Success" Size="ButtonSize.Small" Click="PublishDemo" />
+            Click="OpenPreview" />
+        <RadzenButton Text="Publish" ButtonStyle="ButtonStyle.Success" Size="ButtonSize.Small"
+            Click="PublishDemo" />
         <RadzenButton Text="Settings" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
             Click='() => Nav.NavigateTo($"/demos/{DemoId}/settings")' />
     </RadzenStack>
@@ -24,11 +30,17 @@
         <FrameStrip Frames="frames" SelectedFrameId="selectedFrameId"
             OnFrameSelected="SelectFrame" OnAddFrame="AddFrame" />
 
-        <FramePreview HtmlContent="@currentFrameHtml"
-            Annotations="@currentAnnotations" />
+        <FrameEditor @ref="frameEditor" HtmlContent="@currentFrameHtml"
+            Annotations="@currentAnnotations"
+            ShowFindReplace="@showFindReplace"
+            ShowFindReplaceChanged="(v) => showFindReplace = v"
+            OnHtmlChanged="OnFrameHtmlSaved" />
 
         <StepPanel Steps="steps" SelectedStepId="selectedStepId"
             OnStepSelected="SelectStep" OnAddStep="AddStep" />
+
+        <AnnotationEditor StepId="@selectedStepId" Annotations="@currentAnnotations"
+            OnAnnotationsChanged="RefreshAnnotations" />
     </RadzenStack>
 </RadzenStack>
 
@@ -46,6 +58,8 @@
     private string? currentFrameHtml;
     private List<AnnotationResponse>? currentAnnotations;
     private bool saving;
+    private bool showFindReplace;
+    private FrameEditor? frameEditor;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -66,14 +80,29 @@
 
     private async Task SelectFrame(Guid frameId)
     {
+        // Save pending edits before switching frames
+        if (frameEditor?.HasUnsavedEdits == true && selectedFrameId != null)
+            await SaveFrameEdits();
+
         selectedFrameId = frameId;
         var detail = await DemoApi.GetFrameDetailAsync(frameId);
         currentFrameHtml = detail?.HtmlContent;
 
-        // Show annotations for the step that uses this frame
         var step = steps.FirstOrDefault(s => s.FrameId == frameId);
         currentAnnotations = step?.Annotations;
         selectedStepId = step?.Id;
+    }
+
+    private async Task RefreshAnnotations()
+    {
+        // Reload steps to get fresh annotations
+        steps = await DemoApi.GetStepsAsync(DemoId);
+        if (selectedStepId != null)
+        {
+            var step = steps.FirstOrDefault(s => s.Id == selectedStepId);
+            currentAnnotations = step?.Annotations;
+        }
+        StateHasChanged();
     }
 
     private void SelectStep(Guid stepId)
@@ -86,6 +115,29 @@
             currentAnnotations = step.Annotations;
             _ = SelectFrame(step.FrameId);
         }
+    }
+
+    private async Task SaveFrameEdits()
+    {
+        if (selectedFrameId == null || frameEditor == null) return;
+        await frameEditor.RequestSerializedHtml();
+        // OnFrameHtmlSaved will be called via the callback
+    }
+
+    private async Task OnFrameHtmlSaved(string html)
+    {
+        if (selectedFrameId == null) return;
+        var success = await DemoApi.PatchFrameContentAsync(selectedFrameId.Value, html);
+        if (success)
+            Notification.Notify(NotificationSeverity.Success, "Saved", "Frame edits saved.");
+        else
+            Notification.Notify(NotificationSeverity.Error, "Error", "Failed to save frame edits.");
+    }
+
+    private async Task OpenPreview()
+    {
+        if (demo?.Slug != null)
+            await JS.InvokeVoidAsync("open", $"/demo/{demo.Slug}", "_blank");
     }
 
     private async Task AddFrame()
@@ -132,7 +184,8 @@
             s.NavigationAction, s.NavigationTarget,
             s.Annotations.Select(a => new AnnotationDto(
                 a.Id, a.Type, a.Title, a.Content,
-                a.PositionX, a.PositionY, a.Width, a.Height, a.Style)).ToList()
+                a.PositionX, a.PositionY, a.Width, a.Height, a.Style,
+                a.TargetSelector, a.ArrowDirection, a.BadgeNumber)).ToList()
         )).Append(newStep).ToList();
 
         await DemoApi.UpdateStepsAsync(DemoId, new UpdateStepsRequest(allSteps));
@@ -143,12 +196,18 @@
     private async Task SaveSteps()
     {
         saving = true;
+
+        // Save frame edits first if any
+        if (frameEditor?.HasUnsavedEdits == true)
+            await SaveFrameEdits();
+
         var stepDtos = steps.Select(s => new StepDto(
             s.Id, s.FrameId, s.StepNumber, s.ClickTargetSelector,
             s.NavigationAction, s.NavigationTarget,
             s.Annotations.Select(a => new AnnotationDto(
                 a.Id, a.Type, a.Title, a.Content,
-                a.PositionX, a.PositionY, a.Width, a.Height, a.Style)).ToList()
+                a.PositionX, a.PositionY, a.Width, a.Height, a.Style,
+                a.TargetSelector, a.ArrowDirection, a.BadgeNumber)).ToList()
         )).ToList();
 
         await DemoApi.UpdateStepsAsync(DemoId, new UpdateStepsRequest(stepDtos));
@@ -158,6 +217,10 @@
 
     private async Task PublishDemo()
     {
+        // Save edits before publishing
+        if (frameEditor?.HasUnsavedEdits == true)
+            await SaveFrameEdits();
+
         await DemoApi.PublishDemoAsync(DemoId);
         demo = await DemoApi.GetDemoAsync(DemoId);
         Notification.Notify(NotificationSeverity.Success, "Published", $"Demo is live at /demo/{demo?.Slug}");

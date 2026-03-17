@@ -1,0 +1,211 @@
+@inject DemoApiService DemoApi
+@inject NotificationService Notification
+
+<div class="annotation-editor-panel">
+    <RadzenText TextStyle="TextStyle.Subtitle2" class="rz-mb-2"><strong>Annotations</strong></RadzenText>
+
+    @if (StepId == null)
+    {
+        <RadzenText Style="color:var(--rz-text-secondary-color);font-size:12px">Select a step to edit annotations</RadzenText>
+    }
+    else
+    {
+        <div class="ae-toolbar">
+            <RadzenDropDown TValue="AnnotationType" @bind-Value="newType" Data="annotationTypes"
+                TextProperty="Text" ValueProperty="Value" Style="width:100%;font-size:12px" />
+            <RadzenButton Text="+ Add" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.ExtraSmall"
+                Click="AddAnnotation" Style="width:100%" />
+        </div>
+
+        @if (Annotations != null)
+        {
+            @foreach (var ann in Annotations)
+            {
+                <div class="ae-card @(editingId == ann.Id ? "ae-card-active" : "")" @onclick="() => StartEdit(ann)">
+                    <div class="ae-card-header">
+                        <span class="ae-type-badge">@GetTypeName(ann.Type)</span>
+                        @if (ann.BadgeNumber != null)
+                        {
+                            <span class="ae-badge-num">#@ann.BadgeNumber</span>
+                        }
+                        <div style="flex:1"></div>
+                        <button class="ae-delete" @onclick="() => DeleteAnnotation(ann.Id)" @onclick:stopPropagation="true">&times;</button>
+                    </div>
+
+                    @if (editingId == ann.Id)
+                    {
+                        <div class="ae-edit-form">
+                            <RadzenTextBox @bind-Value="editTitle" Placeholder="Title" Style="width:100%;font-size:12px" />
+                            <RadzenTextArea @bind-Value="editContent" Placeholder="Content..." Style="width:100%;font-size:12px;min-height:50px" />
+
+                            @if (ann.Type == AnnotationType.NumberedTooltip || ann.Type == AnnotationType.Beacon)
+                            {
+                                <RadzenNumeric TValue="int" @bind-Value="editBadgeNumber" Min="1" Max="99"
+                                    Style="width:100%;font-size:12px" Placeholder="Badge #" />
+                            }
+
+                            <div class="ae-row">
+                                <label style="font-size:11px;color:var(--rz-text-secondary-color)">Arrow</label>
+                                <RadzenDropDown TValue="string" @bind-Value="editArrowDirection"
+                                    Data='new[] { "", "top", "bottom", "left", "right" }'
+                                    Style="width:100%;font-size:12px" Placeholder="None" />
+                            </div>
+
+                            <div class="ae-row">
+                                <label style="font-size:11px;color:var(--rz-text-secondary-color)">Position (%)</label>
+                                <div style="display:flex;gap:4px">
+                                    <RadzenNumeric TValue="double" @bind-Value="editX" Min="0" Max="100" Style="flex:1;font-size:11px" Placeholder="X" />
+                                    <RadzenNumeric TValue="double" @bind-Value="editY" Min="0" Max="100" Style="flex:1;font-size:11px" Placeholder="Y" />
+                                </div>
+                            </div>
+
+                            <div class="ae-row">
+                                <label style="font-size:11px;color:var(--rz-text-secondary-color)">Size (%)</label>
+                                <div style="display:flex;gap:4px">
+                                    <RadzenNumeric TValue="double" @bind-Value="editW" Min="1" Max="100" Style="flex:1;font-size:11px" Placeholder="W" />
+                                    <RadzenNumeric TValue="double" @bind-Value="editH" Min="1" Max="100" Style="flex:1;font-size:11px" Placeholder="H" />
+                                </div>
+                            </div>
+
+                            <RadzenButton Text="Save" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.ExtraSmall"
+                                Click="SaveEdit" Style="width:100%" />
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="ae-preview">
+                            @if (ann.Title != null) { <strong style="font-size:12px">@ann.Title</strong> }
+                            @if (ann.Content != null) { <span style="font-size:11px;color:var(--rz-text-secondary-color)">@Truncate(ann.Content, 50)</span> }
+                        </div>
+                    }
+                </div>
+            }
+        }
+    }
+</div>
+
+<style>
+    .annotation-editor-panel {
+        width: 260px; min-width: 260px;
+        border-left: 1px solid var(--rz-border-color);
+        padding: 12px; overflow-y: auto;
+        background: var(--rz-base-background-color);
+    }
+    .ae-toolbar { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+    .ae-card {
+        border: 1px solid var(--rz-border-color); border-radius: 8px;
+        padding: 8px; margin-bottom: 8px; cursor: pointer;
+        transition: border-color 0.15s;
+    }
+    .ae-card:hover { border-color: #4361ee; }
+    .ae-card-active { border-color: #4361ee; background: rgba(67,97,238,0.04); }
+    .ae-card-header { display: flex; align-items: center; gap: 6px; }
+    .ae-type-badge {
+        font-size: 10px; font-weight: 600; text-transform: uppercase;
+        background: rgba(67,97,238,0.1); color: #4361ee;
+        padding: 2px 6px; border-radius: 4px;
+    }
+    .ae-badge-num { font-size: 11px; font-weight: 700; color: #4361ee; }
+    .ae-delete {
+        background: none; border: none; color: #aaa; font-size: 16px;
+        cursor: pointer; padding: 0 4px; line-height: 1;
+    }
+    .ae-delete:hover { color: #ef4444; }
+    .ae-preview { display: flex; flex-direction: column; gap: 2px; margin-top: 4px; }
+    .ae-edit-form { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+    .ae-row { display: flex; flex-direction: column; gap: 2px; }
+</style>
+
+@code {
+    [Parameter] public Guid? StepId { get; set; }
+    [Parameter] public List<AnnotationResponse>? Annotations { get; set; }
+    [Parameter] public EventCallback OnAnnotationsChanged { get; set; }
+
+    private AnnotationType newType = AnnotationType.NumberedTooltip;
+    private Guid? editingId;
+    private string? editTitle;
+    private string? editContent;
+    private string? editArrowDirection;
+    private int editBadgeNumber = 1;
+    private double editX, editY, editW, editH;
+
+    private record TypeOption(string Text, AnnotationType Value);
+    private static readonly TypeOption[] annotationTypes =
+    [
+        new("Numbered Tooltip", AnnotationType.NumberedTooltip),
+        new("Tooltip", AnnotationType.Tooltip),
+        new("Beacon", AnnotationType.Beacon),
+        new("Hotspot", AnnotationType.Hotspot),
+        new("Modal", AnnotationType.Modal),
+        new("Blur", AnnotationType.Blur),
+        new("Click Zone", AnnotationType.ClickZone),
+    ];
+
+    private async Task AddAnnotation()
+    {
+        if (StepId == null) return;
+
+        var badgeNum = (Annotations?.Count ?? 0) + 1;
+        var request = new CreateAnnotationRequest(
+            newType, "Step " + badgeNum, "Description here",
+            20, 30, 25, 15, null, null,
+            newType is AnnotationType.Tooltip or AnnotationType.NumberedTooltip ? "bottom" : null,
+            newType is AnnotationType.NumberedTooltip or AnnotationType.Beacon ? badgeNum : null);
+
+        var result = await DemoApi.CreateAnnotationAsync(StepId.Value, request);
+        if (result != null)
+        {
+            await OnAnnotationsChanged.InvokeAsync();
+            Notification.Notify(NotificationSeverity.Success, "Annotation added");
+        }
+    }
+
+    private void StartEdit(AnnotationResponse ann)
+    {
+        editingId = ann.Id;
+        editTitle = ann.Title;
+        editContent = ann.Content;
+        editArrowDirection = ann.ArrowDirection;
+        editBadgeNumber = ann.BadgeNumber ?? 1;
+        editX = ann.PositionX;
+        editY = ann.PositionY;
+        editW = ann.Width;
+        editH = ann.Height;
+    }
+
+    private async Task SaveEdit()
+    {
+        if (StepId == null || editingId == null) return;
+
+        var ann = Annotations?.FirstOrDefault(a => a.Id == editingId);
+        if (ann == null) return;
+
+        var request = new CreateAnnotationRequest(
+            ann.Type, editTitle, editContent,
+            editX, editY, editW, editH, ann.Style,
+            ann.TargetSelector,
+            string.IsNullOrEmpty(editArrowDirection) ? null : editArrowDirection,
+            editBadgeNumber > 0 ? editBadgeNumber : null);
+
+        await DemoApi.UpdateAnnotationAsync(StepId.Value, editingId.Value, request);
+        editingId = null;
+        await OnAnnotationsChanged.InvokeAsync();
+    }
+
+    private async Task DeleteAnnotation(Guid annotationId)
+    {
+        if (StepId == null) return;
+        await DemoApi.DeleteAnnotationAsync(StepId.Value, annotationId);
+        await OnAnnotationsChanged.InvokeAsync();
+    }
+
+    private string GetTypeName(AnnotationType type) => type switch
+    {
+        AnnotationType.NumberedTooltip => "Tooltip #",
+        AnnotationType.Beacon => "Beacon",
+        AnnotationType.ClickZone => "Click Zone",
+        _ => type.ToString()
+    };
+
+    private string Truncate(string s, int len) => s.Length <= len ? s : s[..len] + "...";
+}

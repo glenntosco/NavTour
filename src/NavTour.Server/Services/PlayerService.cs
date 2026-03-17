@@ -52,7 +52,8 @@ public class PlayerService : IPlayerService
                 s.NavigationAction, s.NavigationTarget,
                 s.Annotations.Where(a => !a.IsDeleted).Select(a => new PlayerAnnotationDto(
                     a.Type, a.Title, a.Content,
-                    a.PositionX, a.PositionY, a.Width, a.Height, a.Style
+                    a.PositionX, a.PositionY, a.Width, a.Height, a.Style,
+                    a.TargetSelector, a.ArrowDirection, a.BadgeNumber
                 )).ToList()))
             .ToListAsync();
 

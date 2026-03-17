@@ -50,6 +50,13 @@ public class FramesController : ControllerBase
         return frame == null ? NotFound() : Ok(frame);
     }
 
+    [HttpPatch("api/v1/frames/{id:guid}/content")]
+    public async Task<ActionResult<FrameDetailResponse>> PatchContent(Guid id, PatchFrameContentRequest request)
+    {
+        var frame = await _frameService.UpdateAsync(id, request.HtmlContent, request.CssContent);
+        return frame == null ? NotFound() : Ok(frame);
+    }
+
     [HttpDelete("api/v1/frames/{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {

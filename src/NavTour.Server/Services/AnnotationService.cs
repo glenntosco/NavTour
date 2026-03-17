@@ -20,7 +20,8 @@ public class AnnotationService : IAnnotationService
             .Where(a => a.StepId == stepId)
             .Select(a => new AnnotationResponse(
                 a.Id, a.Type, a.Title, a.Content,
-                a.PositionX, a.PositionY, a.Width, a.Height, a.Style))
+                a.PositionX, a.PositionY, a.Width, a.Height, a.Style,
+                a.TargetSelector, a.ArrowDirection, a.BadgeNumber))
             .ToListAsync();
     }
 
@@ -37,7 +38,10 @@ public class AnnotationService : IAnnotationService
             PositionY = request.PositionY,
             Width = request.Width,
             Height = request.Height,
-            Style = request.Style
+            Style = request.Style,
+            TargetSelector = request.TargetSelector,
+            ArrowDirection = request.ArrowDirection,
+            BadgeNumber = request.BadgeNumber
         };
 
         _db.Annotations.Add(annotation);
@@ -45,7 +49,8 @@ public class AnnotationService : IAnnotationService
 
         return new AnnotationResponse(annotation.Id, annotation.Type, annotation.Title,
             annotation.Content, annotation.PositionX, annotation.PositionY,
-            annotation.Width, annotation.Height, annotation.Style);
+            annotation.Width, annotation.Height, annotation.Style,
+            annotation.TargetSelector, annotation.ArrowDirection, annotation.BadgeNumber);
     }
 
     public async Task<AnnotationResponse?> UpdateAsync(Guid id, CreateAnnotationRequest request)
@@ -61,12 +66,16 @@ public class AnnotationService : IAnnotationService
         annotation.Width = request.Width;
         annotation.Height = request.Height;
         annotation.Style = request.Style;
+        annotation.TargetSelector = request.TargetSelector;
+        annotation.ArrowDirection = request.ArrowDirection;
+        annotation.BadgeNumber = request.BadgeNumber;
 
         await _db.SaveChangesAsync();
 
         return new AnnotationResponse(annotation.Id, annotation.Type, annotation.Title,
             annotation.Content, annotation.PositionX, annotation.PositionY,
-            annotation.Width, annotation.Height, annotation.Style);
+            annotation.Width, annotation.Height, annotation.Style,
+            annotation.TargetSelector, annotation.ArrowDirection, annotation.BadgeNumber);
     }
 
     public async Task<bool> DeleteAsync(Guid id)

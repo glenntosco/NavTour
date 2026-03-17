@@ -1,0 +1,368 @@
+@inject IJSRuntime JS
+
+<div style="flex:1;position:relative;overflow:hidden;background:var(--rz-base-200)">
+    @if (HtmlContent != null)
+    {
+        <iframe @ref="iframeRef" sandbox="allow-same-origin allow-scripts"
+            style="width:100%;height:100%;border:none"
+            srcdoc="@HtmlContent"></iframe>
+
+        @* Element toolbar — appears when an element is selected *@
+        @if (selectedElement != null)
+        {
+            <div class="element-toolbar" style="@GetToolbarPosition()">
+                <span class="element-tag">@selectedElement.TagName</span>
+
+                @if (selectedElement.IsText)
+                {
+                    <button class="et-btn" title="Edit text" @onclick="StartInlineEdit">
+                        <RadzenIcon Icon="edit" Style="font-size:14px" />
+                    </button>
+                }
+                @if (selectedElement.IsImage)
+                {
+                    <button class="et-btn" title="Replace image" @onclick="() => showImageUpload = true">
+                        <RadzenIcon Icon="image" Style="font-size:14px" />
+                    </button>
+                }
+                <button class="et-btn" title="Blur" @onclick="BlurSelected">
+                    <RadzenIcon Icon="blur_on" Style="font-size:14px" />
+                </button>
+                <button class="et-btn" title="Hide" @onclick="HideSelected">
+                    <RadzenIcon Icon="visibility_off" Style="font-size:14px" />
+                </button>
+                <button class="et-btn et-btn-danger" title="Delete" @onclick="DeleteSelected">
+                    <RadzenIcon Icon="delete" Style="font-size:14px" />
+                </button>
+            </div>
+        }
+
+        @* Image upload dialog *@
+        @if (showImageUpload)
+        {
+            <div class="image-upload-overlay" @onclick="() => showImageUpload = false">
+                <div class="image-upload-dialog" @onclick:stopPropagation="true">
+                    <RadzenText TextStyle="TextStyle.Subtitle1"><strong>Replace Image</strong></RadzenText>
+                    <RadzenTextBox @bind-Value="newImageUrl" Placeholder="Paste image URL..." Style="width:100%;margin:8px 0" />
+                    <RadzenButton Text="Replace" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small"
+                        Click="SwapImage" />
+                    <RadzenButton Text="Cancel" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
+                        Click="() => showImageUpload = false" />
+                </div>
+            </div>
+        }
+
+        @* Find & Replace bar *@
+        @if (ShowFindReplace)
+        {
+            <div class="find-replace-bar">
+                <RadzenTextBox @bind-Value="findText" Placeholder="Find..." Style="width:180px" />
+                <RadzenTextBox @bind-Value="replaceText" Placeholder="Replace with..." Style="width:180px" />
+                <RadzenButton Text="Replace All" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small"
+                    Click="DoFindReplace" />
+                @if (replaceCount >= 0)
+                {
+                    <span style="color:var(--rz-text-secondary-color);font-size:12px">@replaceCount replacements</span>
+                }
+                <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall"
+                    Click="() => ShowFindReplaceChanged.InvokeAsync(false)" />
+            </div>
+        }
+
+        @* Unsaved indicator *@
+        @if (hasUnsavedEdits)
+        {
+            <div class="unsaved-badge">
+                <RadzenIcon Icon="edit" Style="font-size:12px" /> Unsaved edits
+            </div>
+        }
+
+        @* Annotations on top *@
+        @if (Annotations != null)
+        {
+            foreach (var annotation in Annotations)
+            {
+                <AnnotationOverlay Annotation="annotation" Mode="AnnotationOverlay.AnnotationOverlayMode.Edit" />
+            }
+        }
+    }
+    else
+    {
+        <RadzenStack AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Style="height:100%">
+            <RadzenIcon Icon="image" Style="font-size:64px;color:var(--rz-text-tertiary-color)" />
+            <RadzenText Style="color:var(--rz-text-secondary-color)">Select a frame to preview</RadzenText>
+        </RadzenStack>
+    }
+</div>
+
+<style>
+    .element-toolbar {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        background: #1a1a2e;
+        border-radius: 8px;
+        padding: 4px 8px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+        z-index: 100;
+        pointer-events: all;
+    }
+    .element-tag {
+        color: #4361ee;
+        font-size: 11px;
+        font-weight: 600;
+        font-family: monospace;
+        margin-right: 6px;
+    }
+    .et-btn {
+        background: transparent;
+        border: none;
+        color: #ccc;
+        cursor: pointer;
+        padding: 4px 6px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+    }
+    .et-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    .et-btn-danger:hover { background: rgba(239,68,68,0.2); color: #ef4444; }
+
+    .find-replace-bar {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: #fff;
+        border-radius: 8px;
+        padding: 8px 12px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        z-index: 100;
+    }
+
+    .image-upload-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0,0,0,0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 200;
+    }
+    .image-upload-dialog {
+        background: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        min-width: 320px;
+    }
+
+    .unsaved-badge {
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        background: #fbbf24;
+        color: #1a1a2e;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        z-index: 50;
+    }
+</style>
+
+@code {
+    [Parameter] public string? HtmlContent { get; set; }
+    [Parameter] public List<AnnotationResponse>? Annotations { get; set; }
+    [Parameter] public bool ShowFindReplace { get; set; }
+    [Parameter] public EventCallback<bool> ShowFindReplaceChanged { get; set; }
+    [Parameter] public EventCallback<string> OnHtmlChanged { get; set; }
+
+    private ElementReference iframeRef;
+    private DotNetObjectReference<FrameEditor>? dotnetRef;
+    private SelectedElementInfo? selectedElement;
+    private bool hasUnsavedEdits;
+    private bool showImageUpload;
+    private string newImageUrl = "";
+    private string findText = "";
+    private string replaceText = "";
+    private int replaceCount = -1;
+    private bool editorReady;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            dotnetRef = DotNetObjectReference.Create(this);
+        }
+
+        // Re-init editor when iframe content changes
+        if (HtmlContent != null && dotnetRef != null)
+        {
+            // Small delay to let iframe load srcdoc
+            await Task.Delay(300);
+            try
+            {
+                await JS.InvokeVoidAsync("frameEditorBridge.init", dotnetRef, iframeRef);
+            }
+            catch { /* iframe may not be ready yet */ }
+        }
+    }
+
+    // --- Callbacks from JS ---
+
+    [JSInvokable]
+    public void OnEditorReady()
+    {
+        editorReady = true;
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public void OnElementSelected(string json)
+    {
+        selectedElement = System.Text.Json.JsonSerializer.Deserialize<SelectedElementInfo>(json,
+            new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public void OnElementDeselected()
+    {
+        selectedElement = null;
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public void OnEditApplied(string editType)
+    {
+        hasUnsavedEdits = true;
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public async Task OnInlineEditDone(string selector, string text)
+    {
+        hasUnsavedEdits = true;
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public void OnFindReplaceDone(int count)
+    {
+        replaceCount = count;
+        if (count > 0) hasUnsavedEdits = true;
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public async Task OnSerializedHtml(string html)
+    {
+        hasUnsavedEdits = false;
+        await OnHtmlChanged.InvokeAsync(html);
+        StateHasChanged();
+    }
+
+    // --- Toolbar actions ---
+
+    private async Task StartInlineEdit()
+    {
+        if (selectedElement == null) return;
+        await JS.InvokeVoidAsync("frameEditorBridge.sendCommand", "inline-edit",
+            new { selector = selectedElement.Selector });
+    }
+
+    private async Task SwapImage()
+    {
+        if (selectedElement == null || string.IsNullOrWhiteSpace(newImageUrl)) return;
+        await JS.InvokeVoidAsync("frameEditorBridge.sendCommand", "swap-image",
+            new { selector = selectedElement.Selector, src = newImageUrl.Trim() });
+        showImageUpload = false;
+        newImageUrl = "";
+    }
+
+    private async Task BlurSelected()
+    {
+        if (selectedElement == null) return;
+        await JS.InvokeVoidAsync("frameEditorBridge.sendCommand", "blur",
+            new { selector = selectedElement.Selector });
+    }
+
+    private async Task HideSelected()
+    {
+        if (selectedElement == null) return;
+        await JS.InvokeVoidAsync("frameEditorBridge.sendCommand", "hide",
+            new { selector = selectedElement.Selector });
+    }
+
+    private async Task DeleteSelected()
+    {
+        if (selectedElement == null) return;
+        await JS.InvokeVoidAsync("frameEditorBridge.sendCommand", "delete",
+            new { selector = selectedElement.Selector });
+        selectedElement = null;
+    }
+
+    private async Task DoFindReplace()
+    {
+        if (string.IsNullOrEmpty(findText)) return;
+        replaceCount = -1;
+        await JS.InvokeVoidAsync("frameEditorBridge.sendCommand", "find-replace",
+            new { find = findText, replace = replaceText });
+    }
+
+    /// <summary>
+    /// Called by parent to serialize the edited HTML for saving.
+    /// </summary>
+    public async Task RequestSerializedHtml()
+    {
+        await JS.InvokeVoidAsync("frameEditorBridge.sendCommand", "get-html", (object?)null);
+    }
+
+    public bool HasUnsavedEdits => hasUnsavedEdits;
+
+    private string GetToolbarPosition()
+    {
+        if (selectedElement?.Rect == null) return "top:0;left:0;display:none";
+        // Position above the selected element, clamped to viewport
+        var top = Math.Max(4, selectedElement.Rect.Top - 40);
+        var left = Math.Max(4, selectedElement.Rect.Left);
+        return $"top:{top}px;left:{left}px";
+    }
+
+    public void Dispose()
+    {
+        dotnetRef?.Dispose();
+        JS.InvokeVoidAsync("frameEditorBridge.dispose");
+    }
+
+    // --- Models ---
+
+    private class SelectedElementInfo
+    {
+        public string Selector { get; set; } = "";
+        public string TagName { get; set; } = "";
+        public string Text { get; set; } = "";
+        public string Src { get; set; } = "";
+        public bool IsImage { get; set; }
+        public bool IsText { get; set; }
+        public bool IsContainer { get; set; }
+        public ElementRect? Rect { get; set; }
+    }
+
+    private class ElementRect
+    {
+        public double Left { get; set; }
+        public double Top { get; set; }
+        public double Width { get; set; }
+        public double Height { get; set; }
+    }
+}

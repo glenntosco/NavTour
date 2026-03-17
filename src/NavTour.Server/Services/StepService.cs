@@ -26,7 +26,8 @@ public class StepService : IStepService
                 s.NavigationAction, s.NavigationTarget,
                 s.Annotations.Where(a => !a.IsDeleted).Select(a => new AnnotationResponse(
                     a.Id, a.Type, a.Title, a.Content,
-                    a.PositionX, a.PositionY, a.Width, a.Height, a.Style
+                    a.PositionX, a.PositionY, a.Width, a.Height, a.Style,
+                    a.TargetSelector, a.ArrowDirection, a.BadgeNumber
                 )).ToList()))
             .ToListAsync();
     }
@@ -63,7 +64,10 @@ public class StepService : IStepService
                     PositionY = a.PositionY,
                     Width = a.Width,
                     Height = a.Height,
-                    Style = a.Style
+                    Style = a.Style,
+                    TargetSelector = a.TargetSelector,
+                    ArrowDirection = a.ArrowDirection,
+                    BadgeNumber = a.BadgeNumber
                 }).ToList()
             };
             _db.Steps.Add(step);

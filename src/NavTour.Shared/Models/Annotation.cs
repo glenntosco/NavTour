@@ -13,6 +13,9 @@ public class Annotation : TenantEntity
     public double Width { get; set; }
     public double Height { get; set; }
     public string? Style { get; set; }
+    public string? TargetSelector { get; set; }
+    public string? ArrowDirection { get; set; }
+    public int? BadgeNumber { get; set; }
 
     public Step Step { get; set; } = null!;
 }

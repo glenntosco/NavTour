@@ -6,10 +6,31 @@
         @switch (annotation.Type)
         {
             case AnnotationType.Tooltip:
-                var tooltipStyle = ParseStyle(annotation.Style);
-                <div style="background:@tooltipStyle.GetValueOrDefault("backgroundColor", "#1a1a2e");color:@tooltipStyle.GetValueOrDefault("textColor", "#fff");border-radius:@tooltipStyle.GetValueOrDefault("borderRadius", "8px");padding:12px 16px;font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,0.2)">
+                var ts = ParseStyle(annotation.Style);
+                <div style="position:relative;background:@ts.GetValueOrDefault("backgroundColor", "#1a1a2e");color:@ts.GetValueOrDefault("textColor", "#fff");border-radius:@ts.GetValueOrDefault("borderRadius", "8px");padding:12px 16px;font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,0.2);--arrow-bg:@ts.GetValueOrDefault("backgroundColor", "#1a1a2e")">
+                    @if (annotation.ArrowDirection != null)
+                    {
+                        <div class="tooltip-arrow tooltip-arrow-@annotation.ArrowDirection"></div>
+                    }
                     @if (annotation.Title != null) { <strong>@annotation.Title</strong> }
                     @if (annotation.Content != null) { <p style="margin:4px 0 0">@annotation.Content</p> }
+                </div>
+                break;
+
+            case AnnotationType.NumberedTooltip:
+                var nts = ParseStyle(annotation.Style);
+                <div style="position:relative">
+                    <div style="position:absolute;top:-12px;left:-12px;width:28px;height:28px;border-radius:50%;background:#4361ee;color:white;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(67,97,238,0.4);z-index:1">
+                        @(annotation.BadgeNumber ?? 1)
+                    </div>
+                    <div style="position:relative;background:@nts.GetValueOrDefault("backgroundColor", "#1a1a2e");color:@nts.GetValueOrDefault("textColor", "#fff");border-radius:@nts.GetValueOrDefault("borderRadius", "8px");padding:12px 16px;font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,0.2);margin-top:8px;--arrow-bg:@nts.GetValueOrDefault("backgroundColor", "#1a1a2e")">
+                        @if (annotation.ArrowDirection != null)
+                        {
+                            <div class="tooltip-arrow tooltip-arrow-@annotation.ArrowDirection"></div>
+                        }
+                        @if (annotation.Title != null) { <strong>@annotation.Title</strong> }
+                        @if (annotation.Content != null) { <p style="margin:4px 0 0">@annotation.Content</p> }
+                    </div>
                 </div>
                 break;
 
@@ -24,8 +45,21 @@
                 <div style="width:24px;height:24px;border-radius:50%;background:rgba(59,130,246,0.5);border:3px solid #3b82f6;animation:pulse 2s infinite"></div>
                 break;
 
+            case AnnotationType.Beacon:
+                <div style="position:relative;width:36px;height:36px">
+                    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:28px;height:28px;border-radius:50%;background:#4361ee;color:white;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;z-index:2">
+                        @(annotation.BadgeNumber ?? 1)
+                    </div>
+                    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:36px;height:36px;border-radius:50%;border:2px solid rgba(67,97,238,0.4);animation:beacon-pulse 2s ease-out infinite"></div>
+                </div>
+                break;
+
             case AnnotationType.Blur:
                 <div style="width:100%;height:100%;backdrop-filter:blur(8px);background:rgba(0,0,0,0.1);border-radius:4px"></div>
+                break;
+
+            case AnnotationType.ClickZone:
+                <div style="width:100%;height:100%;cursor:pointer;pointer-events:all" @onclick="() => OnClickZone.InvokeAsync(annotation)"></div>
                 break;
         }
     </div>
@@ -33,6 +67,7 @@
 
 @code {
     [Parameter] public List<PlayerAnnotationDto> Annotations { get; set; } = [];
+    [Parameter] public EventCallback<PlayerAnnotationDto> OnClickZone { get; set; }
 
     private Dictionary<string, string> ParseStyle(string? style)
     {
