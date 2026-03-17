@@ -1,0 +1,105 @@
+/* NavTour Marketing Site Styles */
+
+/* ========== CSS Custom Properties ========== */
+:root {
+    --nt-primary: #4361ee;
+    --nt-primary-dark: #2d3db8;
+    --nt-primary-light: #e8ebfd;
+    --nt-primary-lighter: #f4f5fe;
+    --nt-text: #1a1a2e;
+    --nt-text-secondary: #64748b;
+    --nt-white: #ffffff;
+    --nt-success: #10b981;
+    --nt-border: #e2e8f0;
+    --nt-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+    --nt-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    --nt-radius: 8px;
+    --nt-radius-lg: 12px;
+    --nt-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --nt-max-width: 1200px;
+    --nt-section-padding: 80px 24px;
+}
+
+/* ========== Reset & Base ========== */
+.mkt * { box-sizing: border-box; margin: 0; padding: 0; }
+.mkt { font-family: var(--nt-font); color: var(--nt-text); line-height: 1.6; }
+.mkt a { color: var(--nt-primary); text-decoration: none; }
+.mkt a:hover { color: var(--nt-primary-dark); }
+.mkt img { max-width: 100%; height: auto; }
+
+/* ========== Typography ========== */
+.mkt h1 { font-size: 3.5rem; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; }
+.mkt h2 { font-size: 2.5rem; font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
+.mkt h3 { font-size: 1.5rem; font-weight: 600; line-height: 1.3; }
+.mkt h4 { font-size: 1.25rem; font-weight: 600; line-height: 1.4; }
+.mkt p { font-size: 1.125rem; color: var(--nt-text-secondary); }
+.mkt .text-sm { font-size: 0.875rem; }
+.mkt .text-center { text-align: center; }
+
+/* ========== Layout ========== */
+.mkt-container { max-width: var(--nt-max-width); margin: 0 auto; padding: 0 24px; }
+.mkt-section { padding: var(--nt-section-padding); }
+.mkt-section-alt { padding: var(--nt-section-padding); background: var(--nt-primary-lighter); }
+
+/* ========== Grid ========== */
+.mkt-grid { display: grid; gap: 32px; }
+.mkt-grid-2 { grid-template-columns: repeat(2, 1fr); }
+.mkt-grid-3 { grid-template-columns: repeat(3, 1fr); }
+.mkt-grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+/* ========== Buttons ========== */
+.mkt-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 12px 28px; border-radius: var(--nt-radius); font-size: 1rem;
+    font-weight: 600; cursor: pointer; transition: all 0.2s ease; border: 2px solid transparent;
+    text-decoration: none;
+}
+.mkt-btn-primary {
+    background: var(--nt-primary); color: var(--nt-white); border-color: var(--nt-primary);
+}
+.mkt-btn-primary:hover {
+    background: var(--nt-primary-dark); border-color: var(--nt-primary-dark); color: var(--nt-white);
+}
+.mkt-btn-outline {
+    background: transparent; color: var(--nt-primary); border-color: var(--nt-primary);
+}
+.mkt-btn-outline:hover {
+    background: var(--nt-primary); color: var(--nt-white);
+}
+.mkt-btn-lg { padding: 16px 36px; font-size: 1.125rem; }
+
+/* ========== Cards ========== */
+.mkt-card {
+    background: var(--nt-white); border: 1px solid var(--nt-border);
+    border-radius: var(--nt-radius-lg); padding: 32px;
+    box-shadow: var(--nt-shadow); transition: box-shadow 0.2s ease;
+}
+.mkt-card:hover { box-shadow: var(--nt-shadow-lg); }
+
+/* ========== Image Placeholders ========== */
+.mkt-placeholder {
+    background: linear-gradient(135deg, var(--nt-primary-light) 0%, #d4dbf9 100%);
+    border-radius: var(--nt-radius-lg); display: flex;
+    align-items: center; justify-content: center;
+    color: var(--nt-primary); font-weight: 600; font-size: 0.875rem;
+}
+.mkt-placeholder-hero { width: 100%; height: 400px; }
+.mkt-placeholder-feature { width: 100%; height: 300px; }
+.mkt-placeholder-logo { width: 120px; height: 40px; border-radius: 4px; }
+
+/* ========== Responsive ========== */
+@media (max-width: 1024px) {
+    .mkt h1 { font-size: 2.75rem; }
+    .mkt h2 { font-size: 2rem; }
+    .mkt-grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+    :root { --nt-section-padding: 48px 16px; }
+    .mkt h1 { font-size: 2.25rem; }
+    .mkt h2 { font-size: 1.75rem; }
+    .mkt-grid-2, .mkt-grid-3, .mkt-grid-4 { grid-template-columns: 1fr; }
+    .mkt-btn-lg { padding: 14px 28px; font-size: 1rem; }
+}
+@media (max-width: 640px) {
+    .mkt h1 { font-size: 1.875rem; }
+}
