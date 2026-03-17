@@ -1,0 +1,37 @@
+@page "/leads"
+@inject HttpClient Http
+@inject AuthService Auth
+@inject NavigationManager Nav
+
+<RadzenStack Gap="16px">
+    <RadzenText TextStyle="TextStyle.H4">Captured Leads</RadzenText>
+
+    @if (loading)
+    {
+        <RadzenProgressBarCircular ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+    }
+    else
+    {
+        <RadzenDataGrid Data="@leads" TItem="LeadResponse" AllowSorting="true" AllowPaging="true" PageSize="25">
+            <Columns>
+                <RadzenDataGridColumn Property="Email" Title="Email" />
+                <RadzenDataGridColumn Property="Name" Title="Name" />
+                <RadzenDataGridColumn Property="Company" Title="Company" />
+                <RadzenDataGridColumn Property="DemoName" Title="Demo" />
+                <RadzenDataGridColumn Property="CapturedAt" Title="Captured" FormatString="{0:g}" />
+            </Columns>
+        </RadzenDataGrid>
+    }
+</RadzenStack>
+
+@code {
+    private List<LeadResponse> leads = [];
+    private bool loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
+        leads = await Http.GetFromJsonAsync<List<LeadResponse>>("api/v1/leads") ?? [];
+        loading = false;
+    }
+}

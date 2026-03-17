@@ -1,0 +1,22 @@
+<RadzenStack Gap="8px" Style="width:140px;min-height:100%;overflow-y:auto;border-right:1px solid var(--rz-border-color);padding:8px">
+    @for (int i = 0; i < Frames.Count; i++)
+    {
+        var frame = Frames[i];
+        var isSelected = frame.Id == SelectedFrameId;
+        <RadzenCard Style="@($"cursor:pointer;padding:8px;{(isSelected ? "border:2px solid var(--rz-primary)" : "")}")"
+            @onclick="() => OnFrameSelected.InvokeAsync(frame.Id)">
+            <RadzenStack AlignItems="AlignItems.Center">
+                <RadzenIcon Icon="web" Style="font-size:32px;color:var(--rz-text-secondary-color)" />
+                <RadzenText TextStyle="TextStyle.Caption">Frame @frame.SequenceOrder</RadzenText>
+            </RadzenStack>
+        </RadzenCard>
+    }
+    <RadzenButton Text="+ Add" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Style="width:100%" Click="OnAddFrame" />
+</RadzenStack>
+
+@code {
+    [Parameter] public List<FrameResponse> Frames { get; set; } = [];
+    [Parameter] public Guid? SelectedFrameId { get; set; }
+    [Parameter] public EventCallback<Guid> OnFrameSelected { get; set; }
+    [Parameter] public EventCallback OnAddFrame { get; set; }
+}

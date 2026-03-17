@@ -1,0 +1,140 @@
+@page "/demos/{DemoId:guid}/analytics"
+@using NavTour.Client.Services
+@using NavTour.Shared.DTOs.Demos
+@inject AnalyticsApiService AnalyticsApi
+@inject DemoApiService DemoApi
+@inject HttpClient Http
+@inject AuthService Auth
+@inject NavigationManager Nav
+
+<RadzenStack Gap="16px">
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="8px">
+        <RadzenButton Icon="arrow_back" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
+            Click='() => Nav.NavigateTo($"/demos/{DemoId}/edit")' />
+        <RadzenText TextStyle="TextStyle.H4">Analytics: @(demo?.Name ?? "...")</RadzenText>
+    </RadzenStack>
+
+    @if (loading)
+    {
+        <RadzenProgressBarCircular ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+    }
+    else if (summary != null)
+    {
+        @* Stat cards *@
+        <RadzenRow Gap="16px">
+            <RadzenColumn Size="3">
+                <RadzenCard Style="text-align:center">
+                    <RadzenText TextStyle="TextStyle.H3">@summary.TotalViews</RadzenText>
+                    <RadzenText TextStyle="TextStyle.Caption">Total Views</RadzenText>
+                </RadzenCard>
+            </RadzenColumn>
+            <RadzenColumn Size="3">
+                <RadzenCard Style="text-align:center">
+                    <RadzenText TextStyle="TextStyle.H3">@summary.Completions</RadzenText>
+                    <RadzenText TextStyle="TextStyle.Caption">Completions</RadzenText>
+                </RadzenCard>
+            </RadzenColumn>
+            <RadzenColumn Size="3">
+                <RadzenCard Style="text-align:center">
+                    <RadzenText TextStyle="TextStyle.H3">@summary.CompletionRate.ToString("F1")%</RadzenText>
+                    <RadzenText TextStyle="TextStyle.Caption">Completion Rate</RadzenText>
+                </RadzenCard>
+            </RadzenColumn>
+            <RadzenColumn Size="3">
+                <RadzenCard Style="text-align:center">
+                    <RadzenText TextStyle="TextStyle.H3">@TimeSpan.FromSeconds(summary.AvgTimeSeconds).ToString(@"m\:ss")</RadzenText>
+                    <RadzenText TextStyle="TextStyle.Caption">Avg Time</RadzenText>
+                </RadzenCard>
+            </RadzenColumn>
+        </RadzenRow>
+
+        @* Views over time chart *@
+        <RadzenCard>
+            <RadzenText TextStyle="TextStyle.H6">Views Over Time</RadzenText>
+            <RadzenChart Style="height:250px">
+                <RadzenLineSeries Data="@summary.ViewsOverTime" CategoryProperty="Date" ValueProperty="Count" Title="Views" />
+                <RadzenCategoryAxis FormatString="{0:MMM dd}" />
+                <RadzenValueAxis />
+            </RadzenChart>
+        </RadzenCard>
+
+        @* Step funnel *@
+        @if (summary.Funnel.Count > 0)
+        {
+            <RadzenCard>
+                <RadzenText TextStyle="TextStyle.H6">Step Funnel</RadzenText>
+                <RadzenChart Style="height:250px">
+                    <RadzenBarSeries Data="@summary.Funnel" CategoryProperty="StepNumber" ValueProperty="ViewCount" Title="Viewed" />
+                    <RadzenBarSeries Data="@summary.Funnel" CategoryProperty="StepNumber" ValueProperty="CompletionCount" Title="Completed" />
+                    <RadzenCategoryAxis />
+                    <RadzenValueAxis />
+                    <RadzenLegend Visible="true" />
+                </RadzenChart>
+            </RadzenCard>
+        }
+
+        @* Top sources *@
+        @if (summary.TopSources.Count > 0)
+        {
+            <RadzenCard>
+                <RadzenText TextStyle="TextStyle.H6">Top Sources</RadzenText>
+                <RadzenDataGrid Data="@summary.TopSources" TItem="SourceEntry">
+                    <Columns>
+                        <RadzenDataGridColumn Property="Source" Title="Source" />
+                        <RadzenDataGridColumn Property="Count" Title="Views" Width="100px" />
+                    </Columns>
+                </RadzenDataGrid>
+            </RadzenCard>
+        }
+
+        @* Leads count *@
+        <RadzenCard>
+            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center">
+                <RadzenStack>
+                    <RadzenText TextStyle="TextStyle.H6">Leads Captured</RadzenText>
+                    <RadzenText TextStyle="TextStyle.H3">@leadCount</RadzenText>
+                </RadzenStack>
+                <RadzenButton Text="View All Leads" ButtonStyle="ButtonStyle.Light" Click='() => Nav.NavigateTo("/leads")' />
+            </RadzenStack>
+        </RadzenCard>
+
+        @* Recent sessions *@
+        <RadzenCard>
+            <RadzenText TextStyle="TextStyle.H6">Recent Sessions</RadzenText>
+            <RadzenDataGrid Data="@sessions" TItem="SessionListResponse" AllowPaging="true" PageSize="10">
+                <Columns>
+                    <RadzenDataGridColumn Property="StartedAt" Title="Started" FormatString="{0:g}" />
+                    <RadzenDataGridColumn Property="StepsViewed" Title="Steps Viewed" Width="120px" />
+                    <RadzenDataGridColumn Property="Completed" Title="Completed" Width="100px">
+                        <Template Context="session">
+                            <RadzenBadge Text="@(session.Completed ? "Yes" : "No")"
+                                BadgeStyle="@(session.Completed ? BadgeStyle.Success : BadgeStyle.Light)" />
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn Property="Source" Title="Source" />
+                </Columns>
+            </RadzenDataGrid>
+        </RadzenCard>
+    }
+</RadzenStack>
+
+@code {
+    [Parameter] public Guid DemoId { get; set; }
+
+    private DemoResponse? demo;
+    private AnalyticsSummaryResponse? summary;
+    private List<SessionListResponse> sessions = [];
+    private int leadCount;
+    private bool loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
+        demo = await DemoApi.GetDemoAsync(DemoId);
+        summary = await AnalyticsApi.GetSummaryAsync(DemoId);
+        sessions = await AnalyticsApi.GetSessionsAsync(DemoId);
+        var leads = await Http.GetFromJsonAsync<List<LeadResponse>>("api/v1/leads");
+        leadCount = leads?.Count ?? 0;
+        loading = false;
+    }
+}

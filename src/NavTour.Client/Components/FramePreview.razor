@@ -1,0 +1,32 @@
+@inject IJSRuntime JS
+
+<div style="flex:1;position:relative;overflow:hidden;background:var(--rz-base-200)">
+    @if (HtmlContent != null)
+    {
+        <iframe @ref="iframeRef" sandbox="allow-same-origin" style="width:100%;height:100%;border:none"
+            srcdoc="@HtmlContent"></iframe>
+
+        @* Annotation overlays rendered on top *@
+        @if (Annotations != null)
+        {
+            foreach (var annotation in Annotations)
+            {
+                <AnnotationOverlay Annotation="annotation" Mode="AnnotationOverlay.AnnotationOverlayMode.Edit" />
+            }
+        }
+    }
+    else
+    {
+        <RadzenStack AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Style="height:100%">
+            <RadzenIcon Icon="image" Style="font-size:64px;color:var(--rz-text-tertiary-color)" />
+            <RadzenText Style="color:var(--rz-text-secondary-color)">Select a frame to preview</RadzenText>
+        </RadzenStack>
+    }
+</div>
+
+@code {
+    [Parameter] public string? HtmlContent { get; set; }
+    [Parameter] public List<AnnotationResponse>? Annotations { get; set; }
+
+    private ElementReference iframeRef;
+}

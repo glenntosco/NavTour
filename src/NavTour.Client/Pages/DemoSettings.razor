@@ -1,0 +1,78 @@
+@page "/demos/{DemoId:guid}/settings"
+@inject DemoApiService DemoApi
+@inject NavigationManager Nav
+@inject NotificationService Notification
+@inject AuthService Auth
+
+<RadzenStack Gap="16px" Style="max-width:600px">
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="8px">
+        <RadzenButton Icon="arrow_back" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
+            Click='() => Nav.NavigateTo($"/demos/{DemoId}/edit")' />
+        <RadzenText TextStyle="TextStyle.H5">Demo Settings</RadzenText>
+    </RadzenStack>
+
+    @if (demo != null)
+    {
+        <RadzenCard>
+            <RadzenStack Gap="12px">
+                <RadzenFormField Text="Name">
+                    <RadzenTextBox @bind-Value="name" Style="width:100%" />
+                </RadzenFormField>
+                <RadzenFormField Text="Description">
+                    <RadzenTextArea @bind-Value="description" Style="width:100%" Rows="3" />
+                </RadzenFormField>
+                <RadzenFormField Text="Slug (URL path)">
+                    <RadzenTextBox Value="@demo.Slug" Disabled="true" Style="width:100%" />
+                </RadzenFormField>
+                <RadzenFormField Text="Language">
+                    <RadzenDropDown @bind-Value="locale" Data="@locales" Style="width:100%" />
+                </RadzenFormField>
+                <RadzenButton Text="Save Changes" ButtonStyle="ButtonStyle.Primary" Click="Save" IsBusy="saving" />
+            </RadzenStack>
+        </RadzenCard>
+
+        <RadzenCard>
+            <RadzenStack Gap="8px">
+                <RadzenText TextStyle="TextStyle.H6" Style="color:var(--rz-danger)">Danger Zone</RadzenText>
+                <RadzenButton Text="Delete Demo" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Outlined" Click="DeleteDemo" />
+            </RadzenStack>
+        </RadzenCard>
+    }
+</RadzenStack>
+
+@code {
+    [Parameter] public Guid DemoId { get; set; }
+
+    private DemoResponse? demo;
+    private string name = "";
+    private string? description;
+    private string locale = "en";
+    private bool saving;
+    private List<string> locales = ["en", "es"];
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
+        demo = await DemoApi.GetDemoAsync(DemoId);
+        if (demo != null)
+        {
+            name = demo.Name;
+            description = demo.Description;
+            locale = demo.Locale;
+        }
+    }
+
+    private async Task Save()
+    {
+        saving = true;
+        await DemoApi.UpdateDemoAsync(DemoId, new UpdateDemoRequest(name, description, locale, null));
+        Notification.Notify(NotificationSeverity.Success, "Saved");
+        saving = false;
+    }
+
+    private async Task DeleteDemo()
+    {
+        await DemoApi.DeleteDemoAsync(DemoId);
+        Nav.NavigateTo("/");
+    }
+}

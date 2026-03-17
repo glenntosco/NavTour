@@ -1,0 +1,43 @@
+@page "/register"
+@inject AuthService Auth
+@inject NavigationManager Nav
+
+<RadzenStack Gap="16px" Style="max-width:400px;margin:60px auto">
+    <RadzenText TextStyle="TextStyle.H4">Create Your NavTour Account</RadzenText>
+
+    @if (errorMessage != null)
+    {
+        <RadzenAlert AlertStyle="AlertStyle.Danger" ShowIcon="true">@errorMessage</RadzenAlert>
+    }
+
+    <RadzenTextBox @bind-Value="fullName" Placeholder="Full Name" Style="width:100%" />
+    <RadzenTextBox @bind-Value="companyName" Placeholder="Company Name" Style="width:100%" />
+    <RadzenTextBox @bind-Value="email" Placeholder="Email" Style="width:100%" />
+    <RadzenPassword @bind-Value="password" Placeholder="Password (min 8 chars)" Style="width:100%" />
+    <RadzenButton Text="Create Account" ButtonStyle="ButtonStyle.Primary" Style="width:100%" Click="HandleRegister" IsBusy="loading" />
+
+    <RadzenText>
+        Already have an account? <RadzenLink Path="/login">Sign In</RadzenLink>
+    </RadzenText>
+</RadzenStack>
+
+@code {
+    private string fullName = "";
+    private string companyName = "";
+    private string email = "";
+    private string password = "";
+    private string? errorMessage;
+    private bool loading;
+
+    private async Task HandleRegister()
+    {
+        loading = true;
+        errorMessage = null;
+        var (success, error) = await Auth.RegisterAsync(email, password, companyName, fullName);
+        if (success)
+            Nav.NavigateTo("/");
+        else
+            errorMessage = error ?? "Registration failed";
+        loading = false;
+    }
+}

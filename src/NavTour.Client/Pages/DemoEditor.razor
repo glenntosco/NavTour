@@ -1,0 +1,135 @@
+@page "/demos/{DemoId:guid}/edit"
+@inject DemoApiService DemoApi
+@inject NavigationManager Nav
+@inject NotificationService Notification
+@inject AuthService Auth
+
+<RadzenStack Gap="0" Style="height:calc(100vh - 80px)">
+    @* Toolbar *@
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="8px"
+        Style="padding:8px 12px;border-bottom:1px solid var(--rz-border-color)">
+        <RadzenText TextStyle="TextStyle.H6" class="rz-m-0">@(demo?.Name ?? "Loading...")</RadzenText>
+        <div style="flex:1"></div>
+        <RadzenButton Text="Save" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" Click="SaveSteps" IsBusy="saving" />
+        <RadzenButton Text="Preview" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
+            Click='() => Nav.NavigateTo($"/demo/{demo?.Slug}", true)' />
+        <RadzenButton Text="Publish" ButtonStyle="ButtonStyle.Success" Size="ButtonSize.Small" Click="PublishDemo" />
+        <RadzenButton Text="Settings" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
+            Click='() => Nav.NavigateTo($"/demos/{DemoId}/settings")' />
+    </RadzenStack>
+
+    @* Main workspace *@
+    <RadzenStack Orientation="Orientation.Horizontal" Style="flex:1;overflow:hidden">
+        <FrameStrip Frames="frames" SelectedFrameId="selectedFrameId"
+            OnFrameSelected="SelectFrame" OnAddFrame="AddFrame" />
+
+        <FramePreview HtmlContent="@currentFrameHtml"
+            Annotations="@currentAnnotations" />
+
+        <StepPanel Steps="steps" SelectedStepId="selectedStepId"
+            OnStepSelected="SelectStep" OnAddStep="AddStep" />
+    </RadzenStack>
+</RadzenStack>
+
+@code {
+    [Parameter] public Guid DemoId { get; set; }
+
+    private DemoResponse? demo;
+    private List<FrameResponse> frames = [];
+    private List<StepResponse> steps = [];
+    private Guid? selectedFrameId;
+    private Guid? selectedStepId;
+    private string? currentFrameHtml;
+    private List<AnnotationResponse>? currentAnnotations;
+    private bool saving;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
+
+        demo = await DemoApi.GetDemoAsync(DemoId);
+        if (demo == null) { Nav.NavigateTo("/"); return; }
+
+        frames = await DemoApi.GetFramesAsync(DemoId);
+        steps = await DemoApi.GetStepsAsync(DemoId);
+
+        if (frames.Count > 0)
+            await SelectFrame(frames[0].Id);
+    }
+
+    private async Task SelectFrame(Guid frameId)
+    {
+        selectedFrameId = frameId;
+        var detail = await DemoApi.GetFrameDetailAsync(frameId);
+        currentFrameHtml = detail?.HtmlContent;
+
+        // Show annotations for the step that uses this frame
+        var step = steps.FirstOrDefault(s => s.FrameId == frameId);
+        currentAnnotations = step?.Annotations;
+        selectedStepId = step?.Id;
+    }
+
+    private void SelectStep(Guid stepId)
+    {
+        selectedStepId = stepId;
+        var step = steps.FirstOrDefault(s => s.Id == stepId);
+        if (step != null)
+        {
+            selectedFrameId = step.FrameId;
+            currentAnnotations = step.Annotations;
+            _ = SelectFrame(step.FrameId);
+        }
+    }
+
+    private async Task AddFrame()
+    {
+        // Trigger file input via JS interop would be ideal,
+        // but for MVP use a simple HTML content input
+        // The upload will be handled when the user selects a file
+        Notification.Notify(NotificationSeverity.Info, "Upload", "Use the API to upload HTML frames for now.");
+    }
+
+    private async Task AddStep()
+    {
+        if (selectedFrameId == null) return;
+
+        var newStep = new StepDto(
+            null, selectedFrameId.Value, steps.Count + 1,
+            null, NavigationAction.NextStep, null, []);
+
+        var allSteps = steps.Select(s => new StepDto(
+            s.Id, s.FrameId, s.StepNumber, s.ClickTargetSelector,
+            s.NavigationAction, s.NavigationTarget,
+            s.Annotations.Select(a => new AnnotationDto(
+                a.Id, a.Type, a.Title, a.Content,
+                a.PositionX, a.PositionY, a.Width, a.Height, a.Style)).ToList()
+        )).Append(newStep).ToList();
+
+        await DemoApi.UpdateStepsAsync(DemoId, new UpdateStepsRequest(allSteps));
+        steps = await DemoApi.GetStepsAsync(DemoId);
+        Notification.Notify(NotificationSeverity.Success, "Step added");
+    }
+
+    private async Task SaveSteps()
+    {
+        saving = true;
+        var stepDtos = steps.Select(s => new StepDto(
+            s.Id, s.FrameId, s.StepNumber, s.ClickTargetSelector,
+            s.NavigationAction, s.NavigationTarget,
+            s.Annotations.Select(a => new AnnotationDto(
+                a.Id, a.Type, a.Title, a.Content,
+                a.PositionX, a.PositionY, a.Width, a.Height, a.Style)).ToList()
+        )).ToList();
+
+        await DemoApi.UpdateStepsAsync(DemoId, new UpdateStepsRequest(stepDtos));
+        Notification.Notify(NotificationSeverity.Success, "Saved", "Steps saved successfully.");
+        saving = false;
+    }
+
+    private async Task PublishDemo()
+    {
+        await DemoApi.PublishDemoAsync(DemoId);
+        demo = await DemoApi.GetDemoAsync(DemoId);
+        Notification.Notify(NotificationSeverity.Success, "Published", $"Demo is live at /demo/{demo?.Slug}");
+    }
+}

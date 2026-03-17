@@ -1,0 +1,95 @@
+@page "/"
+@inject AuthService Auth
+@inject DemoApiService DemoApi
+@inject NavigationManager Nav
+@inject DialogService Dialog
+
+@if (!Auth.IsAuthenticated)
+{
+    <RadzenStack Gap="24px" Style="max-width:600px;margin:60px auto;text-align:center">
+        <RadzenText TextStyle="TextStyle.H3"><strong>NavTour</strong></RadzenText>
+        <RadzenText TextStyle="TextStyle.H6" Style="color:var(--rz-text-secondary-color)">
+            Create interactive product demos that convert prospects into customers.
+        </RadzenText>
+        <RadzenStack Orientation="Orientation.Horizontal" Gap="12px" JustifyContent="JustifyContent.Center">
+            <RadzenButton Text="Sign In" ButtonStyle="ButtonStyle.Primary" Click='() => Nav.NavigateTo("/login")' />
+            <RadzenButton Text="Get Started Free" ButtonStyle="ButtonStyle.Secondary" Click='() => Nav.NavigateTo("/register")' />
+        </RadzenStack>
+    </RadzenStack>
+}
+else
+{
+    <RadzenStack Gap="16px">
+        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center">
+            <RadzenText TextStyle="TextStyle.H4">My Demos</RadzenText>
+            <RadzenButton Text="+ New Demo" ButtonStyle="ButtonStyle.Primary" Click="CreateNewDemo" />
+        </RadzenStack>
+
+        @if (loading)
+        {
+            <RadzenProgressBarCircular ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+        }
+        else if (demos.Count == 0)
+        {
+            <RadzenCard Style="text-align:center;padding:40px">
+                <RadzenText TextStyle="TextStyle.H6">No demos yet</RadzenText>
+                <RadzenText>Create your first interactive demo to get started.</RadzenText>
+                <RadzenButton Text="Create Demo" ButtonStyle="ButtonStyle.Primary" Style="margin-top:16px" Click="CreateNewDemo" />
+            </RadzenCard>
+        }
+        else
+        {
+            <RadzenDataGrid Data="@demos" TItem="DemoListItemResponse" AllowSorting="true">
+                <Columns>
+                    <RadzenDataGridColumn Property="Name" Title="Name">
+                        <Template Context="demo">
+                            <RadzenLink Path='@($"/demos/{demo.Id}/edit")'>@demo.Name</RadzenLink>
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn Property="Status" Title="Status" Width="120px">
+                        <Template Context="demo">
+                            <RadzenBadge Text="@demo.Status.ToString()"
+                                BadgeStyle="@(demo.Status == DemoStatus.Published ? BadgeStyle.Success : BadgeStyle.Light)" />
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn Property="ViewCount" Title="Views" Width="100px" />
+                    <RadzenDataGridColumn Property="FrameCount" Title="Frames" Width="100px" />
+                    <RadzenDataGridColumn Property="StepCount" Title="Steps" Width="100px" />
+                    <RadzenDataGridColumn Title="Actions" Width="200px">
+                        <Template Context="demo">
+                            <RadzenButton Text="Edit" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
+                                Click='() => Nav.NavigateTo($"/demos/{demo.Id}/edit")' />
+                            <RadzenButton Text="Analytics" ButtonStyle="ButtonStyle.Info" Variant="Variant.Text" Size="ButtonSize.Small"
+                                Click='() => Nav.NavigateTo($"/demos/{demo.Id}/analytics")' />
+                        </Template>
+                    </RadzenDataGridColumn>
+                </Columns>
+            </RadzenDataGrid>
+        }
+    </RadzenStack>
+}
+
+@code {
+    private List<DemoListItemResponse> demos = [];
+    private bool loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Auth.IsAuthenticated)
+        {
+            demos = await DemoApi.GetDemosAsync();
+        }
+        loading = false;
+    }
+
+    private async Task CreateNewDemo()
+    {
+        var name = await Dialog.OpenAsync<RadzenTextBox>("New Demo Name");
+        if (name is string demoName && !string.IsNullOrWhiteSpace(demoName))
+        {
+            var demo = await DemoApi.CreateDemoAsync(new CreateDemoRequest(demoName, null));
+            if (demo != null)
+                Nav.NavigateTo($"/demos/{demo.Id}/edit");
+        }
+    }
+}
