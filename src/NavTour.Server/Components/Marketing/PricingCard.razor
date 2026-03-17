@@ -1,0 +1,36 @@
+<div class="mkt-card mkt-pricing-card @(Highlighted ? "mkt-pricing-highlighted" : "")">
+    <h3>@Name</h3>
+    <div class="mkt-pricing-price">
+        @if (Price == "Free")
+        {
+            <span class="mkt-pricing-amount">Free</span>
+        }
+        else if (Price == "Custom")
+        {
+            <span class="mkt-pricing-amount">Custom</span>
+        }
+        else
+        {
+            <span class="mkt-pricing-amount">@Price</span>
+            <span class="mkt-pricing-period">/mo</span>
+        }
+    </div>
+    <p class="mkt-pricing-desc">@Description</p>
+    <ul class="mkt-pricing-features">
+        @foreach (var feature in Features)
+        {
+            <li>@feature</li>
+        }
+    </ul>
+    <a href="@CtaUrl" class="mkt-btn @(Highlighted ? "mkt-btn-primary" : "mkt-btn-outline")" style="width:100%">@CtaText</a>
+</div>
+
+@code {
+    [Parameter] public string Name { get; set; } = "";
+    [Parameter] public string Price { get; set; } = "";
+    [Parameter] public string Description { get; set; } = "";
+    [Parameter] public List<string> Features { get; set; } = new();
+    [Parameter] public string CtaText { get; set; } = "Get Started";
+    [Parameter] public string CtaUrl { get; set; } = "/register";
+    [Parameter] public bool Highlighted { get; set; }
+}

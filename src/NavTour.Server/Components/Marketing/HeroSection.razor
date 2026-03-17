@@ -1,0 +1,28 @@
+<section class="mkt-section mkt-hero">
+    <div class="mkt-container">
+        <div class="mkt-hero-content">
+            <h1>@Title</h1>
+            <p class="mkt-hero-sub">@Subtitle</p>
+            <div class="mkt-hero-actions">
+                @if (!string.IsNullOrEmpty(PrimaryCtaUrl))
+                {
+                    <a href="@PrimaryCtaUrl" class="mkt-btn mkt-btn-primary mkt-btn-lg">@PrimaryCtaText</a>
+                }
+                @if (!string.IsNullOrEmpty(SecondaryCtaUrl))
+                {
+                    <a href="@SecondaryCtaUrl" class="mkt-btn mkt-btn-outline mkt-btn-lg">@SecondaryCtaText</a>
+                }
+            </div>
+        </div>
+        <div class="mkt-placeholder mkt-placeholder-hero">Product Preview</div>
+    </div>
+</section>
+
+@code {
+    [Parameter] public string Title { get; set; } = "";
+    [Parameter] public string Subtitle { get; set; } = "";
+    [Parameter] public string PrimaryCtaText { get; set; } = "Start Free";
+    [Parameter] public string PrimaryCtaUrl { get; set; } = "/register";
+    [Parameter] public string SecondaryCtaText { get; set; } = "Book a Demo";
+    [Parameter] public string SecondaryCtaUrl { get; set; } = "/contact";
+}

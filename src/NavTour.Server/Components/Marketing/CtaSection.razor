@@ -1,0 +1,16 @@
+<section class="mkt-section mkt-cta-section">
+    <div class="mkt-container text-center">
+        <h2>@Title</h2>
+        <p>@Subtitle</p>
+        <div class="mkt-hero-actions" style="margin-top:24px">
+            <a href="@CtaUrl" class="mkt-btn mkt-btn-primary mkt-btn-lg">@CtaText</a>
+        </div>
+    </div>
+</section>
+
+@code {
+    [Parameter] public string Title { get; set; } = "Ready to transform your demos?";
+    [Parameter] public string Subtitle { get; set; } = "Start building interactive demos in minutes. No credit card required.";
+    [Parameter] public string CtaText { get; set; } = "Start Free";
+    [Parameter] public string CtaUrl { get; set; } = "/register";
+}
