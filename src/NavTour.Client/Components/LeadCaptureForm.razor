@@ -1,0 +1,27 @@
+<div style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;display:flex;align-items:center;justify-content:center">
+    <RadzenCard Style="width:400px;padding:24px">
+        <RadzenStack Gap="16px">
+            <RadzenText TextStyle="TextStyle.H5">Want to learn more?</RadzenText>
+            <RadzenText>Enter your details to continue.</RadzenText>
+            <RadzenTextBox @bind-Value="email" Placeholder="Email *" Style="width:100%" />
+            <RadzenTextBox @bind-Value="name" Placeholder="Name" Style="width:100%" />
+            <RadzenTextBox @bind-Value="company" Placeholder="Company" Style="width:100%" />
+            <RadzenButton Text="Continue" ButtonStyle="ButtonStyle.Primary" Style="width:100%" Click="Submit" Disabled="@string.IsNullOrWhiteSpace(email)" />
+            <RadzenButton Text="Skip" ButtonStyle="ButtonStyle.Light" Variant="Variant.Text" Style="width:100%" Click="() => OnSkip.InvokeAsync()" />
+        </RadzenStack>
+    </RadzenCard>
+</div>
+
+@code {
+    [Parameter] public EventCallback<LeadCaptureRequest> OnSubmit { get; set; }
+    [Parameter] public EventCallback OnSkip { get; set; }
+
+    private string email = "";
+    private string? name;
+    private string? company;
+
+    private async Task Submit()
+    {
+        await OnSubmit.InvokeAsync(new LeadCaptureRequest(email, name, company, null));
+    }
+}
