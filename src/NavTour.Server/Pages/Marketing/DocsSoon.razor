@@ -1,0 +1,54 @@
+@page "/docs"
+@layout MarketingLayout
+@inject IHttpClientFactory HttpClientFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Documentation — NavTour</PageTitle>
+<HeadContent>
+    <meta name="description" content="NavTour documentation — guides, API reference, and integration tutorials." />
+</HeadContent>
+
+<section class="mkt-section" style="min-height:60vh;display:flex;align-items:center">
+    <div class="mkt-container text-center">
+        <h1>Documentation</h1>
+        <p style="margin:16px auto 24px;max-width:480px">Our documentation is coming soon. Subscribe to be notified, or reach out if you need help.</p>
+
+        @if (subscribed)
+        {
+            <p style="color:var(--nt-success);font-weight:600">Thanks! We'll notify you when docs are ready.</p>
+        }
+        else
+        {
+            <form method="post" @formname="docs-subscribe" @onsubmit="HandleSubscribe" style="display:inline-flex;gap:8px;margin-top:8px;flex-wrap:wrap;justify-content:center">
+                <AntiforgeryToken />
+                <input type="email" name="SubscribeEmail" value="@SubscribeEmail" required placeholder="Enter your email"
+                    style="padding:10px 14px;border:1px solid var(--nt-border);border-radius:var(--nt-radius);font-size:1rem;min-width:260px" />
+                <button type="submit" class="mkt-btn mkt-btn-primary">Subscribe for Updates</button>
+            </form>
+        }
+
+        <div style="margin-top:32px">
+            <a href="/contact" class="mkt-btn mkt-btn-outline">Contact Us</a>
+        </div>
+    </div>
+</section>
+
+@code {
+    [SupplyParameterFromForm]
+    public string SubscribeEmail { get; set; } = "";
+
+    private bool subscribed;
+
+    private async Task HandleSubscribe()
+    {
+        if (string.IsNullOrWhiteSpace(SubscribeEmail)) return;
+        try
+        {
+            using var http = HttpClientFactory.CreateClient();
+            http.BaseAddress = new Uri(NavigationManager.BaseUri);
+            await http.PostAsJsonAsync("api/v1/contact", new { email = SubscribeEmail, type = "Newsletter" });
+        }
+        catch { }
+        subscribed = true;
+    }
+}
