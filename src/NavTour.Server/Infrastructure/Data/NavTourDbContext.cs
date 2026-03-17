@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using NavTour.Server.Infrastructure.Auth;
 using NavTour.Server.Infrastructure.MultiTenancy;
+using NavTour.Shared.Entities;
 using NavTour.Shared.Models;
 
 namespace NavTour.Server.Infrastructure.Data;
@@ -27,6 +28,7 @@ public class NavTourDbContext : IdentityDbContext<ApplicationUser, IdentityRole<
     public DbSet<Lead> Leads => Set<Lead>();
     public DbSet<ApiKey> ApiKeys => Set<ApiKey>();
     public DbSet<PersonalizationVariable> PersonalizationVariables => Set<PersonalizationVariable>();
+    public DbSet<ContactSubmission> ContactSubmissions => Set<ContactSubmission>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
