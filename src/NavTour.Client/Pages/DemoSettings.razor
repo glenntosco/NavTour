@@ -50,8 +50,10 @@
     private bool saving;
     private List<string> locales = ["en", "es"];
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (!firstRender) return;
+        await Auth.TryRestoreAsync();
         if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
         demo = await DemoApi.GetDemoAsync(DemoId);
         if (demo != null)
@@ -60,6 +62,7 @@
             description = demo.Description;
             locale = demo.Locale;
         }
+        StateHasChanged();
     }
 
     private async Task Save()

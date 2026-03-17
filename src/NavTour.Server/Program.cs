@@ -30,8 +30,18 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
 .AddEntityFrameworkStores<NavTourDbContext>()
 .AddDefaultTokenProviders();
 
-// JWT Authentication
+// JWT Authentication — supports both Bearer header and cookie
 var jwtKey = builder.Configuration["Jwt:Key"] ?? "NavTourDevelopmentSecretKey2026!@#$%^&*()";
+var tokenParams = new TokenValidationParameters
+{
+    ValidateIssuer = true,
+    ValidateAudience = true,
+    ValidateLifetime = true,
+    ValidateIssuerSigningKey = true,
+    ValidIssuer = builder.Configuration["Jwt:Issuer"] ?? "NavTour",
+    ValidAudience = builder.Configuration["Jwt:Audience"] ?? "NavTour",
+    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+};
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -39,15 +49,18 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    options.TokenValidationParameters = new TokenValidationParameters
+    options.TokenValidationParameters = tokenParams;
+    // Read JWT from cookie if no Authorization header present
+    options.Events = new JwtBearerEvents
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"] ?? "NavTour",
-        ValidAudience = builder.Configuration["Jwt:Audience"] ?? "NavTour",
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+        OnMessageReceived = context =>
+        {
+            if (string.IsNullOrEmpty(context.Token) && context.Request.Cookies.TryGetValue("navtour_auth", out var cookie))
+            {
+                context.Token = cookie;
+            }
+            return Task.CompletedTask;
+        }
     };
 });
 builder.Services.AddAuthorization();
@@ -70,11 +83,13 @@ builder.Services.AddControllers();
 builder.Services.AddRadzenComponents();
 builder.Services.AddHttpClient();
 
-// CORS for player embeds
+// CORS for player embeds and extension
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("PlayerCors", policy =>
         policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+    options.AddPolicy("AppCors", policy =>
+        policy.SetIsOriginAllowed(_ => true).AllowAnyMethod().AllowAnyHeader().AllowCredentials());
 });
 
 // Auth Services
@@ -94,14 +109,20 @@ builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 builder.Services.AddScoped<ILeadService, LeadService>();
 
 // Client Services (needed for SSR pre-rendering of Blazor components)
-// HttpClient with BaseAddress for server-side rendering context
+// HttpClient that forwards auth cookie for server-side rendering
 builder.Services.AddScoped(sp =>
 {
     var httpContext = sp.GetService<IHttpContextAccessor>()?.HttpContext;
     var baseAddress = httpContext != null
         ? $"{httpContext.Request.Scheme}://{httpContext.Request.Host}"
         : "http://localhost:5017";
-    return new HttpClient { BaseAddress = new Uri(baseAddress) };
+
+    var handler = new HttpClientHandler();
+    if (httpContext?.Request.Cookies.TryGetValue("navtour_auth", out var cookie) == true)
+    {
+        handler.CookieContainer.Add(new Uri(baseAddress), new System.Net.Cookie("navtour_auth", cookie));
+    }
+    return new HttpClient(handler) { BaseAddress = new Uri(baseAddress) };
 });
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<AuthService>();
@@ -125,7 +146,7 @@ if (!app.Environment.IsDevelopment())
 }
 app.UseAntiforgery();
 
-app.UseCors("PlayerCors");
+app.UseCors("AppCors");
 app.UseAuthentication();
 app.UseMiddleware<ApiKeyMiddleware>();
 app.UseAuthorization();

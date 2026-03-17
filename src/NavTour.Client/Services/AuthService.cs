@@ -6,7 +6,7 @@ namespace NavTour.Client.Services;
 public class AuthService
 {
     private readonly HttpClient _http;
-    private string? _accessToken;
+    private bool _isAuthenticated;
     private Guid? _tenantId;
 
     public AuthService(HttpClient http)
@@ -14,8 +14,30 @@ public class AuthService
         _http = http;
     }
 
-    public bool IsAuthenticated => _accessToken != null;
+    public bool IsAuthenticated => _isAuthenticated;
     public Guid? TenantId => _tenantId;
+
+    /// <summary>
+    /// Check if the auth cookie is valid by making a lightweight API call.
+    /// </summary>
+    public async Task TryRestoreAsync()
+    {
+        if (_isAuthenticated) return;
+
+        try
+        {
+            // Quick auth check — cookie is sent automatically by the browser
+            var response = await _http.GetAsync("api/v1/demos");
+            if (response.IsSuccessStatusCode)
+            {
+                _isAuthenticated = true;
+            }
+        }
+        catch
+        {
+            // SSR prerender or network error — not authenticated
+        }
+    }
 
     public async Task<(bool Success, string? Error)> LoginAsync(string email, string password)
     {
@@ -27,9 +49,8 @@ public class AuthService
         }
 
         var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
-        _accessToken = result!.AccessToken;
-        _tenantId = result.TenantId;
-        _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _accessToken);
+        _isAuthenticated = true;
+        _tenantId = result!.TenantId;
         return (true, null);
     }
 
@@ -44,16 +65,15 @@ public class AuthService
         }
 
         var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
-        _accessToken = result!.AccessToken;
-        _tenantId = result.TenantId;
-        _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _accessToken);
+        _isAuthenticated = true;
+        _tenantId = result!.TenantId;
         return (true, null);
     }
 
-    public void Logout()
+    public async Task LogoutAsync()
     {
-        _accessToken = null;
+        _isAuthenticated = false;
         _tenantId = null;
-        _http.DefaultRequestHeaders.Authorization = null;
+        await _http.PostAsync("api/v1/auth/logout", null);
     }
 }

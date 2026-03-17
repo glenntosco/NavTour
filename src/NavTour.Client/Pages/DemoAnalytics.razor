@@ -127,8 +127,10 @@
     private int leadCount;
     private bool loading = true;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (!firstRender) return;
+        await Auth.TryRestoreAsync();
         if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
         demo = await DemoApi.GetDemoAsync(DemoId);
         summary = await AnalyticsApi.GetSummaryAsync(DemoId);
@@ -136,5 +138,6 @@
         var leads = await Http.GetFromJsonAsync<List<LeadResponse>>("api/v1/leads");
         leadCount = leads?.Count ?? 0;
         loading = false;
+        StateHasChanged();
     }
 }

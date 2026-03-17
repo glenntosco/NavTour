@@ -33,7 +33,6 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<ActionResult<LoginResponse>> Register(RegisterRequest request)
     {
-        // Create tenant
         var tenant = new Tenant
         {
             Name = request.CompanyName,
@@ -44,7 +43,6 @@ public class AuthController : ControllerBase
         _dbContext.Tenants.Add(tenant);
         await _dbContext.SaveChangesAsync();
 
-        // Create user
         var user = new ApplicationUser
         {
             UserName = request.Email,
@@ -58,7 +56,6 @@ public class AuthController : ControllerBase
         var result = await _userManager.CreateAsync(user, request.Password);
         if (!result.Succeeded)
         {
-            // Rollback tenant
             _dbContext.Tenants.Remove(tenant);
             await _dbContext.SaveChangesAsync();
             return BadRequest(result.Errors);
@@ -67,6 +64,7 @@ public class AuthController : ControllerBase
         var accessToken = _jwtService.GenerateAccessToken(user);
         var refreshToken = _jwtService.GenerateRefreshToken();
 
+        SetAuthCookie(accessToken);
         return Ok(new LoginResponse(accessToken, refreshToken, DateTime.UtcNow.AddHours(1), tenant.Id));
     }
 
@@ -80,14 +78,32 @@ public class AuthController : ControllerBase
         var accessToken = _jwtService.GenerateAccessToken(user);
         var refreshToken = _jwtService.GenerateRefreshToken();
 
+        SetAuthCookie(accessToken);
         return Ok(new LoginResponse(accessToken, refreshToken, DateTime.UtcNow.AddHours(1), user.TenantId));
+    }
+
+    [HttpPost("logout")]
+    public IActionResult LogoutApi()
+    {
+        Response.Cookies.Delete("navtour_auth");
+        return Ok();
     }
 
     [HttpPost("refresh")]
     public ActionResult<LoginResponse> Refresh(RefreshRequest request)
     {
-        // MVP: simple refresh — validate the refresh token is non-empty
-        // Full refresh token rotation implemented in Phase 2
         return BadRequest(new { message = "Refresh not yet implemented — re-login required" });
+    }
+
+    private void SetAuthCookie(string token)
+    {
+        Response.Cookies.Append("navtour_auth", token, new CookieOptions
+        {
+            HttpOnly = true,
+            SameSite = SameSiteMode.Lax,
+            Secure = false, // Set true in production with HTTPS
+            Path = "/",
+            Expires = DateTimeOffset.UtcNow.AddHours(8),
+        });
     }
 }

@@ -3,6 +3,7 @@
 @inject NavigationManager Nav
 @inject NotificationService Notification
 @inject AuthService Auth
+@inject IJSRuntime JS
 
 <RadzenStack Gap="0" Style="height:calc(100vh - 80px)">
     @* Toolbar *@
@@ -31,6 +32,9 @@
     </RadzenStack>
 </RadzenStack>
 
+<InputFile id="frame-file-input" OnChange="HandleFileUpload" Accept=".html,.htm"
+    style="display:none" />
+
 @code {
     [Parameter] public Guid DemoId { get; set; }
 
@@ -43,8 +47,10 @@
     private List<AnnotationResponse>? currentAnnotations;
     private bool saving;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (!firstRender) return;
+        await Auth.TryRestoreAsync();
         if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
 
         demo = await DemoApi.GetDemoAsync(DemoId);
@@ -55,6 +61,7 @@
 
         if (frames.Count > 0)
             await SelectFrame(frames[0].Id);
+        StateHasChanged();
     }
 
     private async Task SelectFrame(Guid frameId)
@@ -83,10 +90,33 @@
 
     private async Task AddFrame()
     {
-        // Trigger file input via JS interop would be ideal,
-        // but for MVP use a simple HTML content input
-        // The upload will be handled when the user selects a file
-        Notification.Notify(NotificationSeverity.Info, "Upload", "Use the API to upload HTML frames for now.");
+        await JS.InvokeVoidAsync("clickElement", "frame-file-input");
+    }
+
+    private async Task HandleFileUpload(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file == null) return;
+
+        try
+        {
+            using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024);
+            var result = await DemoApi.UploadFrameAsync(DemoId, stream, file.Name);
+            if (result != null)
+            {
+                frames = await DemoApi.GetFramesAsync(DemoId);
+                await SelectFrame(result.Id);
+                Notification.Notify(NotificationSeverity.Success, "Frame added", file.Name);
+            }
+            else
+            {
+                Notification.Notify(NotificationSeverity.Error, "Upload failed", "Could not upload frame.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Notification.Notify(NotificationSeverity.Error, "Upload error", ex.Message);
+        }
     }
 
     private async Task AddStep()

@@ -1,0 +1,15 @@
+{
+  "name": "navtour-extension",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "esbuild src/popup.ts src/background.ts --bundle --outdir=dist --format=iife --target=chrome110",
+    "watch": "esbuild src/popup.ts src/background.ts --bundle --outdir=dist --format=iife --target=chrome110 --watch"
+  },
+  "devDependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "esbuild": "^0.24.0",
+    "playwright": "^1.58.2",
+    "typescript": "^5.6.0"
+  }
+}

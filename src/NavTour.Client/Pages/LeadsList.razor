@@ -28,10 +28,13 @@
     private List<LeadResponse> leads = [];
     private bool loading = true;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (!firstRender) return;
+        await Auth.TryRestoreAsync();
         if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
         leads = await Http.GetFromJsonAsync<List<LeadResponse>>("api/v1/leads") ?? [];
         loading = false;
+        StateHasChanged();
     }
 }

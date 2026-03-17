@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NavTour Capture</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <h1 class="logo">NavTour</h1>
+
+    <!-- Login Screen -->
+    <div id="screen-login" class="screen">
+      <div class="field">
+        <label for="server-url">Server URL</label>
+        <input type="url" id="server-url" value="http://localhost:5017" placeholder="http://localhost:5017">
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="admin@navtour.io">
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Password">
+      </div>
+      <button id="btn-login" class="btn btn-primary">Log In</button>
+      <div id="login-error" class="error" hidden></div>
+    </div>
+
+    <!-- Demo Select Screen -->
+    <div id="screen-select" class="screen" hidden>
+      <div class="field">
+        <label for="demo-select">Select Demo</label>
+        <select id="demo-select">
+          <option value="">— Choose a demo —</option>
+        </select>
+      </div>
+      <div class="divider">or</div>
+      <div class="field">
+        <label for="new-demo-name">Create New Demo</label>
+        <input type="text" id="new-demo-name" placeholder="My Product Demo">
+      </div>
+      <button id="btn-start" class="btn btn-primary">Start Capturing</button>
+      <button id="btn-logout" class="btn btn-link">Log out</button>
+      <div id="select-error" class="error" hidden></div>
+    </div>
+
+    <!-- Capture Active Screen (status only — capture happens via page toolbar) -->
+    <div id="screen-capture" class="screen" hidden>
+      <div class="info">
+        <span class="label">Demo:</span>
+        <span id="capture-demo-name" class="value"></span>
+      </div>
+      <div class="info">
+        <span class="label">Frames captured:</span>
+        <span id="capture-frame-count" class="value">0</span>
+      </div>
+      <div id="capture-status" class="status" hidden></div>
+      <button id="btn-finish" class="btn btn-primary">Finish &amp; Open Builder</button>
+      <button id="btn-back" class="btn btn-link">Stop &amp; back to demo list</button>
+    </div>
+  </div>
+
+  <script src="dist/popup.js"></script>
+</body>
+</html>

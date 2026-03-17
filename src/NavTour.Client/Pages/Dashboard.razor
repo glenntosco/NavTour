@@ -4,7 +4,13 @@
 @inject NavigationManager Nav
 @inject DialogService Dialog
 
-@if (!Auth.IsAuthenticated)
+@if (loading)
+{
+    <RadzenStack AlignItems="AlignItems.Center" Style="margin:100px auto">
+        <RadzenText TextStyle="TextStyle.H6" Style="color:var(--rz-text-secondary-color)">Loading...</RadzenText>
+    </RadzenStack>
+}
+else if (!Auth.IsAuthenticated)
 {
     <RadzenStack Gap="24px" Style="max-width:600px;margin:60px auto;text-align:center">
         <RadzenText TextStyle="TextStyle.H3"><strong>NavTour</strong></RadzenText>
@@ -73,13 +79,18 @@ else
     private List<DemoListItemResponse> demos = [];
     private bool loading = true;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (Auth.IsAuthenticated)
+        if (firstRender)
         {
-            demos = await DemoApi.GetDemosAsync();
+            await Auth.TryRestoreAsync();
+            if (Auth.IsAuthenticated)
+            {
+                demos = await DemoApi.GetDemosAsync();
+            }
+            loading = false;
+            StateHasChanged();
         }
-        loading = false;
     }
 
     private async Task CreateNewDemo()

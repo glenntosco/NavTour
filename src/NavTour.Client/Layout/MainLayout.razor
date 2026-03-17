@@ -32,9 +32,21 @@
 <RadzenContextMenu />
 
 @code {
-    private void Logout()
+    private bool _restored;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        Auth.Logout();
+        if (firstRender && !_restored)
+        {
+            _restored = true;
+            await Auth.TryRestoreAsync();
+            StateHasChanged();
+        }
+    }
+
+    private async Task Logout()
+    {
+        await Auth.LogoutAsync();
         Nav.NavigateTo("/login");
     }
 }
