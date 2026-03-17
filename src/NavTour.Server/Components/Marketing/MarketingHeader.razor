@@ -1,0 +1,26 @@
+<header class="mkt-header">
+    <div class="mkt-container mkt-header-inner">
+        <a href="/" class="mkt-logo">
+            <img src="favicon.svg" alt="NavTour" width="32" height="32" />
+            <span>NavTour</span>
+        </a>
+
+        <nav class="mkt-nav" id="mkt-nav">
+            <a href="/features">Features</a>
+            <a href="/use-cases">Use Cases</a>
+            <a href="/pricing">Pricing</a>
+            <a href="/about">About</a>
+            <a href="/login" class="mkt-nav-mobile-only">Login</a>
+            <a href="/register" class="mkt-nav-mobile-only mkt-btn mkt-btn-primary" style="text-align:center">Start Free</a>
+        </nav>
+
+        <div class="mkt-header-actions">
+            <a href="/login" class="mkt-btn mkt-btn-outline">Login</a>
+            <a href="/register" class="mkt-btn mkt-btn-primary">Start Free</a>
+        </div>
+
+        <button class="mkt-hamburger" id="mkt-hamburger" aria-label="Toggle menu" aria-expanded="false" onclick="var n=document.getElementById('mkt-nav');n.classList.toggle('open');this.setAttribute('aria-expanded',n.classList.contains('open'))">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+</header>
