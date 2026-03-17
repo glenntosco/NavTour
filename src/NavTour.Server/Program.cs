@@ -68,6 +68,9 @@ builder.Services.AddCors(options =>
         policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 });
 
+// Auth Services
+builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+
 var app = builder.Build();
 
 // Seed database
@@ -84,6 +87,7 @@ app.UseAntiforgery();
 
 app.UseCors("PlayerCors");
 app.UseAuthentication();
+app.UseMiddleware<ApiKeyMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();
