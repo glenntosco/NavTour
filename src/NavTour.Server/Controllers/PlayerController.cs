@@ -20,7 +20,10 @@ public class PlayerController : ControllerBase
     [HttpGet("{slug}/manifest")]
     public async Task<ActionResult<PlayerManifestResponse>> GetManifest(string slug)
     {
-        var manifest = await _playerService.GetManifestAsync(slug);
+        // Pass query params for personalization variable resolution
+        var queryParams = HttpContext.Request.Query
+            .ToDictionary(q => q.Key, q => (string?)q.Value.ToString());
+        var manifest = await _playerService.GetManifestAsync(slug, queryParams);
         return manifest == null ? NotFound() : Ok(manifest);
     }
 

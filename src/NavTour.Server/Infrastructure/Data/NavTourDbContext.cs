@@ -26,6 +26,7 @@ public class NavTourDbContext : IdentityDbContext<ApplicationUser, IdentityRole<
     public DbSet<SessionEvent> SessionEvents => Set<SessionEvent>();
     public DbSet<Lead> Leads => Set<Lead>();
     public DbSet<ApiKey> ApiKeys => Set<ApiKey>();
+    public DbSet<PersonalizationVariable> PersonalizationVariables => Set<PersonalizationVariable>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -98,6 +99,17 @@ public class NavTourDbContext : IdentityDbContext<ApplicationUser, IdentityRole<
             e.Property(l => l.Email).HasMaxLength(320);
             e.Property(l => l.Name).HasMaxLength(200);
             e.Property(l => l.Company).HasMaxLength(200);
+        });
+
+        // PersonalizationVariable
+        builder.Entity<PersonalizationVariable>(e =>
+        {
+            e.HasQueryFilter(pv => pv.TenantId == _tenantProvider.TenantId && !pv.IsDeleted);
+            e.HasOne(pv => pv.Demo).WithMany().HasForeignKey(pv => pv.DemoId).OnDelete(DeleteBehavior.Cascade);
+            e.Property(pv => pv.Key).HasMaxLength(100);
+            e.Property(pv => pv.DefaultValue).HasMaxLength(1000);
+            e.Property(pv => pv.Description).HasMaxLength(500);
+            e.HasIndex(pv => new { pv.DemoId, pv.Key }).IsUnique();
         });
 
         // ApiKey

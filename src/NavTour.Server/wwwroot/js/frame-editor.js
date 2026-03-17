@@ -186,6 +186,28 @@
         }
     }
 
+    function insertText(selector, text) {
+        var el = document.querySelector(selector);
+        if (!el) return;
+
+        if (el.getAttribute('contenteditable') === 'true') {
+            // Element is being edited — insert at cursor position
+            var sel = window.getSelection();
+            if (sel.rangeCount > 0) {
+                var range = sel.getRangeAt(0);
+                range.deleteContents();
+                range.insertNode(document.createTextNode(text));
+                range.collapse(false);
+            } else {
+                el.textContent += text;
+            }
+        } else {
+            // Not in edit mode — append to text content
+            el.textContent += text;
+        }
+        notifyParent('edit-applied', { type: 'insert-text', selector: selector });
+    }
+
     function findAndReplace(findText, replaceText) {
         var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
         var count = 0;
@@ -260,6 +282,7 @@
             case 'delete': deleteElement(cmd.selector); break;
             case 'hide': hideElement(cmd.selector); break;
             case 'set-style': setStyle(cmd.selector, cmd.prop, cmd.value); break;
+            case 'insert-text': insertText(cmd.selector, cmd.text); break;
             case 'find-replace': findAndReplace(cmd.find, cmd.replace); break;
             case 'get-html':
                 var html = getSerializedHtml();

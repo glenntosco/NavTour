@@ -1,0 +1,97 @@
+@inject DemoApiService DemoApi
+@inject NotificationService Notification
+
+<RadzenCard>
+    <RadzenStack Gap="12px">
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+            <RadzenText TextStyle="TextStyle.H6">Personalization Variables</RadzenText>
+            <RadzenButton Text="+ Add" Icon="add" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall"
+                Click="AddVariable" />
+        </RadzenStack>
+
+        <RadzenText Style="color:var(--rz-text-secondary-color);font-size:13px">
+            Use <code>@("{{company}}")</code> in frame HTML or annotation text. Variables are resolved when the demo is viewed.
+            Override defaults via URL: <code>/demo/slug?company=Acme</code>
+        </RadzenText>
+
+        @if (variables.Count == 0)
+        {
+            <RadzenText Style="color:var(--rz-text-tertiary-color);font-size:13px;font-style:italic">No variables defined yet.</RadzenText>
+        }
+
+        @foreach (var v in variables)
+        {
+            <div class="var-row">
+                <RadzenFormField Text="Key" Style="flex:1">
+                    <RadzenTextBox Value="@v.Key" Change="val => v.Key = val" Placeholder="company" Style="width:100%" />
+                </RadzenFormField>
+                <RadzenFormField Text="Default Value" Style="flex:2">
+                    <RadzenTextBox Value="@v.DefaultValue" Change="val => v.DefaultValue = val" Placeholder="Acme Corp" Style="width:100%" />
+                </RadzenFormField>
+                <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Text"
+                    Size="ButtonSize.Small" Click="() => RemoveVariable(v)" Style="align-self:flex-end;margin-bottom:4px" />
+            </div>
+        }
+
+        @if (variables.Count > 0)
+        {
+            <RadzenButton Text="Save Variables" ButtonStyle="ButtonStyle.Primary" Click="Save" IsBusy="saving"
+                Style="align-self:flex-start" />
+        }
+    </RadzenStack>
+</RadzenCard>
+
+<style>
+    .var-row { display: flex; gap: 8px; align-items: flex-start; }
+</style>
+
+@code {
+    [Parameter] public Guid DemoId { get; set; }
+
+    private List<EditableVariable> variables = [];
+    private bool saving;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var dtos = await DemoApi.GetVariablesAsync(DemoId);
+        variables = dtos.Select(d => new EditableVariable { Id = d.Id, Key = d.Key, DefaultValue = d.DefaultValue, Description = d.Description }).ToList();
+    }
+
+    private void AddVariable()
+    {
+        variables.Add(new EditableVariable { Key = "", DefaultValue = "" });
+    }
+
+    private void RemoveVariable(EditableVariable v)
+    {
+        variables.Remove(v);
+    }
+
+    private async Task Save()
+    {
+        // Validate
+        var valid = variables.Where(v => !string.IsNullOrWhiteSpace(v.Key)).ToList();
+        if (valid.Count == 0 && variables.Count > 0)
+        {
+            Notification.Notify(NotificationSeverity.Warning, "Keys required", "Each variable needs a key.");
+            return;
+        }
+
+        saving = true;
+        var dtos = valid.Select(v => new VariableDto(v.Id, v.Key.Trim(), v.DefaultValue, v.Description)).ToList();
+        var success = await DemoApi.SaveVariablesAsync(DemoId, dtos);
+        if (success)
+            Notification.Notify(NotificationSeverity.Success, "Variables saved");
+        else
+            Notification.Notify(NotificationSeverity.Error, "Failed to save variables");
+        saving = false;
+    }
+
+    private class EditableVariable
+    {
+        public Guid? Id { get; set; }
+        public string Key { get; set; } = "";
+        public string DefaultValue { get; set; } = "";
+        public string? Description { get; set; }
+    }
+}

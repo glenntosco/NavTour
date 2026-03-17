@@ -30,7 +30,7 @@
         <FrameStrip Frames="frames" SelectedFrameId="selectedFrameId"
             OnFrameSelected="SelectFrame" OnAddFrame="AddFrame" />
 
-        <FrameEditor @ref="frameEditor" HtmlContent="@currentFrameHtml"
+        <FrameEditor @ref="frameEditor" DemoId="@DemoId" HtmlContent="@currentFrameHtml"
             Annotations="@currentAnnotations"
             ShowFindReplace="@showFindReplace"
             ShowFindReplaceChanged="(v) => showFindReplace = v"
@@ -39,7 +39,7 @@
         <StepPanel Steps="steps" SelectedStepId="selectedStepId"
             OnStepSelected="SelectStep" OnAddStep="AddStep" />
 
-        <AnnotationEditor StepId="@selectedStepId" Annotations="@currentAnnotations"
+        <AnnotationEditor DemoId="@DemoId" StepId="@selectedStepId" Annotations="@currentAnnotations"
             OnAnnotationsChanged="RefreshAnnotations" />
     </RadzenStack>
 </RadzenStack>

@@ -3,6 +3,7 @@ using NavTour.Shared.DTOs.Demos;
 using NavTour.Shared.DTOs.Frames;
 using NavTour.Shared.DTOs.Steps;
 using NavTour.Shared.DTOs.Annotations;
+using NavTour.Shared.DTOs.Personalization;
 
 namespace NavTour.Client.Services;
 
@@ -106,6 +107,19 @@ public class DemoApiService
     public async Task<bool> DeleteAnnotationAsync(Guid stepId, Guid annotationId)
     {
         var response = await _http.DeleteAsync($"api/v1/steps/{stepId}/annotations/{annotationId}");
+        return response.IsSuccessStatusCode;
+    }
+
+    // Personalization Variables
+    public async Task<List<VariableDto>> GetVariablesAsync(Guid demoId)
+    {
+        var response = await _http.GetFromJsonAsync<VariableListResponse>($"api/v1/demos/{demoId}/variables");
+        return response?.Variables ?? [];
+    }
+
+    public async Task<bool> SaveVariablesAsync(Guid demoId, List<VariableDto> variables)
+    {
+        var response = await _http.PutAsJsonAsync($"api/v1/demos/{demoId}/variables", new VariableListResponse(variables));
         return response.IsSuccessStatusCode;
     }
 }

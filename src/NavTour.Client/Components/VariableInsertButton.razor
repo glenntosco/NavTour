@@ -1,0 +1,84 @@
+@inject DemoApiService DemoApi
+
+<div class="var-insert-wrapper" @onclick:stopPropagation="true">
+    <RadzenButton Icon="data_object" ButtonStyle="ButtonStyle.Light" Variant="Variant.Text"
+        Size="ButtonSize.ExtraSmall" Click="TogglePopup"
+        title="Insert variable" Style="padding:2px 4px;min-width:unset" />
+
+    @if (showPopup)
+    {
+        <div class="var-insert-popup">
+            @if (loading)
+            {
+                <div class="var-insert-item" style="color:var(--rz-text-secondary-color)">Loading...</div>
+            }
+            else if (variables.Count == 0)
+            {
+                <div class="var-insert-item" style="color:var(--rz-text-secondary-color);font-style:italic">
+                    No variables defined.
+                    <a href="/demos/@DemoId/settings" style="font-size:11px;display:block;margin-top:4px">Go to Settings</a>
+                </div>
+            }
+            else
+            {
+                @foreach (var v in variables)
+                {
+                    <div class="var-insert-item var-insert-clickable" @onclick="() => SelectVariable(v.Key)">
+                        <span class="var-insert-key">@("{{" + v.Key + "}}")</span>
+                        @if (!string.IsNullOrEmpty(v.DefaultValue))
+                        {
+                            <span class="var-insert-default">@v.DefaultValue</span>
+                        }
+                    </div>
+                }
+            }
+        </div>
+    }
+</div>
+
+<style>
+    .var-insert-wrapper { position: relative; display: inline-flex; }
+    .var-insert-popup {
+        position: absolute; top: 100%; left: 0; z-index: 1000;
+        background: var(--rz-base-background-color);
+        border: 1px solid var(--rz-border-color);
+        border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        min-width: 180px; max-height: 200px; overflow-y: auto;
+        padding: 4px 0;
+    }
+    .var-insert-item { padding: 6px 10px; font-size: 12px; }
+    .var-insert-clickable { cursor: pointer; }
+    .var-insert-clickable:hover { background: rgba(67,97,238,0.08); }
+    .var-insert-key { font-weight: 600; font-family: monospace; }
+    .var-insert-default {
+        display: block; font-size: 11px;
+        color: var(--rz-text-secondary-color); margin-top: 1px;
+    }
+</style>
+
+@code {
+    [Parameter] public Guid DemoId { get; set; }
+    [Parameter] public EventCallback<string> OnInsert { get; set; }
+
+    private List<VariableDto> variables = [];
+    private bool showPopup;
+    private bool loading;
+
+    private async Task TogglePopup()
+    {
+        showPopup = !showPopup;
+        if (showPopup)
+        {
+            loading = true;
+            StateHasChanged();
+            variables = await DemoApi.GetVariablesAsync(DemoId);
+            loading = false;
+        }
+    }
+
+    private async Task SelectVariable(string key)
+    {
+        showPopup = false;
+        await OnInsert.InvokeAsync("{{" + key + "}}");
+    }
+}

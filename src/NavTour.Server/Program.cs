@@ -95,7 +95,8 @@ builder.Services.AddCors(options =>
 // Auth Services
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
-// Player Services (Task 5)
+// Player & Personalization
+builder.Services.AddScoped<IPersonalizationService, PersonalizationService>();
 builder.Services.AddScoped<IPlayerService, PlayerService>();
 
 // Demo Services

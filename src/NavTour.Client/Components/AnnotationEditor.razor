@@ -35,8 +35,14 @@
                     @if (editingId == ann.Id)
                     {
                         <div class="ae-edit-form">
-                            <RadzenTextBox @bind-Value="editTitle" Placeholder="Title" Style="width:100%;font-size:12px" />
-                            <RadzenTextArea @bind-Value="editContent" Placeholder="Content..." Style="width:100%;font-size:12px;min-height:50px" />
+                            <div class="ae-field-row">
+                                <RadzenTextBox @bind-Value="editTitle" Placeholder="Title" Style="flex:1;font-size:12px" />
+                                <VariableInsertButton DemoId="DemoId" OnInsert="InsertIntoTitle" />
+                            </div>
+                            <div class="ae-field-row">
+                                <RadzenTextArea @bind-Value="editContent" Placeholder="Content..." Style="flex:1;font-size:12px;min-height:50px" />
+                                <VariableInsertButton DemoId="DemoId" OnInsert="InsertIntoContent" />
+                            </div>
 
                             @if (ann.Type == AnnotationType.NumberedTooltip || ann.Type == AnnotationType.Beacon)
                             {
@@ -114,9 +120,11 @@
     .ae-preview { display: flex; flex-direction: column; gap: 2px; margin-top: 4px; }
     .ae-edit-form { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
     .ae-row { display: flex; flex-direction: column; gap: 2px; }
+    .ae-field-row { display: flex; align-items: flex-start; gap: 4px; }
 </style>
 
 @code {
+    [Parameter] public Guid DemoId { get; set; }
     [Parameter] public Guid? StepId { get; set; }
     [Parameter] public List<AnnotationResponse>? Annotations { get; set; }
     [Parameter] public EventCallback OnAnnotationsChanged { get; set; }
@@ -206,6 +214,10 @@
         AnnotationType.ClickZone => "Click Zone",
         _ => type.ToString()
     };
+
+    private void InsertIntoTitle(string token) => editTitle = (editTitle ?? "") + token;
+
+    private void InsertIntoContent(string token) => editContent = (editContent ?? "") + token;
 
     private string Truncate(string s, int len) => s.Length <= len ? s : s[..len] + "...";
 }
