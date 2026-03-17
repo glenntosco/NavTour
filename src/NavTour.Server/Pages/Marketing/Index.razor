@@ -1,0 +1,157 @@
+@page "/"
+@layout MarketingLayout
+
+<PageTitle>NavTour — Interactive Demo Platform</PageTitle>
+<HeadContent>
+    <meta name="description" content="Create interactive product demos that close deals faster. 5x cheaper than Navattic. Free to start." />
+    <meta property="og:title" content="NavTour — Interactive Demo Platform" />
+    <meta property="og:description" content="Create interactive product demos that close deals faster." />
+</HeadContent>
+
+@* 1. Hero *@
+<HeroSection
+    Title="Interactive demos that close deals faster"
+    Subtitle="Create, personalize, and share interactive product walkthroughs your prospects can experience — without logging into your product." />
+
+@* 2. Social Proof Bar *@
+<section class="mkt-section-alt" style="padding:32px 24px">
+    <div class="mkt-container text-center">
+        <p class="text-sm" style="color:var(--nt-text-secondary);margin-bottom:16px">Built on proven infrastructure serving 5,000+ clients</p>
+        <div style="display:flex;gap:32px;justify-content:center;align-items:center;flex-wrap:wrap">
+            @for (int i = 0; i < 5; i++)
+            {
+                <div class="mkt-placeholder mkt-placeholder-logo">Partner</div>
+            }
+        </div>
+    </div>
+</section>
+
+@* 3. Problem → Solution *@
+<section class="mkt-section">
+    <div class="mkt-container">
+        <h2 class="text-center" style="margin-bottom:48px">Why teams switch to NavTour</h2>
+        <div class="mkt-grid mkt-grid-3">
+            <div class="mkt-card" style="text-align:center">
+                <div style="font-size:2rem;margin-bottom:12px">💰</div>
+                <h3>Demos shouldn't cost $500/mo</h3>
+                <p>Start free, scale at $99/mo. 5x cheaper than the industry standard with more features included.</p>
+            </div>
+            <div class="mkt-card" style="text-align:center">
+                <div style="font-size:2rem;margin-bottom:12px">🔧</div>
+                <h3>No engineering required</h3>
+                <p>Capture your product with our Chrome extension. Build walkthroughs with drag-and-drop. No code needed.</p>
+            </div>
+            <div class="mkt-card" style="text-align:center">
+                <div style="font-size:2rem;margin-bottom:12px">📊</div>
+                <h3>Know what's working</h3>
+                <p>Track every click, see where prospects drop off, and capture leads — all in one dashboard.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+@* 4. Feature Highlights *@
+<section class="mkt-section-alt">
+    <div class="mkt-container">
+        <h2 class="text-center" style="margin-bottom:48px">Everything you need to build demos</h2>
+        <div class="mkt-grid mkt-grid-4">
+            <FeatureCard Icon="📸" Title="Capture" Description="One-click Chrome extension captures your product as interactive HTML snapshots." />
+            <FeatureCard Icon="✏️" Title="Annotate" Description="Add tooltips, modals, hotspots, and blur overlays to guide your viewers." />
+            <FeatureCard Icon="🎯" Title="Personalize" Description="Dynamic tokens like {{company}} tailor every demo to every prospect." />
+            <FeatureCard Icon="📈" Title="Analyze" Description="Session tracking, step completion rates, and lead capture in real time." />
+        </div>
+    </div>
+</section>
+
+@* 5. How It Works *@
+<section class="mkt-section">
+    <div class="mkt-container">
+        <h2 class="text-center" style="margin-bottom:48px">Build a demo in 3 steps</h2>
+        <div class="mkt-grid mkt-grid-3">
+            <div style="text-align:center">
+                <div style="width:48px;height:48px;background:var(--nt-primary);color:#fff;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:1.25rem;font-weight:700;margin-bottom:16px">1</div>
+                <h3>Capture</h3>
+                <p>Use the Chrome extension to capture your product screens as interactive HTML snapshots.</p>
+            </div>
+            <div style="text-align:center">
+                <div style="width:48px;height:48px;background:var(--nt-primary);color:#fff;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:1.25rem;font-weight:700;margin-bottom:16px">2</div>
+                <h3>Customize</h3>
+                <p>Add annotations, personalization tokens, and configure the guided walkthrough flow.</p>
+            </div>
+            <div style="text-align:center">
+                <div style="width:48px;height:48px;background:var(--nt-primary);color:#fff;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:1.25rem;font-weight:700;margin-bottom:16px">3</div>
+                <h3>Share</h3>
+                <p>Publish and share a link. Embed on your website. Track engagement and capture leads.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+@* 6. Use Case Previews *@
+<section class="mkt-section-alt">
+    <div class="mkt-container">
+        <h2 class="text-center" style="margin-bottom:48px">Built for every go-to-market team</h2>
+        <div class="mkt-grid mkt-grid-3">
+            <a href="/use-cases#sales" class="mkt-card" style="text-decoration:none;color:inherit">
+                <h3>For Sales</h3>
+                <p>Share interactive demos instantly after discovery calls. Close deals faster.</p>
+            </a>
+            <a href="/use-cases#marketing" class="mkt-card" style="text-decoration:none;color:inherit">
+                <h3>For Marketing</h3>
+                <p>Embed product experiences on landing pages and in campaigns. Convert more visitors.</p>
+            </a>
+            <a href="/use-cases#cs" class="mkt-card" style="text-decoration:none;color:inherit">
+                <h3>For Customer Success</h3>
+                <p>Self-serve product tours for onboarding and feature adoption. Reduce support tickets.</p>
+            </a>
+        </div>
+    </div>
+</section>
+
+@* 7. Metrics / Trust *@
+<section class="mkt-section">
+    <div class="mkt-container text-center">
+        <h2 style="margin-bottom:16px">Trusted infrastructure</h2>
+        <p style="max-width:600px;margin:0 auto 32px">NavTour is built on P4 Software's proven multi-tenant platform — the same infrastructure that powers 5,000+ business clients across Latin America and the US.</p>
+        <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap">
+            <div>
+                <div style="font-size:2.5rem;font-weight:800;color:var(--nt-primary)">5,000+</div>
+                <p class="text-sm">Clients served</p>
+            </div>
+            <div>
+                <div style="font-size:2.5rem;font-weight:800;color:var(--nt-primary)">99.9%</div>
+                <p class="text-sm">Uptime SLA</p>
+            </div>
+            <div>
+                <div style="font-size:2.5rem;font-weight:800;color:var(--nt-primary)">SOC 2</div>
+                <p class="text-sm">Compliant infrastructure</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+@* 8. Pricing Preview *@
+<section class="mkt-section-alt">
+    <div class="mkt-container text-center">
+        <h2 style="margin-bottom:8px">Simple, transparent pricing</h2>
+        <p style="margin-bottom:32px">5x cheaper than the industry standard. Start free, upgrade when you're ready.</p>
+        <div class="mkt-grid mkt-grid-4">
+            <PricingCard Name="Starter" Price="Free" Description="For trying it out"
+                Features='new() { "1 seat", "1 demo", "100 views/mo", "Basic capture" }'
+                CtaText="Start Free" />
+            <PricingCard Name="Pro" Price="$99" Description="For growing teams" Highlighted="true"
+                Features='new() { "5 seats", "25 demos", "10K views/mo", "Analytics + API" }'
+                CtaText="Start Free" />
+            <PricingCard Name="Business" Price="$299" Description="For scaling orgs"
+                Features='new() { "15 seats", "Unlimited demos", "50K views/mo", "SSO + Branding" }'
+                CtaText="Contact Sales" CtaUrl="/contact" />
+            <PricingCard Name="Enterprise" Price="Custom" Description="For large deployments"
+                Features='new() { "Unlimited seats", "Unlimited demos", "Unlimited views", "Self-host + SLA" }'
+                CtaText="Contact Sales" CtaUrl="/contact" />
+        </div>
+        <a href="/pricing" style="display:inline-block;margin-top:24px;font-weight:600">See full pricing comparison →</a>
+    </div>
+</section>
+
+@* 9. Final CTA *@
+<CtaSection />
