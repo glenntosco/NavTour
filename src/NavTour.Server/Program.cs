@@ -6,6 +6,7 @@ using System.Text;
 using NavTour.Server.Infrastructure.Auth;
 using NavTour.Server.Infrastructure.Data;
 using NavTour.Server.Infrastructure.MultiTenancy;
+using NavTour.Server.Services;
 using Radzen;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -70,6 +71,19 @@ builder.Services.AddCors(options =>
 
 // Auth Services
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+
+// Player Services (Task 5)
+builder.Services.AddScoped<IPlayerService, PlayerService>();
+
+// Demo Services
+builder.Services.AddScoped<IDemoService, DemoService>();
+builder.Services.AddScoped<IFrameService, FrameService>();
+builder.Services.AddScoped<IStepService, StepService>();
+builder.Services.AddScoped<IAnnotationService, AnnotationService>();
+
+// Analytics Services
+builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
+builder.Services.AddScoped<ILeadService, LeadService>();
 
 var app = builder.Build();
 
