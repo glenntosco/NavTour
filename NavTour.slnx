@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/NavTour.Client/NavTour.Client.csproj" />
+    <Project Path="src/NavTour.Server/NavTour.Server.csproj" />
+    <Project Path="src/NavTour.Shared/NavTour.Shared.csproj" />
+  </Folder>
+</Solution>
