@@ -1,4 +1,5 @@
 @page "/demo/{Slug}"
+@rendermode InteractiveServer
 @layout PlayerLayout
 @inject PlayerApiService PlayerApi
 @inject NavigationManager Nav
@@ -24,7 +25,7 @@ else
     <div style="display:flex;flex-direction:column;height:100vh;background:#f5f5f5">
         @* Header bar *@
         <div style="display:flex;align-items:center;padding:8px 16px;background:white;border-bottom:1px solid #e0e0e0;gap:12px">
-            <span style="font-weight:600;font-size:14px;color:#666">NavTour</span>
+            <img src="favicon.svg" alt="NavTour" style="height:24px;width:auto" />
             <span style="font-size:14px;font-weight:500">@manifest.DemoName</span>
             <div style="flex:1"></div>
             <span style="font-size:13px;color:#999">@(currentStepIndex + 1) / @manifest.Steps.Count</span>

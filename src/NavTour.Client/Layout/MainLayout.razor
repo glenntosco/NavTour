@@ -5,10 +5,8 @@
 <RadzenLayout>
     <RadzenHeader>
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" class="rz-p-2" Style="width:100%">
-            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="8px">
-                <RadzenText TextStyle="TextStyle.H5" class="rz-m-0" Style="cursor:pointer" @onclick='() => Nav.NavigateTo("/")'>
-                    <strong>NavTour</strong>
-                </RadzenText>
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="8px" Style="cursor:pointer" @onclick='() => Nav.NavigateTo("/dashboard")'>
+                <img src="favicon.svg" alt="NavTour" style="height:32px;width:auto" />
             </RadzenStack>
             @if (Auth.IsAuthenticated)
             {

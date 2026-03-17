@@ -1,8 +1,10 @@
 @page "/login"
+@rendermode InteractiveServer
 @inject AuthService Auth
 @inject NavigationManager Nav
 
 <RadzenStack Gap="16px" Style="max-width:400px;margin:60px auto">
+    <img src="favicon.svg" alt="NavTour" style="height:40px;width:auto;align-self:center" />
     <RadzenText TextStyle="TextStyle.H4">Sign In to NavTour</RadzenText>
 
     @if (errorMessage != null)
@@ -31,7 +33,7 @@
         errorMessage = null;
         var (success, error) = await Auth.LoginAsync(email, password);
         if (success)
-            Nav.NavigateTo("/");
+            Nav.NavigateTo("/dashboard");
         else
             errorMessage = "Invalid email or password";
         loading = false;

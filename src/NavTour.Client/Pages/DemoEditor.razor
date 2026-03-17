@@ -1,4 +1,5 @@
 @page "/demos/{DemoId:guid}/edit"
+@rendermode InteractiveServer
 @inject DemoApiService DemoApi
 @inject NavigationManager Nav
 @inject NotificationService Notification
@@ -34,7 +35,8 @@
             Annotations="@currentAnnotations"
             ShowFindReplace="@showFindReplace"
             ShowFindReplaceChanged="(v) => showFindReplace = v"
-            OnHtmlChanged="OnFrameHtmlSaved" />
+            OnHtmlChanged="OnFrameHtmlSaved"
+            OnAnnotationMoved="HandleAnnotationMoved" />
 
         <StepPanel Steps="steps" SelectedStepId="selectedStepId"
             OnStepSelected="SelectStep" OnAddStep="AddStep" />
@@ -68,7 +70,7 @@
         if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
 
         demo = await DemoApi.GetDemoAsync(DemoId);
-        if (demo == null) { Nav.NavigateTo("/"); return; }
+        if (demo == null) { Nav.NavigateTo("/dashboard"); return; }
 
         frames = await DemoApi.GetFramesAsync(DemoId);
         steps = await DemoApi.GetStepsAsync(DemoId);
@@ -91,6 +93,22 @@
         var step = steps.FirstOrDefault(s => s.FrameId == frameId);
         currentAnnotations = step?.Annotations;
         selectedStepId = step?.Id;
+    }
+
+    private async Task HandleAnnotationMoved(AnnotationOverlay.AnnotationPositionChange change)
+    {
+        if (selectedStepId == null) return;
+        var ann = currentAnnotations?.FirstOrDefault(a => a.Id == change.AnnotationId);
+        if (ann == null) return;
+
+        var request = new CreateAnnotationRequest(
+            ann.Type, ann.Title, ann.Content,
+            Math.Round(change.PositionX, 2), Math.Round(change.PositionY, 2),
+            ann.Width, ann.Height, ann.Style,
+            ann.TargetSelector, ann.ArrowDirection, ann.BadgeNumber);
+
+        await DemoApi.UpdateAnnotationAsync(selectedStepId.Value, ann.Id, request);
+        await RefreshAnnotations();
     }
 
     private async Task RefreshAnnotations()

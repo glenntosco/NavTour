@@ -1,4 +1,5 @@
-@page "/"
+@page "/dashboard"
+@rendermode InteractiveServer
 @inject AuthService Auth
 @inject DemoApiService DemoApi
 @inject NavigationManager Nav
@@ -13,7 +14,7 @@
 else if (!Auth.IsAuthenticated)
 {
     <RadzenStack Gap="24px" Style="max-width:600px;margin:60px auto;text-align:center">
-        <RadzenText TextStyle="TextStyle.H3"><strong>NavTour</strong></RadzenText>
+        <img src="favicon.svg" alt="NavTour" style="height:48px;width:auto" />
         <RadzenText TextStyle="TextStyle.H6" Style="color:var(--rz-text-secondary-color)">
             Create interactive product demos that convert prospects into customers.
         </RadzenText>

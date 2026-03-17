@@ -1,8 +1,10 @@
 @page "/register"
+@rendermode InteractiveServer
 @inject AuthService Auth
 @inject NavigationManager Nav
 
 <RadzenStack Gap="16px" Style="max-width:400px;margin:60px auto">
+    <img src="favicon.svg" alt="NavTour" style="height:40px;width:auto;align-self:center" />
     <RadzenText TextStyle="TextStyle.H4">Create Your NavTour Account</RadzenText>
 
     @if (errorMessage != null)
@@ -35,7 +37,7 @@
         errorMessage = null;
         var (success, error) = await Auth.RegisterAsync(email, password, companyName, fullName);
         if (success)
-            Nav.NavigateTo("/");
+            Nav.NavigateTo("/dashboard");
         else
             errorMessage = error ?? "Registration failed";
         loading = false;
