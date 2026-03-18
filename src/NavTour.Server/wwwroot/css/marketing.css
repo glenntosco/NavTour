@@ -1218,6 +1218,34 @@
     color: var(--nt-primary);
 }
 
+/* ========== Skip Link ========== */
+.mkt-skip-link {
+    position: absolute;
+    left: -9999px;
+    top: var(--space-4);
+    z-index: 200;
+    background: var(--nt-primary);
+    color: white;
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius);
+    font-weight: var(--weight-semibold);
+    font-size: var(--text-sm);
+}
+.mkt-skip-link:focus {
+    left: var(--space-4);
+    color: white;
+}
+
+/* ========== Focus Visible ========== */
+.mkt a:focus-visible,
+.mkt button:focus-visible,
+.mkt input:focus-visible,
+.mkt select:focus-visible,
+.mkt textarea:focus-visible {
+    outline: 2px solid var(--nt-primary);
+    outline-offset: 2px;
+}
+
 @media (max-width: 639px) {
     .mkt h1 { font-size: 1.875rem; }
 }
