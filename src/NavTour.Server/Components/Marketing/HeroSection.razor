@@ -1,6 +1,10 @@
 <section class="mkt-section mkt-hero">
     <div class="mkt-container">
         <div class="mkt-hero-content">
+            @if (!string.IsNullOrEmpty(Eyebrow))
+            {
+                <p class="mkt-eyebrow" style="text-transform:uppercase;letter-spacing:0.1em;color:var(--nt-accent)">@Eyebrow</p>
+            }
             <h1>@Title</h1>
             <p class="mkt-hero-sub">@Subtitle</p>
             <div class="mkt-hero-actions">
@@ -19,6 +23,7 @@
 </section>
 
 @code {
+    [Parameter] public string? Eyebrow { get; set; }
     [Parameter] public string Title { get; set; } = "";
     [Parameter] public string Subtitle { get; set; } = "";
     [Parameter] public string PrimaryCtaText { get; set; } = "Start Free";
