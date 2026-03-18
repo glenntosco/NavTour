@@ -150,3 +150,42 @@ body {
   color: #4361ee;
   background: #e8ecf4;
 }
+
+.mode-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mode-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border: 1px solid #e8ecf4;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.mode-option:hover {
+  border-color: #4361ee;
+  background: #f8f9ff;
+}
+
+.mode-option input[type="radio"] {
+  margin: 0;
+  accent-color: #4361ee;
+}
+
+.mode-label {
+  font-weight: 600;
+  font-size: 12px;
+  color: #1a1a2e;
+}
+
+.mode-desc {
+  font-size: 11px;
+  color: #888;
+  margin-left: auto;
+}

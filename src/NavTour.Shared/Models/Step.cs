@@ -10,6 +10,9 @@ public class Step : TenantEntity
     public string? ClickTargetSelector { get; set; }
     public NavigationAction NavigationAction { get; set; } = NavigationAction.NextStep;
     public string? NavigationTarget { get; set; }
+    public TriggerType TriggerType { get; set; } = TriggerType.ButtonClick;
+    public int? TriggerDurationMs { get; set; }
+    public string? BackdropLevel { get; set; } // none, light, medium, heavy
 
     public Demo Demo { get; set; } = null!;
     public Frame Frame { get; set; } = null!;

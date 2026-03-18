@@ -1,6 +1,8 @@
 // Background service worker — auto-captures pages on navigation
 // All state persisted to chrome.storage.local (MV3 workers can sleep)
 
+type CaptureMode = "auto" | "click" | "manual";
+
 interface CaptureState {
   active: boolean;
   demoId: string;
@@ -8,6 +10,7 @@ interface CaptureState {
   serverUrl: string;
   frameCount: number;
   capturedUrls: string[]; // Track URLs to avoid duplicates
+  captureMode: CaptureMode;
 }
 
 const DEFAULT_STATE: CaptureState = {
@@ -17,6 +20,7 @@ const DEFAULT_STATE: CaptureState = {
   serverUrl: "",
   frameCount: 0,
   capturedUrls: [],
+  captureMode: "auto",
 };
 
 async function getState(): Promise<CaptureState> {
@@ -38,7 +42,9 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     // State already written by popup — read it and inject toolbar
     getState().then((state) => {
       injectToolbar(state);
-      autoCaptureActiveTab(state);
+      if (state.captureMode === "auto") {
+        autoCaptureActiveTab(state);
+      }
       sendResponse({ ok: true });
     });
     return true;
@@ -68,15 +74,16 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         capturing: state.active,
         demoName: state.demoName,
         frameCount: state.frameCount,
+        captureMode: state.captureMode,
       });
     });
     return true;
   }
 
-  // Manual capture from toolbar button (kept as fallback)
+  // Manual capture from toolbar button or click-to-capture (kept as fallback)
   if (message.type === "CAPTURE_RESULT") {
-    handleUpload(message.html, message.title, message.url).then((result) =>
-      sendResponse(result)
+    handleUpload(message.html, message.title, message.url, message.clickTargetSelector).then(
+      (result) => sendResponse(result)
     );
     return true;
   }
@@ -96,14 +103,26 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     getState().then((state) => {
       if (!state.active) return;
 
-      // Inject toolbar first
+      // Inject toolbar (always, regardless of mode)
       chrome.scripting
         .executeScript({
           target: { tabId },
           func: injectToolbarUI,
-          args: [state.demoName, state.frameCount, "Capturing..."],
+          args: [state.demoName, state.frameCount, "Capturing...", state.captureMode],
         })
         .catch(() => {});
+
+      // Only auto-capture in "auto" mode
+      if (state.captureMode !== "auto") {
+        chrome.scripting
+          .executeScript({
+            target: { tabId },
+            func: updateToolbarStatus,
+            args: [state.frameCount, state.captureMode === "click" ? "Click elements to capture" : "Press Capture or Ctrl+Shift+C"],
+          })
+          .catch(() => {});
+        return;
+      }
 
       // Skip if already captured this exact URL
       if (state.capturedUrls.includes(tab.url!)) {
@@ -131,7 +150,7 @@ chrome.tabs.onActivated.addListener((activeInfo) => {
         .executeScript({
           target: { tabId: activeInfo.tabId },
           func: injectToolbarUI,
-          args: [state.demoName, state.frameCount, ""],
+          args: [state.demoName, state.frameCount, "", state.captureMode],
         })
         .catch(() => {});
     }
@@ -221,7 +240,7 @@ async function injectToolbar(state: CaptureState) {
       await chrome.scripting.executeScript({
         target: { tabId: tab.id },
         func: injectToolbarUI,
-        args: [state.demoName, state.frameCount, ""],
+        args: [state.demoName, state.frameCount, "", state.captureMode],
       });
     }
   } catch (e) {
@@ -239,6 +258,18 @@ async function removeToolbarFromAll() {
           func: () => {
             const bar = document.getElementById("navtour-capture-bar");
             if (bar) bar.remove();
+            // Remove click-to-capture listeners
+            const handler = (window as any).__navtour_click_handler;
+            if (handler) {
+              document.removeEventListener("click", handler, true);
+              delete (window as any).__navtour_click_handler;
+            }
+            // Remove keyboard shortcut listener
+            const kbHandler = (window as any).__navtour_kb_handler;
+            if (kbHandler) {
+              document.removeEventListener("keydown", kbHandler, true);
+              delete (window as any).__navtour_kb_handler;
+            }
           },
         })
         .catch(() => {});
@@ -249,7 +280,8 @@ async function removeToolbarFromAll() {
 async function handleUpload(
   html: string,
   title: string,
-  url: string
+  url: string,
+  clickTargetSelector?: string
 ): Promise<{ ok: boolean; error?: string }> {
   try {
     const stored = await chrome.storage.local.get(["session", "captureState"]);
@@ -260,8 +292,8 @@ async function handleUpload(
       return { ok: false, error: "Not authenticated" };
     }
 
-    // Skip duplicates
-    if (state.capturedUrls.includes(url)) {
+    // Skip duplicates (but allow click-to-capture to re-capture same URL with different selectors)
+    if (state.captureMode === "auto" && state.capturedUrls.includes(url)) {
       return { ok: false, error: "Already captured" };
     }
 
@@ -273,6 +305,9 @@ async function handleUpload(
     const blob = new Blob([html], { type: "text/html" });
     const form = new FormData();
     form.append("file", blob, fileName);
+    if (clickTargetSelector) {
+      form.append("clickTargetSelector", clickTargetSelector);
+    }
 
     const res = await fetch(
       `${session.serverUrl}/api/v1/demos/${state.demoId}/frames`,
@@ -289,7 +324,9 @@ async function handleUpload(
 
     // Update state
     state.frameCount++;
-    state.capturedUrls.push(url);
+    if (!state.capturedUrls.includes(url)) {
+      state.capturedUrls.push(url);
+    }
     await setState(state);
 
     return { ok: true };
@@ -301,7 +338,7 @@ async function handleUpload(
 
 // --- Injected functions (fully self-contained) ---
 
-function injectToolbarUI(demoName: string, frameCount: number, status: string) {
+function injectToolbarUI(demoName: string, frameCount: number, status: string, captureMode: string) {
   if (document.getElementById("navtour-capture-bar")) {
     // Update existing toolbar
     const countEl = document.getElementById("navtour-frame-count");
@@ -314,6 +351,92 @@ function injectToolbarUI(demoName: string, frameCount: number, status: string) {
     return;
   }
 
+  // --- Helper: generate unique CSS selector for an element ---
+  function getCssSelector(el: Element): string {
+    if (el.id) return `#${CSS.escape(el.id)}`;
+    const parts: string[] = [];
+    let current: Element | null = el;
+    while (current && current !== document.body && current !== document.documentElement) {
+      let selector = current.tagName.toLowerCase();
+      if (current.id) {
+        parts.unshift(`#${CSS.escape(current.id)}`);
+        break;
+      }
+      if (current.classList.length > 0) {
+        const classes = Array.from(current.classList)
+          .filter(c => !c.startsWith("navtour"))
+          .slice(0, 3)
+          .map(c => `.${CSS.escape(c)}`)
+          .join("");
+        if (classes) selector += classes;
+      }
+      // Add nth-child if needed for uniqueness
+      const parent = current.parentElement;
+      if (parent) {
+        const siblings = Array.from(parent.children).filter(
+          (s) => s.tagName === current!.tagName
+        );
+        if (siblings.length > 1) {
+          const idx = siblings.indexOf(current) + 1;
+          selector += `:nth-of-type(${idx})`;
+        }
+      }
+      parts.unshift(selector);
+      current = current.parentElement;
+    }
+    return parts.join(" > ");
+  }
+
+  // --- Helper: clone and clean DOM for capture ---
+  function cloneAndClean(): HTMLElement {
+    const clone = document.documentElement.cloneNode(true) as HTMLElement;
+    const barClone = clone.querySelector("#navtour-capture-bar");
+    if (barClone) barClone.remove();
+    clone.querySelectorAll("script").forEach((el) => el.remove());
+    const evts = ["onclick","onload","onerror","onsubmit","onchange","onmouseover","onmouseout","onkeydown","onkeyup","onfocus","onblur","oninput"];
+    clone.querySelectorAll("*").forEach((el) => { evts.forEach((a) => el.removeAttribute(a)); });
+    clone.querySelectorAll("img[src]").forEach((img) => {
+      const s = img.getAttribute("src");
+      if (s && !s.startsWith("data:")) { try { img.setAttribute("src", new URL(s, document.baseURI).href); } catch {} }
+    });
+    clone.querySelectorAll('link[rel="stylesheet"]').forEach((link) => {
+      const h = link.getAttribute("href");
+      if (h) { try { link.setAttribute("href", new URL(h, document.baseURI).href); } catch {} }
+    });
+    return clone;
+  }
+
+  // --- Helper: send capture result to background ---
+  function sendCapture(clone: HTMLElement, tag: string, clickSelector?: string) {
+    const st = document.getElementById("navtour-status");
+    if (st) { st.textContent = "Capturing..."; st.style.color = "#fbbf24"; }
+
+    const captureUrl = tag ? `${location.href}#${tag}` : location.href;
+
+    chrome.runtime.sendMessage(
+      {
+        type: "CAPTURE_RESULT",
+        html: "<!DOCTYPE html>" + clone.outerHTML,
+        title: document.title + (tag ? ` (${tag})` : ""),
+        url: captureUrl,
+        clickTargetSelector: clickSelector || undefined,
+      },
+      (resp) => {
+        const stEl = document.getElementById("navtour-status");
+        const ctEl = document.getElementById("navtour-frame-count");
+        if (resp?.ok) {
+          if (stEl) { stEl.textContent = "Captured!"; stEl.style.color = "#4ade80"; }
+          if (ctEl) { ctEl.textContent = `${parseInt(ctEl.textContent || "0") + 1} frames`; }
+        } else if (resp?.error?.includes("Already")) {
+          if (stEl) { stEl.textContent = "Already captured"; stEl.style.color = "#94a3b8"; }
+        } else {
+          if (stEl) { stEl.textContent = resp?.error || "Failed"; stEl.style.color = "#f87171"; }
+        }
+      }
+    );
+  }
+
+  // --- Build toolbar UI ---
   const bar = document.createElement("div");
   bar.id = "navtour-capture-bar";
   bar.style.cssText = `
@@ -340,14 +463,23 @@ function injectToolbarUI(demoName: string, frameCount: number, status: string) {
   name.style.cssText = "color: #ccc;";
   bar.appendChild(name);
 
+  // Mode indicator
+  const modeLabel = document.createElement("span");
+  modeLabel.id = "navtour-mode-label";
+  const modeText = captureMode === "click" ? "Click-to-Capture" : captureMode === "manual" ? "Manual" : "Auto";
+  modeLabel.textContent = `[${modeText}]`;
+  modeLabel.style.cssText = "color: #818cf8; font-size: 11px; font-weight: 500;";
+  bar.appendChild(modeLabel);
+
   const spacer = document.createElement("span");
   spacer.style.cssText = "flex: 1;";
   bar.appendChild(spacer);
 
   const statusEl = document.createElement("span");
   statusEl.id = "navtour-status";
-  statusEl.textContent = status || "Recording...";
-  statusEl.style.cssText = "color: #fbbf24; font-weight: 500;";
+  const defaultStatus = captureMode === "click" ? "Click elements to capture" : captureMode === "manual" ? "Press Capture or Ctrl+Shift+C" : (status || "Recording...");
+  statusEl.textContent = defaultStatus;
+  statusEl.style.cssText = `color: ${captureMode !== "auto" ? "#818cf8" : "#fbbf24"}; font-weight: 500;`;
   bar.appendChild(statusEl);
 
   const count = document.createElement("span");
@@ -356,9 +488,10 @@ function injectToolbarUI(demoName: string, frameCount: number, status: string) {
   count.style.cssText = "color: #aaa; margin-left: 8px;";
   bar.appendChild(count);
 
-  // Manual capture button (for SPA pages that don't trigger navigation)
+  // Manual capture button (always visible, useful as fallback in all modes)
   const captureBtn = document.createElement("button");
   captureBtn.textContent = "Capture";
+  captureBtn.title = "Manual capture (Ctrl+Shift+C)";
   captureBtn.style.cssText = `
     background: #334155; color: #fff; border: 1px solid #555; border-radius: 6px;
     padding: 6px 14px; font-size: 12px; cursor: pointer; margin-left: 8px;
@@ -366,37 +499,9 @@ function injectToolbarUI(demoName: string, frameCount: number, status: string) {
   captureBtn.addEventListener("click", () => {
     captureBtn.disabled = true;
     captureBtn.textContent = "...";
-
-    const clone = document.documentElement.cloneNode(true) as HTMLElement;
-    const barClone = clone.querySelector("#navtour-capture-bar");
-    if (barClone) barClone.remove();
-    clone.querySelectorAll("script").forEach((el) => el.remove());
-    const evtAttrs = ["onclick","onload","onerror","onsubmit","onchange","onmouseover","onmouseout","onkeydown","onkeyup","onfocus","onblur","oninput"];
-    clone.querySelectorAll("*").forEach((el) => { evtAttrs.forEach((a) => el.removeAttribute(a)); });
-    clone.querySelectorAll("img[src]").forEach((img) => {
-      const s = img.getAttribute("src");
-      if (s && !s.startsWith("data:")) { try { img.setAttribute("src", new URL(s, document.baseURI).href); } catch {} }
-    });
-    clone.querySelectorAll('link[rel="stylesheet"]').forEach((link) => {
-      const h = link.getAttribute("href");
-      if (h) { try { link.setAttribute("href", new URL(h, document.baseURI).href); } catch {} }
-    });
-
-    chrome.runtime.sendMessage(
-      { type: "CAPTURE_RESULT", html: "<!DOCTYPE html>" + clone.outerHTML, title: document.title, url: location.href },
-      (resp) => {
-        captureBtn.disabled = false;
-        captureBtn.textContent = "Capture";
-        const st = document.getElementById("navtour-status");
-        const ct = document.getElementById("navtour-frame-count");
-        if (resp?.ok) {
-          if (st) { st.textContent = "Captured!"; st.style.color = "#4ade80"; }
-          if (ct) { ct.textContent = `${parseInt(ct.textContent || "0") + 1} frames`; }
-        } else {
-          if (st) { st.textContent = resp?.error || "Failed"; st.style.color = "#f87171"; }
-        }
-      }
-    );
+    const clone = cloneAndClean();
+    sendCapture(clone, "");
+    setTimeout(() => { captureBtn.disabled = false; captureBtn.textContent = "Capture"; }, 1000);
   });
   bar.appendChild(captureBtn);
 
@@ -414,64 +519,86 @@ function injectToolbarUI(demoName: string, frameCount: number, status: string) {
 
   document.body.appendChild(bar);
 
-  // --- Shared capture helper (used by URL watcher and popup detector) ---
-  function captureAndSend(tag: string) {
-    const st = document.getElementById("navtour-status");
-    if (st) { st.textContent = "Capturing..."; st.style.color = "#fbbf24"; }
+  // --- Click-to-Capture Mode ---
+  if (captureMode === "click") {
+    // Remove any existing handler
+    const existingHandler = (window as any).__navtour_click_handler;
+    if (existingHandler) {
+      document.removeEventListener("click", existingHandler, true);
+    }
 
-    const clone = document.documentElement.cloneNode(true) as HTMLElement;
-    const barClone = clone.querySelector("#navtour-capture-bar");
-    if (barClone) barClone.remove();
-    clone.querySelectorAll("script").forEach((el) => el.remove());
-    const evts = ["onclick","onload","onerror","onsubmit","onchange","onmouseover","onmouseout","onkeydown","onkeyup","onfocus","onblur","oninput"];
-    clone.querySelectorAll("*").forEach((el) => { evts.forEach((a) => el.removeAttribute(a)); });
-    clone.querySelectorAll("img[src]").forEach((img) => {
-      const s = img.getAttribute("src");
-      if (s && !s.startsWith("data:")) { try { img.setAttribute("src", new URL(s, document.baseURI).href); } catch {} }
-    });
-    clone.querySelectorAll('link[rel="stylesheet"]').forEach((link) => {
-      const h = link.getAttribute("href");
-      if (h) { try { link.setAttribute("href", new URL(h, document.baseURI).href); } catch {} }
-    });
+    let lastCaptureTime = 0;
+    const clickHandler = (e: MouseEvent) => {
+      const target = e.target as Element;
+      if (!target || target.closest("#navtour-capture-bar")) return;
 
-    // Use URL + tag as unique key so popups on the same page get captured separately
-    const captureUrl = tag ? `${location.href}#${tag}` : location.href;
+      // Debounce — prevent rapid double-captures
+      const now = Date.now();
+      if (now - lastCaptureTime < 800) return;
+      lastCaptureTime = now;
 
-    chrome.runtime.sendMessage(
-      { type: "CAPTURE_RESULT", html: "<!DOCTYPE html>" + clone.outerHTML, title: document.title + (tag ? ` (${tag})` : ""), url: captureUrl },
-      (resp) => {
-        const stEl = document.getElementById("navtour-status");
-        const ctEl = document.getElementById("navtour-frame-count");
-        if (resp?.ok) {
-          if (stEl) { stEl.textContent = "Captured!"; stEl.style.color = "#4ade80"; }
-          if (ctEl) { ctEl.textContent = `${parseInt(ctEl.textContent || "0") + 1} frames`; }
-        } else if (resp?.error?.includes("Already")) {
-          if (stEl) { stEl.textContent = "Already captured"; stEl.style.color = "#94a3b8"; }
-        } else {
-          if (stEl) { stEl.textContent = resp?.error || "Failed"; stEl.style.color = "#f87171"; }
-        }
-      }
-    );
+      // Record the CSS selector for the clicked element
+      const selector = getCssSelector(target);
+
+      // Brief highlight effect on clicked element
+      const prevOutline = (target as HTMLElement).style.outline;
+      (target as HTMLElement).style.outline = "3px solid #4361ee";
+      setTimeout(() => { (target as HTMLElement).style.outline = prevOutline; }, 400);
+
+      // Capture after a short delay (allow hover/active states to render)
+      setTimeout(() => {
+        const clone = cloneAndClean();
+        const tag = `click-${selector.replace(/[^a-zA-Z0-9]/g, "_").substring(0, 40)}`;
+        sendCapture(clone, tag, selector);
+      }, 150);
+    };
+
+    document.addEventListener("click", clickHandler, true);
+    (window as any).__navtour_click_handler = clickHandler;
   }
 
-  // --- SPA Navigation Detection ---
+  // --- Keyboard Shortcut: Ctrl+Shift+C for manual capture ---
+  if (!(window as any).__navtour_kb_handler) {
+    const kbHandler = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.shiftKey && e.key === "C") {
+        e.preventDefault();
+        e.stopPropagation();
+        const clone = cloneAndClean();
+        sendCapture(clone, "");
+      }
+    };
+    document.addEventListener("keydown", kbHandler, true);
+    (window as any).__navtour_kb_handler = kbHandler;
+  }
+
+  // --- SPA Navigation Detection (for auto mode) ---
   const navtourKey = "__navtour_watcher";
   if (!(window as any)[navtourKey]) {
     (window as any)[navtourKey] = true;
     let lastUrl = location.href;
 
+    function captureAndSend(tag: string) {
+      const clone = cloneAndClean();
+      sendCapture(clone, tag);
+    }
+
     function onUrlChange() {
       const currentUrl = location.href;
       if (currentUrl === lastUrl) return;
       lastUrl = currentUrl;
-      setTimeout(() => captureAndSend(""), 500);
+      // Only auto-capture URL changes in auto mode
+      chrome.storage.local.get(["captureState"], (stored) => {
+        const st = stored.captureState;
+        if (st?.active && st.captureMode === "auto") {
+          setTimeout(() => captureAndSend(""), 500);
+        }
+      });
     }
 
     window.addEventListener("popstate", onUrlChange);
     setInterval(onUrlChange, 800);
 
-    // --- Popup / Modal / Dialog Detection ---
-    // Watches for new dialogs, modals, dropdowns, and overlays added to the DOM
+    // --- Popup / Modal / Dialog Detection (auto mode only) ---
     let captureTimeout: ReturnType<typeof setTimeout> | null = null;
 
     const popupSelectors = [
@@ -508,23 +635,26 @@ function injectToolbarUI(demoName: string, frameCount: number, status: string) {
     }
 
     const observer = new MutationObserver((mutations) => {
-      for (const mutation of mutations) {
-        for (const node of Array.from(mutation.addedNodes)) {
-          if (!(node instanceof HTMLElement)) continue;
-          // Check the node itself and its children
-          if (isPopupElement(node) || node.querySelector(popupSelectors.join(","))) {
-            // Debounce — multiple nodes may be added for one popup
-            if (captureTimeout) clearTimeout(captureTimeout);
-            captureTimeout = setTimeout(() => {
-              // Generate a tag from the popup's text content for uniqueness
-              const popupText = (node.textContent || "").trim().substring(0, 30).replace(/[^a-zA-Z0-9]/g, "_");
-              const tag = `popup-${popupText || "dialog"}`;
-              captureAndSend(tag);
-            }, 600); // Wait for popup animation/content to render
-            return;
+      // Only auto-capture popups in auto mode
+      chrome.storage.local.get(["captureState"], (stored) => {
+        const st = stored.captureState;
+        if (!st?.active || st.captureMode !== "auto") return;
+
+        for (const mutation of mutations) {
+          for (const node of Array.from(mutation.addedNodes)) {
+            if (!(node instanceof HTMLElement)) continue;
+            if (isPopupElement(node) || node.querySelector(popupSelectors.join(","))) {
+              if (captureTimeout) clearTimeout(captureTimeout);
+              captureTimeout = setTimeout(() => {
+                const popupText = (node.textContent || "").trim().substring(0, 30).replace(/[^a-zA-Z0-9]/g, "_");
+                const tag = `popup-${popupText || "dialog"}`;
+                captureAndSend(tag);
+              }, 600);
+              return;
+            }
           }
         }
-      }
+      });
     });
 
     observer.observe(document.body, {

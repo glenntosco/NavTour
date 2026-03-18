@@ -56,7 +56,8 @@ public class PlayerService : IPlayerService
                     a.Type, a.Title, a.Content,
                     a.PositionX, a.PositionY, a.Width, a.Height, a.Style,
                     a.TargetSelector, a.ArrowDirection, a.BadgeNumber
-                )).ToList()))
+                )).ToList(),
+                s.TriggerType, s.TriggerDurationMs, s.BackdropLevel))
             .ToListAsync();
 
         // Resolve personalization variables

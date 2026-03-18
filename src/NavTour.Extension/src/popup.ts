@@ -1,5 +1,5 @@
 import { NavTourApi } from "./api";
-import type { StoredSession, DemoListItem } from "./types";
+import type { StoredSession, DemoListItem, CaptureMode } from "./types";
 
 // DOM elements
 const screenLogin = document.getElementById("screen-login")!;
@@ -229,13 +229,17 @@ btnStart.addEventListener("click", async () => {
   session = { ...session!, demoId, demoName, frameCount: 0 };
   await chrome.storage.local.set({ session });
 
+  // Read selected capture mode
+  const modeRadio = document.querySelector('input[name="capture-mode"]:checked') as HTMLInputElement;
+  const captureMode = (modeRadio?.value || "auto") as CaptureMode;
+
   // Set capture state directly from popup (more reliable than relying on background)
   await chrome.storage.local.set({
-    captureState: { active: true, demoId, demoName, serverUrl: session!.serverUrl, frameCount: 0, capturedUrls: [] },
+    captureState: { active: true, demoId, demoName, serverUrl: session!.serverUrl, frameCount: 0, capturedUrls: [], captureMode },
   });
 
   // Tell background to inject toolbar into the current page
-  chrome.runtime.sendMessage({ type: "START_CAPTURE", demoId, demoName });
+  chrome.runtime.sendMessage({ type: "START_CAPTURE", demoId, demoName, captureMode });
 
   captureDemoName.textContent = demoName;
   captureFrameCount.textContent = "0";

@@ -1,7 +1,7 @@
 @using NavTour.Shared.DTOs.Steps
 @using NavTour.Shared.DTOs.Annotations
 
-<RadzenStack Gap="8px" Style="width:280px;min-height:100%;overflow-y:auto;border-left:1px solid var(--rz-border-color);padding:12px">
+<RadzenStack Gap="8px" Style="width:300px;min-height:100%;overflow-y:auto;border-left:1px solid var(--rz-border-color);padding:12px">
     <RadzenText TextStyle="TextStyle.H6">Steps</RadzenText>
 
     @if (Steps.Count == 0)
@@ -19,6 +19,10 @@
                 <RadzenText TextStyle="TextStyle.Subtitle2">Step @step.StepNumber</RadzenText>
                 <RadzenText TextStyle="TextStyle.Caption" Style="color:var(--rz-text-secondary-color)">
                     @step.NavigationAction.ToString()
+                    @if (step.TriggerType != TriggerType.ButtonClick)
+                    {
+                        <text> · @step.TriggerType.ToString()</text>
+                    }
                     @if (step.ClickTargetSelector != null)
                     {
                         <text> · @step.ClickTargetSelector</text>
@@ -28,6 +32,90 @@
                     @step.Annotations.Count annotation(s)
                 </RadzenText>
             </RadzenStack>
+
+            @* Inline step settings (shown when selected) *@
+            @if (isSelected)
+            {
+                <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--rz-border-color)" @onclick:stopPropagation="true">
+                    @* Trigger Type *@
+                    <div class="step-field">
+                        <label>Trigger</label>
+                        <RadzenDropDown TValue="TriggerType" Data="@triggerTypes"
+                            Value="@step.TriggerType" TextProperty="Text" ValueProperty="Value"
+                            Change="@(EventCallback.Factory.Create<object>(this, v => UpdateTriggerType(step, (TriggerType)v)))"
+                            Style="width:100%;font-size:12px" />
+                    </div>
+
+                    @* Element selector (for ElementClick/TextInput) *@
+                    @if (step.TriggerType == TriggerType.ElementClick || step.TriggerType == TriggerType.TextInput)
+                    {
+                        <div class="step-field">
+                            <label>CSS Selector</label>
+                            <RadzenTextBox Value="@(step.ClickTargetSelector ?? "")" Style="width:100%;font-size:12px"
+                                Placeholder="e.g. #submit-btn, .nav-link"
+                                Change="@((string v) => UpdateSelector(step, v))" />
+                        </div>
+                    }
+
+                    @* Timer duration *@
+                    @if (step.TriggerType == TriggerType.Timer)
+                    {
+                        <div class="step-field">
+                            <label>Duration (seconds)</label>
+                            <RadzenNumeric TValue="int" Value="@((step.TriggerDurationMs ?? 3000) / 1000)"
+                                Min="1" Max="60" Step="1" Style="width:100%;font-size:12px"
+                                Change="@(EventCallback.Factory.Create<int>(this, v => UpdateTimerDuration(step, v * 1000)))" />
+                        </div>
+                    }
+
+                    @* Navigation Action *@
+                    <div class="step-field">
+                        <label>Action</label>
+                        <RadzenDropDown TValue="NavigationAction" Data="@navigationActions"
+                            Value="@step.NavigationAction" TextProperty="Text" ValueProperty="Value"
+                            Change="@(EventCallback.Factory.Create<object>(this, v => UpdateNavAction(step, (NavigationAction)v)))"
+                            Style="width:100%;font-size:12px" />
+                    </div>
+
+                    @* Navigation Target (for GoToStep, OpenUrl, StartFlow) *@
+                    @if (step.NavigationAction == NavigationAction.GoToStep)
+                    {
+                        <div class="step-field">
+                            <label>Target Step #</label>
+                            <RadzenNumeric TValue="int" Value="@(int.TryParse(step.NavigationTarget, out var t) ? t : 1)"
+                                Min="1" Max="@Steps.Count" Style="width:100%;font-size:12px"
+                                Change="@(EventCallback.Factory.Create<int>(this, v => UpdateNavTarget(step, v.ToString())))" />
+                        </div>
+                    }
+                    @if (step.NavigationAction == NavigationAction.OpenUrl)
+                    {
+                        <div class="step-field">
+                            <label>URL</label>
+                            <RadzenTextBox Value="@(step.NavigationTarget ?? "")" Style="width:100%;font-size:12px"
+                                Placeholder="https://..."
+                                Change="@((string v) => UpdateNavTarget(step, v))" />
+                        </div>
+                    }
+                    @if (step.NavigationAction == NavigationAction.StartFlow)
+                    {
+                        <div class="step-field">
+                            <label>Demo Slug</label>
+                            <RadzenTextBox Value="@(step.NavigationTarget ?? "")" Style="width:100%;font-size:12px"
+                                Placeholder="my-other-demo"
+                                Change="@((string v) => UpdateNavTarget(step, v))" />
+                        </div>
+                    }
+
+                    @* Backdrop Level *@
+                    <div class="step-field">
+                        <label>Backdrop</label>
+                        <RadzenDropDown TValue="string" Data="@backdropLevels"
+                            Value="@(step.BackdropLevel ?? "none")" TextProperty="Text" ValueProperty="Value"
+                            Change="@(EventCallback.Factory.Create<object>(this, v => UpdateBackdrop(step, (string)v)))"
+                            Style="width:100%;font-size:12px" />
+                    </div>
+                </div>
+            }
         </RadzenCard>
     }
 
@@ -41,6 +129,18 @@
         cursor: pointer; padding: 0 4px; line-height: 1; z-index: 1;
     }
     .step-delete:hover { color: #ef4444; }
+    .step-field {
+        margin-top: 6px;
+    }
+    .step-field > label {
+        display: block;
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--rz-text-secondary-color);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 2px;
+    }
 </style>
 
 @code {
@@ -49,4 +149,68 @@
     [Parameter] public EventCallback<Guid> OnStepSelected { get; set; }
     [Parameter] public EventCallback OnAddStep { get; set; }
     [Parameter] public EventCallback<Guid> OnDeleteStep { get; set; }
+    [Parameter] public EventCallback<StepResponse> OnStepSettingsChanged { get; set; }
+
+    private static readonly object[] triggerTypes =
+    [
+        new { Text = "Button Click (default)", Value = TriggerType.ButtonClick },
+        new { Text = "Element Click", Value = TriggerType.ElementClick },
+        new { Text = "Text Input", Value = TriggerType.TextInput },
+        new { Text = "Timer (auto-advance)", Value = TriggerType.Timer },
+    ];
+
+    private static readonly object[] navigationActions =
+    [
+        new { Text = "Next Step", Value = NavigationAction.NextStep },
+        new { Text = "Go To Step", Value = NavigationAction.GoToStep },
+        new { Text = "Previous Step", Value = NavigationAction.PreviousStep },
+        new { Text = "End Demo", Value = NavigationAction.EndDemo },
+        new { Text = "Open URL", Value = NavigationAction.OpenUrl },
+        new { Text = "Mark Converted", Value = NavigationAction.MarkConverted },
+        new { Text = "Start Flow", Value = NavigationAction.StartFlow },
+    ];
+
+    private static readonly object[] backdropLevels =
+    [
+        new { Text = "None", Value = "none" },
+        new { Text = "Light", Value = "light" },
+        new { Text = "Medium", Value = "medium" },
+        new { Text = "Heavy", Value = "heavy" },
+    ];
+
+    private void UpdateTriggerType(StepResponse step, TriggerType value)
+    {
+        var updated = step with { TriggerType = value };
+        OnStepSettingsChanged.InvokeAsync(updated);
+    }
+
+    private void UpdateSelector(StepResponse step, string value)
+    {
+        var updated = step with { ClickTargetSelector = string.IsNullOrWhiteSpace(value) ? null : value };
+        OnStepSettingsChanged.InvokeAsync(updated);
+    }
+
+    private void UpdateTimerDuration(StepResponse step, int ms)
+    {
+        var updated = step with { TriggerDurationMs = ms };
+        OnStepSettingsChanged.InvokeAsync(updated);
+    }
+
+    private void UpdateNavAction(StepResponse step, NavigationAction value)
+    {
+        var updated = step with { NavigationAction = value };
+        OnStepSettingsChanged.InvokeAsync(updated);
+    }
+
+    private void UpdateNavTarget(StepResponse step, string value)
+    {
+        var updated = step with { NavigationTarget = string.IsNullOrWhiteSpace(value) ? null : value };
+        OnStepSettingsChanged.InvokeAsync(updated);
+    }
+
+    private void UpdateBackdrop(StepResponse step, string value)
+    {
+        var updated = step with { BackdropLevel = value == "none" ? null : value };
+        OnStepSettingsChanged.InvokeAsync(updated);
+    }
 }

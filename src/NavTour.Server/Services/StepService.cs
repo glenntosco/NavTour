@@ -28,7 +28,8 @@ public class StepService : IStepService
                     a.Id, a.Type, a.Title, a.Content,
                     a.PositionX, a.PositionY, a.Width, a.Height, a.Style,
                     a.TargetSelector, a.ArrowDirection, a.BadgeNumber
-                )).ToList()))
+                )).ToList(),
+                s.TriggerType, s.TriggerDurationMs, s.BackdropLevel))
             .ToListAsync();
     }
 
@@ -54,6 +55,9 @@ public class StepService : IStepService
                 ClickTargetSelector = stepDto.ClickTargetSelector,
                 NavigationAction = stepDto.NavigationAction,
                 NavigationTarget = stepDto.NavigationTarget,
+                TriggerType = stepDto.TriggerType,
+                TriggerDurationMs = stepDto.TriggerDurationMs,
+                BackdropLevel = stepDto.BackdropLevel,
                 Annotations = stepDto.Annotations.Select(a => new Annotation
                 {
                     Id = a.Id ?? Guid.NewGuid(),

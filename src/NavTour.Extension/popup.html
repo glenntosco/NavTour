@@ -41,6 +41,26 @@
         <label for="new-demo-name">Create New Demo</label>
         <input type="text" id="new-demo-name" placeholder="My Product Demo">
       </div>
+      <div class="field">
+        <label>Capture Mode</label>
+        <div class="mode-group">
+          <label class="mode-option">
+            <input type="radio" name="capture-mode" value="auto" checked>
+            <span class="mode-label">Auto</span>
+            <span class="mode-desc">Captures on navigation</span>
+          </label>
+          <label class="mode-option">
+            <input type="radio" name="capture-mode" value="click">
+            <span class="mode-label">Click-to-Capture</span>
+            <span class="mode-desc">Captures on every click</span>
+          </label>
+          <label class="mode-option">
+            <input type="radio" name="capture-mode" value="manual">
+            <span class="mode-label">Manual</span>
+            <span class="mode-desc">Capture button or Ctrl+Shift+C</span>
+          </label>
+        </div>
+      </div>
       <button id="btn-start" class="btn btn-primary">Start Capturing</button>
       <button id="btn-logout" class="btn btn-link">Log out</button>
       <div id="select-error" class="error" hidden></div>

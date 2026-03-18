@@ -39,7 +39,8 @@
             OnAnnotationMoved="HandleAnnotationMoved" />
 
         <StepPanel Steps="steps" SelectedStepId="selectedStepId"
-            OnStepSelected="SelectStep" OnAddStep="AddStep" OnDeleteStep="DeleteStep" />
+            OnStepSelected="SelectStep" OnAddStep="AddStep" OnDeleteStep="DeleteStep"
+            OnStepSettingsChanged="HandleStepSettingsChanged" />
 
         <AnnotationEditor DemoId="@DemoId" StepId="@selectedStepId" Annotations="@currentAnnotations"
             OnAnnotationsChanged="RefreshAnnotations" />
@@ -197,14 +198,7 @@
             null, selectedFrameId.Value, steps.Count + 1,
             null, NavigationAction.NextStep, null, []);
 
-        var allSteps = steps.Select(s => new StepDto(
-            s.Id, s.FrameId, s.StepNumber, s.ClickTargetSelector,
-            s.NavigationAction, s.NavigationTarget,
-            s.Annotations.Select(a => new AnnotationDto(
-                a.Id, a.Type, a.Title, a.Content,
-                a.PositionX, a.PositionY, a.Width, a.Height, a.Style,
-                a.TargetSelector, a.ArrowDirection, a.BadgeNumber)).ToList()
-        )).Append(newStep).ToList();
+        var allSteps = steps.Select(s => MapStepToDto(s)).Append(newStep).ToList();
 
         await DemoApi.UpdateStepsAsync(DemoId, new UpdateStepsRequest(allSteps));
         steps = await DemoApi.GetStepsAsync(DemoId);
@@ -215,14 +209,11 @@
     {
         var remaining = steps.Where(s => s.Id != stepId).ToList();
 
-        var stepDtos = remaining.Select((s, i) => new StepDto(
-            s.Id, s.FrameId, i + 1, s.ClickTargetSelector,
-            s.NavigationAction, s.NavigationTarget,
-            s.Annotations.Select(a => new AnnotationDto(
-                a.Id, a.Type, a.Title, a.Content,
-                a.PositionX, a.PositionY, a.Width, a.Height, a.Style,
-                a.TargetSelector, a.ArrowDirection, a.BadgeNumber)).ToList()
-        )).ToList();
+        var stepDtos = remaining.Select((s, i) =>
+        {
+            var dto = MapStepToDto(s);
+            return dto with { StepNumber = i + 1 };
+        }).ToList();
 
         await DemoApi.UpdateStepsAsync(DemoId, new UpdateStepsRequest(stepDtos));
         steps = await DemoApi.GetStepsAsync(DemoId);
@@ -245,14 +236,7 @@
         if (frameEditor?.HasUnsavedEdits == true)
             await SaveFrameEdits();
 
-        var stepDtos = steps.Select(s => new StepDto(
-            s.Id, s.FrameId, s.StepNumber, s.ClickTargetSelector,
-            s.NavigationAction, s.NavigationTarget,
-            s.Annotations.Select(a => new AnnotationDto(
-                a.Id, a.Type, a.Title, a.Content,
-                a.PositionX, a.PositionY, a.Width, a.Height, a.Style,
-                a.TargetSelector, a.ArrowDirection, a.BadgeNumber)).ToList()
-        )).ToList();
+        var stepDtos = steps.Select(s => MapStepToDto(s)).ToList();
 
         await DemoApi.UpdateStepsAsync(DemoId, new UpdateStepsRequest(stepDtos));
         Notification.Notify(NotificationSeverity.Success, "Saved", "Steps saved successfully.");
@@ -269,4 +253,23 @@
         demo = await DemoApi.GetDemoAsync(DemoId);
         Notification.Notify(NotificationSeverity.Success, "Published", $"Demo is live at /demo/{demo?.Slug}");
     }
+
+    private void HandleStepSettingsChanged(StepResponse updatedStep)
+    {
+        var idx = steps.FindIndex(s => s.Id == updatedStep.Id);
+        if (idx >= 0)
+        {
+            steps[idx] = updatedStep;
+            StateHasChanged();
+        }
+    }
+
+    private static StepDto MapStepToDto(StepResponse s) => new StepDto(
+        s.Id, s.FrameId, s.StepNumber, s.ClickTargetSelector,
+        s.NavigationAction, s.NavigationTarget,
+        s.Annotations.Select(a => new AnnotationDto(
+            a.Id, a.Type, a.Title, a.Content,
+            a.PositionX, a.PositionY, a.Width, a.Height, a.Style,
+            a.TargetSelector, a.ArrowDirection, a.BadgeNumber)).ToList(),
+        s.TriggerType, s.TriggerDurationMs, s.BackdropLevel);
 }

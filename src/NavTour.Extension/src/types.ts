@@ -42,6 +42,7 @@ export interface CaptureResult {
   html: string;
   title: string;
   url: string;
+  clickTargetSelector?: string; // CSS selector of clicked element (click-to-capture mode)
 }
 
 export interface StoredSession {
@@ -52,12 +53,14 @@ export interface StoredSession {
   frameCount: number;
 }
 
+export type CaptureMode = "auto" | "click" | "manual";
+
 // Messages between popup/background/content
 export type ExtMessage =
-  | { type: "START_CAPTURE"; demoId: string; demoName: string }
+  | { type: "START_CAPTURE"; demoId: string; demoName: string; captureMode: CaptureMode }
   | { type: "STOP_CAPTURE" }
   | { type: "CAPTURE_PAGE" }
-  | { type: "CAPTURE_RESULT"; html: string; title: string; url: string }
+  | { type: "CAPTURE_RESULT"; html: string; title: string; url: string; clickTargetSelector?: string }
   | { type: "CAPTURE_STATUS"; status: "success" | "error"; message: string; frameCount: number }
   | { type: "GET_STATE" }
-  | { type: "STATE"; capturing: boolean; demoName: string; frameCount: number };
+  | { type: "STATE"; capturing: boolean; demoName: string; frameCount: number; captureMode: CaptureMode };

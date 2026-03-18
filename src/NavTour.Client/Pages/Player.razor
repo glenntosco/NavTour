@@ -3,6 +3,7 @@
 @layout PlayerLayout
 @inject PlayerApiService PlayerApi
 @inject NavigationManager Nav
+@inject IJSRuntime JS
 @implements IDisposable
 
 <div @onkeydown="HandleKeyDown" tabindex="0" @ref="playerContainer" style="outline:none">
@@ -33,15 +34,29 @@ else
 
         @* Frame content with overlays *@
         <div style="flex:1;position:relative;overflow:hidden">
+            @* Backdrop overlay *@
+            @if (currentStep != null && !string.IsNullOrEmpty(currentStep.BackdropLevel) && currentStep.BackdropLevel != "none")
+            {
+                <div style="position:absolute;inset:0;z-index:5;pointer-events:none;@GetBackdropStyle(currentStep.BackdropLevel)"></div>
+            }
+
             @if (currentFrame != null)
             {
-                <iframe sandbox="allow-same-origin" style="width:100%;height:100%;border:none"
+                <iframe @ref="iframeRef" sandbox="allow-same-origin" style="width:100%;height:100%;border:none"
                     srcdoc="@currentFrame.HtmlContent"></iframe>
             }
 
             @if (currentStep != null)
             {
-                <PlayerOverlay Annotations="currentStep.Annotations" />
+                <PlayerOverlay Annotations="currentStep.Annotations" OnClickZone="HandleClickZone" />
+            }
+
+            @* Timer progress indicator *@
+            @if (currentStep?.TriggerType == TriggerType.Timer && currentStep.TriggerDurationMs > 0)
+            {
+                <div style="position:absolute;bottom:0;left:0;right:0;height:3px;z-index:20">
+                    <div class="timer-progress" style="animation-duration:@(currentStep.TriggerDurationMs)ms"></div>
+                </div>
             }
         </div>
 
@@ -53,10 +68,42 @@ else
                 <RadzenProgressBar Value="@progressPercent" ShowValue="false" Style="height:6px" />
             </div>
             <RadzenText TextStyle="TextStyle.Caption">Step @(currentStepIndex + 1) of @manifest.Steps.Count</RadzenText>
-            <RadzenButton Text="@(currentStepIndex >= manifest.Steps.Count - 1 ? "Finish" : "Next")"
-                ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" Click="NextStep" />
+            @if (currentStep?.TriggerType == TriggerType.ButtonClick || currentStep?.TriggerType == null)
+            {
+                <RadzenButton Text="@(currentStepIndex >= manifest.Steps.Count - 1 ? "Finish" : "Next")"
+                    ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" Click="NextStep" />
+            }
+            else
+            {
+                <span style="font-size:12px;color:#999;font-style:italic">
+                    @GetTriggerHint(currentStep)
+                </span>
+            }
         </div>
     </div>
+
+    @* Escape View overlay *@
+    @if (showEscapeView)
+    {
+        <div style="position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center"
+            @onclick="DismissEscapeView" @onclick:stopPropagation="true">
+            <div style="background:white;border-radius:16px;padding:32px 40px;max-width:400px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3)"
+                @onclick:stopPropagation="true">
+                <h2 style="margin:0 0 8px;font-size:20px;font-weight:600;color:#1a1a2e">Exit this demo?</h2>
+                <p style="margin:0 0 24px;color:#666;font-size:14px">You're @Math.Round(progressPercent)% through. Want to keep going?</p>
+                <div style="display:flex;gap:12px;justify-content:center">
+                    <button @onclick="DismissEscapeView"
+                        style="padding:10px 24px;background:#4361ee;color:white;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer">
+                        Continue Demo
+                    </button>
+                    <button @onclick="ExitDemo"
+                        style="padding:10px 24px;background:#f1f3f5;color:#666;border:none;border-radius:8px;font-size:14px;cursor:pointer">
+                        Exit
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
 
     @if (showLeadForm)
     {
@@ -64,6 +111,19 @@ else
     }
 }
 </div>
+
+<style>
+    .timer-progress {
+        height: 100%;
+        background: linear-gradient(90deg, #4361ee, #818cf8);
+        animation: timer-fill linear forwards;
+        transform-origin: left;
+    }
+    @@keyframes timer-fill {
+        from { width: 0%; }
+        to { width: 100%; }
+    }
+</style>
 
 @code {
     [Parameter] public string Slug { get; set; } = "";
@@ -73,10 +133,13 @@ else
     private int currentStepIndex;
     private Guid? sessionId;
     private bool showLeadForm;
+    private bool showEscapeView;
     private DateTime stepStartTime = DateTime.UtcNow;
     private List<SessionEventDto> eventBuffer = [];
     private System.Threading.Timer? flushTimer;
     private ElementReference playerContainer;
+    private ElementReference iframeRef;
+    private DotNetObjectReference<Player>? dotnetRef;
 
     private PlayerStepDto? currentStep => manifest?.Steps.ElementAtOrDefault(currentStepIndex);
     private PlayerFrameDto? currentFrame => currentStep != null
@@ -93,18 +156,75 @@ else
 
         if (manifest != null)
         {
-            // Fire DemoStarted event
+            dotnetRef = DotNetObjectReference.Create(this);
             BufferEvent(EventType.DemoStarted, null, null);
             BufferEvent(EventType.StepViewed, 1, null);
             stepStartTime = DateTime.UtcNow;
-
-            // Flush events every 5 seconds
             flushTimer = new System.Threading.Timer(async _ => await FlushEvents(), null, 5000, 5000);
         }
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("playerInterop.focusElement", playerContainer);
+        }
+
+        // Set up trigger for current step after render
+        if (manifest != null && currentStep != null && dotnetRef != null)
+        {
+            await SetupTriggerForStep(currentStep);
+        }
+    }
+
+    private async Task SetupTriggerForStep(PlayerStepDto step)
+    {
+        await JS.InvokeVoidAsync("playerInterop.clearTrigger");
+
+        if (step.TriggerType == TriggerType.ButtonClick) return;
+
+        try
+        {
+            await JS.InvokeAsync<bool>(
+                "playerInterop.setupTrigger",
+                dotnetRef,
+                "iframe",
+                step.TriggerType.ToString(),
+                step.ClickTargetSelector,
+                step.TriggerDurationMs ?? 0);
+        }
+        catch
+        {
+            // Iframe may not be ready yet, or selector not found — graceful fallback
+        }
+    }
+
+    [JSInvokable]
+    public async Task OnTriggerFired()
+    {
+        await InvokeAsync(async () =>
+        {
+            await NextStep();
+            StateHasChanged();
+        });
+    }
+
     private void HandleKeyDown(KeyboardEventArgs e)
     {
+        if (showEscapeView)
+        {
+            if (e.Key == "Escape") DismissEscapeView();
+            return;
+        }
+
+        if (e.Key == "Escape")
+        {
+            showEscapeView = true;
+            BufferEvent(EventType.StepCompleted, currentStepIndex + 1, "{\"action\":\"escape_view\"}");
+            return;
+        }
+
         if (e.Key == "ArrowRight" || e.Key == "Right") _ = NextStep();
         else if (e.Key == "ArrowLeft" || e.Key == "Left") _ = PreviousStep();
     }
@@ -116,6 +236,9 @@ else
         var step = currentStep;
         var timeOnStep = (int)(DateTime.UtcNow - stepStartTime).TotalMilliseconds;
         BufferEvent(EventType.StepCompleted, currentStepIndex + 1, $"{{\"timeOnStepMs\":{timeOnStep}}}");
+
+        // Clear any active trigger
+        try { await JS.InvokeVoidAsync("playerInterop.clearTrigger"); } catch { }
 
         // Handle NavigationAction
         if (step != null)
@@ -152,6 +275,29 @@ else
                     if (step.NavigationTarget != null)
                         Nav.NavigateTo(step.NavigationTarget, true);
                     return;
+
+                case NavigationAction.MarkConverted:
+                    BufferEvent(EventType.DemoCompleted, null, "{\"converted\":true}");
+                    await FlushEvents();
+                    // Continue to next step if available
+                    if (currentStepIndex < manifest.Steps.Count - 1)
+                        currentStepIndex++;
+                    else
+                    {
+                        showLeadForm = true;
+                        return;
+                    }
+                    break;
+
+                case NavigationAction.StartFlow:
+                    if (step.NavigationTarget != null)
+                    {
+                        BufferEvent(EventType.DemoCompleted, null, $"{{\"nextFlow\":\"{step.NavigationTarget}\"}}");
+                        await FlushEvents();
+                        Nav.NavigateTo($"/demo/{step.NavigationTarget}", true);
+                        return;
+                    }
+                    break;
             }
         }
 
@@ -160,17 +306,51 @@ else
         StateHasChanged();
     }
 
-    private Task PreviousStep()
+    private async Task PreviousStep()
     {
         if (currentStepIndex > 0)
         {
+            try { await JS.InvokeVoidAsync("playerInterop.clearTrigger"); } catch { }
             currentStepIndex--;
             stepStartTime = DateTime.UtcNow;
             BufferEvent(EventType.StepViewed, currentStepIndex + 1, null);
             StateHasChanged();
         }
-        return Task.CompletedTask;
     }
+
+    private async Task HandleClickZone(PlayerAnnotationDto annotation)
+    {
+        await NextStep();
+    }
+
+    private void DismissEscapeView()
+    {
+        showEscapeView = false;
+    }
+
+    private void ExitDemo()
+    {
+        showEscapeView = false;
+        BufferEvent(EventType.DemoCompleted, null, "{\"earlyExit\":true}");
+        _ = FlushEvents();
+        showLeadForm = true;
+    }
+
+    private static string GetBackdropStyle(string? level) => level switch
+    {
+        "light" => "background:rgba(0,0,0,0.15);",
+        "medium" => "background:rgba(0,0,0,0.35);",
+        "heavy" => "background:rgba(0,0,0,0.55);",
+        _ => ""
+    };
+
+    private static string GetTriggerHint(PlayerStepDto step) => step.TriggerType switch
+    {
+        TriggerType.ElementClick => "Click the highlighted element to continue",
+        TriggerType.TextInput => "Type in the highlighted field to continue",
+        TriggerType.Timer => $"Auto-advancing in {(step.TriggerDurationMs ?? 0) / 1000}s...",
+        _ => ""
+    };
 
     private void BufferEvent(EventType type, int? stepNumber, string? data)
     {
@@ -202,7 +382,7 @@ else
     public void Dispose()
     {
         flushTimer?.Dispose();
-        // Fire-and-forget final flush
+        dotnetRef?.Dispose();
         _ = FlushEvents();
     }
 }
