@@ -3,12 +3,11 @@
 @inject NavigationManager Nav
 
 <RadzenLayout>
-    <RadzenSidebar @bind-Expanded="@sidebarExpanded" Style="width:240px;background:var(--rz-primary-darker);min-height:100vh">
-        <div style="padding:16px 20px;display:flex;align-items:center;justify-content:space-between">
+    <RadzenSidebar @bind-Expanded="@sidebarExpanded" Style="width:240px;background:var(--rz-primary-darker)">
+        <div style="padding:20px;display:flex;align-items:center;gap:12px">
             <a href="/dashboard" style="display:flex;align-items:center;text-decoration:none">
                 <img src="images/NavTourNoTag.webp" alt="NavTour" style="height:28px;width:auto;filter:brightness(0) invert(1)" />
             </a>
-            <RadzenButton Icon="menu" Click="@(() => sidebarExpanded = !sidebarExpanded)" ButtonStyle="ButtonStyle.Light" Variant="Variant.Text" Size="ButtonSize.Small" Style="color:rgba(255,255,255,0.6)" />
         </div>
         <RadzenPanelMenu Style="width:100%">
             <RadzenPanelMenuItem Text="Dashboard" Icon="dashboard" Path="dashboard" Style="@NavItemStyle("/dashboard")" />
@@ -21,6 +20,11 @@
             </div>
         }
     </RadzenSidebar>
+    <RadzenHeader>
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0" Style="padding:0 16px">
+            <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" />
+        </RadzenStack>
+    </RadzenHeader>
     <RadzenBody>
         <div class="rz-p-4" style="max-width:1200px">
             @Body
