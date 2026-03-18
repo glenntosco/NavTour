@@ -3,26 +3,47 @@
 @inject NavigationManager Nav
 
 <RadzenLayout>
-    <RadzenSidebar @bind-Expanded="@sidebarExpanded" Style="width:240px;background:var(--rz-primary-darker)">
-        <div style="padding:20px;display:flex;align-items:center;gap:12px">
+    <RadzenSidebar @bind-Expanded="@sidebarExpanded" Style="width:250px;background:var(--rz-primary-darker)">
+        <div style="padding:20px 20px 12px;display:flex;align-items:center">
             <a href="/dashboard" style="display:flex;align-items:center;text-decoration:none">
                 <img src="images/NavTourNoTag.webp" alt="NavTour" style="height:28px;width:auto;filter:brightness(0) invert(1)" />
             </a>
         </div>
-        <RadzenPanelMenu Style="width:100%">
-            <RadzenPanelMenuItem Text="Dashboard" Icon="dashboard" Path="dashboard" Style="@NavItemStyle("/dashboard")" />
-            <RadzenPanelMenuItem Text="Leads" Icon="people" Path="leads" Style="@NavItemStyle("/leads")" />
-        </RadzenPanelMenu>
+
+        <div style="flex:1;overflow-y:auto;padding-top:8px">
+            <RadzenPanelMenu Style="width:100%">
+                <RadzenPanelMenuItem Text="Product Demos" Icon="apps" Path="dashboard" Style="@NavItemStyle("/dashboard")" />
+            </RadzenPanelMenu>
+
+            <div class="sidebar-category">Analyze</div>
+            <RadzenPanelMenu Style="width:100%">
+                <RadzenPanelMenuItem Text="Analytics" Icon="bar_chart" Path="analytics" Style="@NavItemStyle("/analytics")" />
+            </RadzenPanelMenu>
+
+            <div class="sidebar-category">Leads</div>
+            <RadzenPanelMenu Style="width:100%">
+                <RadzenPanelMenuItem Text="Leads" Icon="people" Path="leads" Style="@NavItemStyle("/leads")" />
+            </RadzenPanelMenu>
+
+            <div class="sidebar-category">Manage</div>
+            <RadzenPanelMenu Style="width:100%">
+                <RadzenPanelMenuItem Text="Settings" Icon="settings" Path="settings" Style="@NavItemStyle("/settings")" />
+            </RadzenPanelMenu>
+        </div>
+
         @if (Auth.IsAuthenticated)
         {
-            <div style="position:absolute;bottom:0;left:0;right:0;padding:16px 20px;border-top:1px solid rgba(255,255,255,0.1)">
+            <div style="padding:16px 20px;border-top:1px solid rgba(255,255,255,0.1)">
                 <RadzenButton Text="Logout" Icon="logout" ButtonStyle="ButtonStyle.Light" Variant="Variant.Text" Click="Logout" Style="width:100%;justify-content:flex-start;color:rgba(255,255,255,0.6)" />
             </div>
         }
     </RadzenSidebar>
     <RadzenHeader>
-        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0" Style="padding:0 16px">
-            <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" />
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="0" Style="padding:0 16px;width:100%">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="8px">
+                <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" />
+                <span style="font-size:0.875rem;color:var(--rz-text-secondary-color)">@GetBreadcrumb()</span>
+            </RadzenStack>
         </RadzenStack>
     </RadzenHeader>
     <RadzenBody>
@@ -61,7 +82,19 @@
     {
         var isActive = Nav.Uri.Contains(path, StringComparison.OrdinalIgnoreCase);
         return isActive
-            ? "color:white;background:rgba(255,255,255,0.1);border-radius:6px;margin:2px 8px"
-            : "color:rgba(255,255,255,0.7);border-radius:6px;margin:2px 8px";
+            ? "color:white;background:rgba(255,255,255,0.12);border-radius:6px;margin:2px 12px;font-weight:600"
+            : "color:rgba(255,255,255,0.7);border-radius:6px;margin:2px 12px";
+    }
+
+    private string GetBreadcrumb()
+    {
+        var uri = Nav.Uri;
+        if (uri.Contains("/dashboard", StringComparison.OrdinalIgnoreCase)) return "Product Demos";
+        if (uri.Contains("/analytics", StringComparison.OrdinalIgnoreCase)) return "Analytics";
+        if (uri.Contains("/leads", StringComparison.OrdinalIgnoreCase)) return "Leads";
+        if (uri.Contains("/settings", StringComparison.OrdinalIgnoreCase)) return "Settings";
+        if (uri.Contains("/demos/", StringComparison.OrdinalIgnoreCase) && uri.Contains("/edit", StringComparison.OrdinalIgnoreCase)) return "Product Demos / Edit Demo";
+        if (uri.Contains("/demos/", StringComparison.OrdinalIgnoreCase) && uri.Contains("/analytics", StringComparison.OrdinalIgnoreCase)) return "Product Demos / Analytics";
+        return "NavTour";
     }
 }

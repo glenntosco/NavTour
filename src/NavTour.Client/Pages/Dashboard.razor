@@ -8,7 +8,7 @@
 @if (loading)
 {
     <RadzenStack AlignItems="AlignItems.Center" Style="margin:100px auto">
-        <RadzenText TextStyle="TextStyle.H6" Style="color:var(--rz-text-secondary-color)">Loading...</RadzenText>
+        <RadzenProgressBarCircular ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
     </RadzenStack>
 }
 else if (!Auth.IsAuthenticated)
@@ -26,59 +26,91 @@ else if (!Auth.IsAuthenticated)
 }
 else
 {
-    <RadzenStack Gap="16px">
+    <RadzenStack Gap="24px">
+        @* Header: Title + Create button *@
         <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center">
-            <RadzenText TextStyle="TextStyle.H4">My Demos</RadzenText>
-            <RadzenButton Text="+ New Demo" ButtonStyle="ButtonStyle.Primary" Click="CreateNewDemo" />
+            <RadzenText TextStyle="TextStyle.H4" Style="margin:0;font-weight:700">
+                Product Demos <span style="font-weight:400;color:var(--rz-text-secondary-color)">(@demos.Count)</span>
+            </RadzenText>
+            <RadzenButton Text="+ Create Demo" ButtonStyle="ButtonStyle.Secondary" Click="CreateNewDemo" />
         </RadzenStack>
 
-        @if (loading)
+        @* Search bar *@
+        <div class="demo-search-bar">
+            <RadzenIcon Icon="search" Style="color:var(--rz-text-secondary-color)" />
+            <RadzenTextBox Placeholder="Search demos..." @bind-Value="searchText" Change="@OnSearchChanged" Style="flex:1;max-width:400px" />
+        </div>
+
+        @if (filteredDemos.Count == 0 && demos.Count > 0)
         {
-            <RadzenProgressBarCircular ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+            <RadzenCard Style="text-align:center;padding:40px">
+                <RadzenText TextStyle="TextStyle.H6" Style="color:var(--rz-text-secondary-color)">No demos match your search</RadzenText>
+            </RadzenCard>
         }
         else if (demos.Count == 0)
         {
-            <RadzenCard Style="text-align:center;padding:40px">
-                <RadzenText TextStyle="TextStyle.H6">No demos yet</RadzenText>
-                <RadzenText>Create your first interactive demo to get started.</RadzenText>
-                <RadzenButton Text="Create Demo" ButtonStyle="ButtonStyle.Primary" Style="margin-top:16px" Click="CreateNewDemo" />
+            <RadzenCard Style="text-align:center;padding:60px">
+                <RadzenIcon Icon="apps" Style="font-size:3rem;color:var(--rz-text-secondary-color);margin-bottom:16px" />
+                <RadzenText TextStyle="TextStyle.H5" Style="margin-bottom:8px">No demos yet</RadzenText>
+                <RadzenText Style="color:var(--rz-text-secondary-color);margin-bottom:24px">Create your first interactive demo to get started.</RadzenText>
+                <RadzenButton Text="+ Create Demo" ButtonStyle="ButtonStyle.Secondary" Click="CreateNewDemo" />
             </RadzenCard>
         }
         else
         {
-            <RadzenDataGrid Data="@demos" TItem="DemoListItemResponse" AllowSorting="true">
-                <Columns>
-                    <RadzenDataGridColumn Property="Name" Title="Name">
-                        <Template Context="demo">
-                            <RadzenLink Path='@($"/demos/{demo.Id}/edit")'>@demo.Name</RadzenLink>
-                        </Template>
-                    </RadzenDataGridColumn>
-                    <RadzenDataGridColumn Property="Status" Title="Status" Width="120px">
-                        <Template Context="demo">
-                            <RadzenBadge Text="@demo.Status.ToString()"
-                                BadgeStyle="@(demo.Status == DemoStatus.Published ? BadgeStyle.Success : BadgeStyle.Light)" />
-                        </Template>
-                    </RadzenDataGridColumn>
-                    <RadzenDataGridColumn Property="ViewCount" Title="Views" Width="100px" />
-                    <RadzenDataGridColumn Property="FrameCount" Title="Frames" Width="100px" />
-                    <RadzenDataGridColumn Property="StepCount" Title="Steps" Width="100px" />
-                    <RadzenDataGridColumn Title="Actions" Width="200px">
-                        <Template Context="demo">
-                            <RadzenButton Text="Edit" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
-                                Click='() => Nav.NavigateTo($"/demos/{demo.Id}/edit")' />
-                            <RadzenButton Text="Analytics" ButtonStyle="ButtonStyle.Info" Variant="Variant.Text" Size="ButtonSize.Small"
-                                Click='() => Nav.NavigateTo($"/demos/{demo.Id}/analytics")' />
-                        </Template>
-                    </RadzenDataGridColumn>
-                </Columns>
-            </RadzenDataGrid>
+            @* Demo cards grid *@
+            <div class="demo-cards-grid">
+                @foreach (var demo in filteredDemos)
+                {
+                    <div class="demo-card" @onclick='() => Nav.NavigateTo($"/demos/{demo.Id}/edit")'>
+                        <div class="demo-card-thumbnail">
+                            <span>Demo Preview</span>
+                        </div>
+                        <div class="demo-card-body">
+                            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+                                <span class="demo-card-name">@demo.Name</span>
+                                <span class="demo-status-badge @(demo.Status == DemoStatus.Published ? "demo-status-published" : "demo-status-draft")">
+                                    @demo.Status.ToString()
+                                </span>
+                            </div>
+                            <div class="demo-card-meta">
+                                <span>@demo.FrameCount frames</span>
+                                <span>&middot;</span>
+                                <span>@demo.ViewCount views</span>
+                            </div>
+                            <div class="demo-card-actions">
+                                <RadzenButton Text="Edit" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
+                                    Click='() => Nav.NavigateTo($"/demos/{demo.Id}/edit")' />
+                                <RadzenButton Text="Analytics" ButtonStyle="ButtonStyle.Info" Variant="Variant.Text" Size="ButtonSize.Small"
+                                    Click='() => Nav.NavigateTo($"/demos/{demo.Id}/analytics")' />
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+        @* Get started section for new users *@
+        @if (demos.Count < 3)
+        {
+            <RadzenCard Style="background:linear-gradient(135deg, #F8FAFC 0%, #EEF2F7 100%);border:1px solid #E2E8F0;margin-top:8px">
+                <RadzenStack Gap="8px">
+                    <RadzenText TextStyle="TextStyle.H6" Style="margin:0;font-weight:600">Get started with NavTour</RadzenText>
+                    <RadzenText Style="color:var(--rz-text-secondary-color);margin:0">
+                        Best practices for creating interactive demos that convert prospects into customers.
+                    </RadzenText>
+                    <RadzenLink Path="https://navtour.com/docs" Text="Explore docs" Style="font-weight:500" />
+                </RadzenStack>
+            </RadzenCard>
         }
     </RadzenStack>
 }
 
 @code {
     private List<DemoListItemResponse> demos = [];
+    private List<DemoListItemResponse> filteredDemos = [];
     private bool loading = true;
+    private string searchText = "";
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -88,9 +120,22 @@ else
             if (Auth.IsAuthenticated)
             {
                 demos = await DemoApi.GetDemosAsync();
+                filteredDemos = demos;
             }
             loading = false;
             StateHasChanged();
+        }
+    }
+
+    private void OnSearchChanged()
+    {
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            filteredDemos = demos;
+        }
+        else
+        {
+            filteredDemos = demos.Where(d => d.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase)).ToList();
         }
     }
 

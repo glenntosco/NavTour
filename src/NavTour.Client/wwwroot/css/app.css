@@ -106,3 +106,141 @@ code {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+
+/* ============================================
+   Dashboard demo cards
+   ============================================ */
+.demo-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.demo-card {
+    background: #fff;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: box-shadow 200ms ease, transform 200ms ease;
+    cursor: pointer;
+}
+
+.demo-card:hover {
+    box-shadow: 0 4px 12px rgba(15, 32, 53, 0.1);
+    transform: translateY(-2px);
+}
+
+.demo-card-thumbnail {
+    width: 100%;
+    height: 180px;
+    background: linear-gradient(135deg, #E8EFF7 0%, #F1F5F9 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94A3B8;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.demo-card-body {
+    padding: 16px;
+}
+
+.demo-card-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #0B1929;
+    margin-bottom: 4px;
+}
+
+.demo-card-meta {
+    font-size: 0.8125rem;
+    color: #64748B;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.demo-card-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.demo-status-badge {
+    display: inline-block;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.demo-status-published {
+    background: #ECFDF5;
+    color: #059669;
+}
+
+.demo-status-draft {
+    background: #F1F5F9;
+    color: #64748B;
+}
+
+/* ============================================
+   Sidebar category labels
+   ============================================ */
+.sidebar-category {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.4);
+    padding: 20px 20px 8px;
+}
+
+/* ============================================
+   Search bar
+   ============================================ */
+.demo-search-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    align-items: center;
+}
+
+/* ============================================
+   Dark sidebar panel menu overrides
+   ============================================ */
+.rz-sidebar .rz-panel-menu {
+    background: transparent;
+}
+
+.rz-sidebar .rz-panel-menu .rz-navigation-item-link {
+    color: rgba(255, 255, 255, 0.7);
+    border-radius: 6px;
+    margin: 2px 12px;
+    padding: 10px 12px;
+}
+
+.rz-sidebar .rz-panel-menu .rz-navigation-item-link:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+}
+
+.rz-sidebar .rz-panel-menu .rz-navigation-item-link.active,
+.rz-sidebar .rz-panel-menu .rz-navigation-item-link[aria-current="page"] {
+    background: rgba(255, 255, 255, 0.12);
+    color: white;
+    font-weight: 600;
+}
+
+.rz-sidebar .rz-panel-menu .rz-navigation-item-icon {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.rz-sidebar .rz-panel-menu .rz-navigation-item-link:hover .rz-navigation-item-icon,
+.rz-sidebar .rz-panel-menu .rz-navigation-item-link.active .rz-navigation-item-icon {
+    color: white;
+}
