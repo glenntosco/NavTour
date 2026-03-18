@@ -1,20 +1,20 @@
-/* Override Radzen material-base purple with NavTour blue */
+/* Override Radzen material-base with NavTour navy/coral */
 :root {
-    --rz-primary: #4361ee;
-    --rz-primary-light: #5a75f0;
-    --rz-primary-lighter: #8196f4;
-    --rz-primary-dark: #3551d4;
-    --rz-primary-darker: #2a41aa;
+    --rz-primary: #1E3A5F;
+    --rz-primary-light: #2D4A6F;
+    --rz-primary-lighter: #475B73;
+    --rz-primary-dark: #152D4A;
+    --rz-primary-darker: #0F2035;
     --rz-on-primary: #fff;
-    --rz-link-color: #4361ee;
-    --rz-link-hover-color: #3551d4;
-    --rz-badge-info-background-color: #4361ee;
-    --rz-scheduler-highlight-background-color: rgba(67, 97, 238, 0.1);
-    --rz-secondary: #3b82f6;
-    --rz-secondary-light: #60a5fa;
-    --rz-secondary-lighter: #93c5fd;
-    --rz-secondary-dark: #2563eb;
-    --rz-secondary-darker: #1d4ed8;
+    --rz-link-color: #1E3A5F;
+    --rz-link-hover-color: #152D4A;
+    --rz-badge-info-background-color: #1E3A5F;
+    --rz-scheduler-highlight-background-color: rgba(30, 58, 95, 0.1);
+    --rz-secondary: #E8523F;
+    --rz-secondary-light: #ED7566;
+    --rz-secondary-lighter: #F4A59B;
+    --rz-secondary-dark: #D4412F;
+    --rz-secondary-darker: #B83425;
 }
 
 .valid.modified:not([type=checkbox]) {
