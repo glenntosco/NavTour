@@ -27,7 +27,7 @@ export class NavTourApi {
     const res = await fetch(`${this.serverUrl}/api/v1/demos`, {
       headers: this.headers(),
     });
-    if (!res.ok) throw new Error("Failed to fetch demos");
+    if (!res.ok) throw new Error("Failed to fetch demos: " + res.status);
     return res.json();
   }
 
@@ -37,7 +37,7 @@ export class NavTourApi {
       headers: { ...this.headers(), "Content-Type": "application/json" },
       body: JSON.stringify(request),
     });
-    if (!res.ok) throw new Error("Failed to create demo");
+    if (!res.ok) throw new Error("Failed to create demo: " + res.status);
     return res.json();
   }
 
@@ -58,7 +58,7 @@ export class NavTourApi {
         body: form,
       }
     );
-    if (!res.ok) throw new Error("Failed to upload frame");
+    if (!res.ok) throw new Error("Failed to upload frame: " + res.status);
     return res.json();
   }
 }

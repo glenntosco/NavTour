@@ -99,7 +99,7 @@ public class AuthController : ControllerBase
     {
         Response.Cookies.Append("navtour_auth", token, new CookieOptions
         {
-            HttpOnly = true,
+            HttpOnly = false,
             SameSite = SameSiteMode.Lax,
             Secure = false, // Set true in production with HTTPS
             Path = "/",
