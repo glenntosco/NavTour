@@ -1,56 +1,109 @@
 @page "/blog"
 @layout MarketingLayout
-@inject IHttpClientFactory HttpClientFactory
-@inject NavigationManager NavigationManager
 
 <PageTitle>Blog — NavTour</PageTitle>
 <HeadContent>
-    <meta name="description" content="Product updates, demo best practices, and go-to-market insights from the NavTour team." />
+    <meta name="description" content="Insights on interactive demos, AI-powered sales, and product-led growth from the NavTour team." />
 </HeadContent>
 
-<section class="mkt-section" style="min-height:60vh;display:flex;align-items:center">
-    <div class="mkt-container text-center" style="max-width:480px">
-        <h1>Blog</h1>
-        <p style="margin-top:var(--space-5)">We're working on content about demo best practices, product updates, and go-to-market strategies.</p>
-
-        @if (subscribed)
-        {
-            <div class="mkt-alert-success" style="margin-top:var(--space-8)">
-                <p style="font-weight:var(--weight-semibold)">Thanks! We'll notify you when we publish.</p>
-            </div>
-        }
-        else
-        {
-            <form method="post" @formname="blog-subscribe" @onsubmit="HandleSubscribe" style="display:inline-flex;gap:var(--space-2);margin-top:var(--space-8);flex-wrap:wrap;justify-content:center">
-                <AntiforgeryToken />
-                <input type="email" name="SubscribeEmail" value="@SubscribeEmail" required placeholder="Enter your email"
-                    class="mkt-input" style="min-width:260px;width:auto" />
-                <button type="submit" class="mkt-btn mkt-btn-primary">Subscribe for Updates</button>
-            </form>
-        }
-
-        <div style="margin-top:var(--space-10)">
-            <a href="/register" class="mkt-btn mkt-btn-secondary">Get Started Instead</a>
-        </div>
+<section class="mkt-section" style="padding-bottom:var(--space-10)">
+    <div class="mkt-container" style="max-width:680px">
+        <h1 class="text-center">Blog</h1>
+        <p class="text-center" style="margin-top:var(--space-5)">Insights on interactive demos, AI-powered sales, and product-led growth.</p>
     </div>
 </section>
 
-@code {
-    [SupplyParameterFromForm]
-    public string SubscribeEmail { get; set; } = "";
+<section style="padding:0 var(--space-6) var(--space-32)">
+    <div class="mkt-container">
+        @* Category filter bar *@
+        <div class="mkt-blog-categories reveal">
+            <a href="/blog" class="active">All</a>
+            <a href="/blog">Product Updates</a>
+            <a href="/blog">Sales Playbooks</a>
+            <a href="/blog">Marketing</a>
+            <a href="/blog">Engineering</a>
+            <a href="/blog">Customer Stories</a>
+        </div>
 
-    private bool subscribed;
+        @* Blog post grid *@
+        <div class="mkt-grid mkt-grid-2 reveal-stagger" style="gap:var(--space-8)">
+            @* Post 1 *@
+            <div class="mkt-blog-card">
+                <div class="mkt-blog-card-image">Product Update</div>
+                <div class="mkt-blog-card-body">
+                    <span class="mkt-blog-card-tag">Product Update</span>
+                    <h3 class="mkt-blog-card-title">Introducing AI Copilot: Build demos 10x faster</h3>
+                    <p class="mkt-blog-card-excerpt">NavTour's AI Copilot automatically generates interactive demos from your product capture...</p>
+                    <div class="mkt-blog-card-meta">
+                        <span>NavTour Team</span> &middot; <span>Mar 12, 2026</span> &middot; <a href="/blog" style="color:var(--nt-primary);font-weight:var(--weight-semibold)">Read &rarr;</a>
+                    </div>
+                </div>
+            </div>
 
-    private async Task HandleSubscribe()
-    {
-        if (string.IsNullOrWhiteSpace(SubscribeEmail)) return;
-        try
-        {
-            using var http = HttpClientFactory.CreateClient();
-            http.BaseAddress = new Uri(NavigationManager.BaseUri);
-            await http.PostAsJsonAsync("api/v1/contact", new { email = SubscribeEmail, type = "Newsletter" });
-        }
-        catch { }
-        subscribed = true;
-    }
-}
+            @* Post 2 *@
+            <div class="mkt-blog-card">
+                <div class="mkt-blog-card-image">Sales Playbook</div>
+                <div class="mkt-blog-card-body">
+                    <span class="mkt-blog-card-tag">Sales Playbook</span>
+                    <h3 class="mkt-blog-card-title">How to Send a Personalized Demo in Under 60 Seconds</h3>
+                    <p class="mkt-blog-card-excerpt">The best sales teams don't wait for SE availability. Here's how to use AI personalization...</p>
+                    <div class="mkt-blog-card-meta">
+                        <span>Sarah Chen</span> &middot; <span>Mar 8, 2026</span> &middot; <a href="/blog" style="color:var(--nt-primary);font-weight:var(--weight-semibold)">Read &rarr;</a>
+                    </div>
+                </div>
+            </div>
+
+            @* Post 3 *@
+            <div class="mkt-blog-card">
+                <div class="mkt-blog-card-image">Marketing</div>
+                <div class="mkt-blog-card-body">
+                    <span class="mkt-blog-card-tag">Marketing</span>
+                    <h3 class="mkt-blog-card-title">Why Interactive Demos Convert 3x Better Than Video</h3>
+                    <p class="mkt-blog-card-excerpt">We analyzed 10,000 demo sessions. The data is clear: interactive beats passive every time...</p>
+                    <div class="mkt-blog-card-meta">
+                        <span>NavTour Team</span> &middot; <span>Mar 1, 2026</span> &middot; <a href="/blog" style="color:var(--nt-primary);font-weight:var(--weight-semibold)">Read &rarr;</a>
+                    </div>
+                </div>
+            </div>
+
+            @* Post 4 *@
+            <div class="mkt-blog-card">
+                <div class="mkt-blog-card-image">Customer Story</div>
+                <div class="mkt-blog-card-body">
+                    <span class="mkt-blog-card-tag">Customer Story</span>
+                    <h3 class="mkt-blog-card-title">How CloudScale Cut Demo Creation Time by 98%</h3>
+                    <p class="mkt-blog-card-excerpt">From 3 hours to 2 minutes: CloudScale's sales team transformed their demo workflow...</p>
+                    <div class="mkt-blog-card-meta">
+                        <span>Alex Rivera</span> &middot; <span>Feb 25, 2026</span> &middot; <a href="/blog" style="color:var(--nt-primary);font-weight:var(--weight-semibold)">Read &rarr;</a>
+                    </div>
+                </div>
+            </div>
+
+            @* Post 5 *@
+            <div class="mkt-blog-card">
+                <div class="mkt-blog-card-image">Engineering</div>
+                <div class="mkt-blog-card-body">
+                    <span class="mkt-blog-card-tag">Engineering</span>
+                    <h3 class="mkt-blog-card-title">Building a Chrome Extension for DOM Snapshot Capture</h3>
+                    <p class="mkt-blog-card-excerpt">A technical deep dive into how NavTour captures interactive HTML snapshots...</p>
+                    <div class="mkt-blog-card-meta">
+                        <span>NavTour Engineering</span> &middot; <span>Feb 18, 2026</span> &middot; <a href="/blog" style="color:var(--nt-primary);font-weight:var(--weight-semibold)">Read &rarr;</a>
+                    </div>
+                </div>
+            </div>
+
+            @* Post 6 *@
+            <div class="mkt-blog-card">
+                <div class="mkt-blog-card-image">Sales Playbook</div>
+                <div class="mkt-blog-card-body">
+                    <span class="mkt-blog-card-tag">Sales Playbook</span>
+                    <h3 class="mkt-blog-card-title">The AI-Powered Demo Stack for 2026</h3>
+                    <p class="mkt-blog-card-excerpt">Your buyers expect personalized experiences. Here's the technology stack that delivers...</p>
+                    <div class="mkt-blog-card-meta">
+                        <span>NavTour Team</span> &middot; <span>Feb 10, 2026</span> &middot; <a href="/blog" style="color:var(--nt-primary);font-weight:var(--weight-semibold)">Read &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

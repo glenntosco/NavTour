@@ -3,13 +3,14 @@
 
 <PageTitle>Security — NavTour</PageTitle>
 <HeadContent>
-    <meta name="description" content="NavTour security: SOC 2 compliant, AES-256 encryption, GDPR ready, SSO/SAML, audit logs, and self-hosted deployment options." />
+    <meta name="description" content="NavTour security: SOC 2 compliant, AES-256 encryption, GDPR ready, 99.9% uptime SLA, Azure hosted." />
 </HeadContent>
 
 <section class="mkt-section" style="padding-bottom:var(--space-16)">
     <div class="mkt-container" style="max-width:680px">
-        <h1 class="text-center">Enterprise-grade security, startup-friendly pricing</h1>
-        <p class="text-center" style="margin-top:var(--space-5)">Your data is protected by the same infrastructure and security standards that serve 5,000+ P4 Software clients.</p>
+        <p class="mkt-eyebrow text-center" style="text-transform:uppercase;letter-spacing:0.1em;color:var(--nt-accent)">Security</p>
+        <h1 class="text-center">Enterprise-grade security you can trust</h1>
+        <p class="text-center" style="margin-top:var(--space-5)">NavTour is built on industry-leading security practices. Your data is protected at every layer.</p>
     </div>
 </section>
 
@@ -19,121 +20,71 @@
         <div class="mkt-trust-badges">
             <div class="mkt-trust-badge">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                SOC 2 Type II
-            </div>
-            <div class="mkt-trust-badge">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                GDPR Compliant
-            </div>
-            <div class="mkt-trust-badge">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                AES-256
+                SOC 2 Compliant
             </div>
             <div class="mkt-trust-badge">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                99.9% Uptime
+                99.9% Uptime SLA
+            </div>
+            <div class="mkt-trust-badge">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                AES-256 Encryption
+            </div>
+            <div class="mkt-trust-badge">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                GDPR Ready
+            </div>
+            <div class="mkt-trust-badge">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                Azure Hosted
             </div>
         </div>
+    </div>
+</section>
+
+@* Data Security *@
+<section class="mkt-section">
+    <div class="mkt-container reveal" style="max-width:720px">
+        <h2>Data Security</h2>
+        <p style="margin-top:var(--space-5)">Your data is encrypted at rest (AES-256) and in transit (TLS 1.3). We implement strict access controls, regular key rotation, and comprehensive audit logging. Demo content is isolated per tenant with row-level security.</p>
+        <p style="margin-top:var(--space-4)">Every database query is scoped to your tenant. There is no mechanism to access another organization's data, even in error. Encryption keys are managed via Azure Key Vault with automated rotation policies.</p>
     </div>
 </section>
 
 @* Infrastructure *@
-<section class="mkt-section">
-    <div class="mkt-container reveal">
-        <div class="mkt-grid mkt-grid-2" style="align-items:start;gap:var(--space-16)">
-            <div>
-                <p class="mkt-eyebrow">Infrastructure</p>
-                <h2 style="margin-top:var(--space-2)">Built on Azure, hardened for enterprise</h2>
-                <p style="margin-top:var(--space-4)">NavTour runs on Microsoft Azure with multi-region redundancy, automated failover, and continuous monitoring. Our infrastructure is the same platform that powers P4 Software's 5,000+ client base — battle-tested and proven at scale.</p>
-                <ul class="mkt-benefits">
-                    <li>Microsoft Azure hosting with 99.9% uptime SLA</li>
-                    <li>Multi-region deployment with automated failover</li>
-                    <li>Daily encrypted backups with point-in-time recovery</li>
-                    <li>DDoS protection and Web Application Firewall (WAF)</li>
-                    <li>Continuous security monitoring and alerting</li>
-                </ul>
-            </div>
-            <div>
-                <p class="mkt-eyebrow">Encryption</p>
-                <h2 style="margin-top:var(--space-2)">Your data, encrypted everywhere</h2>
-                <p style="margin-top:var(--space-4)">All data is encrypted at rest and in transit. We use industry-standard encryption protocols and regularly rotate keys. No plaintext secrets, no shortcuts.</p>
-                <ul class="mkt-benefits">
-                    <li>AES-256 encryption at rest</li>
-                    <li>TLS 1.3 for all data in transit</li>
-                    <li>Automated key rotation</li>
-                    <li>Encrypted database backups</li>
-                    <li>Secrets managed via Azure Key Vault</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</section>
-
-@* Data Privacy *@
 <section class="mkt-section-alt">
-    <div class="mkt-container reveal">
-        <div class="mkt-grid mkt-grid-2" style="align-items:start;gap:var(--space-16)">
-            <div>
-                <p class="mkt-eyebrow">Data Privacy</p>
-                <h2 style="margin-top:var(--space-2)">Privacy by design</h2>
-                <p style="margin-top:var(--space-4)">We collect only the data necessary to provide our service. We never sell your data, never share it with third parties for advertising, and give you full control over data retention and deletion.</p>
-                <ul class="mkt-benefits">
-                    <li>GDPR and CCPA compliant data handling</li>
-                    <li>Data residency options for EU and US</li>
-                    <li>No third-party data sharing or selling</li>
-                    <li>Right to deletion with complete data purge</li>
-                    <li>Configurable data retention policies</li>
-                </ul>
-            </div>
-            <div>
-                <p class="mkt-eyebrow">Access Control</p>
-                <h2 style="margin-top:var(--space-2)">Fine-grained permissions</h2>
-                <p style="margin-top:var(--space-4)">Control who can access what with enterprise-grade identity management. From SSO integration to role-based access, NavTour gives your security team the controls they need.</p>
-                <ul class="mkt-benefits">
-                    <li>SSO / SAML 2.0 integration (Business+)</li>
-                    <li>Role-based access control (RBAC)</li>
-                    <li>API key management with scoped permissions</li>
-                    <li>Comprehensive audit logs</li>
-                    <li>Session management and forced logout</li>
-                </ul>
-            </div>
-        </div>
+    <div class="mkt-container reveal" style="max-width:720px">
+        <h2>Infrastructure</h2>
+        <p style="margin-top:var(--space-5)">NavTour runs on Microsoft Azure with multi-region redundancy. Automated backups, disaster recovery, and 99.9% uptime SLA. Infrastructure is managed via code with automated security scanning on every deployment.</p>
+        <p style="margin-top:var(--space-4)">We use Azure App Service, Azure SQL, and Azure Blob Storage with geo-redundant replication. Every deployment passes through automated SAST and dependency vulnerability scans before reaching production.</p>
     </div>
 </section>
 
 @* Compliance *@
 <section class="mkt-section">
-    <div class="mkt-container text-center reveal">
-        <div class="mkt-section-heading">
-            <h2>Compliance &amp; Certifications</h2>
-            <p>We take compliance seriously. Our security posture is validated by independent auditors and meets the requirements of enterprise procurement.</p>
-        </div>
-        <div class="mkt-grid mkt-grid-3">
-            <div class="mkt-card" style="text-align:center">
-                <h3>SOC 2 Type II</h3>
-                <p style="margin-top:var(--space-2);font-size:var(--text-sm)">Annual audit covering security, availability, and confidentiality. Report available under NDA.</p>
-            </div>
-            <div class="mkt-card" style="text-align:center">
-                <h3>GDPR</h3>
-                <p style="margin-top:var(--space-2);font-size:var(--text-sm)">Full compliance with EU data protection regulations. Data Processing Agreement (DPA) available.</p>
-            </div>
-            <div class="mkt-card" style="text-align:center">
-                <h3>CCPA</h3>
-                <p style="margin-top:var(--space-2);font-size:var(--text-sm)">California Consumer Privacy Act compliance. Transparent data practices and consumer rights support.</p>
-            </div>
-        </div>
+    <div class="mkt-container reveal" style="max-width:720px">
+        <h2>Compliance</h2>
+        <p style="margin-top:var(--space-5)">NavTour is SOC 2 Type II compliant. We undergo annual third-party audits covering security, availability, and confidentiality. We also comply with GDPR, CCPA, and maintain a current Data Processing Agreement (DPA).</p>
+        <p style="margin-top:var(--space-4)">Our SOC 2 report is available under NDA for enterprise customers evaluating NavTour. Contact our team to request a copy along with our completed security questionnaire.</p>
+    </div>
+</section>
+
+@* Privacy *@
+<section class="mkt-section-alt">
+    <div class="mkt-container reveal" style="max-width:720px">
+        <h2>Privacy</h2>
+        <p style="margin-top:var(--space-5)">We collect only what's necessary. Demo viewer data is anonymized by default. You control data retention policies. We never sell customer data. Full GDPR data subject rights supported: access, deletion, portability.</p>
+        <p style="margin-top:var(--space-4)">NavTour does not use customer data for model training or any purpose beyond delivering the service. When you delete your account, all associated data is permanently purged within 30 days.</p>
     </div>
 </section>
 
 @* Responsible Disclosure *@
-<section class="mkt-section-alt">
-    <div class="mkt-container text-center" style="max-width:560px">
-        <div class="reveal">
-            <h2>Responsible Disclosure</h2>
-            <p style="margin-top:var(--space-4)">We welcome security researchers who help us keep NavTour safe. If you've found a vulnerability, please report it responsibly.</p>
-            <a href="/contact" class="mkt-btn mkt-btn-secondary" style="margin-top:var(--space-6)">Report a Vulnerability</a>
-        </div>
+<section class="mkt-section">
+    <div class="mkt-container reveal" style="max-width:720px">
+        <h2>Responsible Disclosure</h2>
+        <p style="margin-top:var(--space-5)">We maintain a responsible disclosure program for security researchers. If you discover a vulnerability, please email security@navtour.com. We respond within 24 hours and never pursue legal action against good-faith reporters.</p>
+        <p style="margin-top:var(--space-4)">We appreciate the security research community and are committed to working with researchers to verify, reproduce, and respond to legitimate reports. Critical issues are triaged immediately.</p>
     </div>
 </section>
 
-<CtaSection Title="Security questions?" Subtitle="Our team is happy to walk through our security practices and provide documentation." CtaText="Contact Us" CtaUrl="/contact" />
+<CtaSection Title="Questions about security?" Subtitle="Our team is happy to discuss security practices, share our SOC 2 report, or review your compliance requirements." CtaText="Contact Security Team" CtaUrl="/contact" />

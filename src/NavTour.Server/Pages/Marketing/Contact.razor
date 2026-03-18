@@ -9,51 +9,104 @@
 </HeadContent>
 
 <section class="mkt-section">
-    <div class="mkt-container" style="max-width:520px">
-        <h1 class="text-center">Get in Touch</h1>
-        <p class="text-center" style="margin-top:var(--space-4);margin-bottom:var(--space-12)">Questions about NavTour? Want to see a live demo? We'd love to hear from you.</p>
+    <div class="mkt-container">
+        <div class="mkt-grid mkt-grid-2 reveal" style="gap:var(--space-16);align-items:start">
 
-        @if (submitted)
-        {
-            <div class="mkt-alert-success" style="margin-bottom:var(--space-8)">
-                <h3>Thank you!</h3>
-                <p>We'll get back to you shortly.</p>
+            @* Left side — Form *@
+            <div>
+                <h1 style="font-size:var(--text-3xl)">Get in touch</h1>
+                <p style="margin-top:var(--space-3);margin-bottom:var(--space-10)">Fill out the form and we'll get back to you within 2 hours.</p>
+
+                @if (submitted)
+                {
+                    <div class="mkt-alert-success" style="margin-bottom:var(--space-8)">
+                        <h3>Thank you!</h3>
+                        <p>We'll get back to you within 2 hours.</p>
+                    </div>
+                }
+
+                <form method="post" @formname="contact" @onsubmit="HandleSubmit">
+                    <AntiforgeryToken />
+                    <div style="display:flex;flex-direction:column;gap:var(--space-5)">
+
+                        @* Honeypot field — hidden from users, bots fill it *@
+                        <div style="position:absolute;left:-9999px" aria-hidden="true">
+                            <input type="text" name="website" @bind="Model.Honeypot" tabindex="-1" autocomplete="off" />
+                        </div>
+
+                        <div>
+                            <label class="mkt-label">Name *</label>
+                            <input type="text" name="Model.Name" value="@Model.Name" required class="mkt-input" />
+                        </div>
+                        <div>
+                            <label class="mkt-label">Email *</label>
+                            <input type="email" name="Model.Email" value="@Model.Email" required class="mkt-input" />
+                        </div>
+                        <div>
+                            <label class="mkt-label">Company</label>
+                            <input type="text" name="Model.Company" value="@Model.Company" class="mkt-input" />
+                        </div>
+                        <div>
+                            <label class="mkt-label">Company Size</label>
+                            <select name="Model.CompanySize" class="mkt-input" value="@Model.CompanySize">
+                                <option value="">Select...</option>
+                                <option value="1-10">1-10</option>
+                                <option value="11-50">11-50</option>
+                                <option value="51-200">51-200</option>
+                                <option value="201-1000">201-1000</option>
+                                <option value="1000+">1000+</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="mkt-label">Message *</label>
+                            <textarea name="Model.Message" rows="4" required class="mkt-input" style="resize:vertical">@Model.Message</textarea>
+                        </div>
+
+                        <button type="submit" class="mkt-btn mkt-btn-primary" style="width:100%;margin-top:var(--space-2)">Send Message</button>
+                    </div>
+                </form>
             </div>
-        }
 
-        <form method="post" @formname="contact" @onsubmit="HandleSubmit">
-            <AntiforgeryToken />
-            <div style="display:flex;flex-direction:column;gap:var(--space-5)">
+            @* Right side — Value props *@
+            <div style="padding-top:var(--space-10)">
+                <h3 style="margin-bottom:var(--space-8)">What happens next?</h3>
 
-                @* Honeypot field — hidden from users, bots fill it *@
-                <div style="position:absolute;left:-9999px" aria-hidden="true">
-                    <input type="text" name="website" @bind="Model.Honeypot" tabindex="-1" autocomplete="off" />
+                <div style="display:flex;flex-direction:column;gap:var(--space-8)">
+                    <div style="display:flex;gap:var(--space-5);align-items:start">
+                        <div class="mkt-step-number" style="flex-shrink:0">1</div>
+                        <div>
+                            <h4>We respond within 2 hours</h4>
+                            <p style="font-size:var(--text-base);margin-top:var(--space-2)">A real person from our team will reply to your message. No bots, no auto-responders.</p>
+                        </div>
+                    </div>
+                    <div style="display:flex;gap:var(--space-5);align-items:start">
+                        <div class="mkt-step-number" style="flex-shrink:0">2</div>
+                        <div>
+                            <h4>15-minute intro call</h4>
+                            <p style="font-size:var(--text-base);margin-top:var(--space-2)">We'll learn about your use case and show you how NavTour can help.</p>
+                        </div>
+                    </div>
+                    <div style="display:flex;gap:var(--space-5);align-items:start">
+                        <div class="mkt-step-number" style="flex-shrink:0">3</div>
+                        <div>
+                            <h4>Custom demo of your workflow</h4>
+                            <p style="font-size:var(--text-base);margin-top:var(--space-2)">See NavTour configured for your specific product and audience.</p>
+                        </div>
+                    </div>
                 </div>
 
-                <div>
-                    <label class="mkt-label">Name *</label>
-                    <input type="text" name="Model.Name" value="@Model.Name" required class="mkt-input" />
+                @* Social proof *@
+                <div style="margin-top:var(--space-12);padding:var(--space-6);background:var(--surface-secondary);border-radius:var(--radius-md);border:1px solid var(--neutral-200)">
+                    <blockquote style="font-style:italic;font-size:var(--text-base);color:var(--text-primary);line-height:var(--leading-normal);margin-bottom:var(--space-4)">
+                        "From first contact to live demos in under a week. The NavTour team made onboarding effortless."
+                    </blockquote>
+                    <div>
+                        <div style="font-weight:var(--weight-semibold);font-size:var(--text-sm);color:var(--text-primary)">Alex Rivera</div>
+                        <div style="font-size:var(--text-sm);color:var(--text-tertiary)">Head of Sales, TerraLogic</div>
+                    </div>
                 </div>
-                <div>
-                    <label class="mkt-label">Email *</label>
-                    <input type="email" name="Model.Email" value="@Model.Email" required class="mkt-input" />
-                </div>
-                <div>
-                    <label class="mkt-label">Company</label>
-                    <input type="text" name="Model.Company" value="@Model.Company" class="mkt-input" />
-                </div>
-                <div>
-                    <label class="mkt-label">Message *</label>
-                    <textarea name="Model.Message" rows="5" required class="mkt-input" style="resize:vertical">@Model.Message</textarea>
-                </div>
-
-                <button type="submit" class="mkt-btn mkt-btn-primary" style="width:100%;margin-top:var(--space-2)">Send Message</button>
             </div>
-        </form>
 
-        <div class="text-center" style="margin-top:var(--space-12)">
-            <p style="font-weight:var(--weight-semibold);font-size:var(--text-sm);color:var(--text-tertiary)">Or email us directly</p>
-            <p style="margin-top:var(--space-2)"><a href="mailto:hello@navtour.io" class="mkt-link-reveal">hello@navtour.io</a></p>
         </div>
     </div>
 </section>
@@ -97,6 +150,7 @@
         public string Name { get; set; } = "";
         public string Email { get; set; } = "";
         public string Company { get; set; } = "";
+        public string CompanySize { get; set; } = "";
         public string Message { get; set; } = "";
         public string Honeypot { get; set; } = "";
     }
