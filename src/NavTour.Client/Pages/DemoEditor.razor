@@ -29,7 +29,8 @@
     @* Main workspace *@
     <RadzenStack Orientation="Orientation.Horizontal" Style="flex:1;overflow:hidden">
         <FrameStrip Frames="frames" SelectedFrameId="selectedFrameId"
-            OnFrameSelected="SelectFrame" OnAddFrame="AddFrame" />
+            OnFrameSelected="SelectFrame" OnAddFrame="AddFrame"
+            OnDeleteFrame="DeleteFrame" OnInsertFrame="InsertFrame" />
 
         <FrameEditor @ref="frameEditor" DemoId="@DemoId" HtmlContent="@currentFrameHtml"
             Annotations="@currentAnnotations"
@@ -188,6 +189,39 @@
         {
             Notification.Notify(NotificationSeverity.Error, "Upload error", ex.Message);
         }
+    }
+
+    private async Task DeleteFrame(Guid frameId)
+    {
+        var success = await DemoApi.DeleteFrameAsync(frameId);
+        if (!success)
+        {
+            Notification.Notify(NotificationSeverity.Error, "Error", "Failed to delete frame.");
+            return;
+        }
+
+        frames = await DemoApi.GetFramesAsync(DemoId);
+
+        if (selectedFrameId == frameId)
+        {
+            if (frames.Count > 0)
+                await SelectFrame(frames[0].Id);
+            else
+            {
+                selectedFrameId = null;
+                currentFrameHtml = null;
+                currentAnnotations = null;
+                selectedStepId = null;
+            }
+        }
+
+        Notification.Notify(NotificationSeverity.Success, "Frame deleted");
+        StateHasChanged();
+    }
+
+    private async Task InsertFrame(int index)
+    {
+        await JS.InvokeVoidAsync("clickElement", "frame-file-input");
     }
 
     private async Task AddStep()

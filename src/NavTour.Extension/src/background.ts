@@ -436,7 +436,7 @@ function injectToolbarUI(demoName: string, frameCount: number, status: string, c
     );
   }
 
-  // --- Build floating toolbar UI (Navattic-style pill bar) ---
+  // --- Build floating toolbar UI (pill bar) ---
   const bar = document.createElement("div");
   bar.id = "navtour-capture-bar";
   bar.style.cssText = `
@@ -487,7 +487,7 @@ function injectToolbarUI(demoName: string, frameCount: number, status: string, c
   bar.appendChild(count);
 
   const countLabel = document.createElement("span");
-  countLabel.textContent = "screens";
+  countLabel.textContent = "frames";
   countLabel.style.cssText = "color: rgba(255,255,255,0.5); font-size: 11px; margin-left: -4px;";
   bar.appendChild(countLabel);
 

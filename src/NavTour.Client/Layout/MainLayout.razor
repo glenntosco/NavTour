@@ -41,13 +41,13 @@
     <RadzenHeader>
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="0" Style="padding:0 16px;width:100%">
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="8px">
-                <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" />
+                <RadzenSidebarToggle />
                 <span style="font-size:0.875rem;color:var(--rz-text-secondary-color)">@GetBreadcrumb()</span>
             </RadzenStack>
         </RadzenStack>
     </RadzenHeader>
     <RadzenBody>
-        <div class="rz-p-4" style="max-width:1200px">
+        <div class="@BodyCssClass">
             @Body
         </div>
     </RadzenBody>
@@ -85,6 +85,10 @@
             ? "color:white;background:rgba(255,255,255,0.12);border-radius:6px;margin:2px 12px;font-weight:600"
             : "color:rgba(255,255,255,0.7);border-radius:6px;margin:2px 12px";
     }
+
+    private bool IsEditorPage => Nav.Uri.Contains("/edit", StringComparison.OrdinalIgnoreCase);
+
+    private string BodyCssClass => IsEditorPage ? "" : "rz-p-4";
 
     private string GetBreadcrumb()
     {
