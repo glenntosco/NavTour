@@ -1,22 +1,106 @@
-<RadzenStack Gap="8px" Style="width:140px;min-height:100%;overflow-y:auto;border-right:1px solid var(--rz-border-color);padding:8px">
+<RadzenStack Gap="4px" Style="width:140px;min-height:100%;overflow-y:auto;border-right:1px solid var(--rz-border-color);padding:8px">
     @for (int i = 0; i < Frames.Count; i++)
     {
         var frame = Frames[i];
+        var index = i;
         var isSelected = frame.Id == SelectedFrameId;
-        <RadzenCard Style="@($"cursor:pointer;padding:8px;{(isSelected ? "border:2px solid var(--rz-primary)" : "")}")"
-            @onclick="() => OnFrameSelected.InvokeAsync(frame.Id)">
-            <RadzenStack AlignItems="AlignItems.Center">
-                <RadzenIcon Icon="web" Style="font-size:32px;color:var(--rz-text-secondary-color)" />
-                <RadzenText TextStyle="TextStyle.Caption">Frame @frame.SequenceOrder</RadzenText>
+        <div class="fs-frame @(isSelected ? "fs-selected" : "")" @onclick="() => OnFrameSelected.InvokeAsync(frame.Id)">
+            <RadzenStack AlignItems="AlignItems.Center" Gap="2px">
+                <RadzenIcon Icon="web" Style="font-size:28px;color:var(--rz-text-secondary-color)" />
+                <RadzenText TextStyle="TextStyle.Caption" Style="margin:0">Frame @frame.SequenceOrder</RadzenText>
             </RadzenStack>
-        </RadzenCard>
+            <div class="fs-actions">
+                <button class="fs-action-btn" title="Insert frame before" @onclick="() => OnInsertFrame.InvokeAsync(index)" @onclick:stopPropagation="true">
+                    <RadzenIcon Icon="add_circle_outline" Style="font-size:14px" />
+                </button>
+                <button class="fs-action-btn fs-action-danger" title="Delete frame" @onclick="() => ConfirmDelete(frame.Id)" @onclick:stopPropagation="true">
+                    <RadzenIcon Icon="delete_outline" Style="font-size:14px" />
+                </button>
+            </div>
+        </div>
     }
     <RadzenButton Text="+ Add" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Style="width:100%" Click="OnAddFrame" />
+
+    @if (confirmDeleteId != null)
+    {
+        <div class="fs-confirm-overlay" @onclick="() => confirmDeleteId = null">
+            <div class="fs-confirm-dialog" @onclick:stopPropagation="true">
+                <RadzenText TextStyle="TextStyle.Body2"><strong>Delete this frame?</strong></RadzenText>
+                <RadzenText TextStyle="TextStyle.Caption" Style="color:var(--rz-text-secondary-color)">This cannot be undone.</RadzenText>
+                <RadzenStack Orientation="Orientation.Horizontal" Gap="6px" Style="margin-top:8px">
+                    <RadzenButton Text="Delete" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.ExtraSmall"
+                        Click="() => OnDeleteFrame.InvokeAsync(confirmDeleteId.Value)" />
+                    <RadzenButton Text="Cancel" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall"
+                        Click="() => confirmDeleteId = null" />
+                </RadzenStack>
+            </div>
+        </div>
+    }
 </RadzenStack>
+
+<style>
+    .fs-frame {
+        position: relative;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 8px;
+        border: 2px solid transparent;
+        background: var(--rz-base-background-color);
+        transition: border-color 0.15s;
+    }
+    .fs-frame:hover { border-color: var(--rz-border-color); }
+    .fs-selected { border-color: var(--rz-primary) !important; }
+    .fs-actions {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        display: none;
+        flex-direction: column;
+        gap: 2px;
+    }
+    .fs-frame:hover .fs-actions { display: flex; }
+    .fs-action-btn {
+        background: var(--rz-base-200);
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        padding: 2px;
+        display: flex;
+        align-items: center;
+        color: var(--rz-text-secondary-color);
+    }
+    .fs-action-btn:hover { background: var(--rz-base-300); color: var(--rz-text-color); }
+    .fs-action-danger:hover { color: var(--rz-danger); }
+    .fs-confirm-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    }
+    .fs-confirm-dialog {
+        background: var(--rz-base-background-color);
+        border-radius: 10px;
+        padding: 16px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        min-width: 200px;
+    }
+</style>
 
 @code {
     [Parameter] public List<FrameResponse> Frames { get; set; } = [];
     [Parameter] public Guid? SelectedFrameId { get; set; }
     [Parameter] public EventCallback<Guid> OnFrameSelected { get; set; }
     [Parameter] public EventCallback OnAddFrame { get; set; }
+    [Parameter] public EventCallback<Guid> OnDeleteFrame { get; set; }
+    [Parameter] public EventCallback<int> OnInsertFrame { get; set; }
+
+    private Guid? confirmDeleteId;
+
+    private void ConfirmDelete(Guid frameId)
+    {
+        confirmDeleteId = frameId;
+    }
 }

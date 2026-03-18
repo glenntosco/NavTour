@@ -84,7 +84,8 @@
         {
             foreach (var annotation in Annotations)
             {
-                <AnnotationOverlay Annotation="annotation" Mode="AnnotationOverlay.AnnotationOverlayMode.Edit" />
+                <AnnotationOverlay Annotation="annotation" Mode="AnnotationOverlay.AnnotationOverlayMode.Edit"
+                    OnPositionChanged="HandleAnnotationMoved" />
             }
         }
     }
@@ -188,6 +189,7 @@
     [Parameter] public bool ShowFindReplace { get; set; }
     [Parameter] public EventCallback<bool> ShowFindReplaceChanged { get; set; }
     [Parameter] public EventCallback<string> OnHtmlChanged { get; set; }
+    [Parameter] public EventCallback<AnnotationOverlay.AnnotationPositionChange> OnAnnotationMoved { get; set; }
 
     private ElementReference iframeRef;
     private DotNetObjectReference<FrameEditor>? dotnetRef;
@@ -351,6 +353,11 @@
         var top = Math.Max(4, selectedElement.Rect.Top - 40);
         var left = Math.Max(4, selectedElement.Rect.Left);
         return $"top:{top}px;left:{left}px";
+    }
+
+    private async Task HandleAnnotationMoved(AnnotationOverlay.AnnotationPositionChange change)
+    {
+        await OnAnnotationMoved.InvokeAsync(change);
     }
 
     public void Dispose()

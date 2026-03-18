@@ -1,6 +1,8 @@
 @using NavTour.Shared.DTOs.Annotations
+@inject IJSRuntime JS
 
-<div style="@GetStyle()" class="annotation-overlay @(Mode == AnnotationOverlayMode.Edit ? "editable" : "")">
+<div @ref="selfRef" style="@GetStyle()" class="annotation-overlay @(Mode == AnnotationOverlayMode.Edit ? "editable" : "") @(isDragging ? "dragging" : "")"
+     @onmousedown="OnMouseDown" @onmousedown:stopPropagation="true">
     @switch (Annotation.Type)
     {
         case AnnotationType.Tooltip:
@@ -80,9 +82,18 @@
     }
 </div>
 
+@if (isDragging)
+{
+    <div class="drag-capture-overlay"
+         @onmousemove="OnMouseMove" @onmousemove:preventDefault="true"
+         @onmouseup="OnMouseUp" @onmouseleave="OnMouseUp"></div>
+}
+
 <style>
     .annotation-overlay.editable { cursor: move; pointer-events: all !important; }
     .annotation-overlay.editable:hover { outline: 2px dashed rgba(67,97,238,0.5); outline-offset: 2px; }
+    .annotation-overlay.dragging { outline: 2px solid #4361ee; outline-offset: 2px; opacity: 0.85; z-index: 100 !important; }
+    .drag-capture-overlay { position: absolute; inset: 0; z-index: 9999; cursor: move; }
 
     .numbered-badge {
         position: absolute; top: -12px; left: -12px;
@@ -137,10 +148,65 @@
 @code {
     [Parameter] public AnnotationResponse Annotation { get; set; } = null!;
     [Parameter] public AnnotationOverlayMode Mode { get; set; } = AnnotationOverlayMode.View;
+    [Parameter] public EventCallback<AnnotationPositionChange> OnPositionChanged { get; set; }
+
+    private ElementReference selfRef;
+    private bool isDragging;
+    private double dragStartMouseX, dragStartMouseY;
+    private double dragStartPosX, dragStartPosY;
+    private double dragX, dragY;
+    private double parentWidth, parentHeight;
+
+    private async Task OnMouseDown(MouseEventArgs e)
+    {
+        if (Mode != AnnotationOverlayMode.Edit) return;
+        // Measure the parent container size for accurate pixel-to-percent conversion
+        try
+        {
+            var size = await JS.InvokeAsync<double[]>("annotationDrag.getParentSize", selfRef);
+            parentWidth = size[0];
+            parentHeight = size[1];
+        }
+        catch
+        {
+            parentWidth = 1200;
+            parentHeight = 700;
+        }
+        isDragging = true;
+        dragStartMouseX = e.ClientX;
+        dragStartMouseY = e.ClientY;
+        dragStartPosX = Annotation.PositionX;
+        dragStartPosY = Annotation.PositionY;
+        dragX = Annotation.PositionX;
+        dragY = Annotation.PositionY;
+    }
+
+    private void OnMouseMove(MouseEventArgs e)
+    {
+        if (!isDragging) return;
+        var dx = e.ClientX - dragStartMouseX;
+        var dy = e.ClientY - dragStartMouseY;
+        dragX = Math.Clamp(dragStartPosX + (dx / parentWidth * 100), 0, 100 - Annotation.Width);
+        dragY = Math.Clamp(dragStartPosY + (dy / parentHeight * 100), 0, 100 - Annotation.Height);
+        StateHasChanged();
+    }
+
+    private async Task OnMouseUp(MouseEventArgs e)
+    {
+        if (!isDragging) return;
+        isDragging = false;
+        if (Math.Abs(dragX - dragStartPosX) > 0.5 || Math.Abs(dragY - dragStartPosY) > 0.5)
+        {
+            await OnPositionChanged.InvokeAsync(new AnnotationPositionChange(Annotation.Id, dragX, dragY));
+        }
+        StateHasChanged();
+    }
 
     private string GetStyle()
     {
-        return $"position:absolute;left:{Annotation.PositionX}%;top:{Annotation.PositionY}%;width:{Annotation.Width}%;height:{Annotation.Height}%;z-index:10;pointer-events:none";
+        var posX = isDragging ? dragX : Annotation.PositionX;
+        var posY = isDragging ? dragY : Annotation.PositionY;
+        return $"position:absolute;left:{posX:F2}%;top:{posY:F2}%;width:{Annotation.Width}%;height:{Annotation.Height}%;z-index:10;pointer-events:none";
     }
 
     private string GetTooltipStyle()
@@ -163,4 +229,5 @@
     }
 
     public enum AnnotationOverlayMode { View, Edit }
+    public record AnnotationPositionChange(Guid AnnotationId, double PositionX, double PositionY);
 }

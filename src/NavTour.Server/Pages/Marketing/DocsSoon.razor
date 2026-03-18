@@ -9,26 +9,28 @@
 </HeadContent>
 
 <section class="mkt-section" style="min-height:60vh;display:flex;align-items:center">
-    <div class="mkt-container text-center">
+    <div class="mkt-container text-center" style="max-width:480px">
         <h1>Documentation</h1>
-        <p style="margin:16px auto 24px;max-width:480px">Our documentation is coming soon. Subscribe to be notified, or reach out if you need help.</p>
+        <p style="margin-top:var(--space-5)">Our documentation is coming soon. Subscribe to be notified, or reach out if you need help.</p>
 
         @if (subscribed)
         {
-            <p style="color:var(--nt-success);font-weight:600">Thanks! We'll notify you when docs are ready.</p>
+            <div class="mkt-alert-success" style="margin-top:var(--space-8)">
+                <p style="font-weight:var(--weight-semibold)">Thanks! We'll notify you when docs are ready.</p>
+            </div>
         }
         else
         {
-            <form method="post" @formname="docs-subscribe" @onsubmit="HandleSubscribe" style="display:inline-flex;gap:8px;margin-top:8px;flex-wrap:wrap;justify-content:center">
+            <form method="post" @formname="docs-subscribe" @onsubmit="HandleSubscribe" style="display:inline-flex;gap:var(--space-2);margin-top:var(--space-8);flex-wrap:wrap;justify-content:center">
                 <AntiforgeryToken />
                 <input type="email" name="SubscribeEmail" value="@SubscribeEmail" required placeholder="Enter your email"
-                    style="padding:10px 14px;border:1px solid var(--nt-border);border-radius:var(--nt-radius);font-size:1rem;min-width:260px" />
+                    class="mkt-input" style="min-width:260px;width:auto" />
                 <button type="submit" class="mkt-btn mkt-btn-primary">Subscribe for Updates</button>
             </form>
         }
 
-        <div style="margin-top:32px">
-            <a href="/contact" class="mkt-btn mkt-btn-outline">Contact Us</a>
+        <div style="margin-top:var(--space-10)">
+            <a href="/contact" class="mkt-btn mkt-btn-secondary">Contact Us</a>
         </div>
     </div>
 </section>

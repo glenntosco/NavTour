@@ -1,3 +1,22 @@
+/* Override Radzen material-base purple with NavTour blue */
+:root {
+    --rz-primary: #4361ee;
+    --rz-primary-light: #5a75f0;
+    --rz-primary-lighter: #8196f4;
+    --rz-primary-dark: #3551d4;
+    --rz-primary-darker: #2a41aa;
+    --rz-on-primary: #fff;
+    --rz-link-color: #4361ee;
+    --rz-link-hover-color: #3551d4;
+    --rz-badge-info-background-color: #4361ee;
+    --rz-scheduler-highlight-background-color: rgba(67, 97, 238, 0.1);
+    --rz-secondary: #3b82f6;
+    --rz-secondary-light: #60a5fa;
+    --rz-secondary-lighter: #93c5fd;
+    --rz-secondary-dark: #2563eb;
+    --rz-secondary-darker: #1d4ed8;
+}
+
 .valid.modified:not([type=checkbox]) {
     outline: 1px solid #26b050;
 }

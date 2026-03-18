@@ -3,6 +3,14 @@ window.clickElement = function (id) {
     if (el) el.click();
 };
 
+window.annotationDrag = {
+    getParentSize: function (el) {
+        var parent = el ? el.parentElement : null;
+        if (parent) return [parent.offsetWidth, parent.offsetHeight];
+        return [1200, 700];
+    }
+};
+
 window.authStorage = {
     save: function (token, tenantId) {
         localStorage.setItem("navtour_token", token);

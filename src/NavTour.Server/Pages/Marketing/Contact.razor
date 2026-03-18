@@ -9,21 +9,21 @@
 </HeadContent>
 
 <section class="mkt-section">
-    <div class="mkt-container" style="max-width:600px">
+    <div class="mkt-container" style="max-width:520px">
         <h1 class="text-center">Get in Touch</h1>
-        <p class="text-center" style="margin:16px 0 40px">Questions about NavTour? Want to see a live demo? We'd love to hear from you.</p>
+        <p class="text-center" style="margin-top:var(--space-4);margin-bottom:var(--space-12)">Questions about NavTour? Want to see a live demo? We'd love to hear from you.</p>
 
         @if (submitted)
         {
-            <div style="background:#ecfdf5;border:1px solid #a7f3d0;border-radius:var(--nt-radius);padding:24px;color:#065f46;text-align:center;margin-bottom:32px">
-                <h3 style="color:#065f46">Thank you!</h3>
-                <p style="color:#065f46;margin-top:8px">We'll get back to you shortly.</p>
+            <div class="mkt-alert-success" style="margin-bottom:var(--space-8)">
+                <h3>Thank you!</h3>
+                <p>We'll get back to you shortly.</p>
             </div>
         }
 
         <form method="post" @formname="contact" @onsubmit="HandleSubmit">
             <AntiforgeryToken />
-            <div style="display:flex;flex-direction:column;gap:16px">
+            <div style="display:flex;flex-direction:column;gap:var(--space-5)">
 
                 @* Honeypot field — hidden from users, bots fill it *@
                 <div style="position:absolute;left:-9999px" aria-hidden="true">
@@ -31,33 +31,29 @@
                 </div>
 
                 <div>
-                    <label style="display:block;font-weight:600;margin-bottom:4px">Name *</label>
-                    <input type="text" name="Model.Name" value="@Model.Name" required
-                        style="width:100%;padding:10px 12px;border:1px solid var(--nt-border);border-radius:var(--nt-radius);font-size:1rem" />
+                    <label class="mkt-label">Name *</label>
+                    <input type="text" name="Model.Name" value="@Model.Name" required class="mkt-input" />
                 </div>
                 <div>
-                    <label style="display:block;font-weight:600;margin-bottom:4px">Email *</label>
-                    <input type="email" name="Model.Email" value="@Model.Email" required
-                        style="width:100%;padding:10px 12px;border:1px solid var(--nt-border);border-radius:var(--nt-radius);font-size:1rem" />
+                    <label class="mkt-label">Email *</label>
+                    <input type="email" name="Model.Email" value="@Model.Email" required class="mkt-input" />
                 </div>
                 <div>
-                    <label style="display:block;font-weight:600;margin-bottom:4px">Company</label>
-                    <input type="text" name="Model.Company" value="@Model.Company"
-                        style="width:100%;padding:10px 12px;border:1px solid var(--nt-border);border-radius:var(--nt-radius);font-size:1rem" />
+                    <label class="mkt-label">Company</label>
+                    <input type="text" name="Model.Company" value="@Model.Company" class="mkt-input" />
                 </div>
                 <div>
-                    <label style="display:block;font-weight:600;margin-bottom:4px">Message *</label>
-                    <textarea name="Model.Message" rows="5" required
-                        style="width:100%;padding:10px 12px;border:1px solid var(--nt-border);border-radius:var(--nt-radius);font-size:1rem;resize:vertical">@Model.Message</textarea>
+                    <label class="mkt-label">Message *</label>
+                    <textarea name="Model.Message" rows="5" required class="mkt-input" style="resize:vertical">@Model.Message</textarea>
                 </div>
 
-                <button type="submit" class="mkt-btn mkt-btn-primary" style="width:100%">Send Message</button>
+                <button type="submit" class="mkt-btn mkt-btn-primary" style="width:100%;margin-top:var(--space-2)">Send Message</button>
             </div>
         </form>
 
-        <div class="text-center" style="margin-top:40px">
-            <p style="font-weight:600">Or email us directly</p>
-            <p><a href="mailto:hello@navtour.io">hello@navtour.io</a></p>
+        <div class="text-center" style="margin-top:var(--space-12)">
+            <p style="font-weight:var(--weight-semibold);font-size:var(--text-sm);color:var(--text-tertiary)">Or email us directly</p>
+            <p style="margin-top:var(--space-2)"><a href="mailto:hello@navtour.io" class="mkt-link-reveal">hello@navtour.io</a></p>
         </div>
     </div>
 </section>

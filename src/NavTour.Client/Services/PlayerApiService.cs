@@ -15,7 +15,11 @@ public class PlayerApiService
     }
 
     public async Task<PlayerManifestResponse?> GetManifestAsync(string slug)
-        => await _http.GetFromJsonAsync<PlayerManifestResponse>($"api/v1/player/{slug}/manifest");
+    {
+        var response = await _http.GetAsync($"api/v1/player/{slug}/manifest");
+        if (!response.IsSuccessStatusCode) return null;
+        return await response.Content.ReadFromJsonAsync<PlayerManifestResponse>();
+    }
 
     public async Task<Guid?> SendEventsAsync(string slug, EventBatchRequest batch)
     {

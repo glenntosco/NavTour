@@ -10,3 +10,38 @@
     </main>
     <MarketingFooter />
 </div>
+
+<script>
+    // Scroll reveal observer
+    (function () {
+        if (typeof IntersectionObserver === 'undefined') return;
+        var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+
+        function observe() {
+            document.querySelectorAll('.reveal, .reveal-stagger').forEach(function (el) {
+                observer.observe(el);
+            });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', observe);
+        } else {
+            observe();
+        }
+
+        // Nav scroll shadow
+        var header = document.querySelector('.mkt-header');
+        if (header) {
+            window.addEventListener('scroll', function () {
+                header.classList.toggle('scrolled', window.scrollY > 8);
+            }, { passive: true });
+        }
+    })();
+</script>
