@@ -342,7 +342,7 @@ function injectToolbarUI(demoName: string, frameCount: number, status: string, c
   if (document.getElementById("navtour-capture-bar")) {
     // Update existing toolbar
     const countEl = document.getElementById("navtour-frame-count");
-    if (countEl) countEl.textContent = `${frameCount} frames`;
+    if (countEl) countEl.textContent = `${frameCount}`;
     const statusEl = document.getElementById("navtour-status");
     if (statusEl && status) {
       statusEl.textContent = status;
@@ -426,7 +426,7 @@ function injectToolbarUI(demoName: string, frameCount: number, status: string, c
         const ctEl = document.getElementById("navtour-frame-count");
         if (resp?.ok) {
           if (stEl) { stEl.textContent = "Captured!"; stEl.style.color = "#4ade80"; }
-          if (ctEl) { ctEl.textContent = `${parseInt(ctEl.textContent || "0") + 1} frames`; }
+          if (ctEl) { ctEl.textContent = `${parseInt(ctEl.textContent || "0") + 1}`; }
         } else if (resp?.error?.includes("Already")) {
           if (stEl) { stEl.textContent = "Already captured"; stEl.style.color = "#94a3b8"; }
         } else {
@@ -436,81 +436,107 @@ function injectToolbarUI(demoName: string, frameCount: number, status: string, c
     );
   }
 
-  // --- Build toolbar UI ---
+  // --- Build floating toolbar UI (Navattic-style pill bar) ---
   const bar = document.createElement("div");
   bar.id = "navtour-capture-bar";
   bar.style.cssText = `
-    position: fixed; bottom: 0; left: 0; right: 0; z-index: 2147483647;
-    height: 44px; background: #1a1a2e; color: #fff;
-    display: flex; align-items: center; gap: 12px;
+    position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+    z-index: 2147483647;
+    height: 40px; background: #1a1a2e; color: #fff;
+    display: inline-flex; align-items: center; gap: 8px;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    font-size: 13px; box-shadow: 0 -2px 12px rgba(0,0,0,0.3);
-    padding: 0 16px;
+    font-size: 12px; border-radius: 20px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.08);
+    padding: 0 6px 0 14px;
+    white-space: nowrap;
+    backdrop-filter: blur(8px);
   `;
 
-  const logo = document.createElement("span");
-  logo.textContent = "NavTour";
-  logo.style.cssText = "font-weight: 700; color: #4361ee;";
-  bar.appendChild(logo);
+  // Recording dot indicator
+  const dot = document.createElement("span");
+  dot.id = "navtour-rec-dot";
+  dot.style.cssText = `
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #ef4444; flex-shrink: 0;
+    animation: navtour-pulse 1.5s ease-in-out infinite;
+  `;
+  bar.appendChild(dot);
 
-  const sep = document.createElement("span");
-  sep.textContent = "|";
-  sep.style.cssText = "color: #555;";
-  bar.appendChild(sep);
+  // Inject keyframes for pulse animation
+  if (!document.getElementById("navtour-keyframes")) {
+    const style = document.createElement("style");
+    style.id = "navtour-keyframes";
+    style.textContent = `@keyframes navtour-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }`;
+    document.head.appendChild(style);
+  }
 
   const name = document.createElement("span");
   name.textContent = demoName;
-  name.style.cssText = "color: #ccc;";
+  name.style.cssText = "color: rgba(255,255,255,0.8); font-weight: 500; max-width: 120px; overflow: hidden; text-overflow: ellipsis;";
   bar.appendChild(name);
 
-  // Mode indicator
-  const modeLabel = document.createElement("span");
-  modeLabel.id = "navtour-mode-label";
-  const modeText = captureMode === "click" ? "Click-to-Capture" : captureMode === "manual" ? "Manual" : "Auto";
-  modeLabel.textContent = `[${modeText}]`;
-  modeLabel.style.cssText = "color: #818cf8; font-size: 11px; font-weight: 500;";
-  bar.appendChild(modeLabel);
-
-  const spacer = document.createElement("span");
-  spacer.style.cssText = "flex: 1;";
-  bar.appendChild(spacer);
-
-  const statusEl = document.createElement("span");
-  statusEl.id = "navtour-status";
-  const defaultStatus = captureMode === "click" ? "Click elements to capture" : captureMode === "manual" ? "Press Capture or Ctrl+Shift+C" : (status || "Recording...");
-  statusEl.textContent = defaultStatus;
-  statusEl.style.cssText = `color: ${captureMode !== "auto" ? "#818cf8" : "#fbbf24"}; font-weight: 500;`;
-  bar.appendChild(statusEl);
+  // Thin separator
+  const sep = document.createElement("span");
+  sep.style.cssText = "width: 1px; height: 18px; background: rgba(255,255,255,0.15); flex-shrink: 0;";
+  bar.appendChild(sep);
 
   const count = document.createElement("span");
   count.id = "navtour-frame-count";
-  count.textContent = `${frameCount} frames`;
-  count.style.cssText = "color: #aaa; margin-left: 8px;";
+  count.textContent = `${frameCount}`;
+  count.style.cssText = "color: #fff; font-weight: 700; font-size: 13px; min-width: 12px; text-align: center;";
   bar.appendChild(count);
 
-  // Manual capture button (always visible, useful as fallback in all modes)
+  const countLabel = document.createElement("span");
+  countLabel.textContent = "screens";
+  countLabel.style.cssText = "color: rgba(255,255,255,0.5); font-size: 11px; margin-left: -4px;";
+  bar.appendChild(countLabel);
+
+  // Status text (compact)
+  const statusEl = document.createElement("span");
+  statusEl.id = "navtour-status";
+  const defaultStatus = captureMode === "click" ? "Click to capture" : captureMode === "manual" ? "Ctrl+Shift+C" : (status || "");
+  statusEl.textContent = defaultStatus;
+  statusEl.style.cssText = `color: ${captureMode !== "auto" ? "rgba(255,255,255,0.5)" : "#fbbf24"}; font-size: 11px; font-weight: 500;`;
+  bar.appendChild(statusEl);
+
+  // Separator before buttons
+  const sep2 = document.createElement("span");
+  sep2.style.cssText = "width: 1px; height: 18px; background: rgba(255,255,255,0.15); flex-shrink: 0;";
+  bar.appendChild(sep2);
+
+  // Capture button (pill style)
   const captureBtn = document.createElement("button");
   captureBtn.textContent = "Capture";
-  captureBtn.title = "Manual capture (Ctrl+Shift+C)";
+  captureBtn.title = "Capture this screen (Ctrl+Shift+C)";
   captureBtn.style.cssText = `
-    background: #334155; color: #fff; border: 1px solid #555; border-radius: 6px;
-    padding: 6px 14px; font-size: 12px; cursor: pointer; margin-left: 8px;
+    background: rgba(255,255,255,0.12); color: #fff; border: none; border-radius: 14px;
+    padding: 5px 12px; font-size: 11px; font-weight: 600; cursor: pointer;
+    display: inline-flex; align-items: center;
+    transition: background 0.15s;
+    font-family: inherit;
   `;
+  captureBtn.addEventListener("mouseenter", () => { captureBtn.style.background = "rgba(255,255,255,0.2)"; });
+  captureBtn.addEventListener("mouseleave", () => { captureBtn.style.background = "rgba(255,255,255,0.12)"; });
   captureBtn.addEventListener("click", () => {
     captureBtn.disabled = true;
-    captureBtn.textContent = "...";
+    captureBtn.style.opacity = "0.5";
     const clone = cloneAndClean();
     sendCapture(clone, "");
-    setTimeout(() => { captureBtn.disabled = false; captureBtn.textContent = "Capture"; }, 1000);
+    setTimeout(() => { captureBtn.disabled = false; captureBtn.style.opacity = "1"; }, 1000);
   });
   bar.appendChild(captureBtn);
 
+  // Done button (primary accent pill)
   const finishBtn = document.createElement("button");
-  finishBtn.textContent = "Finish";
+  finishBtn.textContent = "Done";
   finishBtn.style.cssText = `
-    background: #4361ee; color: #fff; border: none; border-radius: 6px;
-    padding: 6px 14px; font-size: 12px; font-weight: 600; cursor: pointer; margin-left: 4px;
+    background: #4361ee; color: #fff; border: none; border-radius: 14px;
+    padding: 5px 14px; font-size: 11px; font-weight: 600; cursor: pointer;
+    transition: background 0.15s;
+    font-family: inherit;
   `;
+  finishBtn.addEventListener("mouseenter", () => { finishBtn.style.background = "#3a56d4"; });
+  finishBtn.addEventListener("mouseleave", () => { finishBtn.style.background = "#4361ee"; });
   finishBtn.addEventListener("click", () => {
     chrome.runtime.sendMessage({ type: "STOP_CAPTURE", openBuilder: true });
     bar.remove();
@@ -666,7 +692,7 @@ function injectToolbarUI(demoName: string, frameCount: number, status: string, c
 
 function updateToolbarStatus(frameCount: number, status: string) {
   const countEl = document.getElementById("navtour-frame-count");
-  if (countEl) countEl.textContent = `${frameCount} frames`;
+  if (countEl) countEl.textContent = `${frameCount}`;
   const statusEl = document.getElementById("navtour-status");
   if (statusEl) {
     statusEl.textContent = status;

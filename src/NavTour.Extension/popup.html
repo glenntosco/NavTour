@@ -10,15 +10,19 @@
   <div class="container">
     <img src="icons/logo.webp" alt="NavTour" class="logo">
 
-    <!-- Not Logged In Screen -->
-    <div id="screen-not-logged-in" class="screen">
-      <div class="not-logged-in-message">
-        <p class="not-logged-in-title">Not logged in</p>
-        <p class="not-logged-in-desc">Log into the NavTour web app first, then come back here.</p>
+    <!-- Login Screen -->
+    <div id="screen-login" class="screen">
+      <div class="field">
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" placeholder="you@company.com" autocomplete="email">
       </div>
-      <a id="btn-open-app" class="btn btn-primary btn-open-app" href="#" target="_blank" rel="noopener">Log in at navtour.cloud</a>
-      <button id="btn-retry" class="btn btn-secondary">Retry</button>
-      <div id="retry-status" class="status" hidden></div>
+      <div class="field">
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" placeholder="Password" autocomplete="current-password">
+      </div>
+      <button id="btn-login" class="btn btn-primary">Sign In</button>
+      <div id="login-error" class="error" hidden></div>
+      <button id="btn-retry" class="btn btn-link login-retry">Try auto-login from browser session</button>
     </div>
 
     <!-- Demo Select Screen -->

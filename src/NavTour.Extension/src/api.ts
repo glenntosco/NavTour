@@ -3,6 +3,7 @@ import type {
   CreateDemoRequest,
   DemoResponse,
   FrameResponse,
+  LoginResponse,
 } from "./types";
 
 export class NavTourApi {
@@ -21,6 +22,20 @@ export class NavTourApi {
     const h: Record<string, string> = { Accept: "application/json" };
     if (this.token) h["Authorization"] = `Bearer ${this.token}`;
     return h;
+  }
+
+  async login(email: string, password: string): Promise<LoginResponse> {
+    const res = await fetch(`${this.serverUrl}/api/v1/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    if (!res.ok) {
+      if (res.status === 401) throw new Error("Invalid email or password");
+      if (res.status === 0 || res.status >= 500) throw new Error("Server unreachable");
+      throw new Error("Login failed: " + res.status);
+    }
+    return res.json();
   }
 
   async getDemos(): Promise<DemoListItem[]> {
