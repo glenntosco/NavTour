@@ -165,4 +165,427 @@
   <data name="cta_default_title" xml:space="preserve"><value>Ready to transform your demos?</value></data>
   <data name="cta_default_subtitle" xml:space="preserve"><value>Start building interactive demos in minutes. No credit card required.</value></data>
   <data name="cta_default_text" xml:space="preserve"><value>Start Free</value></data>
+
+  <!-- Solution Marketing -->
+  <data name="sol_mkt_page_title" xml:space="preserve"><value>NavTour for Marketing — Interactive Demos That Convert</value></data>
+  <data name="sol_mkt_meta_desc" xml:space="preserve"><value>Embed interactive product demos on your website, in campaigns, and on landing pages. Let prospects experience your product the moment they're interested.</value></data>
+  <data name="sol_mkt_eyebrow" xml:space="preserve"><value>For Marketing Teams</value></data>
+  <data name="sol_mkt_hero_title" xml:space="preserve"><value>Your product is amazing. But prospects can't see it until after a sales call.</value></data>
+  <data name="sol_mkt_hero_subtitle" xml:space="preserve"><value>Embed interactive demos on your website, in campaigns, and on landing pages. Let prospects experience your product the moment they're interested.</value></data>
+  <data name="sol_mkt_cta_primary" xml:space="preserve"><value>Start Building Free</value></data>
+  <data name="sol_mkt_cta_secondary" xml:space="preserve"><value>See Marketing Demos</value></data>
+  <data name="sol_mkt_pain1_title" xml:space="preserve"><value>Static screenshots don't convert</value></data>
+  <data name="sol_mkt_pain1_desc" xml:space="preserve"><value>Visitors bounce when they can't interact with your product. Screenshots and videos create awareness but not conviction.</value></data>
+  <data name="sol_mkt_pain2_title" xml:space="preserve"><value>Demos are a sales bottleneck</value></data>
+  <data name="sol_mkt_pain2_desc" xml:space="preserve"><value>Every prospect has to schedule a call, wait for an AE, and sit through a generic pitch before they see the product.</value></data>
+  <data name="sol_mkt_pain3_title" xml:space="preserve"><value>No visibility into buyer interest</value></data>
+  <data name="sol_mkt_pain3_desc" xml:space="preserve"><value>You're sending traffic to a pricing page and hoping for the best. No way to measure who's genuinely evaluating.</value></data>
+  <data name="sol_mkt_feat1_eyebrow" xml:space="preserve"><value>Embed</value></data>
+  <data name="sol_mkt_feat1_title" xml:space="preserve"><value>Website Embeds That Convert</value></data>
+  <data name="sol_mkt_feat1_desc" xml:space="preserve"><value>Replace static product screenshots with interactive, click-through demos. Visitors explore your product at their own pace — no form gates, no sales calls. Embed on landing pages, feature pages, or documentation.</value></data>
+  <data name="sol_mkt_feat1_placeholder" xml:space="preserve"><value>Interactive demo embedded on landing page</value></data>
+  <data name="sol_mkt_feat2_eyebrow" xml:space="preserve"><value>Personalize</value></data>
+  <data name="sol_mkt_feat2_title" xml:space="preserve"><value>AI-Personalized Campaign Assets</value></data>
+  <data name="sol_mkt_feat2_desc" xml:space="preserve"><value>Generate personalized demo links for every campaign segment. AI swaps company names, industry data, and use-case examples automatically. One template serves every audience.</value></data>
+  <data name="sol_mkt_feat2_placeholder" xml:space="preserve"><value>AI-personalized demo link builder</value></data>
+  <data name="sol_mkt_feat3_eyebrow" xml:space="preserve"><value>Attribute</value></data>
+  <data name="sol_mkt_feat3_title" xml:space="preserve"><value>Pipeline Attribution You Can Trust</value></data>
+  <data name="sol_mkt_feat3_desc" xml:space="preserve"><value>AI tracks every demo interaction and scores buying intent. See which campaigns drive the most engaged viewers. Feed signals directly to HubSpot or Salesforce — no manual tagging.</value></data>
+  <data name="sol_mkt_feat3_placeholder" xml:space="preserve"><value>Pipeline attribution dashboard</value></data>
+  <data name="sol_mkt_metrics_title" xml:space="preserve"><value>Marketing teams using NavTour see results</value></data>
+  <data name="sol_mkt_metric1_label" xml:space="preserve"><value>more website engagement</value></data>
+  <data name="sol_mkt_metric1_source" xml:space="preserve"><value>vs. static content</value></data>
+  <data name="sol_mkt_metric2_label" xml:space="preserve"><value>increase in marketing-sourced pipeline</value></data>
+  <data name="sol_mkt_metric3_label" xml:space="preserve"><value>of demo viewers visit pricing page</value></data>
+  <data name="sol_mkt_cta_title" xml:space="preserve"><value>Turn your website into a product experience</value></data>
+  <data name="sol_mkt_cta_subtitle" xml:space="preserve"><value>Embed interactive demos in minutes. Free forever.</value></data>
+
+  <!-- Solution Sales -->
+  <data name="sol_sales_page_title" xml:space="preserve"><value>NavTour for Sales — Personalized Demos That Close Deals</value></data>
+  <data name="sol_sales_meta_desc" xml:space="preserve"><value>Send prospects a custom demo minutes after a discovery call. AI personalizes every experience with their company name, data, and use case.</value></data>
+  <data name="sol_sales_eyebrow" xml:space="preserve"><value>For Sales Teams</value></data>
+  <data name="sol_sales_hero_title" xml:space="preserve"><value>Generic slide decks don't close deals. Personalized demos do.</value></data>
+  <data name="sol_sales_hero_subtitle" xml:space="preserve"><value>Send prospects a custom demo minutes after a discovery call. AI personalizes every experience with their company name, data, and use case.</value></data>
+  <data name="sol_sales_cta_primary" xml:space="preserve"><value>Start Building Free</value></data>
+  <data name="sol_sales_cta_secondary" xml:space="preserve"><value>See Sales Demos</value></data>
+  <data name="sol_sales_pain1_title" xml:space="preserve"><value>Every discovery call ends the same way</value></data>
+  <data name="sol_sales_pain1_desc" xml:space="preserve"><value>You promise to send a follow-up. Then you spend 2 hours building a custom slide deck that the prospect may never open.</value></data>
+  <data name="sol_sales_pain2_title" xml:space="preserve"><value>Champions can't resell internally</value></data>
+  <data name="sol_sales_pain2_desc" xml:space="preserve"><value>Your contact loved the demo, but they can't recreate it for their VP. The deal stalls in committee.</value></data>
+  <data name="sol_sales_pain3_title" xml:space="preserve"><value>No insight into deal engagement</value></data>
+  <data name="sol_sales_pain3_desc" xml:space="preserve"><value>You don't know if the prospect watched your recording, forwarded the deck, or ghosted you entirely.</value></data>
+  <data name="sol_sales_feat1_eyebrow" xml:space="preserve"><value>Personalize</value></data>
+  <data name="sol_sales_feat1_title" xml:space="preserve"><value>Personalized Demos in 60 Seconds</value></data>
+  <data name="sol_sales_feat1_desc" xml:space="preserve"><value>AI generates a prospect-specific demo from your template library. Company name, logo, industry data — all swapped automatically. Send a demo link before the discovery call even ends.</value></data>
+  <data name="sol_sales_feat1_placeholder" xml:space="preserve"><value>AI personalizing a demo in real time</value></data>
+  <data name="sol_sales_feat2_eyebrow" xml:space="preserve"><value>Enable</value></data>
+  <data name="sol_sales_feat2_title" xml:space="preserve"><value>Champion Enablement Assets</value></data>
+  <data name="sol_sales_feat2_desc" xml:space="preserve"><value>Give your champion a demo they can share internally. It walks their VP through the value prop, highlights the relevant use case, and captures engagement from every stakeholder who views it.</value></data>
+  <data name="sol_sales_feat2_placeholder" xml:space="preserve"><value>Champion sharing demo with buying committee</value></data>
+  <data name="sol_sales_feat3_eyebrow" xml:space="preserve"><value>Intelligence</value></data>
+  <data name="sol_sales_feat3_title" xml:space="preserve"><value>Deal Intelligence</value></data>
+  <data name="sol_sales_feat3_desc" xml:space="preserve"><value>AI tracks who viewed your demo, how long they spent, which features they explored, and whether they shared it. Intent scoring tells you which deals to prioritize and when to follow up.</value></data>
+  <data name="sol_sales_feat3_placeholder" xml:space="preserve"><value>Deal intelligence dashboard with intent scores</value></data>
+  <data name="sol_sales_metrics_title" xml:space="preserve"><value>Sales teams using NavTour see results</value></data>
+  <data name="sol_sales_metric1_label" xml:space="preserve"><value>faster deal velocity</value></data>
+  <data name="sol_sales_metric2_label" xml:space="preserve"><value>higher win rate with personalized demos</value></data>
+  <data name="sol_sales_metric3_label" xml:space="preserve"><value>of demos are shared with 2+ stakeholders</value></data>
+  <data name="sol_sales_cta_title" xml:space="preserve"><value>Close deals faster with AI-personalized demos</value></data>
+  <data name="sol_sales_cta_subtitle" xml:space="preserve"><value>Start free. Send your first personalized demo today.</value></data>
+
+  <!-- Solution Presales -->
+  <data name="sol_presales_page_title" xml:space="preserve"><value>NavTour for Presales — Scale Your SE Team with AI Demos</value></data>
+  <data name="sol_presales_meta_desc" xml:space="preserve"><value>Let NavTour handle the first demo. AI-generated self-serve experiences qualify prospects before your SEs invest a minute.</value></data>
+  <data name="sol_presales_eyebrow" xml:space="preserve"><value>For Presales &amp; Solution Engineering</value></data>
+  <data name="sol_presales_hero_title" xml:space="preserve"><value>Your SEs spend 80% of their time on repetitive discovery demos</value></data>
+  <data name="sol_presales_hero_subtitle" xml:space="preserve"><value>Let NavTour handle the first demo. AI-generated self-serve experiences qualify prospects before your SEs invest a minute.</value></data>
+  <data name="sol_presales_cta_primary" xml:space="preserve"><value>Start Building Free</value></data>
+  <data name="sol_presales_cta_secondary" xml:space="preserve"><value>See Presales Demos</value></data>
+  <data name="sol_presales_pain1_title" xml:space="preserve"><value>SEs are the bottleneck</value></data>
+  <data name="sol_presales_pain1_desc" xml:space="preserve"><value>Every deal requires SE involvement for the first demo. Your team is stretched thin, and sales cycles slow down as the pipeline grows.</value></data>
+  <data name="sol_presales_pain2_title" xml:space="preserve"><value>Repetitive demos burn out your best people</value></data>
+  <data name="sol_presales_pain2_desc" xml:space="preserve"><value>80% of discovery demos cover the same features. Your senior SEs are doing work that could be automated.</value></data>
+  <data name="sol_presales_pain3_title" xml:space="preserve"><value>No scalable demo infrastructure</value></data>
+  <data name="sol_presales_pain3_desc" xml:space="preserve"><value>Each SE builds demos differently. No version control, no consistency, no way to measure what works.</value></data>
+  <data name="sol_presales_feat1_eyebrow" xml:space="preserve"><value>Self-Serve</value></data>
+  <data name="sol_presales_feat1_title" xml:space="preserve"><value>Self-Serve Discovery Demos</value></data>
+  <data name="sol_presales_feat1_desc" xml:space="preserve"><value>Let prospects explore your product through AI-generated interactive demos before the sales call. Qualify interest, identify their use case, and give SEs context before they ever pick up the phone.</value></data>
+  <data name="sol_presales_feat1_placeholder" xml:space="preserve"><value>Prospect exploring a self-serve demo</value></data>
+  <data name="sol_presales_feat2_eyebrow" xml:space="preserve"><value>Templates</value></data>
+  <data name="sol_presales_feat2_title" xml:space="preserve"><value>Template Library With Version Control</value></data>
+  <data name="sol_presales_feat2_desc" xml:space="preserve"><value>Build reusable demo templates for every vertical, use case, and persona. Version control ensures everyone uses the latest. AI brand voice keeps messaging consistent across the team.</value></data>
+  <data name="sol_presales_feat2_placeholder" xml:space="preserve"><value>Demo template library with version history</value></data>
+  <data name="sol_presales_feat3_eyebrow" xml:space="preserve"><value>Analytics</value></data>
+  <data name="sol_presales_feat3_title" xml:space="preserve"><value>Team Analytics &amp; Optimization</value></data>
+  <data name="sol_presales_feat3_desc" xml:space="preserve"><value>See which demos perform best, which SEs drive the most engagement, and which templates convert. AI suggests optimizations based on aggregate data across your entire team.</value></data>
+  <data name="sol_presales_feat3_placeholder" xml:space="preserve"><value>Team analytics and optimization dashboard</value></data>
+  <data name="sol_presales_metrics_title" xml:space="preserve"><value>Presales teams using NavTour see results</value></data>
+  <data name="sol_presales_metric1_label" xml:space="preserve"><value>more demos delivered per SE</value></data>
+  <data name="sol_presales_metric2_label" xml:space="preserve"><value>reduction in repetitive demo work</value></data>
+  <data name="sol_presales_metric3_label" xml:space="preserve"><value>saved per SE on average</value></data>
+  <data name="sol_presales_cta_title" xml:space="preserve"><value>Scale your presales team without hiring</value></data>
+  <data name="sol_presales_cta_subtitle" xml:space="preserve"><value>AI handles the repetitive work. Your SEs handle the deals that matter.</value></data>
+
+  <!-- Customers -->
+  <data name="customers_page_title" xml:space="preserve"><value>Customers — NavTour</value></data>
+  <data name="customers_meta_desc" xml:space="preserve"><value>See how teams at leading companies use NavTour interactive demos to close deals faster, convert more visitors, and onboard customers at scale.</value></data>
+  <data name="customers_eyebrow" xml:space="preserve"><value>Customers</value></data>
+  <data name="customers_title" xml:space="preserve"><value>See how teams use NavTour to close more deals</value></data>
+  <data name="customers_subtitle" xml:space="preserve"><value>From startups to enterprise, product-led teams trust NavTour for interactive demos.</value></data>
+  <data name="customers_logo_saas" xml:space="preserve"><value>SaaS Leaders</value></data>
+  <data name="customers_logo_finhealth" xml:space="preserve"><value>Financial &amp; Healthcare</value></data>
+  <data name="customers_challenge" xml:space="preserve"><value>Challenge</value></data>
+  <data name="customers_solution" xml:space="preserve"><value>Solution</value></data>
+  <data name="customers_result" xml:space="preserve"><value>Result</value></data>
+  <data name="customers_cs1_tag" xml:space="preserve"><value>SaaS Platform</value></data>
+  <data name="customers_cs1_challenge" xml:space="preserve"><value>Sales team spent 3 hours per custom demo. Pipeline was growing faster than the team could support.</value></data>
+  <data name="customers_cs1_solution" xml:space="preserve"><value>NavTour's AI Copilot generates personalized demos in under 2 minutes. SEs shifted from demo building to strategic selling.</value></data>
+  <data name="customers_cs1_result" xml:space="preserve"><value>40% increase in close rate. Demo creation time dropped from 3 hours to 2 minutes.</value></data>
+  <data name="customers_cs1_metric" xml:space="preserve"><value>increase in close rate</value></data>
+  <data name="customers_testimonial1_quote" xml:space="preserve"><value>NavTour is the highest-ROI tool we've added this year. Our reps send personalized demos before the discovery call even ends.</value></data>
+  <data name="customers_testimonial1_title" xml:space="preserve"><value>Head of Sales</value></data>
+  <data name="customers_cs2_tag" xml:space="preserve"><value>Healthcare Tech</value></data>
+  <data name="customers_cs2_challenge" xml:space="preserve"><value>Compliance requirements made live product demos risky. Prospects needed to see the product but couldn't access PHI.</value></data>
+  <data name="customers_cs2_solution" xml:space="preserve"><value>Interactive demos with synthetic data. Prospects explore the full workflow without compliance concerns.</value></data>
+  <data name="customers_cs2_result" xml:space="preserve"><value>Sales cycle shortened by 3 weeks. 100% compliant demo environment.</value></data>
+  <data name="customers_cs2_metric_value" xml:space="preserve"><value>3 weeks</value></data>
+  <data name="customers_cs2_metric" xml:space="preserve"><value>shorter sales cycle</value></data>
+  <data name="customers_testimonial2_quote" xml:space="preserve"><value>We embedded NavTour demos on every product page. Engagement tripled overnight. It's like having a sales rep on every page.</value></data>
+  <data name="customers_testimonial2_title" xml:space="preserve"><value>VP of Marketing</value></data>
+  <data name="customers_cs3_tag" xml:space="preserve"><value>Financial Services</value></data>
+  <data name="customers_cs3_challenge" xml:space="preserve"><value>Marketing had no way to show the product on the website. Every prospect required a scheduled demo call.</value></data>
+  <data name="customers_cs3_solution" xml:space="preserve"><value>Embedded interactive demos on landing pages. AI personalization shows relevant features based on visitor segment.</value></data>
+  <data name="customers_cs3_result" xml:space="preserve"><value>67% of website visitors interact with demos. Marketing-sourced pipeline up 52%.</value></data>
+  <data name="customers_cs3_metric" xml:space="preserve"><value>increase in pipeline</value></data>
+  <data name="customers_cta_title" xml:space="preserve"><value>Join the teams already winning with NavTour</value></data>
+  <data name="customers_cta_subtitle" xml:space="preserve"><value>Start free. See results in your first week.</value></data>
+
+  <!-- Blog -->
+  <data name="blog_page_title" xml:space="preserve"><value>Blog — NavTour</value></data>
+  <data name="blog_meta_desc" xml:space="preserve"><value>Insights on interactive demos, AI-powered sales, and product-led growth from the NavTour team.</value></data>
+  <data name="blog_title" xml:space="preserve"><value>Blog</value></data>
+  <data name="blog_subtitle" xml:space="preserve"><value>Insights on interactive demos, AI-powered sales, and product-led growth.</value></data>
+  <data name="blog_cat_all" xml:space="preserve"><value>All</value></data>
+  <data name="blog_cat_product" xml:space="preserve"><value>Product Updates</value></data>
+  <data name="blog_cat_sales" xml:space="preserve"><value>Sales Playbooks</value></data>
+  <data name="blog_cat_marketing" xml:space="preserve"><value>Marketing</value></data>
+  <data name="blog_cat_engineering" xml:space="preserve"><value>Engineering</value></data>
+  <data name="blog_cat_customers" xml:space="preserve"><value>Customer Stories</value></data>
+  <data name="blog_read" xml:space="preserve"><value>Read</value></data>
+  <data name="blog_post1_title" xml:space="preserve"><value>Introducing AI Copilot: Build demos 10x faster</value></data>
+  <data name="blog_post1_excerpt" xml:space="preserve"><value>NavTour's AI Copilot automatically generates interactive demos from your product capture...</value></data>
+  <data name="blog_post2_title" xml:space="preserve"><value>How to Send a Personalized Demo in Under 60 Seconds</value></data>
+  <data name="blog_post2_excerpt" xml:space="preserve"><value>The best sales teams don't wait for SE availability. Here's how to use AI personalization...</value></data>
+  <data name="blog_post3_title" xml:space="preserve"><value>Why Interactive Demos Convert 3x Better Than Video</value></data>
+  <data name="blog_post3_excerpt" xml:space="preserve"><value>We analyzed 10,000 demo sessions. The data is clear: interactive beats passive every time...</value></data>
+  <data name="blog_post4_title" xml:space="preserve"><value>How CloudScale Cut Demo Creation Time by 98%</value></data>
+  <data name="blog_post4_excerpt" xml:space="preserve"><value>From 3 hours to 2 minutes: CloudScale's sales team transformed their demo workflow...</value></data>
+  <data name="blog_post5_title" xml:space="preserve"><value>Building a Chrome Extension for DOM Snapshot Capture</value></data>
+  <data name="blog_post5_excerpt" xml:space="preserve"><value>A technical deep dive into how NavTour captures interactive HTML snapshots...</value></data>
+  <data name="blog_post6_title" xml:space="preserve"><value>The AI-Powered Demo Stack for 2026</value></data>
+  <data name="blog_post6_excerpt" xml:space="preserve"><value>Your buyers expect personalized experiences. Here's the technology stack that delivers...</value></data>
+
+  <!-- Contact -->
+  <data name="contact_page_title" xml:space="preserve"><value>Contact — NavTour</value></data>
+  <data name="contact_meta_desc" xml:space="preserve"><value>Get in touch with the NavTour team. Questions about pricing, demos, or partnerships — we'd love to hear from you.</value></data>
+  <data name="contact_heading" xml:space="preserve"><value>Get in touch</value></data>
+  <data name="contact_subheading" xml:space="preserve"><value>Fill out the form and we'll get back to you within 2 hours.</value></data>
+  <data name="contact_thank_you" xml:space="preserve"><value>Thank you!</value></data>
+  <data name="contact_thank_you_desc" xml:space="preserve"><value>We'll get back to you within 2 hours.</value></data>
+  <data name="contact_label_name" xml:space="preserve"><value>Name</value></data>
+  <data name="contact_label_email" xml:space="preserve"><value>Email</value></data>
+  <data name="contact_label_company" xml:space="preserve"><value>Company</value></data>
+  <data name="contact_label_company_size" xml:space="preserve"><value>Company Size</value></data>
+  <data name="contact_select_default" xml:space="preserve"><value>Select...</value></data>
+  <data name="contact_label_message" xml:space="preserve"><value>Message</value></data>
+  <data name="contact_send" xml:space="preserve"><value>Send Message</value></data>
+  <data name="contact_next_title" xml:space="preserve"><value>What happens next?</value></data>
+  <data name="contact_step1_title" xml:space="preserve"><value>We respond within 2 hours</value></data>
+  <data name="contact_step1_desc" xml:space="preserve"><value>A real person from our team will reply to your message. No bots, no auto-responders.</value></data>
+  <data name="contact_step2_title" xml:space="preserve"><value>15-minute intro call</value></data>
+  <data name="contact_step2_desc" xml:space="preserve"><value>We'll learn about your use case and show you how NavTour can help.</value></data>
+  <data name="contact_step3_title" xml:space="preserve"><value>Custom demo of your workflow</value></data>
+  <data name="contact_step3_desc" xml:space="preserve"><value>See NavTour configured for your specific product and audience.</value></data>
+  <data name="contact_testimonial_quote" xml:space="preserve"><value>From first contact to live demos in under a week. The NavTour team made onboarding effortless.</value></data>
+  <data name="contact_testimonial_role" xml:space="preserve"><value>Head of Sales, TerraLogic</value></data>
+
+  <!-- Security -->
+  <data name="security_page_title" xml:space="preserve"><value>Security — NavTour</value></data>
+  <data name="security_meta_desc" xml:space="preserve"><value>NavTour security: SOC 2 compliant, AES-256 encryption, GDPR ready, 99.9% uptime SLA, Azure hosted.</value></data>
+  <data name="security_eyebrow" xml:space="preserve"><value>Security</value></data>
+  <data name="security_title" xml:space="preserve"><value>Enterprise-grade security you can trust</value></data>
+  <data name="security_subtitle" xml:space="preserve"><value>NavTour is built on industry-leading security practices. Your data is protected at every layer.</value></data>
+  <data name="security_badge_soc2" xml:space="preserve"><value>SOC 2 Compliant</value></data>
+  <data name="security_badge_uptime" xml:space="preserve"><value>99.9% Uptime SLA</value></data>
+  <data name="security_badge_encryption" xml:space="preserve"><value>AES-256 Encryption</value></data>
+  <data name="security_badge_gdpr" xml:space="preserve"><value>GDPR Ready</value></data>
+  <data name="security_badge_azure" xml:space="preserve"><value>Azure Hosted</value></data>
+  <data name="security_data_title" xml:space="preserve"><value>Data Security</value></data>
+  <data name="security_data_p1" xml:space="preserve"><value>Your data is encrypted at rest (AES-256) and in transit (TLS 1.3). We implement strict access controls, regular key rotation, and comprehensive audit logging. Demo content is isolated per tenant with row-level security.</value></data>
+  <data name="security_data_p2" xml:space="preserve"><value>Every database query is scoped to your tenant. There is no mechanism to access another organization's data, even in error. Encryption keys are managed via Azure Key Vault with automated rotation policies.</value></data>
+  <data name="security_infra_title" xml:space="preserve"><value>Infrastructure</value></data>
+  <data name="security_infra_p1" xml:space="preserve"><value>NavTour runs on Microsoft Azure with multi-region redundancy. Automated backups, disaster recovery, and 99.9% uptime SLA. Infrastructure is managed via code with automated security scanning on every deployment.</value></data>
+  <data name="security_infra_p2" xml:space="preserve"><value>We use Azure App Service, Azure SQL, and Azure Blob Storage with geo-redundant replication. Every deployment passes through automated SAST and dependency vulnerability scans before reaching production.</value></data>
+  <data name="security_compliance_title" xml:space="preserve"><value>Compliance</value></data>
+  <data name="security_compliance_p1" xml:space="preserve"><value>NavTour is SOC 2 Type II compliant. We undergo annual third-party audits covering security, availability, and confidentiality. We also comply with GDPR, CCPA, and maintain a current Data Processing Agreement (DPA).</value></data>
+  <data name="security_compliance_p2" xml:space="preserve"><value>Our SOC 2 report is available under NDA for enterprise customers evaluating NavTour. Contact our team to request a copy along with our completed security questionnaire.</value></data>
+  <data name="security_privacy_title" xml:space="preserve"><value>Privacy</value></data>
+  <data name="security_privacy_p1" xml:space="preserve"><value>We collect only what's necessary. Demo viewer data is anonymized by default. You control data retention policies. We never sell customer data. Full GDPR data subject rights supported: access, deletion, portability.</value></data>
+  <data name="security_privacy_p2" xml:space="preserve"><value>NavTour does not use customer data for model training or any purpose beyond delivering the service. When you delete your account, all associated data is permanently purged within 30 days.</value></data>
+  <data name="security_disclosure_title" xml:space="preserve"><value>Responsible Disclosure</value></data>
+  <data name="security_disclosure_p1" xml:space="preserve"><value>We maintain a responsible disclosure program for security researchers. If you discover a vulnerability, please email security@navtour.com. We respond within 24 hours and never pursue legal action against good-faith reporters.</value></data>
+  <data name="security_disclosure_p2" xml:space="preserve"><value>We appreciate the security research community and are committed to working with researchers to verify, reproduce, and respond to legitimate reports. Critical issues are triaged immediately.</value></data>
+  <data name="security_cta_title" xml:space="preserve"><value>Questions about security?</value></data>
+  <data name="security_cta_subtitle" xml:space="preserve"><value>Our team is happy to discuss security practices, share our SOC 2 report, or review your compliance requirements.</value></data>
+  <data name="security_cta_button" xml:space="preserve"><value>Contact Security Team</value></data>
+
+  <!-- Pricing Page -->
+  <data name="pricing_title" xml:space="preserve"><value>Simple pricing. Powerful demos.</value></data>
+  <data name="pricing_subtitle" xml:space="preserve"><value>Start free. Scale as you grow. No credit card required.</value></data>
+  <data name="pricing_annual_note" xml:space="preserve"><value>Save 20% with annual billing</value></data>
+  <data name="pricing_free_name" xml:space="preserve"><value>Free</value></data>
+  <data name="pricing_free_price" xml:space="preserve"><value>Free</value></data>
+  <data name="pricing_free_desc" xml:space="preserve"><value>Try it out — no credit card</value></data>
+  <data name="pricing_free_feat1" xml:space="preserve"><value>1 demo</value></data>
+  <data name="pricing_free_feat2" xml:space="preserve"><value>10 frames</value></data>
+  <data name="pricing_free_feat3" xml:space="preserve"><value>AI Copilot (basic)</value></data>
+  <data name="pricing_free_feat4" xml:space="preserve"><value>Basic embed (iframe)</value></data>
+  <data name="pricing_free_feat5" xml:space="preserve"><value>NavTour branding</value></data>
+  <data name="pricing_free_feat6" xml:space="preserve"><value>Community support</value></data>
+  <data name="pricing_free_cta" xml:space="preserve"><value>Get Started →</value></data>
+  <data name="pricing_starter_name" xml:space="preserve"><value>Starter</value></data>
+  <data name="pricing_starter_price" xml:space="preserve"><value>$99</value></data>
+  <data name="pricing_starter_desc" xml:space="preserve"><value>For individual marketers</value></data>
+  <data name="pricing_starter_feat1" xml:space="preserve"><value>5 demos</value></data>
+  <data name="pricing_starter_feat2" xml:space="preserve"><value>Unlimited frames</value></data>
+  <data name="pricing_starter_feat3" xml:space="preserve"><value>1 user</value></data>
+  <data name="pricing_starter_feat4" xml:space="preserve"><value>AI copy editing</value></data>
+  <data name="pricing_starter_feat5" xml:space="preserve"><value>AI smart editor</value></data>
+  <data name="pricing_starter_feat6" xml:space="preserve"><value>AI demo review</value></data>
+  <data name="pricing_starter_feat7" xml:space="preserve"><value>Basic analytics</value></data>
+  <data name="pricing_starter_feat8" xml:space="preserve"><value>Email support</value></data>
+  <data name="pricing_starter_feat9" xml:space="preserve"><value>Remove NavTour branding</value></data>
+  <data name="pricing_starter_cta" xml:space="preserve"><value>Start Free →</value></data>
+  <data name="pricing_growth_name" xml:space="preserve"><value>Growth</value></data>
+  <data name="pricing_growth_price" xml:space="preserve"><value>$299</value></data>
+  <data name="pricing_growth_desc" xml:space="preserve"><value>For growing SaaS teams</value></data>
+  <data name="pricing_growth_feat1" xml:space="preserve"><value>25 demos</value></data>
+  <data name="pricing_growth_feat2" xml:space="preserve"><value>5 users</value></data>
+  <data name="pricing_growth_feat3" xml:space="preserve"><value>Full analytics + intent scoring</value></data>
+  <data name="pricing_growth_feat4" xml:space="preserve"><value>AI personalization at scale</value></data>
+  <data name="pricing_growth_feat5" xml:space="preserve"><value>AI branching logic</value></data>
+  <data name="pricing_growth_feat6" xml:space="preserve"><value>API access</value></data>
+  <data name="pricing_growth_feat7" xml:space="preserve"><value>Priority support</value></data>
+  <data name="pricing_growth_feat8" xml:space="preserve"><value>CRM integrations</value></data>
+  <data name="pricing_growth_cta" xml:space="preserve"><value>Start Free →</value></data>
+  <data name="pricing_enterprise_name" xml:space="preserve"><value>Enterprise</value></data>
+  <data name="pricing_enterprise_price" xml:space="preserve"><value>Custom</value></data>
+  <data name="pricing_enterprise_desc" xml:space="preserve"><value>For large organizations</value></data>
+  <data name="pricing_enterprise_feat1" xml:space="preserve"><value>Unlimited demos</value></data>
+  <data name="pricing_enterprise_feat2" xml:space="preserve"><value>Unlimited users</value></data>
+  <data name="pricing_enterprise_feat3" xml:space="preserve"><value>SSO / SAML</value></data>
+  <data name="pricing_enterprise_feat4" xml:space="preserve"><value>Custom AI training</value></data>
+  <data name="pricing_enterprise_feat5" xml:space="preserve"><value>AI brand voice</value></data>
+  <data name="pricing_enterprise_feat6" xml:space="preserve"><value>Bulk demo optimization</value></data>
+  <data name="pricing_enterprise_feat7" xml:space="preserve"><value>Dedicated support</value></data>
+  <data name="pricing_enterprise_feat8" xml:space="preserve"><value>SLA guarantee</value></data>
+  <data name="pricing_enterprise_feat9" xml:space="preserve"><value>Self-hosted option</value></data>
+  <data name="pricing_enterprise_cta" xml:space="preserve"><value>Contact Sales</value></data>
+  <data name="pricing_compare_title" xml:space="preserve"><value>Compare plans</value></data>
+  <data name="pricing_table_feature" xml:space="preserve"><value>Feature</value></data>
+  <data name="pricing_cat_core" xml:space="preserve"><value>Core Features</value></data>
+  <data name="pricing_row_demos" xml:space="preserve"><value>Demos</value></data>
+  <data name="pricing_row_frames" xml:space="preserve"><value>Frames per demo</value></data>
+  <data name="pricing_row_users" xml:space="preserve"><value>Users</value></data>
+  <data name="pricing_row_chrome_ext" xml:space="preserve"><value>Chrome extension capture</value></data>
+  <data name="pricing_row_annotations" xml:space="preserve"><value>Annotations (tooltip, modal, hotspot)</value></data>
+  <data name="pricing_row_embed" xml:space="preserve"><value>Embed options</value></data>
+  <data name="pricing_row_custom_domain" xml:space="preserve"><value>Custom domain</value></data>
+  <data name="pricing_cat_ai" xml:space="preserve"><value>AI Features</value></data>
+  <data name="pricing_row_ai_copilot" xml:space="preserve"><value>AI Copilot (demo generation)</value></data>
+  <data name="pricing_row_ai_copy" xml:space="preserve"><value>AI copy editing</value></data>
+  <data name="pricing_row_ai_smart" xml:space="preserve"><value>AI smart editor</value></data>
+  <data name="pricing_row_ai_review" xml:space="preserve"><value>AI demo review</value></data>
+  <data name="pricing_row_ai_personalization" xml:space="preserve"><value>AI personalization at scale</value></data>
+  <data name="pricing_row_ai_intent" xml:space="preserve"><value>AI intent scoring</value></data>
+  <data name="pricing_row_ai_branching" xml:space="preserve"><value>AI branching logic</value></data>
+  <data name="pricing_row_ai_brand" xml:space="preserve"><value>AI brand voice memory</value></data>
+  <data name="pricing_row_ai_training" xml:space="preserve"><value>Custom AI training</value></data>
+  <data name="pricing_cat_analytics" xml:space="preserve"><value>Analytics</value></data>
+  <data name="pricing_row_basic_views" xml:space="preserve"><value>Basic view counts</value></data>
+  <data name="pricing_row_step_analytics" xml:space="preserve"><value>Step completion analytics</value></data>
+  <data name="pricing_row_lead_capture" xml:space="preserve"><value>Lead capture forms</value></data>
+  <data name="pricing_row_intent_scoring" xml:space="preserve"><value>Intent scoring</value></data>
+  <data name="pricing_row_deanonymization" xml:space="preserve"><value>Account deanonymization</value></data>
+  <data name="pricing_cat_integrations" xml:space="preserve"><value>Integrations</value></data>
+  <data name="pricing_row_rest_api" xml:space="preserve"><value>REST API</value></data>
+  <data name="pricing_row_webhooks" xml:space="preserve"><value>Webhooks</value></data>
+  <data name="pricing_row_crm" xml:space="preserve"><value>CRM integrations</value></data>
+  <data name="pricing_row_zapier" xml:space="preserve"><value>Zapier</value></data>
+  <data name="pricing_row_custom_integrations" xml:space="preserve"><value>Custom integrations</value></data>
+  <data name="pricing_cat_support" xml:space="preserve"><value>Support</value></data>
+  <data name="pricing_row_community" xml:space="preserve"><value>Community support</value></data>
+  <data name="pricing_row_email_support" xml:space="preserve"><value>Email support (24hr)</value></data>
+  <data name="pricing_row_priority_support" xml:space="preserve"><value>Priority support (4hr)</value></data>
+  <data name="pricing_row_dedicated_csm" xml:space="preserve"><value>Dedicated CSM</value></data>
+  <data name="pricing_row_sla" xml:space="preserve"><value>SLA guarantee</value></data>
+  <data name="pricing_cat_security" xml:space="preserve"><value>Security</value></data>
+  <data name="pricing_row_soc2" xml:space="preserve"><value>SOC 2 compliance</value></data>
+  <data name="pricing_row_sso" xml:space="preserve"><value>SSO / SAML</value></data>
+  <data name="pricing_row_audit_logs" xml:space="preserve"><value>Audit logs</value></data>
+  <data name="pricing_row_self_hosted" xml:space="preserve"><value>Self-hosted option</value></data>
+  <data name="pricing_faq_title" xml:space="preserve"><value>Frequently asked questions</value></data>
+  <data name="pricing_faq1_q" xml:space="preserve"><value>Is the free plan really free?</value></data>
+  <data name="pricing_faq1_a" xml:space="preserve"><value>Yes. No credit card, no trial period, no expiration. Build 1 demo with up to 10 frames — free forever. We believe in letting you experience NavTour before you commit.</value></data>
+  <data name="pricing_faq2_q" xml:space="preserve"><value>What AI features are included in the free plan?</value></data>
+  <data name="pricing_faq2_a" xml:space="preserve"><value>The free plan includes basic AI Copilot — AI will generate an initial demo draft when you capture your product. For advanced AI features like smart editing, personalization at scale, and intent scoring, you'll need Starter or Growth.</value></data>
+  <data name="pricing_faq3_q" xml:space="preserve"><value>Can I switch plans at any time?</value></data>
+  <data name="pricing_faq3_a" xml:space="preserve"><value>Absolutely. Upgrade or downgrade whenever you want. Upgrades take effect immediately with prorated billing. Downgrades apply at your next billing cycle. No cancellation fees.</value></data>
+  <data name="pricing_faq4_q" xml:space="preserve"><value>How does annual billing work?</value></data>
+  <data name="pricing_faq4_a" xml:space="preserve"><value>Annual billing saves 20% compared to monthly. You're billed once per year. If you need to cancel mid-year, we'll refund the remaining months.</value></data>
+  <data name="pricing_faq5_q" xml:space="preserve"><value>What happens when I hit my demo limit?</value></data>
+  <data name="pricing_faq5_a" xml:space="preserve"><value>Your existing demos stay live — we never disable your content. You'll get a notification suggesting an upgrade. If you need a temporary bump, reach out and we'll work something out.</value></data>
+  <data name="pricing_faq6_q" xml:space="preserve"><value>Do you offer startup or nonprofit discounts?</value></data>
+  <data name="pricing_faq6_a" xml:space="preserve"><value>Yes. 50% off Starter and Growth for startups under $5M ARR and registered nonprofits. Contact us with your details.</value></data>
+  <data name="pricing_faq7_q" xml:space="preserve"><value>Can I migrate from Navattic, Storylane, or another platform?</value></data>
+  <data name="pricing_faq7_a" xml:space="preserve"><value>Yes. We offer free migration assistance. Our team will help recreate your demos in NavTour and ensure a smooth transition.</value></data>
+  <data name="pricing_faq8_q" xml:space="preserve"><value>What kind of support do I get?</value></data>
+  <data name="pricing_faq8_a" xml:space="preserve"><value>Free and Starter include community support. Starter adds email support with 24-hour response. Growth includes priority support with 4-hour response. Enterprise gets a dedicated CSM and SLA.</value></data>
+  <data name="pricing_faq9_q" xml:space="preserve"><value>Is my data secure?</value></data>
+  <data name="pricing_faq9_a" xml:space="preserve"><value>Yes. NavTour is SOC 2 compliant, uses AES-256 encryption at rest and in transit, and runs on Azure infrastructure. Enterprise customers can deploy on their own infrastructure.</value></data>
+  <data name="pricing_faq10_q" xml:space="preserve"><value>Can I use the API to integrate with my CRM?</value></data>
+  <data name="pricing_faq10_a" xml:space="preserve"><value>Starter includes REST API access. Growth adds pre-built CRM integrations (Salesforce, HubSpot) and Zapier. Enterprise supports custom integrations.</value></data>
+  <data name="pricing_cta_title" xml:space="preserve"><value>Start building demos today</value></data>
+  <data name="pricing_cta_subtitle" xml:space="preserve"><value>Free forever. No credit card required.</value></data>
+  <data name="pricing_cta_text" xml:space="preserve"><value>Start Building Free</value></data>
+
+  <!-- Product Page -->
+  <data name="product_eyebrow" xml:space="preserve"><value>Product</value></data>
+  <data name="product_title" xml:space="preserve"><value>The complete platform for interactive demos</value></data>
+  <data name="product_subtitle" xml:space="preserve"><value>From AI-powered capture to analytics that predict buying intent — everything your team needs to build, personalize, and measure product demos at scale.</value></data>
+  <data name="product_feat1_label" xml:space="preserve"><value>AI Copilot</value></data>
+  <data name="product_feat1_title" xml:space="preserve"><value>Your demos, built by AI</value></data>
+  <data name="product_feat1_desc" xml:space="preserve"><value>Click through your product with the Chrome extension. AI Copilot automatically generates a complete demo — guide copy, tooltip placement, story flow, and branching logic. Trained on patterns from thousands of high-performing demos.</value></data>
+  <data name="product_feat2_label" xml:space="preserve"><value>AI Smart Editor</value></data>
+  <data name="product_feat2_title" xml:space="preserve"><value>Edit demos in plain English</value></data>
+  <data name="product_feat2_desc" xml:space="preserve"><value>Tell AI what to change: 'Replace all account names with healthcare companies.' AI rewrites demo data, updates screenshots, and fixes stale dates and pricing across all your demos — instantly.</value></data>
+  <data name="product_feat3_label" xml:space="preserve"><value>AI Personalization Engine</value></data>
+  <data name="product_feat3_title" xml:space="preserve"><value>50 custom demos from 1 template</value></data>
+  <data name="product_feat3_desc" xml:space="preserve"><value>Dynamic variables swap company name, logo, industry data, and role-specific content automatically. AI suggests what to personalize based on the viewer's company. Bulk-generate dozens of prospect-specific demos in minutes.</value></data>
+  <data name="product_feat4_label" xml:space="preserve"><value>AI Analytics &amp; Intent</value></data>
+  <data name="product_feat4_title" xml:space="preserve"><value>Know who's ready to buy</value></data>
+  <data name="product_feat4_desc" xml:space="preserve"><value>AI identifies which demo interactions predict buying intent. Account deanonymization reveals companies without form fills. Engagement scoring feeds directly to Salesforce, HubSpot, or any CRM.</value></data>
+  <data name="product_feat5_label" xml:space="preserve"><value>Chrome Extension Capture</value></data>
+  <data name="product_feat5_title" xml:space="preserve"><value>Capture any web app in clicks</value></data>
+  <data name="product_feat5_desc" xml:space="preserve"><value>Install the extension. Navigate your product. Each click saves a complete HTML/CSS snapshot as an interactive frame. Works on single-page apps, traditional sites, and even complex dashboards.</value></data>
+  <data name="product_feat6_label" xml:space="preserve"><value>No-Code Editor</value></data>
+  <data name="product_feat6_title" xml:space="preserve"><value>Drag, drop, publish</value></data>
+  <data name="product_feat6_desc" xml:space="preserve"><value>Add tooltips, modals, hotspots, blur overlays, click zones, and numbered badges — all with drag-and-drop. Create multi-step flows with conditional branching. Zero engineering required.</value></data>
+  <data name="product_feat7_label" xml:space="preserve"><value>Embed Anywhere</value></data>
+  <data name="product_feat7_title" xml:space="preserve"><value>Your demos, wherever your buyers are</value></data>
+  <data name="product_feat7_desc" xml:space="preserve"><value>Embed on your website, in email campaigns, on ad landing pages, in sales decks, and in help documentation. One demo, every channel. Responsive and fast-loading.</value></data>
+  <data name="product_feat8_label" xml:space="preserve"><value>AI Demo Review</value></data>
+  <data name="product_feat8_title" xml:space="preserve"><value>Get graded on best practices</value></data>
+  <data name="product_feat8_desc" xml:space="preserve"><value>AI analyzes your demo against conversion benchmarks: step count, copy length, CTA placement, completion rates. Get specific suggestions: 'This demo has 18 steps — top performers average 10-12.'</value></data>
+  <data name="product_feat9_label" xml:space="preserve"><value>AI Branching &amp; Flow Logic</value></data>
+  <data name="product_feat9_title" xml:space="preserve"><value>Personalized paths for every buyer</value></data>
+  <data name="product_feat9_desc" xml:space="preserve"><value>AI suggests conditional branching paths based on viewer role and industry. Auto-generates 'choose your own adventure' flows from a single linear capture. Recommends which features to highlight for each persona.</value></data>
+  <data name="product_feat10_label" xml:space="preserve"><value>Team Collaboration</value></data>
+  <data name="product_feat10_title" xml:space="preserve"><value>Scale your demo operation</value></data>
+  <data name="product_feat10_desc" xml:space="preserve"><value>Shared demo library with templates, version control, and role-based permissions. AI brand voice memory ensures consistent tone across all team members. Build once, reuse everywhere.</value></data>
+  <data name="product_feat11_label" xml:space="preserve"><value>Integrations &amp; API</value></data>
+  <data name="product_feat11_title" xml:space="preserve"><value>Connects to your stack</value></data>
+  <data name="product_feat11_desc" xml:space="preserve"><value>Pre-built integrations with HubSpot, Salesforce, Marketo, Slack, and Zapier. Full REST API for custom workflows. Webhooks push events in real time.</value></data>
+  <data name="product_feat12_label" xml:space="preserve"><value>Multi-Language Support</value></data>
+  <data name="product_feat12_title" xml:space="preserve"><value>Demos in every language</value></data>
+  <data name="product_feat12_desc" xml:space="preserve"><value>Create demos in English, Spanish, Portuguese, and more. AI auto-translates demo content while preserving your brand voice. Serve the right language based on viewer locale.</value></data>
+  <data name="product_cta_title" xml:space="preserve"><value>See every feature in action</value></data>
+  <data name="product_cta_subtitle" xml:space="preserve"><value>Build your first AI-powered demo in under 10 minutes. Free forever.</value></data>
+  <data name="product_cta_text" xml:space="preserve"><value>Start Building Free</value></data>
+  <data name="product_cta_secondary" xml:space="preserve"><value>Book a Demo</value></data>
+
+  <!-- Product AI Page -->
+  <data name="ai_eyebrow" xml:space="preserve"><value>AI Platform</value></data>
+  <data name="ai_title" xml:space="preserve"><value>AI that builds, edits, and optimizes your demos</value></data>
+  <data name="ai_subtitle" xml:space="preserve"><value>From auto-generation to smart personalization, NavTour AI handles every step of the demo lifecycle — so you can focus on closing deals.</value></data>
+  <data name="ai_cta_primary" xml:space="preserve"><value>Start Building Free</value></data>
+  <data name="ai_cta_secondary" xml:space="preserve"><value>Watch AI In Action</value></data>
+  <data name="ai_cap1_label" xml:space="preserve"><value>Capability 01</value></data>
+  <data name="ai_cap1_title" xml:space="preserve"><value>Click through your product. AI does the rest.</value></data>
+  <data name="ai_cap1_desc" xml:space="preserve"><value>Walk through your product with the Chrome extension. AI Copilot watches your flow and automatically generates a complete interactive demo — writing guide copy, anchoring tooltips to the right elements, structuring the narrative, and creating logical branching paths. Trained on patterns from thousands of high-performing demos, it knows what converts.</value></data>
+  <data name="ai_cap2_label" xml:space="preserve"><value>Capability 02</value></data>
+  <data name="ai_cap2_title" xml:space="preserve"><value>Edit demos in plain English</value></data>
+  <data name="ai_cap2_desc" xml:space="preserve"><value>No more clicking through screens to update data. Tell AI what to change: "Replace all company names with fintech brands" or "Update the pricing table to Q2 numbers." AI modifies the visual content directly. It also runs continuous "freshness checks" — detecting and replacing stale dates, outdated pricing, and obsolete data across all your demos automatically.</value></data>
+  <data name="ai_cap3_label" xml:space="preserve"><value>Capability 03</value></data>
+  <data name="ai_cap3_title" xml:space="preserve"><value>50 custom demos from 1 template</value></data>
+  <data name="ai_cap3_desc" xml:space="preserve"><value>Every prospect sees THEIR version of your product. Dynamic variables automatically swap company name, logo, industry-specific data, and role-relevant content. AI analyzes each viewer's company and suggests what to personalize. Generate 50 prospect-specific demos from a single template in minutes — each one tailored to resonate.</value></data>
+  <data name="ai_cap4_label" xml:space="preserve"><value>Capability 04</value></data>
+  <data name="ai_cap4_title" xml:space="preserve"><value>AI tells you who's ready to buy</value></data>
+  <data name="ai_cap4_desc" xml:space="preserve"><value>Go beyond page views. AI analyzes demo interaction patterns to predict buying intent — which clicks signal genuine interest, which paths indicate evaluation stage, which drop-offs mean disqualification. Account deanonymization identifies companies viewing your demos without requiring form fills. Every signal feeds directly to your CRM.</value></data>
+  <data name="ai_cap5_label" xml:space="preserve"><value>Capability 05</value></data>
+  <data name="ai_cap5_title" xml:space="preserve"><value>Get graded on best practices</value></data>
+  <data name="ai_cap5_desc" xml:space="preserve"><value>AI scores your demo against conversion benchmarks from thousands of top-performing demos. It checks step count, copy length, CTA placement, completion rates, and engagement patterns. Then it tells you exactly what to fix: "This demo has 18 steps — top performers average 10-12. Consider combining steps 5-7."</value></data>
+  <data name="ai_cap6_label" xml:space="preserve"><value>Capability 06</value></data>
+  <data name="ai_cap6_title" xml:space="preserve"><value>Personalized paths for every buyer</value></data>
+  <data name="ai_cap6_desc" xml:space="preserve"><value>AI analyzes your demo content and suggests conditional branching paths based on viewer role, industry, and company size. It auto-generates "choose your own adventure" flows from a single linear capture — no manual logic required. Each persona sees only the features and workflows most relevant to them.</value></data>
+  <data name="ai_cap7_label" xml:space="preserve"><value>Capability 07</value></data>
+  <data name="ai_cap7_title" xml:space="preserve"><value>Consistent tone across every team member</value></data>
+  <data name="ai_cap7_desc" xml:space="preserve"><value>AI learns your company's communication style — tone, terminology, formatting preferences. When any team member creates or edits a demo, AI ensures the copy matches your brand voice. No more inconsistent messaging across regions, teams, or demo versions.</value></data>
+  <data name="ai_compare_title" xml:space="preserve"><value>NavTour AI vs. the competition</value></data>
+  <data name="ai_compare_subtitle" xml:space="preserve"><value>The most complete AI demo platform on the market.</value></data>
+  <data name="ai_compare_feature" xml:space="preserve"><value>Feature</value></data>
+  <data name="ai_row_generation" xml:space="preserve"><value>AI demo generation</value></data>
+  <data name="ai_row_copy_editing" xml:space="preserve"><value>AI copy editing</value></data>
+  <data name="ai_row_smart_editing" xml:space="preserve"><value>AI smart editing (visual)</value></data>
+  <data name="ai_row_personalization" xml:space="preserve"><value>AI personalization at scale</value></data>
+  <data name="ai_row_intent" xml:space="preserve"><value>AI intent scoring</value></data>
+  <data name="ai_row_review" xml:space="preserve"><value>AI demo review &amp; grading</value></data>
+  <data name="ai_row_branching" xml:space="preserve"><value>AI branching logic</value></data>
+  <data name="ai_row_brand_voice" xml:space="preserve"><value>AI brand voice memory</value></data>
+  <data name="ai_row_nl_editing" xml:space="preserve"><value>Natural language editing</value></data>
+  <data name="ai_row_bulk" xml:space="preserve"><value>Bulk demo generation</value></data>
+  <data name="ai_bottom_cta_title" xml:space="preserve"><value>See AI in action — build your first demo free</value></data>
+  <data name="ai_bottom_cta_subtitle" xml:space="preserve"><value>No credit card. No training required. AI builds your first demo in under 5 minutes.</value></data>
+  <data name="ai_bottom_cta_text" xml:space="preserve"><value>Start Building Free</value></data>
+  <data name="ai_bottom_cta_secondary" xml:space="preserve"><value>Book a Demo</value></data>
 </root>

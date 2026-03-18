@@ -1,5 +1,6 @@
 @page "/pricing"
 @layout MarketingLayout
+@inject IStringLocalizer<NavTour.Server.Resources.SharedResources> L
 
 <PageTitle>Pricing — NavTour</PageTitle>
 <HeadContent>
@@ -9,9 +10,9 @@
 @* Hero *@
 <section class="mkt-section" style="padding-bottom:var(--space-8)">
     <div class="mkt-container" style="max-width:620px">
-        <h1 class="text-center reveal">Simple pricing. Powerful demos.</h1>
-        <p class="text-center reveal" style="margin-top:var(--space-5)">Start free. Scale as you grow. No credit card required.</p>
-        <p class="text-center reveal mkt-pricing-annual-note" style="margin-top:var(--space-3)">Save 20% with annual billing</p>
+        <h1 class="text-center reveal">@L["pricing_title"]</h1>
+        <p class="text-center reveal" style="margin-top:var(--space-5)">@L["pricing_subtitle"]</p>
+        <p class="text-center reveal mkt-pricing-annual-note" style="margin-top:var(--space-3)">@L["pricing_annual_note"]</p>
     </div>
 </section>
 
@@ -19,18 +20,18 @@
 <section class="mkt-section" style="padding-top:0">
     <div class="mkt-container">
         <div class="mkt-grid mkt-grid-4 reveal-stagger">
-            <PricingCard Name="Free" Price="Free" Description="Try it out — no credit card"
-                Features='new() { "1 demo", "10 frames", "AI Copilot (basic)", "Basic embed (iframe)", "NavTour branding", "Community support" }'
-                CtaText="Get Started →" />
-            <PricingCard Name="Starter" Price="$99" Description="For individual marketers"
-                Features='new() { "5 demos", "Unlimited frames", "1 user", "AI copy editing", "AI smart editor", "AI demo review", "Basic analytics", "Email support", "Remove NavTour branding" }'
-                CtaText="Start Free →" />
-            <PricingCard Name="Growth" Price="$299" Description="For growing SaaS teams" Highlighted="true"
-                Features='new() { "25 demos", "5 users", "Full analytics + intent scoring", "AI personalization at scale", "AI branching logic", "API access", "Priority support", "CRM integrations" }'
-                CtaText="Start Free →" />
-            <PricingCard Name="Enterprise" Price="Custom" Description="For large organizations"
-                Features='new() { "Unlimited demos", "Unlimited users", "SSO / SAML", "Custom AI training", "AI brand voice", "Bulk demo optimization", "Dedicated support", "SLA guarantee", "Self-hosted option" }'
-                CtaText="Contact Sales" CtaUrl="/contact" />
+            <PricingCard Name="@L["pricing_free_name"].Value" Price="@L["pricing_free_price"].Value" Description="@L["pricing_free_desc"].Value"
+                Features="@FreeFeatures"
+                CtaText="@L["pricing_free_cta"].Value" />
+            <PricingCard Name="@L["pricing_starter_name"].Value" Price="@L["pricing_starter_price"].Value" Description="@L["pricing_starter_desc"].Value"
+                Features="@StarterFeatures"
+                CtaText="@L["pricing_starter_cta"].Value" />
+            <PricingCard Name="@L["pricing_growth_name"].Value" Price="@L["pricing_growth_price"].Value" Description="@L["pricing_growth_desc"].Value" Highlighted="true"
+                Features="@GrowthFeatures"
+                CtaText="@L["pricing_growth_cta"].Value" />
+            <PricingCard Name="@L["pricing_enterprise_name"].Value" Price="@L["pricing_enterprise_price"].Value" Description="@L["pricing_enterprise_desc"].Value"
+                Features="@EnterpriseFeatures"
+                CtaText="@L["pricing_enterprise_cta"].Value" CtaUrl="/contact" />
         </div>
     </div>
 </section>
@@ -39,17 +40,17 @@
 <section class="mkt-section-alt">
     <div class="mkt-container reveal">
         <div class="mkt-section-heading">
-            <h2>Compare plans</h2>
+            <h2>@L["pricing_compare_title"]</h2>
         </div>
         <div style="overflow-x:auto">
             <table class="mkt-table">
                 <thead>
                     <tr>
-                        <th>Feature</th>
-                        <th>Free</th>
-                        <th>Starter</th>
-                        <th class="highlighted">Growth</th>
-                        <th>Enterprise</th>
+                        <th>@L["pricing_table_feature"]</th>
+                        <th>@L["pricing_free_name"]</th>
+                        <th>@L["pricing_starter_name"]</th>
+                        <th class="highlighted">@L["pricing_growth_name"]</th>
+                        <th>@L["pricing_enterprise_name"]</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -58,13 +59,13 @@
                         if (row.IsCategory)
                         {
                             <tr class="mkt-table-category">
-                                <td colspan="5">@row.Feature</td>
+                                <td colspan="5">@L[row.Feature]</td>
                             </tr>
                         }
                         else
                         {
                             <tr>
-                                <td>@row.Feature</td>
+                                <td>@L[row.Feature]</td>
                                 <td>@((MarkupString)FormatCheck(row.Free))</td>
                                 <td>@((MarkupString)FormatCheck(row.Starter))</td>
                                 <td class="highlighted">@((MarkupString)FormatCheck(row.Growth))</td>
@@ -82,25 +83,30 @@
 <section class="mkt-section">
     <div class="mkt-container" style="max-width:720px">
         <div class="mkt-section-heading reveal">
-            <h2>Frequently asked questions</h2>
+            <h2>@L["pricing_faq_title"]</h2>
         </div>
         <div class="reveal">
-            @foreach (var faq in faqs)
+            @foreach (var faq in faqKeys)
             {
                 <details class="mkt-faq">
-                    <summary>@faq.Q</summary>
-                    <p>@faq.A</p>
+                    <summary>@L[faq.QKey]</summary>
+                    <p>@L[faq.AKey]</p>
                 </details>
             }
         </div>
     </div>
 </section>
 
-<CtaSection Dark="true" Title="Start building demos today" Subtitle="Free forever. No credit card required." CtaText="Start Building Free" />
+<CtaSection Dark="true" Title="@L["pricing_cta_title"].Value" Subtitle="@L["pricing_cta_subtitle"].Value" CtaText="@L["pricing_cta_text"].Value" />
 
 @code {
+    private List<string> FreeFeatures => new() { L["pricing_free_feat1"].Value, L["pricing_free_feat2"].Value, L["pricing_free_feat3"].Value, L["pricing_free_feat4"].Value, L["pricing_free_feat5"].Value, L["pricing_free_feat6"].Value };
+    private List<string> StarterFeatures => new() { L["pricing_starter_feat1"].Value, L["pricing_starter_feat2"].Value, L["pricing_starter_feat3"].Value, L["pricing_starter_feat4"].Value, L["pricing_starter_feat5"].Value, L["pricing_starter_feat6"].Value, L["pricing_starter_feat7"].Value, L["pricing_starter_feat8"].Value, L["pricing_starter_feat9"].Value };
+    private List<string> GrowthFeatures => new() { L["pricing_growth_feat1"].Value, L["pricing_growth_feat2"].Value, L["pricing_growth_feat3"].Value, L["pricing_growth_feat4"].Value, L["pricing_growth_feat5"].Value, L["pricing_growth_feat6"].Value, L["pricing_growth_feat7"].Value, L["pricing_growth_feat8"].Value };
+    private List<string> EnterpriseFeatures => new() { L["pricing_enterprise_feat1"].Value, L["pricing_enterprise_feat2"].Value, L["pricing_enterprise_feat3"].Value, L["pricing_enterprise_feat4"].Value, L["pricing_enterprise_feat5"].Value, L["pricing_enterprise_feat6"].Value, L["pricing_enterprise_feat7"].Value, L["pricing_enterprise_feat8"].Value, L["pricing_enterprise_feat9"].Value };
+
     private record ComparisonRow(string Feature, string Free = "", string Starter = "", string Growth = "", string Enterprise = "", bool IsCategory = false);
-    private record Faq(string Q, string A);
+    private record FaqKeyPair(string QKey, string AKey);
 
     private string FormatCheck(string val) => val switch
     {
@@ -113,65 +119,65 @@
 
     private readonly List<ComparisonRow> comparisonRows = new()
     {
-        Category("Core Features"),
-        new("Demos", "1", "5", "25", "Unlimited"),
-        new("Frames per demo", "10", "Unlimited", "Unlimited", "Unlimited"),
-        new("Users", "1", "1", "5", "Unlimited"),
-        new("Chrome extension capture", "yes", "yes", "yes", "yes"),
-        new("Annotations (tooltip, modal, hotspot)", "yes", "yes", "yes", "yes"),
-        new("Embed options", "Basic iframe", "Full embed", "Full embed", "Full embed"),
-        new("Custom domain", "no", "no", "yes", "yes"),
+        Category("pricing_cat_core"),
+        new("pricing_row_demos", "1", "5", "25", "Unlimited"),
+        new("pricing_row_frames", "10", "Unlimited", "Unlimited", "Unlimited"),
+        new("pricing_row_users", "1", "1", "5", "Unlimited"),
+        new("pricing_row_chrome_ext", "yes", "yes", "yes", "yes"),
+        new("pricing_row_annotations", "yes", "yes", "yes", "yes"),
+        new("pricing_row_embed", "Basic iframe", "Full embed", "Full embed", "Full embed"),
+        new("pricing_row_custom_domain", "no", "no", "yes", "yes"),
 
-        Category("AI Features"),
-        new("AI Copilot (demo generation)", "Basic", "Full", "Full", "Full"),
-        new("AI copy editing", "no", "yes", "yes", "yes"),
-        new("AI smart editor", "no", "yes", "yes", "yes"),
-        new("AI demo review", "no", "yes", "yes", "yes"),
-        new("AI personalization at scale", "no", "no", "yes", "yes"),
-        new("AI intent scoring", "no", "no", "yes", "yes"),
-        new("AI branching logic", "no", "no", "yes", "yes"),
-        new("AI brand voice memory", "no", "no", "no", "yes"),
-        new("Custom AI training", "no", "no", "no", "yes"),
+        Category("pricing_cat_ai"),
+        new("pricing_row_ai_copilot", "Basic", "Full", "Full", "Full"),
+        new("pricing_row_ai_copy", "no", "yes", "yes", "yes"),
+        new("pricing_row_ai_smart", "no", "yes", "yes", "yes"),
+        new("pricing_row_ai_review", "no", "yes", "yes", "yes"),
+        new("pricing_row_ai_personalization", "no", "no", "yes", "yes"),
+        new("pricing_row_ai_intent", "no", "no", "yes", "yes"),
+        new("pricing_row_ai_branching", "no", "no", "yes", "yes"),
+        new("pricing_row_ai_brand", "no", "no", "no", "yes"),
+        new("pricing_row_ai_training", "no", "no", "no", "yes"),
 
-        Category("Analytics"),
-        new("Basic view counts", "yes", "yes", "yes", "yes"),
-        new("Step completion analytics", "no", "yes", "yes", "yes"),
-        new("Lead capture forms", "no", "yes", "yes", "yes"),
-        new("Intent scoring", "no", "no", "yes", "yes"),
-        new("Account deanonymization", "no", "no", "yes", "yes"),
+        Category("pricing_cat_analytics"),
+        new("pricing_row_basic_views", "yes", "yes", "yes", "yes"),
+        new("pricing_row_step_analytics", "no", "yes", "yes", "yes"),
+        new("pricing_row_lead_capture", "no", "yes", "yes", "yes"),
+        new("pricing_row_intent_scoring", "no", "no", "yes", "yes"),
+        new("pricing_row_deanonymization", "no", "no", "yes", "yes"),
 
-        Category("Integrations"),
-        new("REST API", "no", "yes", "yes", "yes"),
-        new("Webhooks", "no", "yes", "yes", "yes"),
-        new("CRM integrations", "no", "no", "yes", "yes"),
-        new("Zapier", "no", "no", "yes", "yes"),
-        new("Custom integrations", "no", "no", "no", "yes"),
+        Category("pricing_cat_integrations"),
+        new("pricing_row_rest_api", "no", "yes", "yes", "yes"),
+        new("pricing_row_webhooks", "no", "yes", "yes", "yes"),
+        new("pricing_row_crm", "no", "no", "yes", "yes"),
+        new("pricing_row_zapier", "no", "no", "yes", "yes"),
+        new("pricing_row_custom_integrations", "no", "no", "no", "yes"),
 
-        Category("Support"),
-        new("Community support", "yes", "yes", "yes", "yes"),
-        new("Email support (24hr)", "no", "yes", "yes", "yes"),
-        new("Priority support (4hr)", "no", "no", "yes", "yes"),
-        new("Dedicated CSM", "no", "no", "no", "yes"),
-        new("SLA guarantee", "no", "no", "no", "yes"),
+        Category("pricing_cat_support"),
+        new("pricing_row_community", "yes", "yes", "yes", "yes"),
+        new("pricing_row_email_support", "no", "yes", "yes", "yes"),
+        new("pricing_row_priority_support", "no", "no", "yes", "yes"),
+        new("pricing_row_dedicated_csm", "no", "no", "no", "yes"),
+        new("pricing_row_sla", "no", "no", "no", "yes"),
 
-        Category("Security"),
-        new("SOC 2 compliance", "yes", "yes", "yes", "yes"),
-        new("SSO / SAML", "no", "no", "no", "yes"),
-        new("Audit logs", "no", "no", "yes", "yes"),
-        new("Self-hosted option", "no", "no", "no", "yes"),
+        Category("pricing_cat_security"),
+        new("pricing_row_soc2", "yes", "yes", "yes", "yes"),
+        new("pricing_row_sso", "no", "no", "no", "yes"),
+        new("pricing_row_audit_logs", "no", "no", "yes", "yes"),
+        new("pricing_row_self_hosted", "no", "no", "no", "yes"),
     };
 
-    private readonly List<Faq> faqs = new()
+    private readonly List<FaqKeyPair> faqKeys = new()
     {
-        new("Is the free plan really free?", "Yes. No credit card, no trial period, no expiration. Build 1 demo with up to 10 frames — free forever. We believe in letting you experience NavTour before you commit."),
-        new("What AI features are included in the free plan?", "The free plan includes basic AI Copilot — AI will generate an initial demo draft when you capture your product. For advanced AI features like smart editing, personalization at scale, and intent scoring, you'll need Starter or Growth."),
-        new("Can I switch plans at any time?", "Absolutely. Upgrade or downgrade whenever you want. Upgrades take effect immediately with prorated billing. Downgrades apply at your next billing cycle. No cancellation fees."),
-        new("How does annual billing work?", "Annual billing saves 20% compared to monthly. You're billed once per year. If you need to cancel mid-year, we'll refund the remaining months."),
-        new("What happens when I hit my demo limit?", "Your existing demos stay live — we never disable your content. You'll get a notification suggesting an upgrade. If you need a temporary bump, reach out and we'll work something out."),
-        new("Do you offer startup or nonprofit discounts?", "Yes. 50% off Starter and Growth for startups under $5M ARR and registered nonprofits. Contact us with your details."),
-        new("Can I migrate from Navattic, Storylane, or another platform?", "Yes. We offer free migration assistance. Our team will help recreate your demos in NavTour and ensure a smooth transition."),
-        new("What kind of support do I get?", "Free and Starter include community support. Starter adds email support with 24-hour response. Growth includes priority support with 4-hour response. Enterprise gets a dedicated CSM and SLA."),
-        new("Is my data secure?", "Yes. NavTour is SOC 2 compliant, uses AES-256 encryption at rest and in transit, and runs on Azure infrastructure. Enterprise customers can deploy on their own infrastructure."),
-        new("Can I use the API to integrate with my CRM?", "Starter includes REST API access. Growth adds pre-built CRM integrations (Salesforce, HubSpot) and Zapier. Enterprise supports custom integrations."),
+        new("pricing_faq1_q", "pricing_faq1_a"),
+        new("pricing_faq2_q", "pricing_faq2_a"),
+        new("pricing_faq3_q", "pricing_faq3_a"),
+        new("pricing_faq4_q", "pricing_faq4_a"),
+        new("pricing_faq5_q", "pricing_faq5_a"),
+        new("pricing_faq6_q", "pricing_faq6_a"),
+        new("pricing_faq7_q", "pricing_faq7_a"),
+        new("pricing_faq8_q", "pricing_faq8_a"),
+        new("pricing_faq9_q", "pricing_faq9_a"),
+        new("pricing_faq10_q", "pricing_faq10_a"),
     };
 }

@@ -2,10 +2,11 @@
 @layout MarketingLayout
 @inject IHttpClientFactory HttpClientFactory
 @inject NavigationManager NavigationManager
+@inject IStringLocalizer<NavTour.Server.Resources.SharedResources> L
 
-<PageTitle>Contact — NavTour</PageTitle>
+<PageTitle>@L["contact_page_title"]</PageTitle>
 <HeadContent>
-    <meta name="description" content="Get in touch with the NavTour team. Questions about pricing, demos, or partnerships — we'd love to hear from you." />
+    <meta name="description" content="@L["contact_meta_desc"].Value" />
 </HeadContent>
 
 <section class="mkt-section">
@@ -14,14 +15,14 @@
 
             @* Left side — Form *@
             <div>
-                <h1 style="font-size:var(--text-3xl)">Get in touch</h1>
-                <p style="margin-top:var(--space-3);margin-bottom:var(--space-10)">Fill out the form and we'll get back to you within 2 hours.</p>
+                <h1 style="font-size:var(--text-3xl)">@L["contact_heading"]</h1>
+                <p style="margin-top:var(--space-3);margin-bottom:var(--space-10)">@L["contact_subheading"]</p>
 
                 @if (submitted)
                 {
                     <div class="mkt-alert-success" style="margin-bottom:var(--space-8)">
-                        <h3>Thank you!</h3>
-                        <p>We'll get back to you within 2 hours.</p>
+                        <h3>@L["contact_thank_you"]</h3>
+                        <p>@L["contact_thank_you_desc"]</p>
                     </div>
                 }
 
@@ -35,21 +36,21 @@
                         </div>
 
                         <div>
-                            <label class="mkt-label">Name *</label>
+                            <label class="mkt-label">@L["contact_label_name"] *</label>
                             <input type="text" name="Model.Name" value="@Model.Name" required class="mkt-input" />
                         </div>
                         <div>
-                            <label class="mkt-label">Email *</label>
+                            <label class="mkt-label">@L["contact_label_email"] *</label>
                             <input type="email" name="Model.Email" value="@Model.Email" required class="mkt-input" />
                         </div>
                         <div>
-                            <label class="mkt-label">Company</label>
+                            <label class="mkt-label">@L["contact_label_company"]</label>
                             <input type="text" name="Model.Company" value="@Model.Company" class="mkt-input" />
                         </div>
                         <div>
-                            <label class="mkt-label">Company Size</label>
+                            <label class="mkt-label">@L["contact_label_company_size"]</label>
                             <select name="Model.CompanySize" class="mkt-input" value="@Model.CompanySize">
-                                <option value="">Select...</option>
+                                <option value="">@L["contact_select_default"]</option>
                                 <option value="1-10">1-10</option>
                                 <option value="11-50">11-50</option>
                                 <option value="51-200">51-200</option>
@@ -58,39 +59,39 @@
                             </select>
                         </div>
                         <div>
-                            <label class="mkt-label">Message *</label>
+                            <label class="mkt-label">@L["contact_label_message"] *</label>
                             <textarea name="Model.Message" rows="4" required class="mkt-input" style="resize:vertical">@Model.Message</textarea>
                         </div>
 
-                        <button type="submit" class="mkt-btn mkt-btn-primary" style="width:100%;margin-top:var(--space-2)">Send Message</button>
+                        <button type="submit" class="mkt-btn mkt-btn-primary" style="width:100%;margin-top:var(--space-2)">@L["contact_send"]</button>
                     </div>
                 </form>
             </div>
 
             @* Right side — Value props *@
             <div style="padding-top:var(--space-10)">
-                <h3 style="margin-bottom:var(--space-8)">What happens next?</h3>
+                <h3 style="margin-bottom:var(--space-8)">@L["contact_next_title"]</h3>
 
                 <div style="display:flex;flex-direction:column;gap:var(--space-8)">
                     <div style="display:flex;gap:var(--space-5);align-items:start">
                         <div class="mkt-step-number" style="flex-shrink:0">1</div>
                         <div>
-                            <h4>We respond within 2 hours</h4>
-                            <p style="font-size:var(--text-base);margin-top:var(--space-2)">A real person from our team will reply to your message. No bots, no auto-responders.</p>
+                            <h4>@L["contact_step1_title"]</h4>
+                            <p style="font-size:var(--text-base);margin-top:var(--space-2)">@L["contact_step1_desc"]</p>
                         </div>
                     </div>
                     <div style="display:flex;gap:var(--space-5);align-items:start">
                         <div class="mkt-step-number" style="flex-shrink:0">2</div>
                         <div>
-                            <h4>15-minute intro call</h4>
-                            <p style="font-size:var(--text-base);margin-top:var(--space-2)">We'll learn about your use case and show you how NavTour can help.</p>
+                            <h4>@L["contact_step2_title"]</h4>
+                            <p style="font-size:var(--text-base);margin-top:var(--space-2)">@L["contact_step2_desc"]</p>
                         </div>
                     </div>
                     <div style="display:flex;gap:var(--space-5);align-items:start">
                         <div class="mkt-step-number" style="flex-shrink:0">3</div>
                         <div>
-                            <h4>Custom demo of your workflow</h4>
-                            <p style="font-size:var(--text-base);margin-top:var(--space-2)">See NavTour configured for your specific product and audience.</p>
+                            <h4>@L["contact_step3_title"]</h4>
+                            <p style="font-size:var(--text-base);margin-top:var(--space-2)">@L["contact_step3_desc"]</p>
                         </div>
                     </div>
                 </div>
@@ -98,11 +99,11 @@
                 @* Social proof *@
                 <div style="margin-top:var(--space-12);padding:var(--space-6);background:var(--surface-secondary);border-radius:var(--radius-md);border:1px solid var(--neutral-200)">
                     <blockquote style="font-style:italic;font-size:var(--text-base);color:var(--text-primary);line-height:var(--leading-normal);margin-bottom:var(--space-4)">
-                        "From first contact to live demos in under a week. The NavTour team made onboarding effortless."
+                        "@L["contact_testimonial_quote"]"
                     </blockquote>
                     <div>
                         <div style="font-weight:var(--weight-semibold);font-size:var(--text-sm);color:var(--text-primary)">Alex Rivera</div>
-                        <div style="font-size:var(--text-sm);color:var(--text-tertiary)">Head of Sales, TerraLogic</div>
+                        <div style="font-size:var(--text-sm);color:var(--text-tertiary)">@L["contact_testimonial_role"]</div>
                     </div>
                 </div>
             </div>

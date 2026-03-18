@@ -1,16 +1,17 @@
 @page "/solutions/marketing"
 @layout MarketingLayout
+@inject IStringLocalizer<NavTour.Server.Resources.SharedResources> L
 
-<PageTitle>NavTour for Marketing — Interactive Demos That Convert</PageTitle>
+<PageTitle>@L["sol_mkt_page_title"]</PageTitle>
 <HeadContent>
-    <meta name="description" content="Embed interactive product demos on your website, in campaigns, and on landing pages. Let prospects experience your product the moment they're interested." />
+    <meta name="description" content="@L["sol_mkt_meta_desc"].Value" />
 </HeadContent>
 
-<HeroSection Eyebrow="For Marketing Teams"
-             Title="Your product is amazing. But prospects can't see it until after a sales call."
-             Subtitle="Embed interactive demos on your website, in campaigns, and on landing pages. Let prospects experience your product the moment they're interested."
-             PrimaryCtaText="Start Building Free"
-             SecondaryCtaText="See Marketing Demos"
+<HeroSection Eyebrow="@L["sol_mkt_eyebrow"].Value"
+             Title="@L["sol_mkt_hero_title"].Value"
+             Subtitle="@L["sol_mkt_hero_subtitle"].Value"
+             PrimaryCtaText="@L["sol_mkt_cta_primary"].Value"
+             SecondaryCtaText="@L["sol_mkt_cta_secondary"].Value"
              SecondaryCtaUrl="/contact" />
 
 @* Pain Points *@
@@ -18,16 +19,16 @@
     <div class="mkt-container reveal">
         <div class="mkt-grid mkt-grid-3 reveal-stagger">
             <div class="mkt-card">
-                <h3>Static screenshots don't convert</h3>
-                <p>Visitors bounce when they can't interact with your product. Screenshots and videos create awareness but not conviction.</p>
+                <h3>@L["sol_mkt_pain1_title"]</h3>
+                <p>@L["sol_mkt_pain1_desc"]</p>
             </div>
             <div class="mkt-card">
-                <h3>Demos are a sales bottleneck</h3>
-                <p>Every prospect has to schedule a call, wait for an AE, and sit through a generic pitch before they see the product.</p>
+                <h3>@L["sol_mkt_pain2_title"]</h3>
+                <p>@L["sol_mkt_pain2_desc"]</p>
             </div>
             <div class="mkt-card">
-                <h3>No visibility into buyer interest</h3>
-                <p>You're sending traffic to a pricing page and hoping for the best. No way to measure who's genuinely evaluating.</p>
+                <h3>@L["sol_mkt_pain3_title"]</h3>
+                <p>@L["sol_mkt_pain3_desc"]</p>
             </div>
         </div>
     </div>
@@ -38,11 +39,11 @@
     <div class="mkt-container reveal">
         <div class="mkt-grid mkt-grid-2" style="align-items:center;gap:var(--space-16)">
             <div>
-                <p class="mkt-eyebrow">Embed</p>
-                <h2 style="margin-top:var(--space-2)">Website Embeds That Convert</h2>
-                <p style="margin-top:var(--space-4)">Replace static product screenshots with interactive, click-through demos. Visitors explore your product at their own pace — no form gates, no sales calls. Embed on landing pages, feature pages, or documentation.</p>
+                <p class="mkt-eyebrow">@L["sol_mkt_feat1_eyebrow"]</p>
+                <h2 style="margin-top:var(--space-2)">@L["sol_mkt_feat1_title"]</h2>
+                <p style="margin-top:var(--space-4)">@L["sol_mkt_feat1_desc"]</p>
             </div>
-            <div class="mkt-placeholder mkt-placeholder-feature">Interactive demo embedded on landing page</div>
+            <div class="mkt-placeholder mkt-placeholder-feature">@L["sol_mkt_feat1_placeholder"]</div>
         </div>
     </div>
 </section>
@@ -51,11 +52,11 @@
 <section class="mkt-section">
     <div class="mkt-container reveal">
         <div class="mkt-grid mkt-grid-2" style="align-items:center;gap:var(--space-16)">
-            <div class="mkt-placeholder mkt-placeholder-feature">AI-personalized demo link builder</div>
+            <div class="mkt-placeholder mkt-placeholder-feature">@L["sol_mkt_feat2_placeholder"]</div>
             <div>
-                <p class="mkt-eyebrow">Personalize</p>
-                <h2 style="margin-top:var(--space-2)">AI-Personalized Campaign Assets</h2>
-                <p style="margin-top:var(--space-4)">Generate personalized demo links for every campaign segment. AI swaps company names, industry data, and use-case examples automatically. One template serves every audience.</p>
+                <p class="mkt-eyebrow">@L["sol_mkt_feat2_eyebrow"]</p>
+                <h2 style="margin-top:var(--space-2)">@L["sol_mkt_feat2_title"]</h2>
+                <p style="margin-top:var(--space-4)">@L["sol_mkt_feat2_desc"]</p>
             </div>
         </div>
     </div>
@@ -66,11 +67,11 @@
     <div class="mkt-container reveal">
         <div class="mkt-grid mkt-grid-2" style="align-items:center;gap:var(--space-16)">
             <div>
-                <p class="mkt-eyebrow">Attribute</p>
-                <h2 style="margin-top:var(--space-2)">Pipeline Attribution You Can Trust</h2>
-                <p style="margin-top:var(--space-4)">AI tracks every demo interaction and scores buying intent. See which campaigns drive the most engaged viewers. Feed signals directly to HubSpot or Salesforce — no manual tagging.</p>
+                <p class="mkt-eyebrow">@L["sol_mkt_feat3_eyebrow"]</p>
+                <h2 style="margin-top:var(--space-2)">@L["sol_mkt_feat3_title"]</h2>
+                <p style="margin-top:var(--space-4)">@L["sol_mkt_feat3_desc"]</p>
             </div>
-            <div class="mkt-placeholder mkt-placeholder-feature">Pipeline attribution dashboard</div>
+            <div class="mkt-placeholder mkt-placeholder-feature">@L["sol_mkt_feat3_placeholder"]</div>
         </div>
     </div>
 </section>
@@ -78,15 +79,15 @@
 @* Metrics *@
 <section class="mkt-section">
     <div class="mkt-container text-center reveal">
-        <h2>Marketing teams using NavTour see results</h2>
+        <h2>@L["sol_mkt_metrics_title"]</h2>
         <div class="mkt-grid mkt-grid-3" style="margin-top:var(--space-10)">
-            <MetricCard Value="3.2x" Label="more website engagement" Source="vs. static content" />
-            <MetricCard Value="47%" Label="increase in marketing-sourced pipeline" />
-            <MetricCard Value="68%" Label="of demo viewers visit pricing page" />
+            <MetricCard Value="3.2x" Label="@L["sol_mkt_metric1_label"].Value" Source="@L["sol_mkt_metric1_source"].Value" />
+            <MetricCard Value="47%" Label="@L["sol_mkt_metric2_label"].Value" />
+            <MetricCard Value="68%" Label="@L["sol_mkt_metric3_label"].Value" />
         </div>
     </div>
 </section>
 
 <CtaSection Dark="true"
-            Title="Turn your website into a product experience"
-            Subtitle="Embed interactive demos in minutes. Free forever." />
+            Title="@L["sol_mkt_cta_title"].Value"
+            Subtitle="@L["sol_mkt_cta_subtitle"].Value" />

@@ -165,4 +165,217 @@
   <data name="cta_default_title" xml:space="preserve"><value>¿Listo para transformar tus demos?</value></data>
   <data name="cta_default_subtitle" xml:space="preserve"><value>Empieza a crear demos interactivas en minutos. Sin tarjeta de crédito.</value></data>
   <data name="cta_default_text" xml:space="preserve"><value>Empieza Gratis</value></data>
+
+  <!-- Solution Marketing -->
+  <data name="sol_mkt_page_title" xml:space="preserve"><value>NavTour para Marketing — Demos Interactivas que Convierten</value></data>
+  <data name="sol_mkt_meta_desc" xml:space="preserve"><value>Inserta demos interactivas en tu sitio web, campañas y landing pages. Deja que los prospectos experimenten tu producto en el momento justo.</value></data>
+  <data name="sol_mkt_eyebrow" xml:space="preserve"><value>Para Equipos de Marketing</value></data>
+  <data name="sol_mkt_hero_title" xml:space="preserve"><value>Tu producto es increíble. Pero los prospectos no pueden verlo hasta después de una llamada de ventas.</value></data>
+  <data name="sol_mkt_hero_subtitle" xml:space="preserve"><value>Inserta demos interactivas en tu sitio web, campañas y landing pages. Deja que los prospectos experimenten tu producto en el momento justo.</value></data>
+  <data name="sol_mkt_cta_primary" xml:space="preserve"><value>Empieza Gratis</value></data>
+  <data name="sol_mkt_cta_secondary" xml:space="preserve"><value>Ver Demos de Marketing</value></data>
+  <data name="sol_mkt_pain1_title" xml:space="preserve"><value>Las capturas estáticas no convierten</value></data>
+  <data name="sol_mkt_pain1_desc" xml:space="preserve"><value>Los visitantes se van cuando no pueden interactuar con tu producto. Las capturas y videos generan awareness, pero no convicción.</value></data>
+  <data name="sol_mkt_pain2_title" xml:space="preserve"><value>Las demos son un cuello de botella</value></data>
+  <data name="sol_mkt_pain2_desc" xml:space="preserve"><value>Cada prospecto tiene que agendar una llamada, esperar a un AE y soportar un pitch genérico antes de ver el producto.</value></data>
+  <data name="sol_mkt_pain3_title" xml:space="preserve"><value>Sin visibilidad del interés del comprador</value></data>
+  <data name="sol_mkt_pain3_desc" xml:space="preserve"><value>Envías tráfico a la página de precios y esperas lo mejor. No hay forma de medir quién está evaluando en serio.</value></data>
+  <data name="sol_mkt_feat1_eyebrow" xml:space="preserve"><value>Insertar</value></data>
+  <data name="sol_mkt_feat1_title" xml:space="preserve"><value>Demos Integradas que Convierten</value></data>
+  <data name="sol_mkt_feat1_desc" xml:space="preserve"><value>Reemplaza capturas estáticas con demos interactivas. Los visitantes exploran tu producto a su ritmo — sin formularios, sin llamadas de ventas. Insértalas en landing pages, páginas de funciones o documentación.</value></data>
+  <data name="sol_mkt_feat1_placeholder" xml:space="preserve"><value>Demo interactiva integrada en landing page</value></data>
+  <data name="sol_mkt_feat2_eyebrow" xml:space="preserve"><value>Personalizar</value></data>
+  <data name="sol_mkt_feat2_title" xml:space="preserve"><value>Activos de Campaña Personalizados con IA</value></data>
+  <data name="sol_mkt_feat2_desc" xml:space="preserve"><value>Genera enlaces de demo personalizados para cada segmento de campaña. La IA intercambia nombres de empresa, datos del sector y ejemplos de uso automáticamente. Una plantilla sirve para cada audiencia.</value></data>
+  <data name="sol_mkt_feat2_placeholder" xml:space="preserve"><value>Constructor de enlaces de demo con IA</value></data>
+  <data name="sol_mkt_feat3_eyebrow" xml:space="preserve"><value>Atribuir</value></data>
+  <data name="sol_mkt_feat3_title" xml:space="preserve"><value>Atribución de Pipeline Confiable</value></data>
+  <data name="sol_mkt_feat3_desc" xml:space="preserve"><value>La IA rastrea cada interacción con la demo y califica la intención de compra. Ve qué campañas generan más engagement. Envía señales directo a HubSpot o Salesforce — sin etiquetado manual.</value></data>
+  <data name="sol_mkt_feat3_placeholder" xml:space="preserve"><value>Panel de atribución de pipeline</value></data>
+  <data name="sol_mkt_metrics_title" xml:space="preserve"><value>Equipos de marketing que usan NavTour ven resultados</value></data>
+  <data name="sol_mkt_metric1_label" xml:space="preserve"><value>más engagement en el sitio web</value></data>
+  <data name="sol_mkt_metric1_source" xml:space="preserve"><value>vs. contenido estático</value></data>
+  <data name="sol_mkt_metric2_label" xml:space="preserve"><value>aumento en pipeline generado por marketing</value></data>
+  <data name="sol_mkt_metric3_label" xml:space="preserve"><value>de los que ven demos visitan la página de precios</value></data>
+  <data name="sol_mkt_cta_title" xml:space="preserve"><value>Convierte tu sitio web en una experiencia de producto</value></data>
+  <data name="sol_mkt_cta_subtitle" xml:space="preserve"><value>Inserta demos interactivas en minutos. Gratis para siempre.</value></data>
+
+  <!-- Solution Sales -->
+  <data name="sol_sales_page_title" xml:space="preserve"><value>NavTour para Ventas — Demos Personalizadas que Cierran Negocios</value></data>
+  <data name="sol_sales_meta_desc" xml:space="preserve"><value>Envía a los prospectos una demo personalizada minutos después de una llamada de descubrimiento. La IA personaliza cada experiencia con su empresa, datos y caso de uso.</value></data>
+  <data name="sol_sales_eyebrow" xml:space="preserve"><value>Para Equipos de Ventas</value></data>
+  <data name="sol_sales_hero_title" xml:space="preserve"><value>Las presentaciones genéricas no cierran negocios. Las demos personalizadas sí.</value></data>
+  <data name="sol_sales_hero_subtitle" xml:space="preserve"><value>Envía a los prospectos una demo personalizada minutos después de una llamada de descubrimiento. La IA personaliza cada experiencia con su empresa, datos y caso de uso.</value></data>
+  <data name="sol_sales_cta_primary" xml:space="preserve"><value>Empieza Gratis</value></data>
+  <data name="sol_sales_cta_secondary" xml:space="preserve"><value>Ver Demos de Ventas</value></data>
+  <data name="sol_sales_pain1_title" xml:space="preserve"><value>Todas las llamadas de descubrimiento terminan igual</value></data>
+  <data name="sol_sales_pain1_desc" xml:space="preserve"><value>Prometes enviar un seguimiento. Luego pasas 2 horas creando una presentación personalizada que el prospecto quizás nunca abra.</value></data>
+  <data name="sol_sales_pain2_title" xml:space="preserve"><value>Los campeones no pueden revender internamente</value></data>
+  <data name="sol_sales_pain2_desc" xml:space="preserve"><value>A tu contacto le encantó la demo, pero no puede recrearla para su VP. El negocio se estanca en el comité.</value></data>
+  <data name="sol_sales_pain3_title" xml:space="preserve"><value>Sin visibilidad del engagement del negocio</value></data>
+  <data name="sol_sales_pain3_desc" xml:space="preserve"><value>No sabes si el prospecto vio tu grabación, reenvió la presentación o simplemente te ignoró.</value></data>
+  <data name="sol_sales_feat1_eyebrow" xml:space="preserve"><value>Personalizar</value></data>
+  <data name="sol_sales_feat1_title" xml:space="preserve"><value>Demos Personalizadas en 60 Segundos</value></data>
+  <data name="sol_sales_feat1_desc" xml:space="preserve"><value>La IA genera una demo específica para cada prospecto desde tu biblioteca de plantillas. Nombre de empresa, logo, datos del sector — todo se intercambia automáticamente. Envía un enlace de demo antes de que termine la llamada.</value></data>
+  <data name="sol_sales_feat1_placeholder" xml:space="preserve"><value>IA personalizando una demo en tiempo real</value></data>
+  <data name="sol_sales_feat2_eyebrow" xml:space="preserve"><value>Habilitar</value></data>
+  <data name="sol_sales_feat2_title" xml:space="preserve"><value>Activos de Habilitación para Campeones</value></data>
+  <data name="sol_sales_feat2_desc" xml:space="preserve"><value>Dale a tu campeón una demo que pueda compartir internamente. Guía a su VP a través de la propuesta de valor, destaca el caso de uso relevante y captura el engagement de cada stakeholder que la vea.</value></data>
+  <data name="sol_sales_feat2_placeholder" xml:space="preserve"><value>Campeón compartiendo demo con el comité de compra</value></data>
+  <data name="sol_sales_feat3_eyebrow" xml:space="preserve"><value>Inteligencia</value></data>
+  <data name="sol_sales_feat3_title" xml:space="preserve"><value>Inteligencia de Negocio</value></data>
+  <data name="sol_sales_feat3_desc" xml:space="preserve"><value>La IA rastrea quién vio tu demo, cuánto tiempo pasó, qué funciones exploró y si la compartió. La puntuación de intención te dice qué negocios priorizar y cuándo hacer seguimiento.</value></data>
+  <data name="sol_sales_feat3_placeholder" xml:space="preserve"><value>Panel de inteligencia de negocio con puntuación de intención</value></data>
+  <data name="sol_sales_metrics_title" xml:space="preserve"><value>Equipos de ventas que usan NavTour ven resultados</value></data>
+  <data name="sol_sales_metric1_label" xml:space="preserve"><value>velocidad de cierre más rápida</value></data>
+  <data name="sol_sales_metric2_label" xml:space="preserve"><value>mayor tasa de cierre con demos personalizadas</value></data>
+  <data name="sol_sales_metric3_label" xml:space="preserve"><value>de las demos se comparten con 2+ stakeholders</value></data>
+  <data name="sol_sales_cta_title" xml:space="preserve"><value>Cierra negocios más rápido con demos personalizadas con IA</value></data>
+  <data name="sol_sales_cta_subtitle" xml:space="preserve"><value>Empieza gratis. Envía tu primera demo personalizada hoy.</value></data>
+
+  <!-- Solution Presales -->
+  <data name="sol_presales_page_title" xml:space="preserve"><value>NavTour para Preventa — Escala tu Equipo de SE con Demos IA</value></data>
+  <data name="sol_presales_meta_desc" xml:space="preserve"><value>Deja que NavTour maneje la primera demo. Experiencias autoservicio generadas por IA califican prospectos antes de que tus SEs inviertan un minuto.</value></data>
+  <data name="sol_presales_eyebrow" xml:space="preserve"><value>Para Preventa e Ingeniería de Soluciones</value></data>
+  <data name="sol_presales_hero_title" xml:space="preserve"><value>Tus SEs dedican el 80% de su tiempo a demos de descubrimiento repetitivas</value></data>
+  <data name="sol_presales_hero_subtitle" xml:space="preserve"><value>Deja que NavTour maneje la primera demo. Experiencias autoservicio generadas por IA califican prospectos antes de que tus SEs inviertan un minuto.</value></data>
+  <data name="sol_presales_cta_primary" xml:space="preserve"><value>Empieza Gratis</value></data>
+  <data name="sol_presales_cta_secondary" xml:space="preserve"><value>Ver Demos de Preventa</value></data>
+  <data name="sol_presales_pain1_title" xml:space="preserve"><value>Los SEs son el cuello de botella</value></data>
+  <data name="sol_presales_pain1_desc" xml:space="preserve"><value>Cada negocio requiere un SE para la primera demo. Tu equipo está al límite y los ciclos de venta se alargan a medida que crece el pipeline.</value></data>
+  <data name="sol_presales_pain2_title" xml:space="preserve"><value>Las demos repetitivas agotan a tu mejor gente</value></data>
+  <data name="sol_presales_pain2_desc" xml:space="preserve"><value>El 80% de las demos de descubrimiento cubren las mismas funciones. Tus SEs senior están haciendo trabajo que podría automatizarse.</value></data>
+  <data name="sol_presales_pain3_title" xml:space="preserve"><value>Sin infraestructura de demos escalable</value></data>
+  <data name="sol_presales_pain3_desc" xml:space="preserve"><value>Cada SE construye demos de forma diferente. Sin control de versiones, sin consistencia, sin forma de medir qué funciona.</value></data>
+  <data name="sol_presales_feat1_eyebrow" xml:space="preserve"><value>Autoservicio</value></data>
+  <data name="sol_presales_feat1_title" xml:space="preserve"><value>Demos de Descubrimiento Autoservicio</value></data>
+  <data name="sol_presales_feat1_desc" xml:space="preserve"><value>Deja que los prospectos exploren tu producto con demos interactivas generadas por IA antes de la llamada de ventas. Califica el interés, identifica su caso de uso y dale contexto a los SEs antes de que levanten el teléfono.</value></data>
+  <data name="sol_presales_feat1_placeholder" xml:space="preserve"><value>Prospecto explorando una demo autoservicio</value></data>
+  <data name="sol_presales_feat2_eyebrow" xml:space="preserve"><value>Plantillas</value></data>
+  <data name="sol_presales_feat2_title" xml:space="preserve"><value>Biblioteca de Plantillas con Control de Versiones</value></data>
+  <data name="sol_presales_feat2_desc" xml:space="preserve"><value>Crea plantillas de demo reutilizables para cada vertical, caso de uso y persona. El control de versiones garantiza que todos usen la última versión. La voz de marca IA mantiene la consistencia en todo el equipo.</value></data>
+  <data name="sol_presales_feat2_placeholder" xml:space="preserve"><value>Biblioteca de plantillas con historial de versiones</value></data>
+  <data name="sol_presales_feat3_eyebrow" xml:space="preserve"><value>Analítica</value></data>
+  <data name="sol_presales_feat3_title" xml:space="preserve"><value>Analítica de Equipo y Optimización</value></data>
+  <data name="sol_presales_feat3_desc" xml:space="preserve"><value>Ve qué demos funcionan mejor, qué SEs generan más engagement y qué plantillas convierten. La IA sugiere optimizaciones basadas en datos agregados de todo tu equipo.</value></data>
+  <data name="sol_presales_feat3_placeholder" xml:space="preserve"><value>Panel de analítica y optimización del equipo</value></data>
+  <data name="sol_presales_metrics_title" xml:space="preserve"><value>Equipos de preventa que usan NavTour ven resultados</value></data>
+  <data name="sol_presales_metric1_label" xml:space="preserve"><value>más demos entregadas por SE</value></data>
+  <data name="sol_presales_metric2_label" xml:space="preserve"><value>reducción en trabajo repetitivo de demos</value></data>
+  <data name="sol_presales_metric3_label" xml:space="preserve"><value>ahorradas por SE en promedio</value></data>
+  <data name="sol_presales_cta_title" xml:space="preserve"><value>Escala tu equipo de preventa sin contratar</value></data>
+  <data name="sol_presales_cta_subtitle" xml:space="preserve"><value>La IA se encarga del trabajo repetitivo. Tus SEs se enfocan en los negocios que importan.</value></data>
+
+  <!-- Customers -->
+  <data name="customers_page_title" xml:space="preserve"><value>Clientes — NavTour</value></data>
+  <data name="customers_meta_desc" xml:space="preserve"><value>Descubre cómo equipos en empresas líderes usan las demos interactivas de NavTour para cerrar negocios más rápido, convertir más visitantes e incorporar clientes a escala.</value></data>
+  <data name="customers_eyebrow" xml:space="preserve"><value>Clientes</value></data>
+  <data name="customers_title" xml:space="preserve"><value>Descubre cómo los equipos usan NavTour para cerrar más negocios</value></data>
+  <data name="customers_subtitle" xml:space="preserve"><value>Desde startups hasta enterprise, los equipos product-led confían en NavTour para demos interactivas.</value></data>
+  <data name="customers_logo_saas" xml:space="preserve"><value>Líderes SaaS</value></data>
+  <data name="customers_logo_finhealth" xml:space="preserve"><value>Finanzas y Salud</value></data>
+  <data name="customers_challenge" xml:space="preserve"><value>Desafío</value></data>
+  <data name="customers_solution" xml:space="preserve"><value>Solución</value></data>
+  <data name="customers_result" xml:space="preserve"><value>Resultado</value></data>
+  <data name="customers_cs1_tag" xml:space="preserve"><value>Plataforma SaaS</value></data>
+  <data name="customers_cs1_challenge" xml:space="preserve"><value>El equipo de ventas dedicaba 3 horas por demo personalizada. El pipeline crecía más rápido de lo que el equipo podía soportar.</value></data>
+  <data name="customers_cs1_solution" xml:space="preserve"><value>El Copiloto IA de NavTour genera demos personalizadas en menos de 2 minutos. Los SEs pasaron de construir demos a venta estratégica.</value></data>
+  <data name="customers_cs1_result" xml:space="preserve"><value>40% de aumento en tasa de cierre. El tiempo de creación de demos bajó de 3 horas a 2 minutos.</value></data>
+  <data name="customers_cs1_metric" xml:space="preserve"><value>aumento en tasa de cierre</value></data>
+  <data name="customers_testimonial1_quote" xml:space="preserve"><value>NavTour es la herramienta con mayor ROI que hemos agregado este año. Nuestros representantes envían demos personalizadas antes de que termine la llamada de descubrimiento.</value></data>
+  <data name="customers_testimonial1_title" xml:space="preserve"><value>Director de Ventas</value></data>
+  <data name="customers_cs2_tag" xml:space="preserve"><value>Tecnología en Salud</value></data>
+  <data name="customers_cs2_challenge" xml:space="preserve"><value>Los requisitos de cumplimiento hacían riesgosas las demos en vivo. Los prospectos necesitaban ver el producto pero no podían acceder a datos clínicos.</value></data>
+  <data name="customers_cs2_solution" xml:space="preserve"><value>Demos interactivas con datos sintéticos. Los prospectos exploran el flujo completo sin preocupaciones de cumplimiento.</value></data>
+  <data name="customers_cs2_result" xml:space="preserve"><value>El ciclo de ventas se acortó 3 semanas. Entorno de demos 100% en cumplimiento.</value></data>
+  <data name="customers_cs2_metric_value" xml:space="preserve"><value>3 semanas</value></data>
+  <data name="customers_cs2_metric" xml:space="preserve"><value>ciclo de ventas más corto</value></data>
+  <data name="customers_testimonial2_quote" xml:space="preserve"><value>Insertamos demos de NavTour en cada página de producto. El engagement se triplicó de la noche a la mañana. Es como tener un representante de ventas en cada página.</value></data>
+  <data name="customers_testimonial2_title" xml:space="preserve"><value>VP de Marketing</value></data>
+  <data name="customers_cs3_tag" xml:space="preserve"><value>Servicios Financieros</value></data>
+  <data name="customers_cs3_challenge" xml:space="preserve"><value>Marketing no tenía forma de mostrar el producto en el sitio web. Cada prospecto requería una llamada de demo agendada.</value></data>
+  <data name="customers_cs3_solution" xml:space="preserve"><value>Demos interactivas integradas en landing pages. La personalización IA muestra funciones relevantes según el segmento del visitante.</value></data>
+  <data name="customers_cs3_result" xml:space="preserve"><value>67% de los visitantes del sitio interactúan con las demos. El pipeline generado por marketing subió 52%.</value></data>
+  <data name="customers_cs3_metric" xml:space="preserve"><value>aumento en pipeline</value></data>
+  <data name="customers_cta_title" xml:space="preserve"><value>Únete a los equipos que ya están ganando con NavTour</value></data>
+  <data name="customers_cta_subtitle" xml:space="preserve"><value>Empieza gratis. Ve resultados en tu primera semana.</value></data>
+
+  <!-- Blog -->
+  <data name="blog_page_title" xml:space="preserve"><value>Blog — NavTour</value></data>
+  <data name="blog_meta_desc" xml:space="preserve"><value>Artículos sobre demos interactivas, ventas con IA y crecimiento product-led del equipo de NavTour.</value></data>
+  <data name="blog_title" xml:space="preserve"><value>Blog</value></data>
+  <data name="blog_subtitle" xml:space="preserve"><value>Artículos sobre demos interactivas, ventas con IA y crecimiento product-led.</value></data>
+  <data name="blog_cat_all" xml:space="preserve"><value>Todos</value></data>
+  <data name="blog_cat_product" xml:space="preserve"><value>Novedades de Producto</value></data>
+  <data name="blog_cat_sales" xml:space="preserve"><value>Playbooks de Ventas</value></data>
+  <data name="blog_cat_marketing" xml:space="preserve"><value>Marketing</value></data>
+  <data name="blog_cat_engineering" xml:space="preserve"><value>Ingeniería</value></data>
+  <data name="blog_cat_customers" xml:space="preserve"><value>Historias de Clientes</value></data>
+  <data name="blog_read" xml:space="preserve"><value>Leer</value></data>
+  <data name="blog_post1_title" xml:space="preserve"><value>Presentamos Copiloto IA: Crea demos 10x más rápido</value></data>
+  <data name="blog_post1_excerpt" xml:space="preserve"><value>El Copiloto IA de NavTour genera automáticamente demos interactivas a partir de la captura de tu producto...</value></data>
+  <data name="blog_post2_title" xml:space="preserve"><value>Cómo Enviar una Demo Personalizada en Menos de 60 Segundos</value></data>
+  <data name="blog_post2_excerpt" xml:space="preserve"><value>Los mejores equipos de ventas no esperan disponibilidad de SEs. Así es como usan la personalización IA...</value></data>
+  <data name="blog_post3_title" xml:space="preserve"><value>Por Qué las Demos Interactivas Convierten 3x Mejor que el Video</value></data>
+  <data name="blog_post3_excerpt" xml:space="preserve"><value>Analizamos 10,000 sesiones de demo. Los datos son claros: lo interactivo supera a lo pasivo cada vez...</value></data>
+  <data name="blog_post4_title" xml:space="preserve"><value>Cómo CloudScale Redujo el Tiempo de Creación de Demos un 98%</value></data>
+  <data name="blog_post4_excerpt" xml:space="preserve"><value>De 3 horas a 2 minutos: el equipo de ventas de CloudScale transformó su flujo de demos...</value></data>
+  <data name="blog_post5_title" xml:space="preserve"><value>Creando una Extensión de Chrome para Captura de Snapshots del DOM</value></data>
+  <data name="blog_post5_excerpt" xml:space="preserve"><value>Un análisis técnico profundo de cómo NavTour captura snapshots HTML interactivos...</value></data>
+  <data name="blog_post6_title" xml:space="preserve"><value>El Stack de Demos con IA para 2026</value></data>
+  <data name="blog_post6_excerpt" xml:space="preserve"><value>Tus compradores esperan experiencias personalizadas. Este es el stack tecnológico que las ofrece...</value></data>
+
+  <!-- Contact -->
+  <data name="contact_page_title" xml:space="preserve"><value>Contacto — NavTour</value></data>
+  <data name="contact_meta_desc" xml:space="preserve"><value>Ponte en contacto con el equipo de NavTour. Preguntas sobre precios, demos o alianzas — nos encantaría saber de ti.</value></data>
+  <data name="contact_heading" xml:space="preserve"><value>Contáctanos</value></data>
+  <data name="contact_subheading" xml:space="preserve"><value>Completa el formulario y te responderemos en menos de 2 horas.</value></data>
+  <data name="contact_thank_you" xml:space="preserve"><value>¡Gracias!</value></data>
+  <data name="contact_thank_you_desc" xml:space="preserve"><value>Te responderemos en menos de 2 horas.</value></data>
+  <data name="contact_label_name" xml:space="preserve"><value>Nombre</value></data>
+  <data name="contact_label_email" xml:space="preserve"><value>Correo electrónico</value></data>
+  <data name="contact_label_company" xml:space="preserve"><value>Empresa</value></data>
+  <data name="contact_label_company_size" xml:space="preserve"><value>Tamaño de la empresa</value></data>
+  <data name="contact_select_default" xml:space="preserve"><value>Seleccionar...</value></data>
+  <data name="contact_label_message" xml:space="preserve"><value>Mensaje</value></data>
+  <data name="contact_send" xml:space="preserve"><value>Enviar Mensaje</value></data>
+  <data name="contact_next_title" xml:space="preserve"><value>¿Qué sigue?</value></data>
+  <data name="contact_step1_title" xml:space="preserve"><value>Respondemos en menos de 2 horas</value></data>
+  <data name="contact_step1_desc" xml:space="preserve"><value>Una persona real de nuestro equipo responderá tu mensaje. Sin bots, sin respuestas automáticas.</value></data>
+  <data name="contact_step2_title" xml:space="preserve"><value>Llamada introductoria de 15 minutos</value></data>
+  <data name="contact_step2_desc" xml:space="preserve"><value>Conoceremos tu caso de uso y te mostraremos cómo NavTour puede ayudarte.</value></data>
+  <data name="contact_step3_title" xml:space="preserve"><value>Demo personalizada de tu flujo de trabajo</value></data>
+  <data name="contact_step3_desc" xml:space="preserve"><value>Ve NavTour configurado para tu producto y audiencia específicos.</value></data>
+  <data name="contact_testimonial_quote" xml:space="preserve"><value>Del primer contacto a demos en vivo en menos de una semana. El equipo de NavTour hizo que la incorporación fuera muy fácil.</value></data>
+  <data name="contact_testimonial_role" xml:space="preserve"><value>Director de Ventas, TerraLogic</value></data>
+
+  <!-- Security -->
+  <data name="security_page_title" xml:space="preserve"><value>Seguridad — NavTour</value></data>
+  <data name="security_meta_desc" xml:space="preserve"><value>Seguridad en NavTour: cumplimiento SOC 2, cifrado AES-256, preparado para GDPR, SLA de 99.9% de disponibilidad, alojado en Azure.</value></data>
+  <data name="security_eyebrow" xml:space="preserve"><value>Seguridad</value></data>
+  <data name="security_title" xml:space="preserve"><value>Seguridad de nivel enterprise en la que puedes confiar</value></data>
+  <data name="security_subtitle" xml:space="preserve"><value>NavTour está construido sobre las mejores prácticas de seguridad de la industria. Tus datos están protegidos en cada capa.</value></data>
+  <data name="security_badge_soc2" xml:space="preserve"><value>Cumplimiento SOC 2</value></data>
+  <data name="security_badge_uptime" xml:space="preserve"><value>SLA 99.9% Disponibilidad</value></data>
+  <data name="security_badge_encryption" xml:space="preserve"><value>Cifrado AES-256</value></data>
+  <data name="security_badge_gdpr" xml:space="preserve"><value>Preparado para GDPR</value></data>
+  <data name="security_badge_azure" xml:space="preserve"><value>Alojado en Azure</value></data>
+  <data name="security_data_title" xml:space="preserve"><value>Seguridad de Datos</value></data>
+  <data name="security_data_p1" xml:space="preserve"><value>Tus datos están cifrados en reposo (AES-256) y en tránsito (TLS 1.3). Implementamos controles de acceso estrictos, rotación regular de claves y registro de auditoría completo. El contenido de demos está aislado por tenant con seguridad a nivel de fila.</value></data>
+  <data name="security_data_p2" xml:space="preserve"><value>Cada consulta a la base de datos está limitada a tu tenant. No existe mecanismo para acceder a los datos de otra organización, ni por error. Las claves de cifrado se gestionan con Azure Key Vault con políticas de rotación automática.</value></data>
+  <data name="security_infra_title" xml:space="preserve"><value>Infraestructura</value></data>
+  <data name="security_infra_p1" xml:space="preserve"><value>NavTour se ejecuta en Microsoft Azure con redundancia multirregión. Copias de seguridad automáticas, recuperación ante desastres y SLA de 99.9% de disponibilidad. La infraestructura se gestiona como código con escaneo de seguridad automatizado en cada despliegue.</value></data>
+  <data name="security_infra_p2" xml:space="preserve"><value>Usamos Azure App Service, Azure SQL y Azure Blob Storage con replicación geo-redundante. Cada despliegue pasa por escaneos SAST automatizados y de vulnerabilidades de dependencias antes de llegar a producción.</value></data>
+  <data name="security_compliance_title" xml:space="preserve"><value>Cumplimiento</value></data>
+  <data name="security_compliance_p1" xml:space="preserve"><value>NavTour cumple con SOC 2 Type II. Nos sometemos a auditorías anuales de terceros que cubren seguridad, disponibilidad y confidencialidad. También cumplimos con GDPR, CCPA y mantenemos un Acuerdo de Procesamiento de Datos (DPA) vigente.</value></data>
+  <data name="security_compliance_p2" xml:space="preserve"><value>Nuestro informe SOC 2 está disponible bajo NDA para clientes enterprise que evalúan NavTour. Contacta a nuestro equipo para solicitar una copia junto con nuestro cuestionario de seguridad completado.</value></data>
+  <data name="security_privacy_title" xml:space="preserve"><value>Privacidad</value></data>
+  <data name="security_privacy_p1" xml:space="preserve"><value>Solo recopilamos lo necesario. Los datos de visualización de demos se anonimizan por defecto. Tú controlas las políticas de retención. Nunca vendemos datos de clientes. Derechos completos de sujeto de datos GDPR: acceso, eliminación, portabilidad.</value></data>
+  <data name="security_privacy_p2" xml:space="preserve"><value>NavTour no usa datos de clientes para entrenamiento de modelos ni ningún propósito más allá de la prestación del servicio. Cuando eliminas tu cuenta, todos los datos asociados se purgan permanentemente en 30 días.</value></data>
+  <data name="security_disclosure_title" xml:space="preserve"><value>Divulgación Responsable</value></data>
+  <data name="security_disclosure_p1" xml:space="preserve"><value>Mantenemos un programa de divulgación responsable para investigadores de seguridad. Si descubres una vulnerabilidad, envía un correo a security@navtour.com. Respondemos en 24 horas y nunca emprendemos acciones legales contra reportantes de buena fe.</value></data>
+  <data name="security_disclosure_p2" xml:space="preserve"><value>Valoramos a la comunidad de investigación en seguridad y estamos comprometidos a trabajar con investigadores para verificar, reproducir y responder a reportes legítimos. Los problemas críticos se priorizan de inmediato.</value></data>
+  <data name="security_cta_title" xml:space="preserve"><value>¿Preguntas sobre seguridad?</value></data>
+  <data name="security_cta_subtitle" xml:space="preserve"><value>Nuestro equipo está encantado de hablar sobre prácticas de seguridad, compartir nuestro informe SOC 2 o revisar tus requisitos de cumplimiento.</value></data>
+  <data name="security_cta_button" xml:space="preserve"><value>Contactar al Equipo de Seguridad</value></data>
 </root>
