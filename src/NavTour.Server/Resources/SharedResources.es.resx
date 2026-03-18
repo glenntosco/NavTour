@@ -378,4 +378,214 @@
   <data name="security_cta_title" xml:space="preserve"><value>¿Preguntas sobre seguridad?</value></data>
   <data name="security_cta_subtitle" xml:space="preserve"><value>Nuestro equipo está encantado de hablar sobre prácticas de seguridad, compartir nuestro informe SOC 2 o revisar tus requisitos de cumplimiento.</value></data>
   <data name="security_cta_button" xml:space="preserve"><value>Contactar al Equipo de Seguridad</value></data>
+
+  <!-- Pricing Page -->
+  <data name="pricing_title" xml:space="preserve"><value>Precios simples. Demos poderosas.</value></data>
+  <data name="pricing_subtitle" xml:space="preserve"><value>Empieza gratis. Escala a tu ritmo. Sin tarjeta de crédito.</value></data>
+  <data name="pricing_annual_note" xml:space="preserve"><value>Ahorra 20% con facturación anual</value></data>
+  <data name="pricing_free_name" xml:space="preserve"><value>Gratis</value></data>
+  <data name="pricing_free_price" xml:space="preserve"><value>Gratis</value></data>
+  <data name="pricing_free_desc" xml:space="preserve"><value>Pruébalo — sin tarjeta de crédito</value></data>
+  <data name="pricing_free_feat1" xml:space="preserve"><value>1 demo</value></data>
+  <data name="pricing_free_feat2" xml:space="preserve"><value>10 frames</value></data>
+  <data name="pricing_free_feat3" xml:space="preserve"><value>Copiloto IA (básico)</value></data>
+  <data name="pricing_free_feat4" xml:space="preserve"><value>Embed básico (iframe)</value></data>
+  <data name="pricing_free_feat5" xml:space="preserve"><value>Marca NavTour</value></data>
+  <data name="pricing_free_feat6" xml:space="preserve"><value>Soporte comunidad</value></data>
+  <data name="pricing_free_cta" xml:space="preserve"><value>Empieza Gratis →</value></data>
+  <data name="pricing_starter_name" xml:space="preserve"><value>Starter</value></data>
+  <data name="pricing_starter_price" xml:space="preserve"><value>$99</value></data>
+  <data name="pricing_starter_desc" xml:space="preserve"><value>Para marketers individuales</value></data>
+  <data name="pricing_starter_feat1" xml:space="preserve"><value>5 demos</value></data>
+  <data name="pricing_starter_feat2" xml:space="preserve"><value>Frames ilimitados</value></data>
+  <data name="pricing_starter_feat3" xml:space="preserve"><value>1 usuario</value></data>
+  <data name="pricing_starter_feat4" xml:space="preserve"><value>Edición de texto IA</value></data>
+  <data name="pricing_starter_feat5" xml:space="preserve"><value>Editor inteligente IA</value></data>
+  <data name="pricing_starter_feat6" xml:space="preserve"><value>Revisión de demo IA</value></data>
+  <data name="pricing_starter_feat7" xml:space="preserve"><value>Analítica básica</value></data>
+  <data name="pricing_starter_feat8" xml:space="preserve"><value>Soporte por email</value></data>
+  <data name="pricing_starter_feat9" xml:space="preserve"><value>Sin marca NavTour</value></data>
+  <data name="pricing_starter_cta" xml:space="preserve"><value>Empieza Gratis →</value></data>
+  <data name="pricing_growth_name" xml:space="preserve"><value>Growth</value></data>
+  <data name="pricing_growth_price" xml:space="preserve"><value>$299</value></data>
+  <data name="pricing_growth_desc" xml:space="preserve"><value>Para equipos SaaS en crecimiento</value></data>
+  <data name="pricing_growth_feat1" xml:space="preserve"><value>25 demos</value></data>
+  <data name="pricing_growth_feat2" xml:space="preserve"><value>5 usuarios</value></data>
+  <data name="pricing_growth_feat3" xml:space="preserve"><value>Analítica completa + intent scoring</value></data>
+  <data name="pricing_growth_feat4" xml:space="preserve"><value>Personalización IA a escala</value></data>
+  <data name="pricing_growth_feat5" xml:space="preserve"><value>Lógica de ramificación IA</value></data>
+  <data name="pricing_growth_feat6" xml:space="preserve"><value>Acceso a API</value></data>
+  <data name="pricing_growth_feat7" xml:space="preserve"><value>Soporte prioritario</value></data>
+  <data name="pricing_growth_feat8" xml:space="preserve"><value>Integraciones CRM</value></data>
+  <data name="pricing_growth_cta" xml:space="preserve"><value>Empieza Gratis →</value></data>
+  <data name="pricing_enterprise_name" xml:space="preserve"><value>Enterprise</value></data>
+  <data name="pricing_enterprise_price" xml:space="preserve"><value>A medida</value></data>
+  <data name="pricing_enterprise_desc" xml:space="preserve"><value>Para grandes organizaciones</value></data>
+  <data name="pricing_enterprise_feat1" xml:space="preserve"><value>Demos ilimitadas</value></data>
+  <data name="pricing_enterprise_feat2" xml:space="preserve"><value>Usuarios ilimitados</value></data>
+  <data name="pricing_enterprise_feat3" xml:space="preserve"><value>SSO / SAML</value></data>
+  <data name="pricing_enterprise_feat4" xml:space="preserve"><value>Entrenamiento IA personalizado</value></data>
+  <data name="pricing_enterprise_feat5" xml:space="preserve"><value>Voz de marca IA</value></data>
+  <data name="pricing_enterprise_feat6" xml:space="preserve"><value>Optimización masiva de demos</value></data>
+  <data name="pricing_enterprise_feat7" xml:space="preserve"><value>Soporte dedicado</value></data>
+  <data name="pricing_enterprise_feat8" xml:space="preserve"><value>Garantía de SLA</value></data>
+  <data name="pricing_enterprise_feat9" xml:space="preserve"><value>Opción self-hosted</value></data>
+  <data name="pricing_enterprise_cta" xml:space="preserve"><value>Contactar Ventas</value></data>
+  <data name="pricing_compare_title" xml:space="preserve"><value>Compara los planes</value></data>
+  <data name="pricing_table_feature" xml:space="preserve"><value>Función</value></data>
+  <data name="pricing_cat_core" xml:space="preserve"><value>Funciones Principales</value></data>
+  <data name="pricing_row_demos" xml:space="preserve"><value>Demos</value></data>
+  <data name="pricing_row_frames" xml:space="preserve"><value>Frames por demo</value></data>
+  <data name="pricing_row_users" xml:space="preserve"><value>Usuarios</value></data>
+  <data name="pricing_row_chrome_ext" xml:space="preserve"><value>Captura con extensión Chrome</value></data>
+  <data name="pricing_row_annotations" xml:space="preserve"><value>Anotaciones (tooltip, modal, hotspot)</value></data>
+  <data name="pricing_row_embed" xml:space="preserve"><value>Opciones de embed</value></data>
+  <data name="pricing_row_custom_domain" xml:space="preserve"><value>Dominio personalizado</value></data>
+  <data name="pricing_cat_ai" xml:space="preserve"><value>Funciones de IA</value></data>
+  <data name="pricing_row_ai_copilot" xml:space="preserve"><value>Copiloto IA (generación de demos)</value></data>
+  <data name="pricing_row_ai_copy" xml:space="preserve"><value>Edición de texto IA</value></data>
+  <data name="pricing_row_ai_smart" xml:space="preserve"><value>Editor inteligente IA</value></data>
+  <data name="pricing_row_ai_review" xml:space="preserve"><value>Revisión de demo IA</value></data>
+  <data name="pricing_row_ai_personalization" xml:space="preserve"><value>Personalización IA a escala</value></data>
+  <data name="pricing_row_ai_intent" xml:space="preserve"><value>Puntuación de intención IA</value></data>
+  <data name="pricing_row_ai_branching" xml:space="preserve"><value>Lógica de ramificación IA</value></data>
+  <data name="pricing_row_ai_brand" xml:space="preserve"><value>Memoria de voz de marca IA</value></data>
+  <data name="pricing_row_ai_training" xml:space="preserve"><value>Entrenamiento IA personalizado</value></data>
+  <data name="pricing_cat_analytics" xml:space="preserve"><value>Analítica</value></data>
+  <data name="pricing_row_basic_views" xml:space="preserve"><value>Conteo básico de vistas</value></data>
+  <data name="pricing_row_step_analytics" xml:space="preserve"><value>Analítica de completado por paso</value></data>
+  <data name="pricing_row_lead_capture" xml:space="preserve"><value>Formularios de captura de leads</value></data>
+  <data name="pricing_row_intent_scoring" xml:space="preserve"><value>Puntuación de intención</value></data>
+  <data name="pricing_row_deanonymization" xml:space="preserve"><value>Desanonimización de cuentas</value></data>
+  <data name="pricing_cat_integrations" xml:space="preserve"><value>Integraciones</value></data>
+  <data name="pricing_row_rest_api" xml:space="preserve"><value>REST API</value></data>
+  <data name="pricing_row_webhooks" xml:space="preserve"><value>Webhooks</value></data>
+  <data name="pricing_row_crm" xml:space="preserve"><value>Integraciones CRM</value></data>
+  <data name="pricing_row_zapier" xml:space="preserve"><value>Zapier</value></data>
+  <data name="pricing_row_custom_integrations" xml:space="preserve"><value>Integraciones personalizadas</value></data>
+  <data name="pricing_cat_support" xml:space="preserve"><value>Soporte</value></data>
+  <data name="pricing_row_community" xml:space="preserve"><value>Soporte comunidad</value></data>
+  <data name="pricing_row_email_support" xml:space="preserve"><value>Soporte por email (24hrs)</value></data>
+  <data name="pricing_row_priority_support" xml:space="preserve"><value>Soporte prioritario (4hrs)</value></data>
+  <data name="pricing_row_dedicated_csm" xml:space="preserve"><value>CSM dedicado</value></data>
+  <data name="pricing_row_sla" xml:space="preserve"><value>Garantía de SLA</value></data>
+  <data name="pricing_cat_security" xml:space="preserve"><value>Seguridad</value></data>
+  <data name="pricing_row_soc2" xml:space="preserve"><value>Cumplimiento SOC 2</value></data>
+  <data name="pricing_row_sso" xml:space="preserve"><value>SSO / SAML</value></data>
+  <data name="pricing_row_audit_logs" xml:space="preserve"><value>Registros de auditoría</value></data>
+  <data name="pricing_row_self_hosted" xml:space="preserve"><value>Opción self-hosted</value></data>
+  <data name="pricing_faq_title" xml:space="preserve"><value>Preguntas frecuentes</value></data>
+  <data name="pricing_faq1_q" xml:space="preserve"><value>¿El plan gratuito es realmente gratis?</value></data>
+  <data name="pricing_faq1_a" xml:space="preserve"><value>Sí. Sin tarjeta de crédito, sin periodo de prueba, sin caducidad. Crea 1 demo con hasta 10 frames — gratis para siempre. Creemos en dejarte experimentar NavTour antes de comprometerte.</value></data>
+  <data name="pricing_faq2_q" xml:space="preserve"><value>¿Qué funciones de IA incluye el plan gratuito?</value></data>
+  <data name="pricing_faq2_a" xml:space="preserve"><value>El plan gratuito incluye el Copiloto IA básico — la IA generará un borrador inicial de demo cuando captures tu producto. Para funciones avanzadas como edición inteligente, personalización a escala y puntuación de intención, necesitarás Starter o Growth.</value></data>
+  <data name="pricing_faq3_q" xml:space="preserve"><value>¿Puedo cambiar de plan en cualquier momento?</value></data>
+  <data name="pricing_faq3_a" xml:space="preserve"><value>Por supuesto. Sube o baja de plan cuando quieras. Las mejoras se aplican de inmediato con facturación prorrateada. Las reducciones aplican en tu próximo ciclo de facturación. Sin cargos por cancelación.</value></data>
+  <data name="pricing_faq4_q" xml:space="preserve"><value>¿Cómo funciona la facturación anual?</value></data>
+  <data name="pricing_faq4_a" xml:space="preserve"><value>La facturación anual ahorra 20% comparada con la mensual. Se te cobra una vez al año. Si necesitas cancelar a mitad de año, reembolsamos los meses restantes.</value></data>
+  <data name="pricing_faq5_q" xml:space="preserve"><value>¿Qué pasa cuando alcanzo mi límite de demos?</value></data>
+  <data name="pricing_faq5_a" xml:space="preserve"><value>Tus demos existentes siguen activas — nunca deshabilitamos tu contenido. Recibirás una notificación sugiriendo una mejora de plan. Si necesitas un aumento temporal, contáctanos y lo resolvemos.</value></data>
+  <data name="pricing_faq6_q" xml:space="preserve"><value>¿Ofrecen descuentos para startups u ONGs?</value></data>
+  <data name="pricing_faq6_a" xml:space="preserve"><value>Sí. 50% de descuento en Starter y Growth para startups con menos de $5M ARR y ONGs registradas. Contáctanos con tus datos.</value></data>
+  <data name="pricing_faq7_q" xml:space="preserve"><value>¿Puedo migrar desde Navattic, Storylane u otra plataforma?</value></data>
+  <data name="pricing_faq7_a" xml:space="preserve"><value>Sí. Ofrecemos asistencia de migración gratuita. Nuestro equipo te ayudará a recrear tus demos en NavTour y asegurar una transición fluida.</value></data>
+  <data name="pricing_faq8_q" xml:space="preserve"><value>¿Qué tipo de soporte recibo?</value></data>
+  <data name="pricing_faq8_a" xml:space="preserve"><value>Gratis y Starter incluyen soporte de comunidad. Starter agrega soporte por email con respuesta en 24 horas. Growth incluye soporte prioritario con respuesta en 4 horas. Enterprise obtiene un CSM dedicado y SLA.</value></data>
+  <data name="pricing_faq9_q" xml:space="preserve"><value>¿Mis datos están seguros?</value></data>
+  <data name="pricing_faq9_a" xml:space="preserve"><value>Sí. NavTour cumple con SOC 2, usa cifrado AES-256 en reposo y en tránsito, y opera sobre infraestructura Azure. Los clientes Enterprise pueden desplegar en su propia infraestructura.</value></data>
+  <data name="pricing_faq10_q" xml:space="preserve"><value>¿Puedo usar la API para integrar con mi CRM?</value></data>
+  <data name="pricing_faq10_a" xml:space="preserve"><value>Starter incluye acceso a la REST API. Growth agrega integraciones CRM preconstruidas (Salesforce, HubSpot) y Zapier. Enterprise soporta integraciones personalizadas.</value></data>
+  <data name="pricing_cta_title" xml:space="preserve"><value>Empieza a crear demos hoy</value></data>
+  <data name="pricing_cta_subtitle" xml:space="preserve"><value>Gratis para siempre. Sin tarjeta de crédito.</value></data>
+  <data name="pricing_cta_text" xml:space="preserve"><value>Empieza Gratis</value></data>
+
+  <!-- Product Page -->
+  <data name="product_eyebrow" xml:space="preserve"><value>Producto</value></data>
+  <data name="product_title" xml:space="preserve"><value>La plataforma completa para demos interactivas</value></data>
+  <data name="product_subtitle" xml:space="preserve"><value>Desde captura potenciada por IA hasta analítica que predice intención de compra — todo lo que tu equipo necesita para crear, personalizar y medir demos a escala.</value></data>
+  <data name="product_feat1_label" xml:space="preserve"><value>Copiloto IA</value></data>
+  <data name="product_feat1_title" xml:space="preserve"><value>Tus demos, creadas por IA</value></data>
+  <data name="product_feat1_desc" xml:space="preserve"><value>Navega tu producto con la extensión de Chrome. El Copiloto IA genera automáticamente una demo completa — texto guía, posición de tooltips, flujo narrativo y lógica de ramificación. Entrenado con patrones de miles de demos de alto rendimiento.</value></data>
+  <data name="product_feat2_label" xml:space="preserve"><value>Editor Inteligente IA</value></data>
+  <data name="product_feat2_title" xml:space="preserve"><value>Edita demos con lenguaje natural</value></data>
+  <data name="product_feat2_desc" xml:space="preserve"><value>Dile a la IA qué cambiar: "Reemplaza todos los nombres de cuenta por empresas de salud." La IA reescribe datos, actualiza capturas y corrige fechas y precios obsoletos en todas tus demos — al instante.</value></data>
+  <data name="product_feat3_label" xml:space="preserve"><value>Motor de Personalización IA</value></data>
+  <data name="product_feat3_title" xml:space="preserve"><value>50 demos personalizadas desde 1 plantilla</value></data>
+  <data name="product_feat3_desc" xml:space="preserve"><value>Las variables dinámicas intercambian nombre de empresa, logo, datos del sector y contenido por rol automáticamente. La IA sugiere qué personalizar según la empresa del visitante. Genera docenas de demos específicas por prospecto en minutos.</value></data>
+  <data name="product_feat4_label" xml:space="preserve"><value>Analítica IA e Intención</value></data>
+  <data name="product_feat4_title" xml:space="preserve"><value>Sabe quién está listo para comprar</value></data>
+  <data name="product_feat4_desc" xml:space="preserve"><value>La IA identifica qué interacciones predicen intención de compra. La desanonimización revela empresas sin formularios. La puntuación de engagement se envía directo a Salesforce, HubSpot o cualquier CRM.</value></data>
+  <data name="product_feat5_label" xml:space="preserve"><value>Captura con Extensión Chrome</value></data>
+  <data name="product_feat5_title" xml:space="preserve"><value>Captura cualquier web app en clics</value></data>
+  <data name="product_feat5_desc" xml:space="preserve"><value>Instala la extensión. Navega tu producto. Cada clic guarda un snapshot HTML/CSS completo como frame interactivo. Funciona en single-page apps, sitios tradicionales y dashboards complejos.</value></data>
+  <data name="product_feat6_label" xml:space="preserve"><value>Editor Sin Código</value></data>
+  <data name="product_feat6_title" xml:space="preserve"><value>Arrastra, suelta, publica</value></data>
+  <data name="product_feat6_desc" xml:space="preserve"><value>Agrega tooltips, modales, hotspots, overlays de desenfoque, zonas de clic y badges numerados — todo con drag-and-drop. Crea flujos multi-paso con ramificación condicional. Cero ingeniería requerida.</value></data>
+  <data name="product_feat7_label" xml:space="preserve"><value>Inserta Donde Quieras</value></data>
+  <data name="product_feat7_title" xml:space="preserve"><value>Tus demos, donde estén tus compradores</value></data>
+  <data name="product_feat7_desc" xml:space="preserve"><value>Insértalas en tu sitio web, campañas de email, landing pages de anuncios, presentaciones de ventas y documentación de ayuda. Una demo, todos los canales. Responsive y carga rápida.</value></data>
+  <data name="product_feat8_label" xml:space="preserve"><value>Revisión de Demo IA</value></data>
+  <data name="product_feat8_title" xml:space="preserve"><value>Recibe calificación de mejores prácticas</value></data>
+  <data name="product_feat8_desc" xml:space="preserve"><value>La IA analiza tu demo contra benchmarks de conversión: cantidad de pasos, largo del texto, posición de CTAs, tasas de completado. Recibe sugerencias específicas: "Esta demo tiene 18 pasos — las de mejor rendimiento promedian 10-12."</value></data>
+  <data name="product_feat9_label" xml:space="preserve"><value>Ramificación y Lógica de Flujo IA</value></data>
+  <data name="product_feat9_title" xml:space="preserve"><value>Caminos personalizados para cada comprador</value></data>
+  <data name="product_feat9_desc" xml:space="preserve"><value>La IA sugiere rutas de ramificación condicional según el rol e industria del visitante. Genera automáticamente flujos "elige tu propia aventura" desde una captura lineal. Recomienda qué funciones destacar para cada persona.</value></data>
+  <data name="product_feat10_label" xml:space="preserve"><value>Colaboración en Equipo</value></data>
+  <data name="product_feat10_title" xml:space="preserve"><value>Escala tu operación de demos</value></data>
+  <data name="product_feat10_desc" xml:space="preserve"><value>Biblioteca de demos compartida con plantillas, control de versiones y permisos por rol. La memoria de voz de marca IA asegura un tono consistente en todo el equipo. Crea una vez, reutiliza en todas partes.</value></data>
+  <data name="product_feat11_label" xml:space="preserve"><value>Integraciones y API</value></data>
+  <data name="product_feat11_title" xml:space="preserve"><value>Se conecta con tu stack</value></data>
+  <data name="product_feat11_desc" xml:space="preserve"><value>Integraciones preconstruidas con HubSpot, Salesforce, Marketo, Slack y Zapier. REST API completa para flujos personalizados. Webhooks envían eventos en tiempo real.</value></data>
+  <data name="product_feat12_label" xml:space="preserve"><value>Soporte Multi-Idioma</value></data>
+  <data name="product_feat12_title" xml:space="preserve"><value>Demos en cualquier idioma</value></data>
+  <data name="product_feat12_desc" xml:space="preserve"><value>Crea demos en inglés, español, portugués y más. La IA traduce automáticamente el contenido preservando tu voz de marca. Sirve el idioma correcto según la localización del visitante.</value></data>
+  <data name="product_cta_title" xml:space="preserve"><value>Ve todas las funciones en acción</value></data>
+  <data name="product_cta_subtitle" xml:space="preserve"><value>Crea tu primera demo con IA en menos de 10 minutos. Gratis para siempre.</value></data>
+  <data name="product_cta_text" xml:space="preserve"><value>Empieza Gratis</value></data>
+  <data name="product_cta_secondary" xml:space="preserve"><value>Agenda una Demo</value></data>
+
+  <!-- Product AI Page -->
+  <data name="ai_eyebrow" xml:space="preserve"><value>Plataforma IA</value></data>
+  <data name="ai_title" xml:space="preserve"><value>IA que crea, edita y optimiza tus demos</value></data>
+  <data name="ai_subtitle" xml:space="preserve"><value>Desde generación automática hasta personalización inteligente, la IA de NavTour maneja cada paso del ciclo de vida de tus demos — para que tú puedas enfocarte en cerrar negocios.</value></data>
+  <data name="ai_cta_primary" xml:space="preserve"><value>Empieza Gratis</value></data>
+  <data name="ai_cta_secondary" xml:space="preserve"><value>Mira la IA en Acción</value></data>
+  <data name="ai_cap1_label" xml:space="preserve"><value>Capacidad 01</value></data>
+  <data name="ai_cap1_title" xml:space="preserve"><value>Navega tu producto. La IA hace el resto.</value></data>
+  <data name="ai_cap1_desc" xml:space="preserve"><value>Recorre tu producto con la extensión de Chrome. El Copiloto IA observa tu flujo y genera automáticamente una demo interactiva completa — escribiendo el texto guía, anclando tooltips a los elementos correctos, estructurando la narrativa y creando rutas de ramificación lógicas. Entrenado con patrones de miles de demos de alto rendimiento, sabe qué convierte.</value></data>
+  <data name="ai_cap2_label" xml:space="preserve"><value>Capacidad 02</value></data>
+  <data name="ai_cap2_title" xml:space="preserve"><value>Edita demos con lenguaje natural</value></data>
+  <data name="ai_cap2_desc" xml:space="preserve"><value>Ya no necesitas navegar pantalla por pantalla para actualizar datos. Dile a la IA qué cambiar: "Reemplaza todos los nombres de empresa por marcas fintech" o "Actualiza la tabla de precios a los números del Q2." La IA modifica el contenido visual directamente. También ejecuta "chequeos de frescura" continuos — detectando y reemplazando fechas obsoletas, precios desactualizados y datos vencidos en todas tus demos automáticamente.</value></data>
+  <data name="ai_cap3_label" xml:space="preserve"><value>Capacidad 03</value></data>
+  <data name="ai_cap3_title" xml:space="preserve"><value>50 demos personalizadas desde 1 plantilla</value></data>
+  <data name="ai_cap3_desc" xml:space="preserve"><value>Cada prospecto ve SU versión de tu producto. Las variables dinámicas intercambian automáticamente nombre de empresa, logo, datos del sector y contenido relevante por rol. La IA analiza la empresa de cada visitante y sugiere qué personalizar. Genera 50 demos específicas por prospecto desde una sola plantilla en minutos — cada una diseñada para resonar.</value></data>
+  <data name="ai_cap4_label" xml:space="preserve"><value>Capacidad 04</value></data>
+  <data name="ai_cap4_title" xml:space="preserve"><value>La IA te dice quién está listo para comprar</value></data>
+  <data name="ai_cap4_desc" xml:space="preserve"><value>Ve más allá de las vistas de página. La IA analiza patrones de interacción con la demo para predecir intención de compra — qué clics señalan interés genuino, qué rutas indican etapa de evaluación, qué abandonos significan descalificación. La desanonimización de cuentas identifica empresas viendo tus demos sin requerir formularios. Cada señal se envía directo a tu CRM.</value></data>
+  <data name="ai_cap5_label" xml:space="preserve"><value>Capacidad 05</value></data>
+  <data name="ai_cap5_title" xml:space="preserve"><value>Recibe calificación de mejores prácticas</value></data>
+  <data name="ai_cap5_desc" xml:space="preserve"><value>La IA califica tu demo contra benchmarks de conversión de miles de demos de alto rendimiento. Revisa cantidad de pasos, largo del texto, posición de CTAs, tasas de completado y patrones de engagement. Luego te dice exactamente qué corregir: "Esta demo tiene 18 pasos — las de mejor rendimiento promedian 10-12. Considera combinar los pasos 5-7."</value></data>
+  <data name="ai_cap6_label" xml:space="preserve"><value>Capacidad 06</value></data>
+  <data name="ai_cap6_title" xml:space="preserve"><value>Caminos personalizados para cada comprador</value></data>
+  <data name="ai_cap6_desc" xml:space="preserve"><value>La IA analiza el contenido de tu demo y sugiere rutas de ramificación condicional según el rol, industria y tamaño de empresa del visitante. Genera automáticamente flujos "elige tu propia aventura" desde una sola captura lineal — sin lógica manual requerida. Cada persona ve solo las funciones y flujos más relevantes para ella.</value></data>
+  <data name="ai_cap7_label" xml:space="preserve"><value>Capacidad 07</value></data>
+  <data name="ai_cap7_title" xml:space="preserve"><value>Tono consistente en todo el equipo</value></data>
+  <data name="ai_cap7_desc" xml:space="preserve"><value>La IA aprende el estilo de comunicación de tu empresa — tono, terminología, preferencias de formato. Cuando cualquier miembro del equipo crea o edita una demo, la IA asegura que el texto coincida con tu voz de marca. Sin más mensajes inconsistentes entre regiones, equipos o versiones de demo.</value></data>
+  <data name="ai_compare_title" xml:space="preserve"><value>NavTour IA vs. la competencia</value></data>
+  <data name="ai_compare_subtitle" xml:space="preserve"><value>La plataforma de demos con IA más completa del mercado.</value></data>
+  <data name="ai_compare_feature" xml:space="preserve"><value>Función</value></data>
+  <data name="ai_row_generation" xml:space="preserve"><value>Generación de demos con IA</value></data>
+  <data name="ai_row_copy_editing" xml:space="preserve"><value>Edición de texto IA</value></data>
+  <data name="ai_row_smart_editing" xml:space="preserve"><value>Edición inteligente IA (visual)</value></data>
+  <data name="ai_row_personalization" xml:space="preserve"><value>Personalización IA a escala</value></data>
+  <data name="ai_row_intent" xml:space="preserve"><value>Puntuación de intención IA</value></data>
+  <data name="ai_row_review" xml:space="preserve"><value>Revisión y calificación de demo IA</value></data>
+  <data name="ai_row_branching" xml:space="preserve"><value>Lógica de ramificación IA</value></data>
+  <data name="ai_row_brand_voice" xml:space="preserve"><value>Memoria de voz de marca IA</value></data>
+  <data name="ai_row_nl_editing" xml:space="preserve"><value>Edición con lenguaje natural</value></data>
+  <data name="ai_row_bulk" xml:space="preserve"><value>Generación masiva de demos</value></data>
+  <data name="ai_bottom_cta_title" xml:space="preserve"><value>Mira la IA en acción — crea tu primera demo gratis</value></data>
+  <data name="ai_bottom_cta_subtitle" xml:space="preserve"><value>Sin tarjeta de crédito. Sin capacitación. La IA crea tu primera demo en menos de 5 minutos.</value></data>
+  <data name="ai_bottom_cta_text" xml:space="preserve"><value>Empieza Gratis</value></data>
+  <data name="ai_bottom_cta_secondary" xml:space="preserve"><value>Agenda una Demo</value></data>
 </root>

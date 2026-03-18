@@ -1,15 +1,16 @@
 @page "/product"
 @page "/features"
 @layout MarketingLayout
+@inject IStringLocalizer<NavTour.Server.Resources.SharedResources> L
 
 <PageTitle>Product — NavTour</PageTitle>
 <HeadContent>
     <meta name="description" content="The complete AI-powered interactive demo platform. Capture, build, personalize, and measure product demos at scale with NavTour." />
 </HeadContent>
 
-<HeroSection Eyebrow="Product"
-             Title="The complete platform for interactive demos"
-             Subtitle="From AI-powered capture to analytics that predict buying intent — everything your team needs to build, personalize, and measure product demos at scale." />
+<HeroSection Eyebrow="@L["product_eyebrow"].Value"
+             Title="@L["product_title"].Value"
+             Subtitle="@L["product_subtitle"].Value" />
 
 @foreach (var (feature, index) in _features.Select((f, i) => (f, i)))
 {
@@ -17,9 +18,9 @@
         <div class="mkt-container">
             <div class="mkt-step-row" style="@(index % 2 == 1 ? "flex-direction:row-reverse" : "")">
                 <div class="mkt-step-row-content">
-                    <div class="mkt-step-label">@feature.Label</div>
-                    <h2>@feature.Title</h2>
-                    <p>@feature.Description</p>
+                    <div class="mkt-step-label">@L[feature.LabelKey]</div>
+                    <h2>@L[feature.TitleKey]</h2>
+                    <p>@L[feature.DescKey]</p>
                 </div>
                 <div class="mkt-step-row-visual">
                     <div class="mkt-placeholder mkt-placeholder-feature">@feature.Placeholder</div>
@@ -30,63 +31,28 @@
 }
 
 <CtaSection Dark="true"
-            Title="See every feature in action"
-            Subtitle="Build your first AI-powered demo in under 10 minutes. Free forever."
-            CtaText="Start Building Free"
-            SecondaryCtaText="Book a Demo"
+            Title="@L["product_cta_title"].Value"
+            Subtitle="@L["product_cta_subtitle"].Value"
+            CtaText="@L["product_cta_text"].Value"
+            SecondaryCtaText="@L["product_cta_secondary"].Value"
             SecondaryCtaUrl="/contact" />
 
 @code {
-    private record FeatureItem(string Label, string Title, string Description, string Placeholder);
+    private record FeatureItem(string LabelKey, string TitleKey, string DescKey, string Placeholder);
 
     private readonly List<FeatureItem> _features = new()
     {
-        new("AI Copilot", "Your demos, built by AI",
-            "Click through your product with the Chrome extension. AI Copilot automatically generates a complete demo — guide copy, tooltip placement, story flow, and branching logic. Trained on patterns from thousands of high-performing demos.",
-            "AI Copilot Demo Generation"),
-
-        new("AI Smart Editor", "Edit demos in plain English",
-            "Tell AI what to change: 'Replace all account names with healthcare companies.' AI rewrites demo data, updates screenshots, and fixes stale dates and pricing across all your demos — instantly.",
-            "Natural Language Editing"),
-
-        new("AI Personalization Engine", "50 custom demos from 1 template",
-            "Dynamic variables swap company name, logo, industry data, and role-specific content automatically. AI suggests what to personalize based on the viewer's company. Bulk-generate dozens of prospect-specific demos in minutes.",
-            "Bulk Personalization Interface"),
-
-        new("AI Analytics & Intent", "Know who's ready to buy",
-            "AI identifies which demo interactions predict buying intent. Account deanonymization reveals companies without form fills. Engagement scoring feeds directly to Salesforce, HubSpot, or any CRM.",
-            "Intent Scoring Dashboard"),
-
-        new("Chrome Extension Capture", "Capture any web app in clicks",
-            "Install the extension. Navigate your product. Each click saves a complete HTML/CSS snapshot as an interactive frame. Works on single-page apps, traditional sites, and even complex dashboards.",
-            "Chrome Extension Recording"),
-
-        new("No-Code Editor", "Drag, drop, publish",
-            "Add tooltips, modals, hotspots, blur overlays, click zones, and numbered badges — all with drag-and-drop. Create multi-step flows with conditional branching. Zero engineering required.",
-            "Drag-and-Drop Editor"),
-
-        new("Embed Anywhere", "Your demos, wherever your buyers are",
-            "Embed on your website, in email campaigns, on ad landing pages, in sales decks, and in help documentation. One demo, every channel. Responsive and fast-loading.",
-            "Multi-Channel Embed"),
-
-        new("AI Demo Review", "Get graded on best practices",
-            "AI analyzes your demo against conversion benchmarks: step count, copy length, CTA placement, completion rates. Get specific suggestions: 'This demo has 18 steps — top performers average 10-12.'",
-            "Demo Score Card"),
-
-        new("AI Branching & Flow Logic", "Personalized paths for every buyer",
-            "AI suggests conditional branching paths based on viewer role and industry. Auto-generates 'choose your own adventure' flows from a single linear capture. Recommends which features to highlight for each persona.",
-            "Branching Flow Builder"),
-
-        new("Team Collaboration", "Scale your demo operation",
-            "Shared demo library with templates, version control, and role-based permissions. AI brand voice memory ensures consistent tone across all team members. Build once, reuse everywhere.",
-            "Team Dashboard"),
-
-        new("Integrations & API", "Connects to your stack",
-            "Pre-built integrations with HubSpot, Salesforce, Marketo, Slack, and Zapier. Full REST API for custom workflows. Webhooks push events in real time.",
-            "Integration Marketplace"),
-
-        new("Multi-Language Support", "Demos in every language",
-            "Create demos in English, Spanish, Portuguese, and more. AI auto-translates demo content while preserving your brand voice. Serve the right language based on viewer locale.",
-            "Language Selection")
+        new("product_feat1_label", "product_feat1_title", "product_feat1_desc", "AI Copilot Demo Generation"),
+        new("product_feat2_label", "product_feat2_title", "product_feat2_desc", "Natural Language Editing"),
+        new("product_feat3_label", "product_feat3_title", "product_feat3_desc", "Bulk Personalization Interface"),
+        new("product_feat4_label", "product_feat4_title", "product_feat4_desc", "Intent Scoring Dashboard"),
+        new("product_feat5_label", "product_feat5_title", "product_feat5_desc", "Chrome Extension Recording"),
+        new("product_feat6_label", "product_feat6_title", "product_feat6_desc", "Drag-and-Drop Editor"),
+        new("product_feat7_label", "product_feat7_title", "product_feat7_desc", "Multi-Channel Embed"),
+        new("product_feat8_label", "product_feat8_title", "product_feat8_desc", "Demo Score Card"),
+        new("product_feat9_label", "product_feat9_title", "product_feat9_desc", "Branching Flow Builder"),
+        new("product_feat10_label", "product_feat10_title", "product_feat10_desc", "Team Dashboard"),
+        new("product_feat11_label", "product_feat11_title", "product_feat11_desc", "Integration Marketplace"),
+        new("product_feat12_label", "product_feat12_title", "product_feat12_desc", "Language Selection"),
     };
 }

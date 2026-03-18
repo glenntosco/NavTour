@@ -1,5 +1,6 @@
 @page "/product/ai"
 @layout MarketingLayout
+@inject IStringLocalizer<NavTour.Server.Resources.SharedResources> L
 
 <PageTitle>AI Features — NavTour</PageTitle>
 <HeadContent>
@@ -7,11 +8,11 @@
 </HeadContent>
 
 <HeroSection
-    Eyebrow="AI Platform"
-    Title="AI that builds, edits, and optimizes your demos"
-    Subtitle="From auto-generation to smart personalization, NavTour AI handles every step of the demo lifecycle — so you can focus on closing deals."
-    PrimaryCtaText="Start Building Free"
-    SecondaryCtaText="Watch AI In Action"
+    Eyebrow="@L["ai_eyebrow"].Value"
+    Title="@L["ai_title"].Value"
+    Subtitle="@L["ai_subtitle"].Value"
+    PrimaryCtaText="@L["ai_cta_primary"].Value"
+    SecondaryCtaText="@L["ai_cta_secondary"].Value"
     SecondaryCtaUrl="/contact" />
 
 @* Capability 01 — AI Copilot *@
@@ -19,9 +20,9 @@
     <div class="mkt-container">
         <div class="mkt-step-row">
             <div class="mkt-step-row-content">
-                <div class="mkt-step-label">Capability 01</div>
-                <h3>Click through your product. AI does the rest.</h3>
-                <p>Walk through your product with the Chrome extension. AI Copilot watches your flow and automatically generates a complete interactive demo — writing guide copy, anchoring tooltips to the right elements, structuring the narrative, and creating logical branching paths. Trained on patterns from thousands of high-performing demos, it knows what converts.</p>
+                <div class="mkt-step-label">@L["ai_cap1_label"]</div>
+                <h3>@L["ai_cap1_title"]</h3>
+                <p>@L["ai_cap1_desc"]</p>
             </div>
             <div class="mkt-step-row-visual">
                 <div class="mkt-placeholder mkt-placeholder-feature">AI Copilot — Capture to Demo Flow</div>
@@ -35,9 +36,9 @@
     <div class="mkt-container">
         <div class="mkt-step-row">
             <div class="mkt-step-row-content">
-                <div class="mkt-step-label">Capability 02</div>
-                <h3>Edit demos in plain English</h3>
-                <p>No more clicking through screens to update data. Tell AI what to change: &ldquo;Replace all company names with fintech brands&rdquo; or &ldquo;Update the pricing table to Q2 numbers.&rdquo; AI modifies the visual content directly. It also runs continuous &ldquo;freshness checks&rdquo; — detecting and replacing stale dates, outdated pricing, and obsolete data across all your demos automatically.</p>
+                <div class="mkt-step-label">@L["ai_cap2_label"]</div>
+                <h3>@L["ai_cap2_title"]</h3>
+                <p>@L["ai_cap2_desc"]</p>
             </div>
             <div class="mkt-step-row-visual">
                 <div class="mkt-placeholder mkt-placeholder-feature">Before/After Natural Language Edit</div>
@@ -51,9 +52,9 @@
     <div class="mkt-container">
         <div class="mkt-step-row">
             <div class="mkt-step-row-content">
-                <div class="mkt-step-label">Capability 03</div>
-                <h3>50 custom demos from 1 template</h3>
-                <p>Every prospect sees THEIR version of your product. Dynamic variables automatically swap company name, logo, industry-specific data, and role-relevant content. AI analyzes each viewer's company and suggests what to personalize. Generate 50 prospect-specific demos from a single template in minutes — each one tailored to resonate.</p>
+                <div class="mkt-step-label">@L["ai_cap3_label"]</div>
+                <h3>@L["ai_cap3_title"]</h3>
+                <p>@L["ai_cap3_desc"]</p>
             </div>
             <div class="mkt-step-row-visual">
                 <div class="mkt-placeholder mkt-placeholder-feature">Bulk Demo Generation Interface</div>
@@ -67,9 +68,9 @@
     <div class="mkt-container">
         <div class="mkt-step-row">
             <div class="mkt-step-row-content">
-                <div class="mkt-step-label">Capability 04</div>
-                <h3>AI tells you who's ready to buy</h3>
-                <p>Go beyond page views. AI analyzes demo interaction patterns to predict buying intent — which clicks signal genuine interest, which paths indicate evaluation stage, which drop-offs mean disqualification. Account deanonymization identifies companies viewing your demos without requiring form fills. Every signal feeds directly to your CRM.</p>
+                <div class="mkt-step-label">@L["ai_cap4_label"]</div>
+                <h3>@L["ai_cap4_title"]</h3>
+                <p>@L["ai_cap4_desc"]</p>
             </div>
             <div class="mkt-step-row-visual">
                 <div class="mkt-placeholder mkt-placeholder-feature">Intent Score Dashboard + CRM Sync</div>
@@ -83,9 +84,9 @@
     <div class="mkt-container">
         <div class="mkt-step-row">
             <div class="mkt-step-row-content">
-                <div class="mkt-step-label">Capability 05</div>
-                <h3>Get graded on best practices</h3>
-                <p>AI scores your demo against conversion benchmarks from thousands of top-performing demos. It checks step count, copy length, CTA placement, completion rates, and engagement patterns. Then it tells you exactly what to fix: &ldquo;This demo has 18 steps — top performers average 10-12. Consider combining steps 5-7.&rdquo;</p>
+                <div class="mkt-step-label">@L["ai_cap5_label"]</div>
+                <h3>@L["ai_cap5_title"]</h3>
+                <p>@L["ai_cap5_desc"]</p>
             </div>
             <div class="mkt-step-row-visual">
                 <div class="mkt-placeholder mkt-placeholder-feature">Demo Optimization Scorecard</div>
@@ -99,9 +100,9 @@
     <div class="mkt-container">
         <div class="mkt-step-row">
             <div class="mkt-step-row-content">
-                <div class="mkt-step-label">Capability 06</div>
-                <h3>Personalized paths for every buyer</h3>
-                <p>AI analyzes your demo content and suggests conditional branching paths based on viewer role, industry, and company size. It auto-generates &ldquo;choose your own adventure&rdquo; flows from a single linear capture — no manual logic required. Each persona sees only the features and workflows most relevant to them.</p>
+                <div class="mkt-step-label">@L["ai_cap6_label"]</div>
+                <h3>@L["ai_cap6_title"]</h3>
+                <p>@L["ai_cap6_desc"]</p>
             </div>
             <div class="mkt-step-row-visual">
                 <div class="mkt-placeholder mkt-placeholder-feature">Auto-Generated Branching Flow</div>
@@ -115,9 +116,9 @@
     <div class="mkt-container">
         <div class="mkt-step-row">
             <div class="mkt-step-row-content">
-                <div class="mkt-step-label">Capability 07</div>
-                <h3>Consistent tone across every team member</h3>
-                <p>AI learns your company's communication style — tone, terminology, formatting preferences. When any team member creates or edits a demo, AI ensures the copy matches your brand voice. No more inconsistent messaging across regions, teams, or demo versions.</p>
+                <div class="mkt-step-label">@L["ai_cap7_label"]</div>
+                <h3>@L["ai_cap7_title"]</h3>
+                <p>@L["ai_cap7_desc"]</p>
             </div>
             <div class="mkt-step-row-visual">
                 <div class="mkt-placeholder mkt-placeholder-feature">Brand Voice Settings Panel</div>
@@ -130,14 +131,14 @@
 <section class="mkt-section-alt">
     <div class="mkt-container reveal">
         <div class="mkt-section-heading">
-            <h2>NavTour AI vs. the competition</h2>
-            <p>The most complete AI demo platform on the market.</p>
+            <h2>@L["ai_compare_title"]</h2>
+            <p>@L["ai_compare_subtitle"]</p>
         </div>
         <div style="overflow-x:auto">
             <table class="mkt-table">
                 <thead>
                     <tr>
-                        <th>Feature</th>
+                        <th>@L["ai_compare_feature"]</th>
                         <th class="highlighted">NavTour</th>
                         <th>Navattic</th>
                         <th>Storylane</th>
@@ -149,7 +150,7 @@
                     @foreach (var row in rows)
                     {
                         <tr>
-                            <td>@row.Feature</td>
+                            <td>@L[row.FeatureKey]</td>
                             <td class="highlighted">@((MarkupString)Check(row.NavTour))</td>
                             <td>@((MarkupString)Check(row.Navattic))</td>
                             <td>@((MarkupString)Check(row.Storylane))</td>
@@ -164,14 +165,14 @@
 </section>
 
 <CtaSection Dark="true"
-    Title="See AI in action — build your first demo free"
-    Subtitle="No credit card. No training required. AI builds your first demo in under 5 minutes."
-    CtaText="Start Building Free"
-    SecondaryCtaText="Book a Demo"
+    Title="@L["ai_bottom_cta_title"].Value"
+    Subtitle="@L["ai_bottom_cta_subtitle"].Value"
+    CtaText="@L["ai_bottom_cta_text"].Value"
+    SecondaryCtaText="@L["ai_bottom_cta_secondary"].Value"
     SecondaryCtaUrl="/contact" />
 
 @code {
-    private record CompRow(string Feature, string NavTour, string Navattic, string Storylane, string Walnut, string Supademo);
+    private record CompRow(string FeatureKey, string NavTour, string Navattic, string Storylane, string Walnut, string Supademo);
 
     private string Check(string val) => val == "yes"
         ? "<span class='mkt-check'>&#10003;</span>"
@@ -179,15 +180,15 @@
 
     private readonly List<CompRow> rows = new()
     {
-        new("AI demo generation",         "yes", "yes", "yes", "no",  "yes"),
-        new("AI copy editing",            "yes", "yes", "no",  "no",  "no"),
-        new("AI smart editing (visual)",  "yes", "no",  "no",  "no",  "no"),
-        new("AI personalization at scale", "yes", "no",  "yes", "yes", "no"),
-        new("AI intent scoring",          "yes", "no",  "no",  "no",  "no"),
-        new("AI demo review & grading",   "yes", "no",  "no",  "no",  "no"),
-        new("AI branching logic",         "yes", "no",  "no",  "no",  "no"),
-        new("AI brand voice memory",      "yes", "no",  "no",  "no",  "no"),
-        new("Natural language editing",   "yes", "no",  "no",  "no",  "no"),
-        new("Bulk demo generation",       "yes", "no",  "no",  "no",  "no"),
+        new("ai_row_generation",       "yes", "yes", "yes", "no",  "yes"),
+        new("ai_row_copy_editing",     "yes", "yes", "no",  "no",  "no"),
+        new("ai_row_smart_editing",    "yes", "no",  "no",  "no",  "no"),
+        new("ai_row_personalization",  "yes", "no",  "yes", "yes", "no"),
+        new("ai_row_intent",          "yes", "no",  "no",  "no",  "no"),
+        new("ai_row_review",          "yes", "no",  "no",  "no",  "no"),
+        new("ai_row_branching",       "yes", "no",  "no",  "no",  "no"),
+        new("ai_row_brand_voice",     "yes", "no",  "no",  "no",  "no"),
+        new("ai_row_nl_editing",      "yes", "no",  "no",  "no",  "no"),
+        new("ai_row_bulk",            "yes", "no",  "no",  "no",  "no"),
     };
 }
