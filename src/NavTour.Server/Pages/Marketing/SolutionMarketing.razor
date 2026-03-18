@@ -1,95 +1,76 @@
 @page "/solutions/marketing"
 @layout MarketingLayout
 
-<PageTitle>NavTour for Marketing — Convert More Visitors with Interactive Demos</PageTitle>
+<PageTitle>NavTour for Marketing — Interactive Demos That Convert</PageTitle>
 <HeadContent>
-    <meta name="description" content="Embed interactive product demos on landing pages and in campaigns. Drive 3x more engagement and capture high-intent leads." />
+    <meta name="description" content="Embed interactive product demos on your website, in campaigns, and on landing pages. Let prospects experience your product the moment they're interested." />
 </HeadContent>
 
-<section class="mkt-section" style="padding-bottom:var(--space-16)">
-    <div class="mkt-container" style="max-width:680px">
-        <p class="mkt-eyebrow text-center">For Marketing Teams</p>
-        <h1 class="text-center" style="margin-top:var(--space-2)">Convert more visitors with interactive product demos</h1>
-        <p class="text-center" style="margin-top:var(--space-5)">Replace static screenshots with experiences. Embed interactive demos on your website and in campaigns to drive engagement, capture leads, and accelerate pipeline.</p>
-        <div class="mkt-hero-actions" style="justify-content:center;margin-top:var(--space-8)">
-            <a href="/register" class="mkt-btn mkt-btn-primary mkt-btn-lg">Start Free</a>
-            <a href="/contact" class="mkt-btn mkt-btn-secondary mkt-btn-lg">Talk to Us</a>
+<HeroSection Eyebrow="For Marketing Teams"
+             Title="Your product is amazing. But prospects can't see it until after a sales call."
+             Subtitle="Embed interactive demos on your website, in campaigns, and on landing pages. Let prospects experience your product the moment they're interested."
+             PrimaryCtaText="Start Building Free"
+             SecondaryCtaText="See Marketing Demos"
+             SecondaryCtaUrl="/contact" />
+
+@* Pain Points *@
+<section class="mkt-section">
+    <div class="mkt-container reveal">
+        <div class="mkt-grid mkt-grid-3 reveal-stagger">
+            <div class="mkt-card">
+                <h3>Static screenshots don't convert</h3>
+                <p>Visitors bounce when they can't interact with your product. Screenshots and videos create awareness but not conviction.</p>
+            </div>
+            <div class="mkt-card">
+                <h3>Demos are a sales bottleneck</h3>
+                <p>Every prospect has to schedule a call, wait for an AE, and sit through a generic pitch before they see the product.</p>
+            </div>
+            <div class="mkt-card">
+                <h3>No visibility into buyer interest</h3>
+                <p>You're sending traffic to a pricing page and hoping for the best. No way to measure who's genuinely evaluating.</p>
+            </div>
         </div>
     </div>
 </section>
 
-@* Website Embed *@
-<section class="mkt-section">
+@* Solution Feature 1 *@
+<section class="mkt-section-alt">
     <div class="mkt-container reveal">
         <div class="mkt-grid mkt-grid-2" style="align-items:center;gap:var(--space-16)">
             <div>
-                <p class="mkt-eyebrow">Website</p>
-                <h2 style="margin-top:var(--space-2)">Turn your website into a product experience</h2>
-                <p style="margin-top:var(--space-4)">Visitors spend 10 seconds on your homepage before deciding to stay or leave. An interactive demo gives them a reason to engage. Embed product walkthroughs directly on your site — no popup, no redirect, no friction.</p>
-                <ul class="mkt-benefits">
-                    <li>Single script tag embeds on any page</li>
-                    <li>Responsive design adapts to any container</li>
-                    <li>Async loading — zero impact on page speed</li>
-                </ul>
+                <p class="mkt-eyebrow">Embed</p>
+                <h2 style="margin-top:var(--space-2)">Website Embeds That Convert</h2>
+                <p style="margin-top:var(--space-4)">Replace static product screenshots with interactive, click-through demos. Visitors explore your product at their own pace — no form gates, no sales calls. Embed on landing pages, feature pages, or documentation.</p>
             </div>
             <div class="mkt-placeholder mkt-placeholder-feature">Interactive demo embedded on landing page</div>
         </div>
     </div>
 </section>
 
-@* Email Campaigns *@
-<section class="mkt-section-alt">
-    <div class="mkt-container reveal">
-        <div class="mkt-grid mkt-grid-2" style="align-items:center;gap:var(--space-16)">
-            <div class="mkt-placeholder mkt-placeholder-feature">Email with interactive demo thumbnail</div>
-            <div>
-                <p class="mkt-eyebrow">Email</p>
-                <h2 style="margin-top:var(--space-2)">Interactive demos in every nurture sequence</h2>
-                <p style="margin-top:var(--space-4)">Email click-through rates plateau at 2–3% with static content. Interactive demo links in nurture sequences drive 3x higher engagement because recipients can experience your product instead of just reading about it.</p>
-                <ul class="mkt-benefits">
-                    <li>Personalized demo links with UTM tracking</li>
-                    <li>Animated thumbnail previews for higher CTR</li>
-                    <li>Engagement data feeds back to your MAP</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</section>
-
-@* Retargeting *@
+@* Solution Feature 2 *@
 <section class="mkt-section">
     <div class="mkt-container reveal">
         <div class="mkt-grid mkt-grid-2" style="align-items:center;gap:var(--space-16)">
+            <div class="mkt-placeholder mkt-placeholder-feature">AI-personalized demo link builder</div>
             <div>
-                <p class="mkt-eyebrow">Retargeting</p>
-                <h2 style="margin-top:var(--space-2)">Retarget visitors who engaged with your demo</h2>
-                <p style="margin-top:var(--space-4)">Demo viewers are your highest-intent audience. Build retargeting audiences from demo engagement data — target prospects who viewed specific features, completed key steps, or dropped off before the CTA.</p>
-                <ul class="mkt-benefits">
-                    <li>Fire tracking pixels on demo events</li>
-                    <li>Segment audiences by engagement depth</li>
-                    <li>Integration with Google Analytics and Segment</li>
-                </ul>
+                <p class="mkt-eyebrow">Personalize</p>
+                <h2 style="margin-top:var(--space-2)">AI-Personalized Campaign Assets</h2>
+                <p style="margin-top:var(--space-4)">Generate personalized demo links for every campaign segment. AI swaps company names, industry data, and use-case examples automatically. One template serves every audience.</p>
             </div>
-            <div class="mkt-placeholder mkt-placeholder-feature">Retargeting audience builder from demo data</div>
         </div>
     </div>
 </section>
 
-@* Content Marketing *@
+@* Solution Feature 3 *@
 <section class="mkt-section-alt">
     <div class="mkt-container reveal">
         <div class="mkt-grid mkt-grid-2" style="align-items:center;gap:var(--space-16)">
-            <div class="mkt-placeholder mkt-placeholder-feature">Blog post with embedded interactive demo</div>
             <div>
-                <p class="mkt-eyebrow">Content</p>
-                <h2 style="margin-top:var(--space-2)">Make every piece of content interactive</h2>
-                <p style="margin-top:var(--space-4)">Blog posts, case studies, and help docs all perform better with interactive demos. Instead of describing a feature with screenshots, let readers experience it. Instead of explaining a workflow, let them walk through it.</p>
-                <ul class="mkt-benefits">
-                    <li>Embed demos in blog posts and case studies</li>
-                    <li>Interactive product tours in help documentation</li>
-                    <li>Gated demos for high-value content assets</li>
-                </ul>
+                <p class="mkt-eyebrow">Attribute</p>
+                <h2 style="margin-top:var(--space-2)">Pipeline Attribution You Can Trust</h2>
+                <p style="margin-top:var(--space-4)">AI tracks every demo interaction and scores buying intent. See which campaigns drive the most engaged viewers. Feed signals directly to HubSpot or Salesforce — no manual tagging.</p>
             </div>
+            <div class="mkt-placeholder mkt-placeholder-feature">Pipeline attribution dashboard</div>
         </div>
     </div>
 </section>
@@ -99,24 +80,13 @@
     <div class="mkt-container text-center reveal">
         <h2>Marketing teams using NavTour see results</h2>
         <div class="mkt-grid mkt-grid-3" style="margin-top:var(--space-10)">
-            <MetricCard Value="3x" Label="website engagement" Source="vs. static screenshots and video" />
-            <MetricCard Value="2.8x" Label="conversion rate" Source="on pages with embedded demos" />
-            <MetricCard Value="180%" Label="more qualified leads" Source="from demo lead capture" />
+            <MetricCard Value="3.2x" Label="more website engagement" Source="vs. static content" />
+            <MetricCard Value="47%" Label="increase in marketing-sourced pipeline" />
+            <MetricCard Value="68%" Label="of demo viewers visit pricing page" />
         </div>
     </div>
 </section>
 
-@* Testimonial *@
-<section class="mkt-section-alt">
-    <div class="mkt-container reveal">
-        <TestimonialCard Featured="true"
-            Quote="Embedding NavTour demos on our landing pages increased conversion by 2.8x. Visitors who interact with a demo are 4x more likely to book a call."
-            Name="Maria Santos"
-            Title="Head of Demand Gen"
-            Company="Vantage CRM"
-            Metric="2.8x"
-            MetricLabel="conversion increase" />
-    </div>
-</section>
-
-<CtaSection Title="Ready to convert more visitors?" Subtitle="Embed your first interactive demo today. Free to start." />
+<CtaSection Dark="true"
+            Title="Turn your website into a product experience"
+            Subtitle="Embed interactive demos in minutes. Free forever." />
