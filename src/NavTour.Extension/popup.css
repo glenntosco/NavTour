@@ -17,11 +17,10 @@ body {
 }
 
 .logo {
-  font-size: 18px;
-  font-weight: 700;
-  color: #4361ee;
-  margin-bottom: 16px;
-  text-align: center;
+  display: block;
+  width: 36px;
+  height: 36px;
+  margin: 0 auto 16px;
 }
 
 .screen {
