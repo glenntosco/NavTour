@@ -651,4 +651,102 @@
   <data name="usecases_cta_subtitle" xml:space="preserve"><value>Empieza gratis. Crea tu primera demo en menos de 5 minutos.</value></data>
   <data name="usecases_cta_text" xml:space="preserve"><value>Empieza Gratis</value></data>
   <data name="usecases_cta_secondary" xml:space="preserve"><value>Agenda una Demo</value></data>
+
+  <!-- Integrations Page -->
+  <data name="integ_page_title" xml:space="preserve"><value>Integraciones — NavTour</value></data>
+  <data name="integ_meta_desc" xml:space="preserve"><value>Conecta NavTour a tu CRM, automatizaci&#xF3;n de marketing, anal&#xED;tica y m&#xE1;s. API REST, webhooks y scripts de inserci&#xF3;n.</value></data>
+  <data name="integ_eyebrow" xml:space="preserve"><value>Integraciones</value></data>
+  <data name="integ_hero_title" xml:space="preserve"><value>Se conecta a toda tu pila tecnol&#xF3;gica</value></data>
+  <data name="integ_hero_subtitle" xml:space="preserve"><value>Env&#xED;a datos de demos a tu CRM, activa flujos de trabajo e inserta demos donde est&#xE9;n tus compradores.</value></data>
+  <data name="integ_cta_primary" xml:space="preserve"><value>Empieza Gratis</value></data>
+  <data name="integ_cta_secondary" xml:space="preserve"><value>Habla con Nosotros</value></data>
+  <data name="integ_cat1_label" xml:space="preserve"><value>CRM</value></data>
+  <data name="integ_cat1_title" xml:space="preserve"><value>Gesti&#xF3;n de Relaciones con Clientes</value></data>
+  <data name="integ_hubspot_name" xml:space="preserve"><value>HubSpot</value></data>
+  <data name="integ_hubspot_desc" xml:space="preserve"><value>Sincroniza engagement de demos y leads directamente con contactos, negocios y flujos de trabajo de HubSpot.</value></data>
+  <data name="integ_salesforce_name" xml:space="preserve"><value>Salesforce</value></data>
+  <data name="integ_salesforce_desc" xml:space="preserve"><value>Env&#xED;a actividad de demos a Salesforce. Crea leads autom&#xE1;ticamente, actualiza oportunidades, registra engagement.</value></data>
+  <data name="integ_pipedrive_name" xml:space="preserve"><value>Pipedrive</value></data>
+  <data name="integ_pipedrive_desc" xml:space="preserve"><value>Rastrea vistas de demos como actividades. Califica leads autom&#xE1;ticamente seg&#xFA;n puntuaci&#xF3;n de engagement.</value></data>
+  <data name="integ_cat2_label" xml:space="preserve"><value>Automatizaci&#xF3;n de Marketing</value></data>
+  <data name="integ_cat2_title" xml:space="preserve"><value>Plataformas de Marketing</value></data>
+  <data name="integ_marketo_name" xml:space="preserve"><value>Marketo</value></data>
+  <data name="integ_marketo_desc" xml:space="preserve"><value>Activa campa&#xF1;as de nurturing basadas en interacciones con demos. Puntua leads por profundidad de engagement.</value></data>
+  <data name="integ_mailchimp_name" xml:space="preserve"><value>Mailchimp</value></data>
+  <data name="integ_mailchimp_desc" xml:space="preserve"><value>Inserta enlaces de demos en campa&#xF1;as de email. Rastrea conversi&#xF3;n de apertura a demo.</value></data>
+  <data name="integ_activecampaign_name" xml:space="preserve"><value>ActiveCampaign</value></data>
+  <data name="integ_activecampaign_desc" xml:space="preserve"><value>Automatiza seguimientos basados en qu&#xE9; pasos de la demo completaron los prospectos.</value></data>
+  <data name="integ_cat3_label" xml:space="preserve"><value>Colaboraci&#xF3;n y Flujos de Trabajo</value></data>
+  <data name="integ_cat3_title" xml:space="preserve"><value>Herramientas de Colaboraci&#xF3;n</value></data>
+  <data name="integ_slack_name" xml:space="preserve"><value>Slack</value></data>
+  <data name="integ_slack_desc" xml:space="preserve"><value>Recibe notificaciones cuando prospectos completen demos, alcancen umbrales de engagement o env&#xED;en formularios de lead.</value></data>
+  <data name="integ_zapier_name" xml:space="preserve"><value>Zapier</value></data>
+  <data name="integ_zapier_desc" xml:space="preserve"><value>Conecta NavTour a m&#xE1;s de 5,000 apps. Activa cualquier flujo de trabajo desde eventos de demo.</value></data>
+  <data name="integ_webhooks_name" xml:space="preserve"><value>Webhooks</value></data>
+  <data name="integ_webhooks_desc" xml:space="preserve"><value>Streaming de eventos en tiempo real para integraciones personalizadas. Cada interacci&#xF3;n de demo, entregada al instante.</value></data>
+  <data name="integ_cat4_label" xml:space="preserve"><value>Inserci&#xF3;n y Anal&#xED;tica</value></data>
+  <data name="integ_cat4_title" xml:space="preserve"><value>Web y Anal&#xED;tica</value></data>
+  <data name="integ_embed_name" xml:space="preserve"><value>Inserci&#xF3;n Web</value></data>
+  <data name="integ_embed_desc" xml:space="preserve"><value>Agrega una sola etiqueta de script en cualquier p&#xE1;gina. Responsivo, carga r&#xE1;pida, sin cambio de dise&#xF1;o.</value></data>
+  <data name="integ_ga_name" xml:space="preserve"><value>Google Analytics</value></data>
+  <data name="integ_ga_desc" xml:space="preserve"><value>Los eventos de demo se disparan como eventos GA4. Rastrea conversi&#xF3;n demo-a-venta en tus dashboards existentes.</value></data>
+  <data name="integ_segment_name" xml:space="preserve"><value>Segment</value></data>
+  <data name="integ_segment_desc" xml:space="preserve"><value>Env&#xED;a datos de demos a trav&#xE9;s de Segment a cada herramienta de tu stack de anal&#xED;tica.</value></data>
+  <data name="integ_api_eyebrow" xml:space="preserve"><value>Plataforma para Desarrolladores</value></data>
+  <data name="integ_api_title" xml:space="preserve"><value>Construye lo que sea con la API</value></data>
+  <data name="integ_api_desc" xml:space="preserve"><value>API REST completa con documentaci&#xF3;n integral. Crea demos, gestiona contenido, activa eventos y extrae anal&#xED;tica program&#xE1;ticamente. Todo lo que puedes hacer en la interfaz, puedes hacerlo v&#xED;a API.</value></data>
+  <data name="integ_api_link" xml:space="preserve"><value>Ver Documentaci&#xF3;n de API</value></data>
+  <data name="integ_bottom_cta_title" xml:space="preserve"><value>&#xBF;No ves tu integraci&#xF3;n?</value></data>
+  <data name="integ_bottom_cta_subtitle" xml:space="preserve"><value>Nuestra API REST y webhooks te permiten conectar NavTour a cualquier cosa. O solicita una integraci&#xF3;n — la construimos r&#xE1;pido.</value></data>
+  <data name="integ_bottom_cta_text" xml:space="preserve"><value>Cont&#xE1;ctanos</value></data>
+
+  <!-- Solution CS Page -->
+  <data name="sol_cs_page_title" xml:space="preserve"><value>NavTour para &#xC9;xito del Cliente — Incorporar, Adoptar, Retener</value></data>
+  <data name="sol_cs_meta_desc" xml:space="preserve"><value>Tours de producto self-serve y gu&#xED;as interactivas escalan tu incorporaci&#xF3;n sin escalar tu equipo.</value></data>
+  <data name="sol_cs_eyebrow" xml:space="preserve"><value>Para &#xC9;xito del Cliente</value></data>
+  <data name="sol_cs_hero_title" xml:space="preserve"><value>Incorpora, adopta y retiene — sin agotar a tu equipo de CS</value></data>
+  <data name="sol_cs_hero_subtitle" xml:space="preserve"><value>Tours de producto self-serve y gu&#xED;as interactivas escalan tu incorporaci&#xF3;n sin escalar tu equipo.</value></data>
+  <data name="sol_cs_cta_primary" xml:space="preserve"><value>Empieza Gratis</value></data>
+  <data name="sol_cs_cta_secondary" xml:space="preserve"><value>Habla con Nosotros</value></data>
+  <data name="sol_cs_pain1_title" xml:space="preserve"><value>La incorporaci&#xF3;n es un cuello de botella</value></data>
+  <data name="sol_cs_pain1_desc" xml:space="preserve"><value>Cada nuevo cliente necesita acompa&#xF1;amiento por las mismas funciones. Tu equipo de CS est&#xE1; atrapado en llamadas repetitivas de incorporaci&#xF3;n en lugar de impulsar resultados estrat&#xE9;gicos.</value></data>
+  <data name="sol_cs_pain2_title" xml:space="preserve"><value>La adopci&#xF3;n de funciones se estanca</value></data>
+  <data name="sol_cs_pain2_desc" xml:space="preserve"><value>Lanzaste una gran funci&#xF3;n nueva, pero los clientes no saben que existe. Enviar emails y notas de lanzamiento no impulsa la adopci&#xF3;n.</value></data>
+  <data name="sol_cs_pain3_title" xml:space="preserve"><value>Las renovaciones dependen del engagement</value></data>
+  <data name="sol_cs_pain3_desc" xml:space="preserve"><value>Los clientes que no usan el producto no renuevan. Pero no puedes verificar manualmente cada cuenta.</value></data>
+  <data name="sol_cs_feat1_eyebrow" xml:space="preserve"><value>Incorporaci&#xF3;n</value></data>
+  <data name="sol_cs_feat1_title" xml:space="preserve"><value>Tours de Incorporaci&#xF3;n Self-Serve</value></data>
+  <data name="sol_cs_feat1_desc" xml:space="preserve"><value>Crea recorridos interactivos para cada flujo de incorporaci&#xF3;n. Los clientes aprenden a su ritmo — sin agendar, sin compartir pantalla, sin llamadas repetitivas. La IA genera el texto de la gu&#xED;a y el flujo de pasos autom&#xE1;ticamente.</value></data>
+  <data name="sol_cs_feat1_placeholder" xml:space="preserve"><value>Tour de incorporaci&#xF3;n self-serve con seguimiento de progreso</value></data>
+  <data name="sol_cs_feat2_eyebrow" xml:space="preserve"><value>Adopci&#xF3;n</value></data>
+  <data name="sol_cs_feat2_title" xml:space="preserve"><value>Campa&#xF1;as de Adopci&#xF3;n de Funciones</value></data>
+  <data name="sol_cs_feat2_desc" xml:space="preserve"><value>Crea demos interactivas para nuevas funciones. Ins&#xE9;rtalas en la app, en documentaci&#xF3;n de ayuda o en campa&#xF1;as de email. Rastrea qu&#xE9; clientes realmente probaron la funci&#xF3;n versus cu&#xE1;les solo leyeron sobre ella.</value></data>
+  <data name="sol_cs_feat2_placeholder" xml:space="preserve"><value>Campa&#xF1;a de adopci&#xF3;n de funciones con seguimiento de engagement</value></data>
+  <data name="sol_cs_feat3_eyebrow" xml:space="preserve"><value>Retenci&#xF3;n</value></data>
+  <data name="sol_cs_feat3_title" xml:space="preserve"><value>Puntuaci&#xF3;n de Salud Basada en Engagement</value></data>
+  <data name="sol_cs_feat3_desc" xml:space="preserve"><value>La IA rastrea qu&#xE9; clientes est&#xE1;n explorando activamente tu producto a trav&#xE9;s de demos y cu&#xE1;les se han quedado callados. Alimenta se&#xF1;ales de engagement a tu plataforma de CS para priorizar cuentas en riesgo.</value></data>
+  <data name="sol_cs_feat3_placeholder" xml:space="preserve"><value>Dashboard de salud del cliente con se&#xF1;ales de engagement</value></data>
+  <data name="sol_cs_metrics_title" xml:space="preserve"><value>Los equipos de &#xE9;xito del cliente que usan NavTour ven resultados</value></data>
+  <data name="sol_cs_metric1_label" xml:space="preserve"><value>m&#xE1;s r&#xE1;pido el tiempo a valor para nuevos clientes</value></data>
+  <data name="sol_cs_metric2_label" xml:space="preserve"><value>reducci&#xF3;n en tickets de soporte de incorporaci&#xF3;n</value></data>
+  <data name="sol_cs_metric3_label" xml:space="preserve"><value>aumento en tasas de adopci&#xF3;n de funciones</value></data>
+  <data name="sol_cs_bottom_cta_title" xml:space="preserve"><value>Escala tu equipo de CS sin contratar</value></data>
+  <data name="sol_cs_bottom_cta_subtitle" xml:space="preserve"><value>Los tours de producto self-serve manejan el trabajo repetitivo. Tu equipo de CS maneja las relaciones.</value></data>
+  <data name="sol_cs_bottom_cta_text" xml:space="preserve"><value>Empieza a Crear Gratis</value></data>
+  <data name="sol_cs_bottom_cta_secondary" xml:space="preserve"><value>Agenda una Demo</value></data>
+
+  <!-- Docs Page -->
+  <data name="docs_page_title" xml:space="preserve"><value>Documentaci&#xF3;n — NavTour</value></data>
+  <data name="docs_meta_desc" xml:space="preserve"><value>Documentaci&#xF3;n de NavTour — gu&#xED;as, referencias de API y tutoriales. Pr&#xF3;ximamente.</value></data>
+  <data name="docs_eyebrow" xml:space="preserve"><value>Documentaci&#xF3;n</value></data>
+  <data name="docs_hero_title" xml:space="preserve"><value>La documentaci&#xF3;n est&#xE1; en camino</value></data>
+  <data name="docs_hero_subtitle" xml:space="preserve"><value>Estamos creando gu&#xED;as completas, referencias de API y tutoriales. Recibe una notificaci&#xF3;n cuando se lancen.</value></data>
+  <data name="docs_notify_title" xml:space="preserve"><value>S&#xE9; el primero en saber</value></data>
+  <data name="docs_notify_desc" xml:space="preserve"><value>Ingresa tu email y te notificaremos cuando nuestra documentaci&#xF3;n est&#xE9; disponible.</value></data>
+  <data name="docs_notify_success" xml:space="preserve"><value>&#xA1;Gracias! Te notificaremos cuando la documentaci&#xF3;n est&#xE9; lista.</value></data>
+  <data name="docs_notify_placeholder" xml:space="preserve"><value>Ingresa tu email</value></data>
+  <data name="docs_notify_btn" xml:space="preserve"><value>Suscr&#xED;bete para Actualizaciones</value></data>
+  <data name="docs_bottom_cta_title" xml:space="preserve"><value>&#xBF;Necesitas ayuda ahora?</value></data>
+  <data name="docs_bottom_cta_subtitle" xml:space="preserve"><value>Nuestro equipo de soporte est&#xE1; listo para responder tus preguntas mientras construimos la documentaci&#xF3;n.</value></data>
+  <data name="docs_bottom_cta_text" xml:space="preserve"><value>Contactar Soporte</value></data>
 </root>

@@ -651,4 +651,102 @@
   <data name="usecases_cta_subtitle" xml:space="preserve"><value>Start free. Build your first demo in under 5 minutes.</value></data>
   <data name="usecases_cta_text" xml:space="preserve"><value>Start Building Free</value></data>
   <data name="usecases_cta_secondary" xml:space="preserve"><value>Book a Demo</value></data>
+
+  <!-- Integrations Page -->
+  <data name="integ_page_title" xml:space="preserve"><value>Integrations — NavTour</value></data>
+  <data name="integ_meta_desc" xml:space="preserve"><value>Connect NavTour to your CRM, marketing automation, analytics, and more. REST API, webhooks, and embed scripts.</value></data>
+  <data name="integ_eyebrow" xml:space="preserve"><value>Integrations</value></data>
+  <data name="integ_hero_title" xml:space="preserve"><value>Connects to your entire stack</value></data>
+  <data name="integ_hero_subtitle" xml:space="preserve"><value>Push demo data to your CRM, trigger workflows, and embed demos wherever your buyers are.</value></data>
+  <data name="integ_cta_primary" xml:space="preserve"><value>Start Free</value></data>
+  <data name="integ_cta_secondary" xml:space="preserve"><value>Talk to Us</value></data>
+  <data name="integ_cat1_label" xml:space="preserve"><value>CRM</value></data>
+  <data name="integ_cat1_title" xml:space="preserve"><value>Customer Relationship Management</value></data>
+  <data name="integ_hubspot_name" xml:space="preserve"><value>HubSpot</value></data>
+  <data name="integ_hubspot_desc" xml:space="preserve"><value>Sync demo engagement and leads directly to HubSpot contacts, deals, and workflows.</value></data>
+  <data name="integ_salesforce_name" xml:space="preserve"><value>Salesforce</value></data>
+  <data name="integ_salesforce_desc" xml:space="preserve"><value>Push demo activity to Salesforce. Auto-create leads, update opportunities, log engagement.</value></data>
+  <data name="integ_pipedrive_name" xml:space="preserve"><value>Pipedrive</value></data>
+  <data name="integ_pipedrive_desc" xml:space="preserve"><value>Track demo views as activities. Auto-qualify leads based on engagement score.</value></data>
+  <data name="integ_cat2_label" xml:space="preserve"><value>Marketing Automation</value></data>
+  <data name="integ_cat2_title" xml:space="preserve"><value>Marketing Platforms</value></data>
+  <data name="integ_marketo_name" xml:space="preserve"><value>Marketo</value></data>
+  <data name="integ_marketo_desc" xml:space="preserve"><value>Trigger nurture campaigns based on demo interactions. Score leads by engagement depth.</value></data>
+  <data name="integ_mailchimp_name" xml:space="preserve"><value>Mailchimp</value></data>
+  <data name="integ_mailchimp_desc" xml:space="preserve"><value>Embed demo links in email campaigns. Track opens-to-demo conversion.</value></data>
+  <data name="integ_activecampaign_name" xml:space="preserve"><value>ActiveCampaign</value></data>
+  <data name="integ_activecampaign_desc" xml:space="preserve"><value>Automate follow-ups based on which demo steps prospects completed.</value></data>
+  <data name="integ_cat3_label" xml:space="preserve"><value>Collaboration &amp; Workflow</value></data>
+  <data name="integ_cat3_title" xml:space="preserve"><value>Collaboration Tools</value></data>
+  <data name="integ_slack_name" xml:space="preserve"><value>Slack</value></data>
+  <data name="integ_slack_desc" xml:space="preserve"><value>Get notified when prospects complete demos, hit engagement thresholds, or submit lead forms.</value></data>
+  <data name="integ_zapier_name" xml:space="preserve"><value>Zapier</value></data>
+  <data name="integ_zapier_desc" xml:space="preserve"><value>Connect NavTour to 5,000+ apps. Trigger any workflow from demo events.</value></data>
+  <data name="integ_webhooks_name" xml:space="preserve"><value>Webhooks</value></data>
+  <data name="integ_webhooks_desc" xml:space="preserve"><value>Real-time event streaming for custom integrations. Every demo interaction, delivered instantly.</value></data>
+  <data name="integ_cat4_label" xml:space="preserve"><value>Embedding &amp; Analytics</value></data>
+  <data name="integ_cat4_title" xml:space="preserve"><value>Website &amp; Analytics</value></data>
+  <data name="integ_embed_name" xml:space="preserve"><value>Website Embed</value></data>
+  <data name="integ_embed_desc" xml:space="preserve"><value>Drop a single script tag on any page. Responsive, fast-loading, zero layout shift.</value></data>
+  <data name="integ_ga_name" xml:space="preserve"><value>Google Analytics</value></data>
+  <data name="integ_ga_desc" xml:space="preserve"><value>Demo events fire as GA4 events. Track demo-to-conversion in your existing dashboards.</value></data>
+  <data name="integ_segment_name" xml:space="preserve"><value>Segment</value></data>
+  <data name="integ_segment_desc" xml:space="preserve"><value>Route demo data through Segment to every tool in your analytics stack.</value></data>
+  <data name="integ_api_eyebrow" xml:space="preserve"><value>Developer Platform</value></data>
+  <data name="integ_api_title" xml:space="preserve"><value>Build anything with the API</value></data>
+  <data name="integ_api_desc" xml:space="preserve"><value>Full REST API with comprehensive documentation. Create demos, manage content, trigger events, and pull analytics programmatically. Everything you can do in the UI, you can do via API.</value></data>
+  <data name="integ_api_link" xml:space="preserve"><value>View API Documentation</value></data>
+  <data name="integ_bottom_cta_title" xml:space="preserve"><value>Don't see your integration?</value></data>
+  <data name="integ_bottom_cta_subtitle" xml:space="preserve"><value>Our REST API and webhooks let you connect NavTour to anything. Or request an integration — we ship fast.</value></data>
+  <data name="integ_bottom_cta_text" xml:space="preserve"><value>Contact Us</value></data>
+
+  <!-- Solution CS Page -->
+  <data name="sol_cs_page_title" xml:space="preserve"><value>NavTour for Customer Success — Onboard, Adopt, Retain</value></data>
+  <data name="sol_cs_meta_desc" xml:space="preserve"><value>Self-serve product tours and interactive guides scale your onboarding without scaling your headcount.</value></data>
+  <data name="sol_cs_eyebrow" xml:space="preserve"><value>For Customer Success</value></data>
+  <data name="sol_cs_hero_title" xml:space="preserve"><value>Onboard, adopt, and retain — without burning out your CS team</value></data>
+  <data name="sol_cs_hero_subtitle" xml:space="preserve"><value>Self-serve product tours and interactive guides scale your onboarding without scaling your headcount.</value></data>
+  <data name="sol_cs_cta_primary" xml:space="preserve"><value>Start Free</value></data>
+  <data name="sol_cs_cta_secondary" xml:space="preserve"><value>Talk to Us</value></data>
+  <data name="sol_cs_pain1_title" xml:space="preserve"><value>Onboarding is a bottleneck</value></data>
+  <data name="sol_cs_pain1_desc" xml:space="preserve"><value>Every new customer needs hand-holding through the same features. Your CS team is stuck in repetitive onboarding calls instead of driving strategic outcomes.</value></data>
+  <data name="sol_cs_pain2_title" xml:space="preserve"><value>Feature adoption stalls</value></data>
+  <data name="sol_cs_pain2_desc" xml:space="preserve"><value>You shipped a great new feature, but customers don't know it exists. Sending emails and release notes doesn't drive adoption.</value></data>
+  <data name="sol_cs_pain3_title" xml:space="preserve"><value>Renewals depend on engagement</value></data>
+  <data name="sol_cs_pain3_desc" xml:space="preserve"><value>Customers who don't use the product don't renew. But you can't manually check in with every account.</value></data>
+  <data name="sol_cs_feat1_eyebrow" xml:space="preserve"><value>Onboarding</value></data>
+  <data name="sol_cs_feat1_title" xml:space="preserve"><value>Self-Serve Onboarding Tours</value></data>
+  <data name="sol_cs_feat1_desc" xml:space="preserve"><value>Create interactive walkthroughs for every onboarding workflow. Customers learn at their own pace — no scheduling, no screen shares, no repetitive calls. AI generates the guide copy and step flow automatically.</value></data>
+  <data name="sol_cs_feat1_placeholder" xml:space="preserve"><value>Self-serve onboarding tour with progress tracking</value></data>
+  <data name="sol_cs_feat2_eyebrow" xml:space="preserve"><value>Adoption</value></data>
+  <data name="sol_cs_feat2_title" xml:space="preserve"><value>Feature Adoption Campaigns</value></data>
+  <data name="sol_cs_feat2_desc" xml:space="preserve"><value>Build interactive demos for new features. Embed them in-app, in help docs, or in email campaigns. Track which customers actually tried the feature versus which ones just read about it.</value></data>
+  <data name="sol_cs_feat2_placeholder" xml:space="preserve"><value>Feature adoption campaign with engagement tracking</value></data>
+  <data name="sol_cs_feat3_eyebrow" xml:space="preserve"><value>Retention</value></data>
+  <data name="sol_cs_feat3_title" xml:space="preserve"><value>Engagement-Based Health Scoring</value></data>
+  <data name="sol_cs_feat3_desc" xml:space="preserve"><value>AI tracks which customers are actively exploring your product through demos and which ones have gone quiet. Feed engagement signals to your CS platform to prioritize at-risk accounts.</value></data>
+  <data name="sol_cs_feat3_placeholder" xml:space="preserve"><value>Customer health dashboard with engagement signals</value></data>
+  <data name="sol_cs_metrics_title" xml:space="preserve"><value>Customer success teams using NavTour see results</value></data>
+  <data name="sol_cs_metric1_label" xml:space="preserve"><value>faster time-to-value for new customers</value></data>
+  <data name="sol_cs_metric2_label" xml:space="preserve"><value>reduction in onboarding support tickets</value></data>
+  <data name="sol_cs_metric3_label" xml:space="preserve"><value>increase in feature adoption rates</value></data>
+  <data name="sol_cs_bottom_cta_title" xml:space="preserve"><value>Scale your CS team without hiring</value></data>
+  <data name="sol_cs_bottom_cta_subtitle" xml:space="preserve"><value>Self-serve product tours handle the repetitive work. Your CS team handles the relationships.</value></data>
+  <data name="sol_cs_bottom_cta_text" xml:space="preserve"><value>Start Building Free</value></data>
+  <data name="sol_cs_bottom_cta_secondary" xml:space="preserve"><value>Book a Demo</value></data>
+
+  <!-- Docs Page -->
+  <data name="docs_page_title" xml:space="preserve"><value>Documentation — NavTour</value></data>
+  <data name="docs_meta_desc" xml:space="preserve"><value>NavTour documentation — guides, API references, and tutorials. Coming soon.</value></data>
+  <data name="docs_eyebrow" xml:space="preserve"><value>Documentation</value></data>
+  <data name="docs_hero_title" xml:space="preserve"><value>Documentation is on the way</value></data>
+  <data name="docs_hero_subtitle" xml:space="preserve"><value>We're building comprehensive guides, API references, and tutorials. Get notified when they launch.</value></data>
+  <data name="docs_notify_title" xml:space="preserve"><value>Be the first to know</value></data>
+  <data name="docs_notify_desc" xml:space="preserve"><value>Enter your email and we'll notify you when our documentation goes live.</value></data>
+  <data name="docs_notify_success" xml:space="preserve"><value>Thanks! We'll notify you when docs are ready.</value></data>
+  <data name="docs_notify_placeholder" xml:space="preserve"><value>Enter your email</value></data>
+  <data name="docs_notify_btn" xml:space="preserve"><value>Subscribe for Updates</value></data>
+  <data name="docs_bottom_cta_title" xml:space="preserve"><value>Need help now?</value></data>
+  <data name="docs_bottom_cta_subtitle" xml:space="preserve"><value>Our support team is ready to answer your questions while we build out the docs.</value></data>
+  <data name="docs_bottom_cta_text" xml:space="preserve"><value>Contact Support</value></data>
 </root>

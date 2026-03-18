@@ -1,39 +1,38 @@
 @page "/integrations"
 @layout MarketingLayout
+@inject IStringLocalizer<NavTour.Server.Resources.SharedResources> L
 
-<PageTitle>Integrations — NavTour</PageTitle>
+<PageTitle>@L["integ_page_title"]</PageTitle>
 <HeadContent>
-    <meta name="description" content="Connect NavTour to Salesforce, HubSpot, Marketo, Google Analytics, Segment, and more. REST API, webhooks, and embed scripts." />
+    <meta name="description" content="@L["integ_meta_desc"].Value" />
 </HeadContent>
 
-<section class="mkt-section" style="padding-bottom:var(--space-16)">
-    <div class="mkt-container" style="max-width:680px">
-        <h1 class="text-center">Connect NavTour to your existing stack</h1>
-        <p class="text-center" style="margin-top:var(--space-5)">Push leads to your CRM, track engagement in your analytics tools, and embed demos anywhere. NavTour integrates with the tools you already use.</p>
-    </div>
-</section>
+<HeroSection Eyebrow="@L["integ_eyebrow"].Value"
+             Title="@L["integ_hero_title"].Value"
+             Subtitle="@L["integ_hero_subtitle"].Value"
+             PrimaryCtaText="@L["integ_cta_primary"].Value"
+             SecondaryCtaText="@L["integ_cta_secondary"].Value"
+             SecondaryCtaUrl="/contact" />
 
 @foreach (var (category, index) in categories.Select((c, i) => (c, i)))
 {
     <section class="@(index % 2 == 0 ? "mkt-section" : "mkt-section-alt")">
         <div class="mkt-container">
             <div class="mkt-section-heading reveal">
-                <p class="mkt-eyebrow">@category.Label</p>
-                <h2>@category.Title</h2>
-                <p>@category.Description</p>
+                <p class="mkt-eyebrow">@L[category.LabelKey]</p>
+                <h2>@L[category.TitleKey]</h2>
             </div>
             <div class="mkt-grid mkt-grid-3 reveal-stagger">
                 @foreach (var integration in category.Items)
                 {
-                    <div class="mkt-integration-card">
+                    <div class="mkt-card">
                         <div class="mkt-integration-icon">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 @((MarkupString)integration.IconPath)
                             </svg>
                         </div>
-                        <h3>@integration.Name</h3>
-                        <p>@integration.Desc</p>
-                        <p style="margin-top:var(--space-3);font-size:var(--text-xs);color:var(--neutral-400)">@integration.HowItConnects</p>
+                        <h3>@L[integration.NameKey]</h3>
+                        <p>@L[integration.DescKey]</p>
                     </div>
                 }
             </div>
@@ -42,58 +41,54 @@
 }
 
 @* API Section *@
-<section class="mkt-section">
+<section class="mkt-section-alt">
     <div class="mkt-container reveal">
         <div class="mkt-grid mkt-grid-2" style="align-items:center;gap:var(--space-16)">
             <div>
-                <p class="mkt-eyebrow">Developer Platform</p>
-                <h2 style="margin-top:var(--space-2)">Build anything with the NavTour API</h2>
-                <p style="margin-top:var(--space-4)">Every feature in NavTour is accessible via our REST API. Create demos programmatically, manage leads, pull analytics data, and trigger webhooks for real-time event processing.</p>
-                <ul class="mkt-benefits">
-                    <li>Full REST API with OpenAPI specification</li>
-                    <li>Webhook notifications for demo events</li>
-                    <li>API key management with scoped permissions</li>
-                    <li>Rate limits designed for production workloads</li>
-                    <li>Comprehensive API documentation</li>
-                </ul>
-                <a href="/docs" class="mkt-btn mkt-btn-secondary" style="margin-top:var(--space-6)">View API Docs</a>
+                <p class="mkt-eyebrow">@L["integ_api_eyebrow"]</p>
+                <h2 style="margin-top:var(--space-2)">@L["integ_api_title"]</h2>
+                <p style="margin-top:var(--space-4)">@L["integ_api_desc"]</p>
+                <a href="/docs" class="mkt-btn mkt-btn-secondary" style="margin-top:var(--space-6)">@L["integ_api_link"] &rarr;</a>
             </div>
-            <div class="mkt-placeholder mkt-placeholder-feature">API documentation with code examples</div>
+            <div class="mkt-placeholder mkt-placeholder-feature">REST API documentation</div>
         </div>
     </div>
 </section>
 
-<CtaSection Title="Don't see your tool?" Subtitle="Our API connects NavTour to any tool in your stack. Talk to us about custom integrations." CtaText="Contact Us" CtaUrl="/contact" />
+<CtaSection Title="@L["integ_bottom_cta_title"].Value"
+            Subtitle="@L["integ_bottom_cta_subtitle"].Value"
+            CtaText="@L["integ_bottom_cta_text"].Value"
+            CtaUrl="/contact" />
 
 @code {
-    private record IntegrationItem(string Name, string Desc, string HowItConnects, string IconPath);
-    private record IntegrationCategory(string Label, string Title, string Description, List<IntegrationItem> Items);
+    private record IntegrationItem(string NameKey, string DescKey, string IconPath);
+    private record IntegrationCategory(string LabelKey, string TitleKey, List<IntegrationItem> Items);
 
     private readonly List<IntegrationCategory> categories = new()
     {
-        new("CRM", "Customer Relationship Management", "Push demo leads and engagement data directly to your CRM. Enrich contact records with interaction history.", new()
+        new("integ_cat1_label", "integ_cat1_title", new()
         {
-            new("Salesforce", "Push captured leads to Salesforce as contacts or leads. Sync demo engagement data to opportunity records for pipeline attribution.", "Connects via REST API and webhooks", "<path d='M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2'/><circle cx='9' cy='7' r='4'/><path d='M23 21v-2a4 4 0 0 0-3-3.87'/><path d='M16 3.13a4 4 0 0 1 0 7.75'/>"),
-            new("HubSpot", "Create contacts and deals from demo lead forms. Log demo views as timeline events on contact records for complete buyer journey tracking.", "Connects via REST API and webhooks", "<circle cx='12' cy='12' r='10'/><circle cx='12' cy='12' r='6'/><circle cx='12' cy='12' r='2'/>"),
-            new("Pipedrive", "Sync demo leads as contacts and log engagement as activities. Prioritize deals based on demo interaction depth.", "Connects via REST API and webhooks", "<line x1='18' y1='20' x2='18' y2='10'/><line x1='12' y1='20' x2='12' y2='4'/><line x1='6' y1='20' x2='6' y2='14'/>")
+            new("integ_hubspot_name", "integ_hubspot_desc", "<circle cx='12' cy='12' r='10'/><circle cx='12' cy='12' r='6'/><circle cx='12' cy='12' r='2'/>"),
+            new("integ_salesforce_name", "integ_salesforce_desc", "<path d='M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2'/><circle cx='9' cy='7' r='4'/><path d='M23 21v-2a4 4 0 0 0-3-3.87'/><path d='M16 3.13a4 4 0 0 1 0 7.75'/>"),
+            new("integ_pipedrive_name", "integ_pipedrive_desc", "<line x1='18' y1='20' x2='18' y2='10'/><line x1='12' y1='20' x2='12' y2='4'/><line x1='6' y1='20' x2='6' y2='14'/>")
         }),
-        new("Marketing Automation", "Marketing Platforms", "Trigger campaigns based on demo engagement. Segment audiences by interaction behavior.", new()
+        new("integ_cat2_label", "integ_cat2_title", new()
         {
-            new("Marketo", "Trigger nurture campaigns when prospects complete demo milestones. Score leads based on demo engagement depth and step completion rates.", "Connects via webhooks and REST API", "<path d='M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z'/><polyline points='22,6 12,13 2,6'/>"),
-            new("Mailchimp", "Add demo viewers to email lists and tag them by engagement level. Trigger automated sequences for high-intent viewers who complete key demo steps.", "Connects via webhooks and REST API", "<path d='M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z'/><polyline points='22,6 12,13 2,6'/>"),
-            new("ActiveCampaign", "Sync demo engagement as contact events. Build automation workflows triggered by demo views, lead captures, and step completions.", "Connects via webhooks and REST API", "<polygon points='13 2 3 14 12 14 11 22 21 10 12 10 13 2'/>")
+            new("integ_marketo_name", "integ_marketo_desc", "<path d='M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z'/><polyline points='22,6 12,13 2,6'/>"),
+            new("integ_mailchimp_name", "integ_mailchimp_desc", "<path d='M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z'/><polyline points='22,6 12,13 2,6'/>"),
+            new("integ_activecampaign_name", "integ_activecampaign_desc", "<polygon points='13 2 3 14 12 14 11 22 21 10 12 10 13 2'/>")
         }),
-        new("Website & Embedding", "Website Integration", "Embed interactive demos on any website with a single script tag. Works with any CMS or static site.", new()
+        new("integ_cat3_label", "integ_cat3_title", new()
         {
-            new("Embed Script", "Drop a single JavaScript snippet on any page to embed an interactive demo. Responsive, lightweight, and loads asynchronously to avoid impacting page speed.", "Script tag on any HTML page", "<polyline points='16 18 22 12 16 6'/><polyline points='8 6 2 12 8 18'/>"),
-            new("WordPress", "Install the NavTour WordPress plugin to embed demos with a shortcode. Compatible with Gutenberg, Elementor, and all major page builders.", "WordPress plugin or embed shortcode", "<rect x='3' y='3' width='18' height='18' rx='2' ry='2'/><line x1='3' y1='9' x2='21' y2='9'/>"),
-            new("iFrame", "Embed demos as iframes in any CMS, LMS, or knowledge base. Full responsive support with configurable dimensions and border options.", "Standard iFrame embed code", "<rect x='2' y='3' width='20' height='14' rx='2' ry='2'/><line x1='8' y1='21' x2='16' y2='21'/><line x1='12' y1='17' x2='12' y2='21'/>")
+            new("integ_slack_name", "integ_slack_desc", "<path d='M14.5 10c-.83 0-1.5-.67-1.5-1.5v-5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5z'/><path d='M20.5 10H19V8.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z'/>"),
+            new("integ_zapier_name", "integ_zapier_desc", "<polygon points='13 2 3 14 12 14 11 22 21 10 12 10 13 2'/>"),
+            new("integ_webhooks_name", "integ_webhooks_desc", "<path d='M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71'/><path d='M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71'/>")
         }),
-        new("Analytics", "Analytics & Data", "Track demo engagement alongside your existing analytics. Build complete attribution models.", new()
+        new("integ_cat4_label", "integ_cat4_title", new()
         {
-            new("Google Analytics", "Fire GA4 events for demo views, step completions, and lead captures. Build custom reports and attribute conversions to specific demo experiences.", "Connects via client-side event firing", "<line x1='18' y1='20' x2='18' y2='10'/><line x1='12' y1='20' x2='12' y2='4'/><line x1='6' y1='20' x2='6' y2='14'/>"),
-            new("Segment", "Send demo events to Segment as track calls. Route engagement data to any downstream tool in your stack — analytics, data warehouse, or marketing automation.", "Connects via client-side Segment SDK", "<circle cx='12' cy='12' r='10'/><line x1='2' y1='12' x2='22' y2='12'/><path d='M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z'/>"),
-            new("Webhooks", "Receive real-time HTTP callbacks for any demo event — views, completions, lead captures, and drop-offs. Build custom integrations with any tool.", "Standard HTTP POST webhooks", "<path d='M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71'/><path d='M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71'/>")
+            new("integ_embed_name", "integ_embed_desc", "<polyline points='16 18 22 12 16 6'/><polyline points='8 6 2 12 8 18'/>"),
+            new("integ_ga_name", "integ_ga_desc", "<line x1='18' y1='20' x2='18' y2='10'/><line x1='12' y1='20' x2='12' y2='4'/><line x1='6' y1='20' x2='6' y2='14'/>"),
+            new("integ_segment_name", "integ_segment_desc", "<circle cx='12' cy='12' r='10'/><line x1='2' y1='12' x2='22' y2='12'/><path d='M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z'/>")
         })
     };
 }
