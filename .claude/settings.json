@@ -1,0 +1,10 @@
+{
+  "enabledPlugins": {
+    "premium-website-design@local": true
+  },
+  "localPlugins": {
+    "premium-website-design": {
+      "path": ".claude/premium-website-design"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "premium-website-design",
+  "description": "Build Stripe/Apple-quality public-facing Blazor websites and pages",
+  "skills": [
+    {
+      "name": "premium-website-design",
+      "path": "skills/SKILL.md",
+      "description": "Build Stripe/Apple-quality public-facing Blazor websites and pages for P4 Software products. Use when creating landing pages, pricing pages, documentation sites, login/onboarding screens, blog/content pages, or client portal dashboards. Triggers on 'website', 'landing page', 'marketing page', 'pricing page', 'public site', 'login page', 'onboarding', 'blog', 'portal dashboard', or any request for a polished, public-facing web page."
+    }
+  ]
+}

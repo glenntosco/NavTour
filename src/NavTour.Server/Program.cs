@@ -14,7 +14,7 @@ using Radzen;
 var builder = WebApplication.CreateBuilder(args);
 
 // Localization
-builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+builder.Services.AddLocalization();
 
 // Database
 builder.Services.AddDbContext<NavTourDbContext>(options =>
