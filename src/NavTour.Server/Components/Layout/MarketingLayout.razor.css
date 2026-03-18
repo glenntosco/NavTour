@@ -1,7 +1,7 @@
 /* Skip link */
 .mkt-skip-link {
     position: absolute; left: -9999px; top: 0; z-index: 999;
-    background: var(--p4-blue, #0A5FAD); color: #fff; padding: 8px 16px;
+    background: var(--nt-primary, #1E3A5F); color: #fff; padding: 8px 16px;
     font-size: 0.875rem; border-radius: 0 0 6px 0;
 }
 .mkt-skip-link:focus { left: 0; }
@@ -31,11 +31,12 @@
 ::deep .mkt-logo {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 1.125rem;
-    font-weight: 600;
+    gap: 10px;
+    font-size: 1.25rem;
+    font-weight: 700;
     color: var(--neutral-950, #0B1929);
     text-decoration: none;
+    letter-spacing: -0.02em;
 }
 ::deep .mkt-logo:hover { color: var(--neutral-950, #0B1929); }
 ::deep .mkt-nav {
@@ -49,7 +50,7 @@
     text-decoration: none;
     transition: color 150ms ease;
 }
-::deep .mkt-nav a:hover { color: var(--p4-blue, #0A5FAD); }
+::deep .mkt-nav a:hover { color: var(--nt-primary, #1E3A5F); }
 ::deep .mkt-header-actions {
     display: flex;
     gap: 12px;
@@ -72,7 +73,7 @@
 }
 ::deep .mkt-lang-toggle a:hover { color: var(--neutral-950, #0B1929); }
 ::deep .mkt-lang-toggle a.active {
-    color: var(--nt-primary, #4F46E5);
+    color: var(--nt-primary, #1E3A5F);
     font-weight: 700;
 }
 ::deep .mkt-lang-toggle span {
