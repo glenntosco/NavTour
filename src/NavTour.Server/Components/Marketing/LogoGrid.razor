@@ -1,0 +1,11 @@
+<div class="mkt-logo-grid mkt-logo-grid-@Columns">
+    @foreach (var company in Companies)
+    {
+        <div class="mkt-logo-grid-item">@company</div>
+    }
+</div>
+
+@code {
+    [Parameter] public List<string> Companies { get; set; } = new();
+    [Parameter] public int Columns { get; set; } = 4;
+}

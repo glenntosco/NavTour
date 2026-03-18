@@ -6,24 +6,48 @@
     <meta name="description" content="Capture, annotate, personalize, and analyze interactive product demos. Chrome extension, drag-and-drop builder, full API." />
 </HeadContent>
 
-<section class="mkt-section">
-    <div class="mkt-container text-center">
-        <h1>Everything you need to build interactive demos</h1>
-        <p style="max-width:640px;margin:16px auto 0">From capture to analytics, NavTour gives your team the tools to create demos that convert — without writing a line of code.</p>
+<section class="mkt-section" style="padding-bottom:var(--space-16)">
+    <div class="mkt-container" style="max-width:680px">
+        <h1 class="text-center">Everything you need to build interactive demos</h1>
+        <p class="text-center" style="margin-top:var(--space-5)">From capture to analytics, NavTour gives your team the tools to create demos that convert — without writing a line of code.</p>
     </div>
 </section>
 
-@* Alternating feature sections *@
 @foreach (var (feature, index) in features.Select((f, i) => (f, i)))
 {
     <section class="@(index % 2 == 0 ? "mkt-section" : "mkt-section-alt")">
-        <div class="mkt-container">
-            <div class="mkt-grid mkt-grid-2" style="align-items:center">
-                <div style="@(index % 2 == 1 ? "order:2" : "")">
-                    <h2>@feature.Title</h2>
-                    <p style="margin-top:12px">@feature.Description</p>
-                </div>
-                <div class="mkt-placeholder mkt-placeholder-feature" style="@(index % 2 == 1 ? "order:1" : "")">@feature.Title</div>
+        <div class="mkt-container reveal">
+            <div class="mkt-grid mkt-grid-2" style="align-items:center;gap:var(--space-16)">
+                @if (index % 2 == 1)
+                {
+                    <div class="mkt-placeholder mkt-placeholder-feature">@feature.PlaceholderLabel</div>
+                    <div>
+                        <p class="mkt-eyebrow">@feature.Label</p>
+                        <h2 style="margin-top:var(--space-2)">@feature.Title</h2>
+                        <p style="margin-top:var(--space-4)">@feature.Description</p>
+                        <ul class="mkt-benefits">
+                            @foreach (var bullet in feature.Bullets)
+                            {
+                                <li>@bullet</li>
+                            }
+                        </ul>
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        <p class="mkt-eyebrow">@feature.Label</p>
+                        <h2 style="margin-top:var(--space-2)">@feature.Title</h2>
+                        <p style="margin-top:var(--space-4)">@feature.Description</p>
+                        <ul class="mkt-benefits">
+                            @foreach (var bullet in feature.Bullets)
+                            {
+                                <li>@bullet</li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="mkt-placeholder mkt-placeholder-feature">@feature.PlaceholderLabel</div>
+                }
             </div>
         </div>
     </section>
@@ -32,15 +56,73 @@
 <CtaSection Title="Ready to build your first demo?" Subtitle="Get started in minutes. No credit card required." />
 
 @code {
-    private readonly List<(string Title, string Description)> features = new()
+    private record FeatureItem(string Label, string Title, string Description, string PlaceholderLabel, List<string> Bullets);
+
+    private readonly List<FeatureItem> features = new()
     {
-        ("Chrome Extension Capture", "Capture your product in clicks, not code. Our Chrome extension takes one-click DOM snapshots, preserving HTML and CSS for fully interactive playback. Works on any web application — SPA, MPA, or static site."),
-        ("Visual Demo Builder", "Build interactive walkthroughs with drag-and-drop. Edit captured frames inline, reorder steps, and preview your demo in real time. No engineering required."),
-        ("Annotations & Overlays", "Guide prospects step-by-step with tooltips, modals, hotspots, and blur overlays. Click to place, drag to reposition. Add numbered badges and directional arrows for crystal-clear guidance."),
-        ("Personalization", "Tailor every demo to every prospect. Use dynamic tokens like {{company}} and {{name}} that resolve via URL parameters. One demo template serves unlimited personalized experiences."),
-        ("Lead Capture", "Turn viewers into pipeline. Configure lead gate forms that capture contact information before or during the demo. Export leads or push to your CRM via API."),
-        ("Analytics Dashboard", "See exactly how prospects engage. Track session starts, step completion rates, drop-off points, and time-on-step. Identify high-intent accounts from engagement data."),
-        ("API-First Architecture", "Automate everything. Every feature is accessible via our REST API — create demos programmatically, trigger events, export data, and integrate with your existing sales and marketing stack."),
-        ("Multi-Language Support", "Demos in every language your buyers speak. Native English and Spanish support from day one, with an extensible translation framework for any language.")
+        new("Capture", "Chrome Extension Capture", "Capture your product in clicks, not code. Our Chrome extension takes one-click DOM snapshots, preserving HTML and CSS for fully interactive playback. Works on any web application — SPA, MPA, or static site.", "Chrome extension capturing a Salesforce page", new()
+        {
+            "One-click DOM capture preserves full HTML and CSS",
+            "Works on Salesforce, HubSpot, or any web application",
+            "Captures interactive elements, forms, and navigation",
+            "Supports multi-page capture sessions",
+            "No code injection or browser modification required"
+        }),
+        new("Build", "Visual Demo Builder", "Build interactive walkthroughs with drag-and-drop. Edit captured frames inline, reorder steps, and preview your demo in real time. No engineering required.", "Drag-and-drop demo builder interface", new()
+        {
+            "Drag-and-drop frame reordering and step configuration",
+            "Inline editing of captured content and layout",
+            "Real-time preview as you build",
+            "Branching logic for non-linear demo flows",
+            "Template library for common walkthrough patterns"
+        }),
+        new("Guide", "Annotations & Overlays", "Guide prospects step-by-step with tooltips, modals, hotspots, and blur overlays. Click to place, drag to reposition. Add numbered badges and directional arrows for crystal-clear guidance.", "Tooltip editor with annotation options panel", new()
+        {
+            "Tooltips with rich text, images, and custom styling",
+            "Modal overlays for detailed feature explanations",
+            "Hotspot highlights that pulse to draw attention",
+            "Blur overlays to focus attention on specific areas",
+            "Numbered step badges and directional arrows"
+        }),
+        new("Tailor", "Personalization Engine", "Tailor every demo to every prospect. Use dynamic tokens like {{company}} and {{name}} that resolve via URL parameters. One demo template serves unlimited personalized experiences.", "Personalization token editor with preview", new()
+        {
+            "Dynamic tokens: {{company}}, {{name}}, {{role}}, and custom fields",
+            "URL parameter resolution for instant personalization",
+            "Fallback values when tokens are unresolved",
+            "Preview personalization before publishing",
+            "CRM field mapping for automated token resolution"
+        }),
+        new("Convert", "Lead Capture Forms", "Turn viewers into pipeline. Configure lead gate forms that capture contact information before or during the demo. Export leads or push to your CRM via API.", "Lead capture form gating a demo", new()
+        {
+            "Customizable form fields (name, email, company, role)",
+            "Gate placement: before demo, mid-demo, or on completion",
+            "Progressive profiling across multiple demo views",
+            "Real-time lead notifications via email or webhook",
+            "Export to CSV or push to CRM via REST API"
+        }),
+        new("Measure", "Analytics Dashboard", "See exactly how prospects engage. Track session starts, step completion rates, drop-off points, and time-on-step. Identify high-intent accounts from engagement data.", "Analytics dashboard with engagement heatmap", new()
+        {
+            "Session-level tracking with viewer identification",
+            "Step completion heatmaps showing engagement depth",
+            "Drop-off analysis to identify friction points",
+            "Time-on-step metrics for content optimization",
+            "Account-level engagement scoring for sales prioritization"
+        }),
+        new("Integrate", "API-First Architecture", "Automate everything. Every feature is accessible via our REST API — create demos programmatically, trigger events, export data, and integrate with your existing sales and marketing stack.", "API documentation with endpoint reference", new()
+        {
+            "Full REST API with OpenAPI specification",
+            "Webhook notifications for demo events",
+            "Programmatic demo creation and management",
+            "Session data export and analytics API",
+            "API key management with role-based permissions"
+        }),
+        new("Localize", "Multi-Language Support", "Demos in every language your buyers speak. Native English and Spanish support from day one, with an extensible translation framework for any language.", "Multi-language demo with language selector", new()
+        {
+            "Native English and Spanish support built in",
+            "Extensible framework for additional languages",
+            "Per-frame language variants for localized content",
+            "RTL layout support for Arabic and Hebrew",
+            "Locale-aware date, number, and currency formatting"
+        })
     };
 }

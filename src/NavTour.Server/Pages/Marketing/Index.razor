@@ -3,48 +3,69 @@
 
 <PageTitle>NavTour — Interactive Demo Platform</PageTitle>
 <HeadContent>
-    <meta name="description" content="Create interactive product demos that close deals faster. 5x cheaper than Navattic. Free to start." />
+    <meta name="description" content="Turn your product into your best salesperson. Interactive demos that drive 3x engagement and close deals 40% faster. Free to start." />
     <meta property="og:title" content="NavTour — Interactive Demo Platform" />
-    <meta property="og:description" content="Create interactive product demos that close deals faster." />
+    <meta property="og:description" content="Interactive product demos that close deals faster. Free to start." />
 </HeadContent>
 
 @* 1. Hero *@
 <HeroSection
-    Title="Interactive demos that close deals faster"
-    Subtitle="Create, personalize, and share interactive product walkthroughs your prospects can experience — without logging into your product." />
+    Title="Turn your product into your best salesperson"
+    Subtitle="Companies using interactive demos see 3x more engagement and close 40% faster. NavTour makes it free to start."
+    PrimaryCtaText="Start Free"
+    PrimaryCtaUrl="/register"
+    SecondaryCtaText="See a Demo"
+    SecondaryCtaUrl="/contact" />
 
 @* 2. Social Proof Bar *@
-<section class="mkt-section-alt" style="padding:32px 24px">
+<section class="mkt-social-proof">
     <div class="mkt-container text-center">
-        <p class="text-sm" style="color:var(--nt-text-secondary);margin-bottom:16px">Built on proven infrastructure serving 5,000+ clients</p>
-        <div style="display:flex;gap:32px;justify-content:center;align-items:center;flex-wrap:wrap">
-            @for (int i = 0; i < 5; i++)
-            {
-                <div class="mkt-placeholder mkt-placeholder-logo">Partner</div>
-            }
-        </div>
+        <p>Trusted by go-to-market teams worldwide</p>
+        <LogoGrid Companies='new() { "Apex Financial", "Meridian Health", "CloudScale", "TerraLogic", "Pinnacle SaaS", "Vantage CRM", "Horizon Ops", "NovaBridge" }' Columns="8" />
+        <p style="margin-top:var(--space-4);font-size:var(--text-xs);color:var(--neutral-400)">Rated 4.9/5 by users</p>
     </div>
 </section>
 
-@* 3. Problem → Solution *@
+@* 3. Product Pillars *@
 <section class="mkt-section">
     <div class="mkt-container">
-        <h2 class="text-center" style="margin-bottom:48px">Why teams switch to NavTour</h2>
-        <div class="mkt-grid mkt-grid-3">
-            <div class="mkt-card" style="text-align:center">
-                <div style="font-size:2rem;margin-bottom:12px">💰</div>
-                <h3>Demos shouldn't cost $500/mo</h3>
-                <p>Start free, scale at $99/mo. 5x cheaper than the industry standard with more features included.</p>
+        <div class="mkt-section-heading reveal">
+            <h2>One platform. Three superpowers.</h2>
+            <p>Everything your team needs to build, personalize, and measure interactive product demos.</p>
+        </div>
+        <div class="mkt-grid mkt-grid-3 reveal-stagger">
+            <div class="mkt-card" style="padding:var(--space-10)">
+                <div class="mkt-placeholder" style="height:200px;margin-bottom:var(--space-6)">Interactive Demo Builder</div>
+                <h3>Interactive Demos</h3>
+                <ul class="mkt-benefits" style="margin-top:var(--space-4)">
+                    <li>Capture any web app with the Chrome extension</li>
+                    <li>Build guided walkthroughs with drag-and-drop</li>
+                    <li>Add tooltips, modals, and hotspot overlays</li>
+                    <li>Share via link or embed on any website</li>
+                    <li>Works on SPA, MPA, and static sites</li>
+                </ul>
             </div>
-            <div class="mkt-card" style="text-align:center">
-                <div style="font-size:2rem;margin-bottom:12px">🔧</div>
-                <h3>No engineering required</h3>
-                <p>Capture your product with our Chrome extension. Build walkthroughs with drag-and-drop. No code needed.</p>
+            <div class="mkt-card" style="padding:var(--space-10)">
+                <div class="mkt-placeholder" style="height:200px;margin-bottom:var(--space-6)">Analytics Dashboard</div>
+                <h3>Lead Capture &amp; Analytics</h3>
+                <ul class="mkt-benefits" style="margin-top:var(--space-4)">
+                    <li>Gate demos with customizable lead forms</li>
+                    <li>Track every click and scroll interaction</li>
+                    <li>Step completion heatmaps and drop-off analysis</li>
+                    <li>Lead scoring based on engagement depth</li>
+                    <li>Export data or push to your CRM via API</li>
+                </ul>
             </div>
-            <div class="mkt-card" style="text-align:center">
-                <div style="font-size:2rem;margin-bottom:12px">📊</div>
-                <h3>Know what's working</h3>
-                <p>Track every click, see where prospects drop off, and capture leads — all in one dashboard.</p>
+            <div class="mkt-card" style="padding:var(--space-10)">
+                <div class="mkt-placeholder" style="height:200px;margin-bottom:var(--space-6)">Personalization Engine</div>
+                <h3>Personalization at Scale</h3>
+                <ul class="mkt-benefits" style="margin-top:var(--space-4)">
+                    <li>Dynamic &#123;&#123;tokens&#125;&#125; for company, name, and more</li>
+                    <li>URL parameter resolution for instant personalization</li>
+                    <li>One template serves unlimited variations</li>
+                    <li>Works with any CRM or marketing tool</li>
+                    <li>Personalized thumbnails and preview text</li>
+                </ul>
             </div>
         </div>
     </div>
@@ -53,12 +74,16 @@
 @* 4. Feature Highlights *@
 <section class="mkt-section-alt">
     <div class="mkt-container">
-        <h2 class="text-center" style="margin-bottom:48px">Everything you need to build demos</h2>
-        <div class="mkt-grid mkt-grid-4">
-            <FeatureCard Icon="📸" Title="Capture" Description="One-click Chrome extension captures your product as interactive HTML snapshots." />
-            <FeatureCard Icon="✏️" Title="Annotate" Description="Add tooltips, modals, hotspots, and blur overlays to guide your viewers." />
-            <FeatureCard Icon="🎯" Title="Personalize" Description="Dynamic tokens like {{company}} tailor every demo to every prospect." />
-            <FeatureCard Icon="📈" Title="Analyze" Description="Session tracking, step completion rates, and lead capture in real time." />
+        <div class="mkt-section-heading reveal">
+            <h2>Everything you need to build demos</h2>
+        </div>
+        <div class="mkt-grid mkt-grid-3 reveal-stagger">
+            <FeatureCard Icon="capture" Title="Chrome Capture" Description="One-click extension captures your product as interactive HTML snapshots. Works on any web app." />
+            <FeatureCard Icon="annotate" Title="Annotations" Description="Add tooltips, modals, hotspots, and blur overlays to guide viewers step-by-step." />
+            <FeatureCard Icon="personalize" Title="Personalization" Description="Dynamic tokens tailor every demo to every prospect. Resolve via URL parameters." />
+            <FeatureCard Icon="analyze" Title="Analytics" Description="Session tracking, step completion rates, and drop-off analysis in real time." />
+            <FeatureCard Icon="lead" Title="Lead Capture" Description="Gate demos with customizable forms. Capture contact info and push leads to your CRM." />
+            <FeatureCard Icon="api" Title="API Access" Description="Automate demo creation, trigger events, and integrate with your stack via REST API." />
         </div>
     </div>
 </section>
@@ -66,76 +91,162 @@
 @* 5. How It Works *@
 <section class="mkt-section">
     <div class="mkt-container">
-        <h2 class="text-center" style="margin-bottom:48px">Build a demo in 3 steps</h2>
-        <div class="mkt-grid mkt-grid-3">
+        <div class="mkt-section-heading reveal">
+            <h2>Build a demo in 3 steps</h2>
+            <p>No engineering required. Go from product to published demo in minutes.</p>
+        </div>
+        <div class="mkt-grid mkt-grid-3 reveal-stagger">
             <div style="text-align:center">
-                <div style="width:48px;height:48px;background:var(--nt-primary);color:#fff;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:1.25rem;font-weight:700;margin-bottom:16px">1</div>
+                <div class="mkt-step-number">1</div>
                 <h3>Capture</h3>
-                <p>Use the Chrome extension to capture your product screens as interactive HTML snapshots.</p>
+                <p style="margin-top:var(--space-3)">Install the Chrome extension and click to capture. Each click saves a full DOM snapshot — HTML, CSS, and layout — as an interactive frame. Works on Salesforce, HubSpot, your own product, or any web app.</p>
             </div>
             <div style="text-align:center">
-                <div style="width:48px;height:48px;background:var(--nt-primary);color:#fff;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:1.25rem;font-weight:700;margin-bottom:16px">2</div>
+                <div class="mkt-step-number">2</div>
                 <h3>Customize</h3>
-                <p>Add annotations, personalization tokens, and configure the guided walkthrough flow.</p>
+                <p style="margin-top:var(--space-3)">Add annotations — tooltips, modals, hotspots, blur overlays — with drag-and-drop. Insert personalization tokens, configure the step flow, and preview the experience in real time.</p>
             </div>
             <div style="text-align:center">
-                <div style="width:48px;height:48px;background:var(--nt-primary);color:#fff;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:1.25rem;font-weight:700;margin-bottom:16px">3</div>
+                <div class="mkt-step-number">3</div>
                 <h3>Share</h3>
-                <p>Publish and share a link. Embed on your website. Track engagement and capture leads.</p>
+                <p style="margin-top:var(--space-3)">Publish and share a unique link. Embed on your website with a script tag. Add lead capture gates. Track every session, click, and drop-off from your analytics dashboard.</p>
             </div>
         </div>
     </div>
 </section>
 
-@* 6. Use Case Previews *@
+@* 6. Buyer Journey Grid *@
 <section class="mkt-section-alt">
     <div class="mkt-container">
-        <h2 class="text-center" style="margin-bottom:48px">Built for every go-to-market team</h2>
-        <div class="mkt-grid mkt-grid-3">
-            <a href="/use-cases#sales" class="mkt-card" style="text-decoration:none;color:inherit">
-                <h3>For Sales</h3>
-                <p>Share interactive demos instantly after discovery calls. Close deals faster.</p>
-            </a>
-            <a href="/use-cases#marketing" class="mkt-card" style="text-decoration:none;color:inherit">
-                <h3>For Marketing</h3>
-                <p>Embed product experiences on landing pages and in campaigns. Convert more visitors.</p>
-            </a>
-            <a href="/use-cases#cs" class="mkt-card" style="text-decoration:none;color:inherit">
-                <h3>For Customer Success</h3>
-                <p>Self-serve product tours for onboarding and feature adoption. Reduce support tickets.</p>
-            </a>
+        <div class="mkt-section-heading reveal">
+            <h2>Interactive demos for every stage</h2>
+            <p>From first touch to renewal, NavTour meets your buyers wherever they are.</p>
+        </div>
+        <div class="mkt-grid mkt-grid-3 reveal-stagger">
+            <BuyerJourneyCard Icon="website" Title="Website Embed" Description="Let visitors experience your product before talking to sales. Replace static screenshots with interactive walkthroughs." />
+            <BuyerJourneyCard Icon="discovery" Title="Post-Discovery" Description="Send a personalized demo within 2 minutes of a discovery call. Keep momentum while the conversation is fresh." />
+            <BuyerJourneyCard Icon="champion" Title="Champion Enablement" Description="Give champions a demo they can share internally. Help them sell your product inside their organization." />
+            <BuyerJourneyCard Icon="email" Title="Email Campaigns" Description="Embed interactive demos in nurture sequences. Drive 3x more click-through than static images or video." />
+            <BuyerJourneyCard Icon="onboarding" Title="Onboarding" Description="Self-serve product tours for new customers. Reduce time-to-value and eliminate scheduling bottlenecks." />
+            <BuyerJourneyCard Icon="tradeshow" Title="Trade Shows" Description="Interactive booth demos that capture leads automatically. No more clipboard sign-up sheets." />
         </div>
     </div>
 </section>
 
-@* 7. Metrics / Trust *@
+@* 7. Customer Impact Metrics *@
 <section class="mkt-section">
-    <div class="mkt-container text-center">
-        <h2 style="margin-bottom:16px">Trusted infrastructure</h2>
-        <p style="max-width:600px;margin:0 auto 32px">NavTour is built on P4 Software's proven multi-tenant platform — the same infrastructure that powers 5,000+ business clients across Latin America and the US.</p>
-        <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap">
-            <div>
-                <div style="font-size:2.5rem;font-weight:800;color:var(--nt-primary)">5,000+</div>
-                <p class="text-sm">Clients served</p>
-            </div>
-            <div>
-                <div style="font-size:2.5rem;font-weight:800;color:var(--nt-primary)">99.9%</div>
-                <p class="text-sm">Uptime SLA</p>
-            </div>
-            <div>
-                <div style="font-size:2.5rem;font-weight:800;color:var(--nt-primary)">SOC 2</div>
-                <p class="text-sm">Compliant infrastructure</p>
-            </div>
+    <div class="mkt-container text-center reveal">
+        <div class="mkt-eyebrow">Impact</div>
+        <h2>The numbers speak for themselves</h2>
+        <p class="text-constrain-sm" style="margin:var(--space-4) auto var(--space-12)">Teams using interactive demos consistently outperform those relying on static content and live walkthroughs.</p>
+        <div class="mkt-grid mkt-grid-3">
+            <MetricCard Value="40%" Label="faster deal cycles" Source="vs. teams without interactive demos" />
+            <MetricCard Value="3x" Label="website engagement" Source="vs. static screenshots and video" />
+            <MetricCard Value="67%" Label="fewer no-shows" Source="when prospects interact before a call" />
         </div>
     </div>
 </section>
 
-@* 8. Pricing Preview *@
+@* 8. Testimonial *@
 <section class="mkt-section-alt">
-    <div class="mkt-container text-center">
-        <h2 style="margin-bottom:8px">Simple, transparent pricing</h2>
-        <p style="margin-bottom:32px">5x cheaper than the industry standard. Start free, upgrade when you're ready.</p>
-        <div class="mkt-grid mkt-grid-4">
+    <div class="mkt-container reveal">
+        <TestimonialCard Featured="true"
+            Quote="We replaced our entire live demo workflow with NavTour. Reps send personalized demos in under a minute, and our close rate jumped. It's the highest-ROI tool we've added this year."
+            Name="Sarah Chen"
+            Title="VP of Sales"
+            Company="CloudScale"
+            Metric="40%"
+            MetricLabel="increase in close rate" />
+    </div>
+</section>
+
+@* 9. Use Case Previews *@
+<section class="mkt-section">
+    <div class="mkt-container">
+        <div class="mkt-section-heading reveal">
+            <h2>Built for every go-to-market team</h2>
+        </div>
+        <div class="mkt-grid mkt-grid-4 reveal-stagger">
+            <a href="/solutions/sales" class="mkt-card" style="text-decoration:none;color:inherit">
+                <p class="mkt-eyebrow">For Sales</p>
+                <h3 style="margin-top:var(--space-2)">Close deals faster</h3>
+                <p style="margin-top:var(--space-3)">Share interactive demos instantly after discovery calls. Personalize every experience with prospect details.</p>
+            </a>
+            <a href="/solutions/marketing" class="mkt-card" style="text-decoration:none;color:inherit">
+                <p class="mkt-eyebrow">For Marketing</p>
+                <h3 style="margin-top:var(--space-2)">Convert more visitors</h3>
+                <p style="margin-top:var(--space-3)">Embed product experiences on landing pages and in campaigns. Turn passive browsing into pipeline.</p>
+            </a>
+            <a href="/solutions/customer-success" class="mkt-card" style="text-decoration:none;color:inherit">
+                <p class="mkt-eyebrow">For Customer Success</p>
+                <h3 style="margin-top:var(--space-2)">Onboard at scale</h3>
+                <p style="margin-top:var(--space-3)">Self-serve product tours for onboarding and feature adoption. Reduce support tickets and time-to-value.</p>
+            </a>
+            <a href="/solutions/sales" class="mkt-card" style="text-decoration:none;color:inherit">
+                <p class="mkt-eyebrow">For Solution Engineers</p>
+                <h3 style="margin-top:var(--space-2)">Scale your demo library</h3>
+                <p style="margin-top:var(--space-3)">Build reusable demo templates for every vertical and use case. Stop rebuilding from scratch for each prospect.</p>
+            </a>
+        </div>
+    </div>
+</section>
+
+@* 10. NavTour vs. The Rest *@
+<section class="mkt-section-alt">
+    <div class="mkt-container" style="max-width:720px">
+        <div class="mkt-section-heading reveal">
+            <h2>NavTour vs. the industry standard</h2>
+            <p>Premium features without the premium price tag.</p>
+        </div>
+        <div class="reveal" style="overflow-x:auto">
+            <table class="mkt-comparison-mini">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th class="mkt-highlight">NavTour</th>
+                        <th>Industry Standard</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Starting price</td>
+                        <td class="mkt-highlight">Free</td>
+                        <td>$500/mo</td>
+                    </tr>
+                    <tr>
+                        <td>Free tier</td>
+                        <td class="mkt-highlight">Yes, forever</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td>API access</td>
+                        <td class="mkt-highlight">From $99/mo</td>
+                        <td>Enterprise only</td>
+                    </tr>
+                    <tr>
+                        <td>Setup time</td>
+                        <td class="mkt-highlight">5 minutes</td>
+                        <td>Weeks</td>
+                    </tr>
+                    <tr>
+                        <td>Annual contract</td>
+                        <td class="mkt-highlight">No</td>
+                        <td>Required</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+@* 11. Pricing Preview *@
+<section class="mkt-section">
+    <div class="mkt-container">
+        <div class="mkt-section-heading reveal">
+            <h2>Simple, transparent pricing</h2>
+            <p>5x cheaper than the industry standard. Start free, upgrade when you're ready.</p>
+        </div>
+        <div class="mkt-grid mkt-grid-4 reveal-stagger">
             <PricingCard Name="Starter" Price="Free" Description="For trying it out"
                 Features='new() { "1 seat", "1 demo", "100 views/mo", "Basic capture" }'
                 CtaText="Start Free" />
@@ -149,9 +260,48 @@
                 Features='new() { "Unlimited seats", "Unlimited demos", "Unlimited views", "Self-host + SLA" }'
                 CtaText="Contact Sales" CtaUrl="/contact" />
         </div>
-        <a href="/pricing" style="display:inline-block;margin-top:24px;font-weight:600">See full pricing comparison →</a>
+        <div class="text-center" style="margin-top:var(--space-8)">
+            <a href="/pricing" class="mkt-link-reveal" style="font-weight:var(--weight-semibold)">See full pricing comparison &rarr;</a>
+        </div>
     </div>
 </section>
 
-@* 9. Final CTA *@
-<CtaSection />
+@* 12. Trust & Security *@
+<section class="mkt-section-alt">
+    <div class="mkt-container text-center reveal">
+        <div class="mkt-eyebrow">Security</div>
+        <h2>Enterprise-grade security</h2>
+        <p class="text-constrain-sm" style="margin:var(--space-4) auto var(--space-12)">Built on P4 Software's proven infrastructure serving 5,000+ clients. Your data is protected with industry-leading security standards.</p>
+        <div class="mkt-trust-badges">
+            <div class="mkt-trust-badge">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                SOC 2 Compliant
+            </div>
+            <div class="mkt-trust-badge">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                99.9% Uptime SLA
+            </div>
+            <div class="mkt-trust-badge">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                AES-256 Encryption
+            </div>
+            <div class="mkt-trust-badge">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                GDPR Ready
+            </div>
+            <div class="mkt-trust-badge">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                Azure Hosted
+            </div>
+        </div>
+        <div style="margin-top:var(--space-8)">
+            <a href="/security" class="mkt-link-reveal" style="font-weight:var(--weight-semibold)">Learn about our security practices &rarr;</a>
+        </div>
+    </div>
+</section>
+
+@* 13. No credit card note *@
+<div style="text-align:center;padding:var(--space-4) var(--space-6);font-size:var(--text-sm);color:var(--neutral-400)">No credit card required. Free forever on Starter.</div>
+
+@* 14. Final CTA *@
+<CtaSection Title="See it in action" Subtitle="Build your first interactive demo in minutes. No credit card, no sales call." CtaText="Start Free" />

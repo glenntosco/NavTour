@@ -6,16 +6,16 @@
     <meta name="description" content="NavTour pricing starts at $0. Pro plans from $99/mo — 5x cheaper than Navattic. Transparent pricing, no hidden fees." />
 </HeadContent>
 
-<section class="mkt-section">
-    <div class="mkt-container text-center">
-        <h1>Simple, transparent pricing</h1>
-        <p style="max-width:560px;margin:16px auto 0">Start free. Upgrade when you're ready. 5x cheaper than the industry standard.</p>
+<section class="mkt-section" style="padding-bottom:var(--space-12)">
+    <div class="mkt-container" style="max-width:560px">
+        <h1 class="text-center">Simple, transparent pricing</h1>
+        <p class="text-center" style="margin-top:var(--space-5)">Start free. Upgrade when you're ready. 5x cheaper than the industry standard.</p>
     </div>
 </section>
 
 <section class="mkt-section" style="padding-top:0">
     <div class="mkt-container">
-        <div class="mkt-grid mkt-grid-4">
+        <div class="mkt-grid mkt-grid-4 reveal-stagger">
             <PricingCard Name="Starter" Price="Free" Description="For trying it out"
                 Features='new() { "1 seat", "1 demo", "100 views/mo", "Chrome extension capture", "Basic annotations" }'
                 CtaText="Start Free" />
@@ -32,30 +32,46 @@
     </div>
 </section>
 
+@* Why teams switch *@
+<section class="mkt-section">
+    <div class="mkt-container text-center reveal">
+        <div class="mkt-eyebrow">Save $4,800/year vs. the industry standard</div>
+        <h2 style="margin-top:var(--space-2)">Why teams switch to NavTour</h2>
+        <p class="text-constrain-sm" style="margin:var(--space-4) auto var(--space-10)">The same features at a fraction of the price. No annual contracts. No per-seat surprises.</p>
+        <div class="mkt-grid mkt-grid-3">
+            <MetricCard Value="5x" Label="cheaper than alternatives" Source="Pro plan vs. industry average" />
+            <MetricCard Value="$0" Label="to get started" Source="No credit card required" />
+            <MetricCard Value="0" Label="annual contracts" Source="Month-to-month, cancel anytime" />
+        </div>
+    </div>
+</section>
+
 @* Feature comparison table *@
 <section class="mkt-section-alt">
-    <div class="mkt-container">
-        <h2 class="text-center" style="margin-bottom:32px">Compare plans</h2>
+    <div class="mkt-container reveal">
+        <div class="mkt-section-heading">
+            <h2>Compare plans</h2>
+        </div>
         <div style="overflow-x:auto">
-            <table style="width:100%;border-collapse:collapse;font-size:0.9375rem">
+            <table class="mkt-table">
                 <thead>
-                    <tr style="border-bottom:2px solid var(--nt-border)">
-                        <th style="text-align:left;padding:12px 16px;width:40%">Feature</th>
-                        <th style="text-align:center;padding:12px 16px">Starter</th>
-                        <th style="text-align:center;padding:12px 16px;background:var(--nt-primary-light)">Pro</th>
-                        <th style="text-align:center;padding:12px 16px">Business</th>
-                        <th style="text-align:center;padding:12px 16px">Enterprise</th>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Starter</th>
+                        <th class="highlighted">Pro</th>
+                        <th>Business</th>
+                        <th>Enterprise</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var row in comparisonRows)
                     {
-                        <tr style="border-bottom:1px solid var(--nt-border)">
-                            <td style="padding:12px 16px;font-weight:500">@row.Feature</td>
-                            <td style="text-align:center;padding:12px 16px">@((MarkupString)FormatCheck(row.Starter))</td>
-                            <td style="text-align:center;padding:12px 16px;background:var(--nt-primary-light)">@((MarkupString)FormatCheck(row.Pro))</td>
-                            <td style="text-align:center;padding:12px 16px">@((MarkupString)FormatCheck(row.Business))</td>
-                            <td style="text-align:center;padding:12px 16px">@((MarkupString)FormatCheck(row.Enterprise))</td>
+                        <tr>
+                            <td>@row.Feature</td>
+                            <td>@((MarkupString)FormatCheck(row.Starter))</td>
+                            <td class="highlighted">@((MarkupString)FormatCheck(row.Pro))</td>
+                            <td>@((MarkupString)FormatCheck(row.Business))</td>
+                            <td>@((MarkupString)FormatCheck(row.Enterprise))</td>
                         </tr>
                     }
                 </tbody>
@@ -67,14 +83,18 @@
 @* FAQ *@
 <section class="mkt-section">
     <div class="mkt-container" style="max-width:720px">
-        <h2 class="text-center" style="margin-bottom:32px">Frequently asked questions</h2>
-        @foreach (var faq in faqs)
-        {
-            <details style="border-bottom:1px solid var(--nt-border);padding:16px 0">
-                <summary style="cursor:pointer;font-weight:600;font-size:1.0625rem">@faq.Q</summary>
-                <p style="margin-top:8px">@faq.A</p>
-            </details>
-        }
+        <div class="mkt-section-heading reveal">
+            <h2>Frequently asked questions</h2>
+        </div>
+        <div class="reveal">
+            @foreach (var faq in faqs)
+            {
+                <details class="mkt-faq">
+                    <summary>@faq.Q</summary>
+                    <p>@faq.A</p>
+                </details>
+            }
+        </div>
     </div>
 </section>
 
@@ -86,8 +106,8 @@
 
     private string FormatCheck(string val) => val switch
     {
-        "yes" => "<span style='color:var(--nt-success);font-weight:700'>✓</span>",
-        "no" => "<span style='color:#cbd5e1'>—</span>",
+        "yes" => "<span class='mkt-check'>&#10003;</span>",
+        "no" => "<span class='mkt-dash'>&mdash;</span>",
         _ => val
     };
 
@@ -95,25 +115,37 @@
     {
         new("Chrome extension capture", "yes", "yes", "yes", "yes"),
         new("Annotations (tooltip, modal, hotspot)", "yes", "yes", "yes", "yes"),
-        new("Personalization tokens", "no", "yes", "yes", "yes"),
+        new("Blur overlays", "yes", "yes", "yes", "yes"),
+        new("Personalization tokens", "no", "Unlimited", "Unlimited", "Unlimited"),
         new("Analytics dashboard", "no", "yes", "yes", "yes"),
         new("Lead capture forms", "no", "yes", "yes", "yes"),
         new("REST API access", "no", "yes", "yes", "yes"),
+        new("Webhooks", "no", "yes", "yes", "yes"),
+        new("Demo templates", "no", "5", "Unlimited", "Unlimited"),
         new("Custom branding", "no", "no", "yes", "yes"),
+        new("Custom domain", "no", "no", "yes", "yes"),
         new("SSO / SAML", "no", "no", "yes", "yes"),
         new("Multi-language demos", "no", "no", "yes", "yes"),
+        new("White-label embedding", "no", "no", "yes", "yes"),
+        new("Audit logs", "no", "no", "yes", "yes"),
+        new("Data export (CSV, API)", "no", "yes", "yes", "yes"),
+        new("Priority support", "no", "no", "yes", "yes"),
+        new("Dedicated CSM", "no", "no", "yes", "yes"),
         new("Self-hosted deployment", "no", "no", "no", "yes"),
         new("SLA guarantee", "no", "no", "no", "yes"),
-        new("Dedicated CSM", "no", "no", "yes", "yes"),
     };
 
     private readonly List<Faq> faqs = new()
     {
-        new("Can I try NavTour for free?", "Yes! The Starter plan is completely free — no credit card required. You get 1 demo with up to 100 views per month."),
+        new("Can I try NavTour for free?", "Yes! The Starter plan is completely free — no credit card required. You get 1 demo with up to 100 views per month. Use it as long as you want."),
         new("What counts as a 'view'?", "A view is counted each time a unique visitor opens your demo. Repeat visits from the same person within 24 hours count as one view."),
-        new("Can I change plans at any time?", "Yes. Upgrade or downgrade at any time. When upgrading, you'll be prorated for the remainder of your billing cycle."),
+        new("Can I change plans at any time?", "Yes. Upgrade or downgrade at any time. When upgrading, you'll be prorated for the remainder of your billing cycle. No penalties for downgrading."),
         new("Do you offer annual billing?", "Yes. Annual billing saves 20% compared to monthly pricing. Contact us for annual plan details."),
         new("What happens if I exceed my view limit?", "Your demos stay live. We'll notify you when you reach 80% of your limit and suggest upgrading. We never cut off your demos mid-month."),
-        new("Is there a self-hosted option?", "Yes, for Enterprise customers. You can deploy NavTour on your own infrastructure with full control over data residency and security.")
+        new("Is there a self-hosted option?", "Yes, for Enterprise customers. You can deploy NavTour on your own infrastructure with full control over data residency and security."),
+        new("Can I migrate from another demo platform?", "Yes. We offer free migration assistance for teams switching from other platforms. Our team will help you recreate your existing demos in NavTour and ensure a smooth transition."),
+        new("Do you offer startup or nonprofit discounts?", "Yes. We offer 50% off Pro and Business plans for startups under $5M ARR and registered nonprofits. Contact us with your details."),
+        new("What kind of support is included?", "Starter includes community support. Pro includes email support with 24-hour response time. Business and Enterprise include priority support with dedicated CSM and 4-hour response SLA."),
+        new("Can I use the API to integrate with my CRM?", "Yes. The Pro plan includes full REST API access with webhooks. You can push leads to Salesforce, HubSpot, or any CRM. We also offer pre-built integrations on Business and Enterprise plans.")
     };
 }

@@ -1,0 +1,129 @@
+@page "/customers"
+@layout MarketingLayout
+
+<PageTitle>Customers — NavTour</PageTitle>
+<HeadContent>
+    <meta name="description" content="See how teams at leading companies use NavTour interactive demos to close deals faster, convert more visitors, and onboard customers at scale." />
+</HeadContent>
+
+<section class="mkt-section" style="padding-bottom:var(--space-16)">
+    <div class="mkt-container" style="max-width:680px">
+        <h1 class="text-center">Trusted by teams who sell with demos</h1>
+        <p class="text-center" style="margin-top:var(--space-5)">From startups to enterprise, go-to-market teams use NavTour to create product experiences that drive pipeline and close deals.</p>
+    </div>
+</section>
+
+@* Logo Grid *@
+<section class="mkt-social-proof">
+    <div class="mkt-container text-center">
+        <div class="mkt-eyebrow" style="margin-bottom:var(--space-6)">SaaS &amp; Technology</div>
+        <LogoGrid Companies='new() { "CloudScale", "Pinnacle SaaS", "NovaBridge", "TerraLogic", "Vantage CRM", "Horizon Ops", "DataForge", "Nexus AI" }' Columns="8" />
+
+        <div class="mkt-eyebrow" style="margin-top:var(--space-12);margin-bottom:var(--space-6)">Financial Services &amp; Healthcare</div>
+        <LogoGrid Companies='new() { "Apex Financial", "Meridian Health", "CapitalFlow", "VitaCore", "SecureBank", "HealthGrid", "TrustWise", "MedConnect" }' Columns="8" />
+    </div>
+</section>
+
+@* Case Study 1 *@
+<section class="mkt-section">
+    <div class="mkt-container reveal">
+        <div class="mkt-grid mkt-grid-2" style="align-items:center;gap:var(--space-16)">
+            <div>
+                <p class="mkt-eyebrow">Case Study</p>
+                <h2 style="margin-top:var(--space-2)">CloudScale reduces time-to-demo by 95%</h2>
+                <p style="margin-top:var(--space-4)">CloudScale's sales team was spending 3–5 days scheduling and preparing live demos for every prospect. With NavTour, reps now send personalized interactive demos within minutes of a discovery call — keeping momentum while the conversation is fresh.</p>
+                <p style="margin-top:var(--space-3)"><strong>Challenge:</strong> Long demo scheduling cycles causing prospect drop-off. Average time from first contact to demo was 4.2 days.</p>
+                <p style="margin-top:var(--space-3)"><strong>Solution:</strong> NavTour interactive demos sent immediately after discovery, personalized with prospect branding and use-case context via URL tokens.</p>
+                <div class="mkt-grid mkt-grid-3" style="margin-top:var(--space-8)">
+                    <MetricCard Value="95%" Label="faster time-to-demo" />
+                    <MetricCard Value="40%" Label="higher close rate" />
+                    <MetricCard Value="2x" Label="pipeline generated" />
+                </div>
+            </div>
+            <div class="mkt-placeholder mkt-placeholder-feature">CloudScale demo builder workflow</div>
+        </div>
+    </div>
+</section>
+
+@* Case Study 2 *@
+<section class="mkt-section-alt">
+    <div class="mkt-container reveal">
+        <div class="mkt-grid mkt-grid-2" style="align-items:center;gap:var(--space-16)">
+            <div class="mkt-placeholder mkt-placeholder-feature">Vantage CRM embedded demo on landing page</div>
+            <div>
+                <p class="mkt-eyebrow">Case Study</p>
+                <h2 style="margin-top:var(--space-2)">Vantage CRM drives 2.8x more conversions</h2>
+                <p style="margin-top:var(--space-4)">Vantage CRM replaced static screenshots on their pricing page with an embedded interactive demo. Visitors who interacted with the demo were 4x more likely to request a sales call and converted to paid at nearly 3x the previous rate.</p>
+                <p style="margin-top:var(--space-3)"><strong>Challenge:</strong> Low website conversion rate. Visitors couldn't understand the product from static images and marketing copy alone.</p>
+                <p style="margin-top:var(--space-3)"><strong>Solution:</strong> Ungated interactive demo embedded on the homepage and pricing page, with gated deep-dive demos on feature pages for lead capture.</p>
+                <div class="mkt-grid mkt-grid-3" style="margin-top:var(--space-8)">
+                    <MetricCard Value="2.8x" Label="conversion increase" />
+                    <MetricCard Value="4x" Label="demo-to-call rate" />
+                    <MetricCard Value="180%" Label="more qualified leads" />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@* Case Study 3 *@
+<section class="mkt-section">
+    <div class="mkt-container reveal">
+        <div class="mkt-grid mkt-grid-2" style="align-items:center;gap:var(--space-16)">
+            <div>
+                <p class="mkt-eyebrow">Case Study</p>
+                <h2 style="margin-top:var(--space-2)">Horizon Ops cuts onboarding time by 60%</h2>
+                <p style="margin-top:var(--space-4)">Horizon Ops was spending 8 hours per customer on live onboarding calls. After building self-serve product tours with NavTour, new customers complete setup 3x faster and submit 45% fewer support tickets in their first 30 days.</p>
+                <p style="margin-top:var(--space-3)"><strong>Challenge:</strong> High-touch onboarding consuming CS team bandwidth. Customer time-to-value averaging 14 days.</p>
+                <p style="margin-top:var(--space-3)"><strong>Solution:</strong> Library of step-by-step product tours assigned by customer segment, with completion tracking for proactive CS intervention.</p>
+                <div class="mkt-grid mkt-grid-3" style="margin-top:var(--space-8)">
+                    <MetricCard Value="60%" Label="less onboarding time" />
+                    <MetricCard Value="45%" Label="fewer support tickets" />
+                    <MetricCard Value="+15" Label="NPS improvement" />
+                </div>
+            </div>
+            <div class="mkt-placeholder mkt-placeholder-feature">Horizon Ops onboarding tour with progress tracking</div>
+        </div>
+    </div>
+</section>
+
+@* Testimonials *@
+<section class="mkt-section-alt">
+    <div class="mkt-container">
+        <div class="mkt-section-heading reveal">
+            <h2>What our customers say</h2>
+        </div>
+        <div class="mkt-grid mkt-grid-2 reveal-stagger">
+            <TestimonialCard
+                Quote="NavTour is the highest-ROI tool we've added this year. Our reps send personalized demos in under a minute, and prospects actually engage before the call."
+                Name="Sarah Chen"
+                Title="VP of Sales"
+                Company="CloudScale"
+                Metric="40%"
+                MetricLabel="increase in close rate" />
+            <TestimonialCard
+                Quote="We replaced 6 hours of weekly demo prep with a library of NavTour templates. Solution engineers build once, reps personalize in seconds."
+                Name="Marcus Johnson"
+                Title="Head of Solutions"
+                Company="TerraLogic"
+                Metric="6 hrs/week"
+                MetricLabel="saved per SE" />
+            <TestimonialCard
+                Quote="Embedding interactive demos on our website was the single biggest conversion lever we've found. Nothing else comes close to letting prospects experience the product."
+                Name="Maria Santos"
+                Title="Head of Demand Gen"
+                Company="Vantage CRM"
+                Metric="2.8x"
+                MetricLabel="conversion increase" />
+            <TestimonialCard
+                Quote="Our CS team went from 8 hours of onboarding calls per customer to 3 hours, and customer satisfaction actually went up. NavTour tours are better than live walkthroughs."
+                Name="David Park"
+                Title="VP of Customer Success"
+                Company="Horizon Ops"
+                Metric="60%"
+                MetricLabel="less onboarding time" />
+        </div>
+    </div>
+</section>
+
+<CtaSection Title="Join them" Subtitle="Start building interactive demos that drive results." />
