@@ -384,7 +384,7 @@
     position: relative;
 }
 .mkt-pricing-highlighted::before {
-    content: 'RECOMMENDED';
+    content: 'MOST POPULAR';
     position: absolute;
     top: var(--space-4);
     right: var(--space-4);
@@ -472,6 +472,16 @@
 .mkt-table tbody tr:hover td.highlighted { background: var(--nt-primary-light); }
 .mkt-check { color: var(--nt-primary); font-weight: var(--weight-bold); }
 .mkt-dash { color: var(--neutral-300); }
+.mkt-table-category td {
+    background: var(--neutral-50);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    font-size: var(--text-sm);
+    letter-spacing: 0.02em;
+    border-bottom: 2px solid var(--neutral-200);
+}
+.mkt-table-category td.highlighted { background: color-mix(in srgb, var(--nt-primary-subtle), var(--neutral-50) 50%); }
+.mkt-pricing-annual-note { font-size: var(--text-sm); color: var(--nt-primary); font-weight: var(--weight-medium); margin-top: var(--space-1); }
 
 /* ========== FAQ Accordion ========== */
 .mkt-faq {
