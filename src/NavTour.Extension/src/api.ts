@@ -1,6 +1,4 @@
 import type {
-  LoginRequest,
-  LoginResponse,
   DemoListItem,
   CreateDemoRequest,
   DemoResponse,
@@ -23,18 +21,6 @@ export class NavTourApi {
     const h: Record<string, string> = { Accept: "application/json" };
     if (this.token) h["Authorization"] = `Bearer ${this.token}`;
     return h;
-  }
-
-  async login(request: LoginRequest): Promise<LoginResponse> {
-    const res = await fetch(`${this.serverUrl}/api/v1/auth/login`, {
-      method: "POST",
-      headers: { ...this.headers(), "Content-Type": "application/json" },
-      body: JSON.stringify(request),
-    });
-    if (!res.ok) throw new Error("Login failed");
-    const data: LoginResponse = await res.json();
-    this.token = data.accessToken;
-    return data;
   }
 
   async getDemos(): Promise<DemoListItem[]> {

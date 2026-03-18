@@ -141,8 +141,8 @@ else
 
     private async Task CreateNewDemo()
     {
-        var name = await Dialog.OpenAsync<RadzenTextBox>("New Demo Name");
-        if (name is string demoName && !string.IsNullOrWhiteSpace(demoName))
+        var result = await Dialog.OpenAsync<CreateDemoDialog>("New Demo Name");
+        if (result is string demoName && !string.IsNullOrWhiteSpace(demoName))
         {
             var demo = await DemoApi.CreateDemoAsync(new CreateDemoRequest(demoName, null));
             if (demo != null)

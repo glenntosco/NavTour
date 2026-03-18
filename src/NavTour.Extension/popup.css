@@ -189,3 +189,27 @@ body {
   color: #888;
   margin-left: auto;
 }
+
+.not-logged-in-message {
+  text-align: center;
+  padding: 12px 0;
+}
+
+.not-logged-in-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 4px;
+}
+
+.not-logged-in-desc {
+  font-size: 12px;
+  color: #777;
+  line-height: 1.4;
+}
+
+.btn-open-app {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+}

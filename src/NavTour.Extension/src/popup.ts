@@ -2,15 +2,13 @@ import { NavTourApi } from "./api";
 import type { StoredSession, DemoListItem, CaptureMode } from "./types";
 
 // DOM elements
-const screenLogin = document.getElementById("screen-login")!;
+const screenNotLoggedIn = document.getElementById("screen-not-logged-in")!;
 const screenSelect = document.getElementById("screen-select")!;
 const screenCapture = document.getElementById("screen-capture")!;
 
-const serverUrlInput = document.getElementById("server-url") as HTMLInputElement;
-const emailInput = document.getElementById("email") as HTMLInputElement;
-const passwordInput = document.getElementById("password") as HTMLInputElement;
-const btnLogin = document.getElementById("btn-login") as HTMLButtonElement;
-const loginError = document.getElementById("login-error")!;
+const btnOpenApp = document.getElementById("btn-open-app") as HTMLAnchorElement;
+const btnRetry = document.getElementById("btn-retry") as HTMLButtonElement;
+const retryStatus = document.getElementById("retry-status")!;
 
 const demoSelect = document.getElementById("demo-select") as HTMLSelectElement;
 const newDemoNameInput = document.getElementById("new-demo-name") as HTMLInputElement;
@@ -29,7 +27,7 @@ let session: StoredSession | null = null;
 let demos: DemoListItem[] = [];
 
 function showScreen(screen: HTMLElement) {
-  screenLogin.hidden = true;
+  screenNotLoggedIn.hidden = true;
   screenSelect.hidden = true;
   screenCapture.hidden = true;
   screen.hidden = false;
@@ -51,52 +49,110 @@ function clearSelectOptions(select: HTMLSelectElement) {
   }
 }
 
-async function tryAutoLogin(): Promise<boolean> {
-  const knownUrls = ["https://navtour.cloud"];
+// Diagnostic result from tryAutoLogin — tells the caller WHY login failed
+type AutoLoginResult =
+  | { ok: true; serverUrl: string }
+  | { ok: false; reason: "no-cookie" }
+  | { ok: false; reason: "expired"; serverUrl: string }
+  | { ok: false; reason: "network-error"; serverUrl: string; detail: string };
 
-  // Also try the active tab's origin (covers localhost or other deployments)
+async function tryAutoLogin(): Promise<AutoLoginResult> {
+  console.log("[NavTour] tryAutoLogin: starting cookie discovery");
+
+  // 1. Use chrome.cookies.getAll to find the cookie on ANY domain
+  let cookies: chrome.cookies.Cookie[] = [];
+  try {
+    cookies = await chrome.cookies.getAll({ name: "navtour_auth" });
+    console.log(`[NavTour] getAll found ${cookies.length} navtour_auth cookie(s):`, cookies.map(c => c.domain));
+  } catch (err) {
+    console.warn("[NavTour] chrome.cookies.getAll failed:", err);
+  }
+
+  // Build candidate URLs from discovered cookies
+  const candidateUrls: string[] = [];
+  for (const c of cookies) {
+    const proto = c.secure ? "https" : "http";
+    const domain = c.domain.startsWith(".") ? c.domain.slice(1) : c.domain;
+    const url = `${proto}://${domain}`;
+    if (!candidateUrls.includes(url)) candidateUrls.push(url);
+  }
+
+  // 2. Fall back to known URLs if getAll returned nothing
+  if (candidateUrls.length === 0) {
+    candidateUrls.push("https://navtour.cloud", "http://localhost:5017");
+    console.log("[NavTour] No cookies from getAll, falling back to known URLs");
+  }
+
+  // Also add the active tab's origin
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     if (tab?.url) {
       const origin = new URL(tab.url).origin;
-      if (!knownUrls.includes(origin)) knownUrls.push(origin);
+      if (!candidateUrls.includes(origin)) candidateUrls.push(origin);
     }
   } catch {
     // tabs query can fail in some contexts, ignore
   }
 
-  for (const url of knownUrls) {
+  console.log("[NavTour] Candidate URLs to try:", candidateUrls);
+
+  let lastFailure: AutoLoginResult = { ok: false, reason: "no-cookie" };
+
+  for (const url of candidateUrls) {
     try {
       const cookie = await chrome.cookies.get({ url, name: "navtour_auth" });
-      if (cookie?.value) {
-        const serverUrl = url;
-        const accessToken = cookie.value;
-
-        api = new NavTourApi(serverUrl);
-        api.setToken(accessToken);
-
-        // Verify the token works by loading demos
-        await api.getDemos();
-
-        session = {
-          serverUrl,
-          accessToken,
-          demoId: "",
-          demoName: "",
-          frameCount: 0,
-        };
-        await chrome.storage.local.set({ session });
-        return true;
+      if (!cookie?.value) {
+        console.log(`[NavTour] No cookie at ${url}`);
+        continue;
       }
-    } catch {
-      // Cookie invalid or token expired, try next URL
+
+      console.log(`[NavTour] Cookie found at ${url}, verifying token with API...`);
+      api = new NavTourApi(url);
+      api.setToken(cookie.value);
+
+      try {
+        await api.getDemos();
+      } catch (apiErr) {
+        const status = apiErr instanceof Error ? apiErr.message : String(apiErr);
+        console.warn(`[NavTour] API rejected token from ${url}:`, status);
+
+        // Distinguish 401 (expired) from network errors
+        if (status.includes("401") || status.includes("Unauthorized")) {
+          lastFailure = { ok: false, reason: "expired", serverUrl: url };
+        } else {
+          lastFailure = { ok: false, reason: "network-error", serverUrl: url, detail: status };
+        }
+        continue;
+      }
+
+      console.log(`[NavTour] Token valid at ${url} — auto-login success`);
+      session = {
+        serverUrl: url,
+        accessToken: cookie.value,
+        demoId: "",
+        demoName: "",
+        frameCount: 0,
+      };
+      await chrome.storage.local.set({ session });
+      return { ok: true, serverUrl: url };
+    } catch (err) {
+      console.warn(`[NavTour] Error checking ${url}:`, err);
     }
   }
 
-  return false;
+  console.log("[NavTour] tryAutoLogin: all candidates exhausted, reason:", lastFailure.reason);
+  return lastFailure;
+}
+
+function updateOpenAppLink(serverUrl?: string) {
+  const base = serverUrl || "https://navtour.cloud";
+  btnOpenApp.href = `${base}/login`;
+  btnOpenApp.textContent = `Log in at ${new URL(base).hostname}`;
 }
 
 async function init() {
+  updateOpenAppLink();
+
   const stored = await chrome.storage.local.get(["session"]);
 
   if (stored.session) {
@@ -120,17 +176,20 @@ async function init() {
             // Token expired
             chrome.storage.local.remove(["session"]);
             session = null;
-            showScreen(screenLogin);
+            showScreen(screenNotLoggedIn);
           });
       }
     });
   } else {
-    // Try auto-login from navtour_auth cookie before showing login form
-    if (await tryAutoLogin()) {
+    // Try auto-login from navtour_auth cookie
+    const result = await tryAutoLogin();
+    if (result.ok) {
+      updateOpenAppLink(result.serverUrl);
       await loadDemos();
       showScreen(screenSelect);
     } else {
-      showScreen(screenLogin);
+      if ("serverUrl" in result) updateOpenAppLink(result.serverUrl);
+      showScreen(screenNotLoggedIn);
     }
   }
 }
@@ -152,42 +211,46 @@ async function loadDemos() {
   }
 }
 
-// Login
-btnLogin.addEventListener("click", async () => {
-  hideStatus(loginError);
-  btnLogin.disabled = true;
-  btnLogin.textContent = "Logging in...";
+// Retry auto-login
+btnRetry.addEventListener("click", async () => {
+  hideStatus(retryStatus);
+  btnRetry.disabled = true;
+  btnRetry.textContent = "Checking...";
 
   try {
-    const serverUrl = serverUrlInput.value.trim();
-    api = new NavTourApi(serverUrl);
-    const result = await api.login({
-      email: emailInput.value.trim(),
-      password: passwordInput.value,
-    });
+    const result = await tryAutoLogin();
+    if (result.ok) {
+      updateOpenAppLink(result.serverUrl);
+      await loadDemos();
+      showScreen(screenSelect);
+    } else {
+      if ("serverUrl" in result) updateOpenAppLink(result.serverUrl);
 
-    session = {
-      serverUrl,
-      accessToken: result.accessToken,
-      demoId: "",
-      demoName: "",
-      frameCount: 0,
-    };
-    await chrome.storage.local.set({ session });
-
-    await loadDemos();
-    showScreen(screenSelect);
+      switch (result.reason) {
+        case "no-cookie":
+          showStatus(retryStatus, "No navtour_auth cookie found. Log in at the web app first.", "error");
+          break;
+        case "expired":
+          showStatus(retryStatus, "Cookie found but session expired. Please log in again.", "error");
+          break;
+        case "network-error":
+          showStatus(retryStatus, `Cookie found but server unreachable: ${result.detail}`, "error");
+          break;
+      }
+    }
   } catch (err) {
-    const msg = err instanceof Error ? err.message : "Unknown error";
-    console.error("[NavTour] Login failed:", err);
-    loginError.textContent = msg.includes("Login failed")
-      ? "Invalid email or password"
-      : `Connection error: ${msg}`;
-    loginError.hidden = false;
+    console.error("[NavTour] Retry failed:", err);
+    showStatus(retryStatus, "Could not connect. Try again.", "error");
   } finally {
-    btnLogin.disabled = false;
-    btnLogin.textContent = "Log In";
+    btnRetry.disabled = false;
+    btnRetry.textContent = "Retry";
   }
+});
+
+// Open app link
+btnOpenApp.addEventListener("click", (e) => {
+  e.preventDefault();
+  chrome.tabs.create({ url: btnOpenApp.href });
 });
 
 // Logout
@@ -195,7 +258,7 @@ btnLogout.addEventListener("click", async () => {
   chrome.runtime.sendMessage({ type: "STOP_CAPTURE" });
   await chrome.storage.local.remove(["session"]);
   session = null;
-  showScreen(screenLogin);
+  showScreen(screenNotLoggedIn);
 });
 
 // Start capturing — tells background to inject toolbar
@@ -275,5 +338,5 @@ btnBack.addEventListener("click", async () => {
 // Initialize
 init().catch((err) => {
   console.error("[NavTour] Popup init failed:", err);
-  showScreen(screenLogin);
+  showScreen(screenNotLoggedIn);
 });

@@ -1,0 +1,19 @@
+@inject DialogService Dialog
+
+<RadzenStack Gap="16px" Style="min-width:320px">
+    <RadzenTextBox @bind-Value="@demoName" Placeholder="My Product Demo" Style="width:100%" autofocus />
+    <RadzenStack Orientation="Orientation.Horizontal" Gap="8px" JustifyContent="JustifyContent.End">
+        <RadzenButton Text="Cancel" ButtonStyle="ButtonStyle.Light" Click="() => Dialog.Close(null)" />
+        <RadzenButton Text="Create" ButtonStyle="ButtonStyle.Primary" Click="OnCreate" Disabled="@string.IsNullOrWhiteSpace(demoName)" />
+    </RadzenStack>
+</RadzenStack>
+
+@code {
+    private string demoName = "";
+
+    private void OnCreate()
+    {
+        if (!string.IsNullOrWhiteSpace(demoName))
+            Dialog.Close(demoName.Trim());
+    }
+}
