@@ -39,7 +39,7 @@
             OnAnnotationMoved="HandleAnnotationMoved" />
 
         <StepPanel Steps="steps" SelectedStepId="selectedStepId"
-            OnStepSelected="SelectStep" OnAddStep="AddStep" />
+            OnStepSelected="SelectStep" OnAddStep="AddStep" OnDeleteStep="DeleteStep" />
 
         <AnnotationEditor DemoId="@DemoId" StepId="@selectedStepId" Annotations="@currentAnnotations"
             OnAnnotationsChanged="RefreshAnnotations" />
@@ -209,6 +209,32 @@
         await DemoApi.UpdateStepsAsync(DemoId, new UpdateStepsRequest(allSteps));
         steps = await DemoApi.GetStepsAsync(DemoId);
         Notification.Notify(NotificationSeverity.Success, "Step added");
+    }
+
+    private async Task DeleteStep(Guid stepId)
+    {
+        var remaining = steps.Where(s => s.Id != stepId).ToList();
+
+        var stepDtos = remaining.Select((s, i) => new StepDto(
+            s.Id, s.FrameId, i + 1, s.ClickTargetSelector,
+            s.NavigationAction, s.NavigationTarget,
+            s.Annotations.Select(a => new AnnotationDto(
+                a.Id, a.Type, a.Title, a.Content,
+                a.PositionX, a.PositionY, a.Width, a.Height, a.Style,
+                a.TargetSelector, a.ArrowDirection, a.BadgeNumber)).ToList()
+        )).ToList();
+
+        await DemoApi.UpdateStepsAsync(DemoId, new UpdateStepsRequest(stepDtos));
+        steps = await DemoApi.GetStepsAsync(DemoId);
+
+        if (selectedStepId == stepId)
+        {
+            selectedStepId = null;
+            currentAnnotations = null;
+        }
+
+        Notification.Notify(NotificationSeverity.Success, "Step deleted");
+        StateHasChanged();
     }
 
     private async Task SaveSteps()

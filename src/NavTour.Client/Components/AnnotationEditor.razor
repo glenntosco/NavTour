@@ -58,6 +58,21 @@
                             </div>
 
                             <div class="ae-row">
+                                <label style="font-size:11px;color:var(--rz-text-secondary-color)">Background Color</label>
+                                <RadzenColorPicker @bind-Value="editBgColor" Style="width:100%" ShowHSV="true" ShowRGBA="true" ShowButton="false" />
+                            </div>
+
+                            <div class="ae-row">
+                                <label style="font-size:11px;color:var(--rz-text-secondary-color)">Text Color</label>
+                                <RadzenColorPicker @bind-Value="editTextColor" Style="width:100%" ShowHSV="true" ShowRGBA="true" ShowButton="false" />
+                            </div>
+
+                            <div class="ae-row">
+                                <label style="font-size:11px;color:var(--rz-text-secondary-color)">Opacity (@(editOpacity)%)</label>
+                                <RadzenSlider @bind-Value="editOpacity" Min="0" Max="100" Step="1" Style="width:100%" />
+                            </div>
+
+                            <div class="ae-row">
                                 <label style="font-size:11px;color:var(--rz-text-secondary-color)">Position (%)</label>
                                 <div style="display:flex;gap:4px">
                                     <RadzenNumeric TValue="double" @bind-Value="editX" Min="0" Max="100" Style="flex:1;font-size:11px" Placeholder="X" />
@@ -92,7 +107,7 @@
 
 <style>
     .annotation-editor-panel {
-        width: 260px; min-width: 260px;
+        width: 320px; min-width: 320px;
         border-left: 1px solid var(--rz-border-color);
         padding: 12px; overflow-y: auto;
         background: var(--rz-base-background-color);
@@ -136,6 +151,9 @@
     private string? editArrowDirection;
     private int editBadgeNumber = 1;
     private double editX, editY, editW, editH;
+    private string editBgColor = "#1a1a2e";
+    private string editTextColor = "#ffffff";
+    private int editOpacity = 100;
 
     private record TypeOption(string Text, AnnotationType Value);
     private static readonly TypeOption[] annotationTypes =
@@ -179,6 +197,18 @@
         editY = ann.PositionY;
         editW = ann.Width;
         editH = ann.Height;
+
+        var parsed = ParseStyle(ann.Style);
+        editBgColor = parsed.GetValueOrDefault("backgroundColor", "#1a1a2e");
+        editTextColor = parsed.GetValueOrDefault("textColor", "#ffffff");
+        editOpacity = int.TryParse(parsed.GetValueOrDefault("opacity", "100"), out var op) ? op : 100;
+    }
+
+    private static Dictionary<string, string> ParseStyle(string? style)
+    {
+        if (string.IsNullOrEmpty(style)) return [];
+        try { return System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(style) ?? []; }
+        catch { return []; }
     }
 
     private async Task SaveEdit()
@@ -188,9 +218,17 @@
         var ann = Annotations?.FirstOrDefault(a => a.Id == editingId);
         if (ann == null) return;
 
+        var styleDict = new Dictionary<string, string>
+        {
+            ["backgroundColor"] = editBgColor,
+            ["textColor"] = editTextColor,
+            ["opacity"] = editOpacity.ToString()
+        };
+        var styleJson = System.Text.Json.JsonSerializer.Serialize(styleDict);
+
         var request = new CreateAnnotationRequest(
             ann.Type, editTitle, editContent,
-            editX, editY, editW, editH, ann.Style,
+            editX, editY, editW, editH, styleJson,
             ann.TargetSelector,
             string.IsNullOrEmpty(editArrowDirection) ? null : editArrowDirection,
             editBadgeNumber > 0 ? editBadgeNumber : null);

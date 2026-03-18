@@ -12,8 +12,9 @@
     @foreach (var step in Steps.OrderBy(s => s.StepNumber))
     {
         var isSelected = step.Id == SelectedStepId;
-        <RadzenCard Style="@($"padding:10px;cursor:pointer;{(isSelected ? "border:2px solid var(--rz-primary)" : "")}")"
+        <RadzenCard Style="@($"position:relative;padding:10px;cursor:pointer;{(isSelected ? "border:2px solid var(--rz-primary)" : "")}")"
             @onclick="() => OnStepSelected.InvokeAsync(step.Id)">
+            <button class="step-delete" @onclick="() => OnDeleteStep.InvokeAsync(step.Id)" @onclick:stopPropagation="true">&times;</button>
             <RadzenStack Gap="4px">
                 <RadzenText TextStyle="TextStyle.Subtitle2">Step @step.StepNumber</RadzenText>
                 <RadzenText TextStyle="TextStyle.Caption" Style="color:var(--rz-text-secondary-color)">
@@ -33,9 +34,19 @@
     <RadzenButton Text="+ Add Step" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Style="width:100%" Click="OnAddStep" />
 </RadzenStack>
 
+<style>
+    .step-delete {
+        position: absolute; top: 4px; right: 6px;
+        background: none; border: none; color: #aaa; font-size: 16px;
+        cursor: pointer; padding: 0 4px; line-height: 1; z-index: 1;
+    }
+    .step-delete:hover { color: #ef4444; }
+</style>
+
 @code {
     [Parameter] public List<StepResponse> Steps { get; set; } = [];
     [Parameter] public Guid? SelectedStepId { get; set; }
     [Parameter] public EventCallback<Guid> OnStepSelected { get; set; }
     [Parameter] public EventCallback OnAddStep { get; set; }
+    [Parameter] public EventCallback<Guid> OnDeleteStep { get; set; }
 }

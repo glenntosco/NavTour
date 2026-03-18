@@ -43,7 +43,10 @@
             break;
 
         case AnnotationType.Modal:
-            <div style="background:white;border-radius:12px;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);max-width:400px">
+            var modalStyle = ParseStyle();
+            var modalBg = modalStyle.GetValueOrDefault("backgroundColor", "white");
+            var modalColor = modalStyle.GetValueOrDefault("textColor", "#1a1a2e");
+            <div style="background:@modalBg;color:@modalColor;border-radius:12px;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);max-width:400px">
                 @if (Annotation.Title != null)
                 {
                     <h3 style="margin:0 0 8px">@Annotation.Title</h3>
@@ -56,19 +59,25 @@
             break;
 
         case AnnotationType.Hotspot:
-            <div class="hotspot-dot"></div>
+            var hotspotStyle = ParseStyle();
+            var hotspotColor = hotspotStyle.GetValueOrDefault("backgroundColor", "#3b82f6");
+            <div class="hotspot-dot" style="background:@(hotspotColor)80;border-color:@hotspotColor"></div>
             break;
 
         case AnnotationType.Beacon:
+            var beaconStyle = ParseStyle();
+            var beaconColor = beaconStyle.GetValueOrDefault("backgroundColor", "#4361ee");
             <div class="beacon-container">
-                <div class="beacon-dot">@(Annotation.BadgeNumber ?? 1)</div>
-                <div class="beacon-ring"></div>
-                <div class="beacon-ring beacon-ring-outer"></div>
+                <div class="beacon-dot" style="background:@beaconColor">@(Annotation.BadgeNumber ?? 1)</div>
+                <div class="beacon-ring" style="border-color:@(beaconColor)66"></div>
+                <div class="beacon-ring beacon-ring-outer" style="border-color:@(beaconColor)66"></div>
             </div>
             break;
 
         case AnnotationType.Blur:
-            <div style="width:100%;height:100%;backdrop-filter:blur(8px);background:rgba(0,0,0,0.1);border-radius:4px"></div>
+            var blurStyle = ParseStyle();
+            var blurOpacity = int.TryParse(blurStyle.GetValueOrDefault("opacity", "100"), out var bop) ? bop / 100.0 : 0.1;
+            <div style="width:100%;height:100%;backdrop-filter:blur(8px);background:rgba(0,0,0,@(blurOpacity.ToString("F2")));border-radius:4px"></div>
             break;
 
         case AnnotationType.ClickZone:
@@ -206,7 +215,11 @@
     {
         var posX = isDragging ? dragX : Annotation.PositionX;
         var posY = isDragging ? dragY : Annotation.PositionY;
-        return $"position:absolute;left:{posX:F2}%;top:{posY:F2}%;width:{Annotation.Width}%;height:{Annotation.Height}%;z-index:10;pointer-events:none";
+        var style = $"position:absolute;left:{posX:F2}%;top:{posY:F2}%;width:{Annotation.Width}%;height:{Annotation.Height}%;z-index:10;pointer-events:none";
+        var parsed = ParseStyle();
+        if (int.TryParse(parsed.GetValueOrDefault("opacity", "100"), out var op) && op < 100 && Annotation.Type != AnnotationType.Blur)
+            style += $";opacity:{(op / 100.0):F2}";
+        return style;
     }
 
     private string GetTooltipStyle()

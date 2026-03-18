@@ -51,6 +51,51 @@ function clearSelectOptions(select: HTMLSelectElement) {
   }
 }
 
+async function tryAutoLogin(): Promise<boolean> {
+  const knownUrls = ["https://navtour.cloud"];
+
+  // Also try the active tab's origin (covers localhost or other deployments)
+  try {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (tab?.url) {
+      const origin = new URL(tab.url).origin;
+      if (!knownUrls.includes(origin)) knownUrls.push(origin);
+    }
+  } catch {
+    // tabs query can fail in some contexts, ignore
+  }
+
+  for (const url of knownUrls) {
+    try {
+      const cookie = await chrome.cookies.get({ url, name: "navtour_auth" });
+      if (cookie?.value) {
+        const serverUrl = url;
+        const accessToken = cookie.value;
+
+        api = new NavTourApi(serverUrl);
+        api.setToken(accessToken);
+
+        // Verify the token works by loading demos
+        await api.getDemos();
+
+        session = {
+          serverUrl,
+          accessToken,
+          demoId: "",
+          demoName: "",
+          frameCount: 0,
+        };
+        await chrome.storage.local.set({ session });
+        return true;
+      }
+    } catch {
+      // Cookie invalid or token expired, try next URL
+    }
+  }
+
+  return false;
+}
+
 async function init() {
   const stored = await chrome.storage.local.get(["session"]);
 
@@ -80,7 +125,13 @@ async function init() {
       }
     });
   } else {
-    showScreen(screenLogin);
+    // Try auto-login from navtour_auth cookie before showing login form
+    if (await tryAutoLogin()) {
+      await loadDemos();
+      showScreen(screenSelect);
+    } else {
+      showScreen(screenLogin);
+    }
   }
 }
 
