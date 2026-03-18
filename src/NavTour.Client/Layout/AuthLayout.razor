@@ -1,0 +1,43 @@
+@inherits LayoutComponentBase
+
+<div class="auth-page">
+    <div class="auth-card">
+        @Body
+    </div>
+</div>
+
+<RadzenDialog />
+<RadzenNotification />
+<RadzenTooltip />
+
+<style>
+    .auth-page {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #F4F8FC;
+        padding: 24px;
+    }
+
+    .auth-card {
+        width: 100%;
+        max-width: 420px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 20px 48px rgba(11, 25, 41, 0.10), 0 8px 16px rgba(11, 25, 41, 0.04);
+        padding: 48px 40px;
+    }
+
+    @@media (max-width: 480px) {
+        .auth-card {
+            padding: 32px 24px;
+            box-shadow: none;
+            border-radius: 0;
+        }
+        .auth-page {
+            padding: 0;
+            background: #fff;
+        }
+    }
+</style>

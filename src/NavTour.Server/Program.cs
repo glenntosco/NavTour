@@ -140,13 +140,16 @@ var app = builder.Build();
 // Seed database
 await DbSeeder.SeedAsync(app.Services);
 
-if (!app.Environment.IsDevelopment())
+// Forward headers from Azure reverse proxy so Request.Scheme is correct
+app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
-    app.UseHsts();
-}
+    ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor
+        | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
+});
 
 if (!app.Environment.IsDevelopment())
 {
+    app.UseHsts();
     app.UseHttpsRedirection();
 }
 app.UseAntiforgery();
