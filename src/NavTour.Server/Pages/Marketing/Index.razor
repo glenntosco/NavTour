@@ -22,9 +22,17 @@
 @* 2. Social Proof / Logo Bar *@
 <section class="mkt-social-proof">
     <div class="mkt-container text-center">
-        <p>@L["home_social_proof"]</p>
+        <div style="display:flex;align-items:center;justify-content:center;gap:var(--space-8);margin-bottom:var(--space-8)">
+            <div style="display:flex;align-items:center;gap:var(--space-2);font-size:var(--text-sm);color:var(--text-secondary)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--nt-accent)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <strong>4.9/5</strong> on G2
+            </div>
+            <div style="width:1px;height:20px;background:var(--neutral-300)"></div>
+            <div style="font-size:var(--text-sm);color:var(--text-secondary)">
+                Trusted by <strong>500+</strong> product-led teams
+            </div>
+        </div>
         <LogoGrid Companies='new() { "Apex Financial", "Meridian Health", "CloudScale", "TerraLogic", "Pinnacle SaaS", "Vantage CRM", "Horizon Ops", "NovaBridge" }' Columns="8" />
-        <p style="margin-top:var(--space-4);font-size:var(--text-xs);color:var(--neutral-400)">@L["home_social_proof_rating"]</p>
     </div>
 </section>
 
