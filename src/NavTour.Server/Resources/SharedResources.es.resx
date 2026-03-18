@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="0" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute name="xml:space" use="optional" default="preserve" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>1.3</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <!-- Nav -->
+  <data name="nav_product" xml:space="preserve"><value>Producto</value></data>
+  <data name="nav_features" xml:space="preserve"><value>Funciones</value></data>
+  <data name="nav_ai_platform" xml:space="preserve"><value>Plataforma IA</value></data>
+  <data name="nav_integrations" xml:space="preserve"><value>Integraciones</value></data>
+  <data name="nav_security" xml:space="preserve"><value>Seguridad</value></data>
+  <data name="nav_solutions" xml:space="preserve"><value>Soluciones</value></data>
+  <data name="nav_marketing" xml:space="preserve"><value>Para Marketing</value></data>
+  <data name="nav_sales" xml:space="preserve"><value>Para Ventas</value></data>
+  <data name="nav_presales" xml:space="preserve"><value>Para Preventa</value></data>
+  <data name="nav_customers" xml:space="preserve"><value>Clientes</value></data>
+  <data name="nav_pricing" xml:space="preserve"><value>Precios</value></data>
+  <data name="nav_sign_in" xml:space="preserve"><value>Iniciar Sesión</value></data>
+  <data name="nav_start_free" xml:space="preserve"><value>Empieza Gratis →</value></data>
+
+  <!-- Footer -->
+  <data name="footer_tagline" xml:space="preserve"><value>Plataforma de demos con IA</value></data>
+  <data name="footer_product" xml:space="preserve"><value>Producto</value></data>
+  <data name="footer_resources" xml:space="preserve"><value>Recursos</value></data>
+  <data name="footer_company" xml:space="preserve"><value>Empresa</value></data>
+  <data name="footer_features" xml:space="preserve"><value>Funciones</value></data>
+  <data name="footer_ai_platform" xml:space="preserve"><value>Plataforma IA</value></data>
+  <data name="footer_integrations" xml:space="preserve"><value>Integraciones</value></data>
+  <data name="footer_changelog" xml:space="preserve"><value>Novedades</value></data>
+  <data name="footer_api_docs" xml:space="preserve"><value>API Docs</value></data>
+  <data name="footer_blog" xml:space="preserve"><value>Blog</value></data>
+  <data name="footer_help_center" xml:space="preserve"><value>Centro de Ayuda</value></data>
+  <data name="footer_templates" xml:space="preserve"><value>Plantillas</value></data>
+  <data name="footer_webinars" xml:space="preserve"><value>Webinars</value></data>
+  <data name="footer_about" xml:space="preserve"><value>Nosotros</value></data>
+  <data name="footer_careers" xml:space="preserve"><value>Empleos</value></data>
+  <data name="footer_contact" xml:space="preserve"><value>Contacto</value></data>
+  <data name="footer_security" xml:space="preserve"><value>Seguridad</value></data>
+  <data name="footer_legal" xml:space="preserve"><value>Legal</value></data>
+  <data name="footer_copyright" xml:space="preserve"><value>© 2026 NavTour</value></data>
+  <data name="footer_privacy" xml:space="preserve"><value>Privacidad</value></data>
+  <data name="footer_terms" xml:space="preserve"><value>Términos</value></data>
+  <data name="footer_status" xml:space="preserve"><value>Estado</value></data>
+
+  <!-- Homepage Hero -->
+  <data name="home_eyebrow" xml:space="preserve"><value>Plataforma de Demos con IA</value></data>
+  <data name="home_title" xml:space="preserve"><value>La IA crea tus demos.&lt;br/&gt;La IA las personaliza.&lt;br/&gt;La IA cierra tus ventas.</value></data>
+  <data name="home_subtitle" xml:space="preserve"><value>Captura tu producto. La IA crea demos interactivas, las personaliza para cada prospecto y te dice quién está listo para comprar.</value></data>
+  <data name="home_cta_primary" xml:space="preserve"><value>Empieza Gratis</value></data>
+  <data name="home_cta_secondary" xml:space="preserve"><value>Míralo en Acción</value></data>
+
+  <!-- Homepage Social Proof -->
+  <data name="home_social_proof" xml:space="preserve"><value>Equipos líderes confían en nosotros</value></data>
+  <data name="home_social_proof_rating" xml:space="preserve"><value>Valoración de 4.9/5 por usuarios</value></data>
+
+  <!-- Homepage Use Cases -->
+  <data name="home_use_cases_title" xml:space="preserve"><value>Demos para cada etapa del recorrido del comprador</value></data>
+  <data name="home_use_cases_subtitle" xml:space="preserve"><value></value></data>
+  <data name="home_uc1_title" xml:space="preserve"><value>Demos en tu Web</value></data>
+  <data name="home_uc1_desc" xml:space="preserve"><value>Deja que los visitantes experimenten tu producto antes de hablar con ventas. Reemplaza capturas estáticas con tours interactivos por persona.</value></data>
+  <data name="home_uc2_title" xml:space="preserve"><value>Ventas Outbound</value></data>
+  <data name="home_uc2_desc" xml:space="preserve"><value>Envía enlaces de demo personalizados minutos después de una llamada. Cada prospecto ve su propia versión.</value></data>
+  <data name="home_uc3_title" xml:space="preserve"><value>Campañas de Ads</value></data>
+  <data name="home_uc3_desc" xml:space="preserve"><value>Cambia "Solicitar Demo" por "Explora el Producto". Convierte tráfico de anuncios con experiencias interactivas al instante.</value></data>
+  <data name="home_uc4_title" xml:space="preserve"><value>Descubrimiento Pre-Llamada</value></data>
+  <data name="home_uc4_desc" xml:space="preserve"><value>Permite que los prospectos exploren tu producto antes de la llamada. Califica el interés e identifica su caso de uso automáticamente.</value></data>
+  <data name="home_uc5_title" xml:space="preserve"><value>Seguimiento Post-Llamada</value></data>
+  <data name="home_uc5_desc" xml:space="preserve"><value>Dale a tus campeones una demo que puedan compartir internamente. Ayúdales a vender tu producto dentro de su organización.</value></data>
+  <data name="home_uc6_title" xml:space="preserve"><value>Documentación y Onboarding</value></data>
+  <data name="home_uc6_desc" xml:space="preserve"><value>Tours de producto autoservicio para nuevos clientes. Reduce el tiempo de activación y elimina cuellos de botella.</value></data>
+
+  <!-- Homepage How It Works -->
+  <data name="home_how_title" xml:space="preserve"><value>De la captura a la conversión en minutos</value></data>
+  <data name="home_how_subtitle" xml:space="preserve"><value></value></data>
+  <data name="home_step1_label" xml:space="preserve"><value>Paso 1</value></data>
+  <data name="home_step1_title" xml:space="preserve"><value>Captura</value></data>
+  <data name="home_step1_desc" xml:space="preserve"><value>Instala la extensión de Chrome. Navega por tu producto. NavTour graba cada pantalla automáticamente como un snapshot HTML interactivo.</value></data>
+  <data name="home_step2_label" xml:space="preserve"><value>Paso 2</value></data>
+  <data name="home_step2_title" xml:space="preserve"><value>La IA Construye tu Demo</value></data>
+  <data name="home_step2_desc" xml:space="preserve"><value>El Copiloto IA escribe el texto guía, ancla tooltips a los elementos correctos, crea rutas ramificadas y personaliza el contenido — todo mientras tomas un café.</value></data>
+  <data name="home_step3_label" xml:space="preserve"><value>Paso 3</value></data>
+  <data name="home_step3_title" xml:space="preserve"><value>Publica y Mide</value></data>
+  <data name="home_step3_desc" xml:space="preserve"><value>Insértala donde quieras. La analítica IA te dice quién está interesado, califica la intención de compra y envía señales directo a tu CRM.</value></data>
+
+  <!-- Homepage Features -->
+  <data name="home_features_title" xml:space="preserve"><value>Todo lo que necesitas para demos a escala</value></data>
+  <data name="home_feat1_label" xml:space="preserve"><value>Copiloto IA</value></data>
+  <data name="home_feat1_title" xml:space="preserve"><value>Navega tu producto. La IA hace el resto.</value></data>
+  <data name="home_feat1_desc" xml:space="preserve"><value>La IA genera un borrador completo de demo — texto guía, tooltips anclados, flujo narrativo y lógica de ramificación. Entrenada con las mejores prácticas de miles de demos exitosas.</value></data>
+  <data name="home_feat2_label" xml:space="preserve"><value>Editor Inteligente</value></data>
+  <data name="home_feat2_title" xml:space="preserve"><value>Edita demos con lenguaje natural.</value></data>
+  <data name="home_feat2_desc" xml:space="preserve"><value>Dile a la IA qué cambiar: "Reemplaza todos los nombres de empresa por marcas fintech." Maneja texto, fechas, precios — en todas tus demos, al instante.</value></data>
+  <data name="home_feat3_label" xml:space="preserve"><value>Motor de Personalización IA</value></data>
+  <data name="home_feat3_title" xml:space="preserve"><value>Cada prospecto ve SU versión.</value></data>
+  <data name="home_feat3_desc" xml:space="preserve"><value>Las variables dinámicas cambian nombre, logo y datos automáticamente. Genera 50 demos personalizadas desde una plantilla. La IA sugiere qué personalizar.</value></data>
+  <data name="home_feat4_label" xml:space="preserve"><value>Analítica IA e Intención</value></data>
+  <data name="home_feat4_title" xml:space="preserve"><value>La IA te dice quién está listo para comprar.</value></data>
+  <data name="home_feat4_desc" xml:space="preserve"><value>La IA califica el engagement y predice la intención de compra. Identifica empresas viendo demos sin completar formularios. Las señales llegan directo al CRM.</value></data>
+  <data name="home_feat5_label" xml:space="preserve"><value>Editor Sin Código</value></data>
+  <data name="home_feat5_title" xml:space="preserve"><value>Arrastra, suelta, publica.</value></data>
+  <data name="home_feat5_desc" xml:space="preserve"><value>Hotspots, tooltips, modales, flujos multi-paso, ramificación condicional — todo sin escribir una sola línea de código.</value></data>
+  <data name="home_feat6_label" xml:space="preserve"><value>Integraciones</value></data>
+  <data name="home_feat6_title" xml:space="preserve"><value>Se conecta con tu stack.</value></data>
+  <data name="home_feat6_desc" xml:space="preserve"><value>HubSpot, Salesforce, Marketo, Slack, Zapier, REST API. Los datos de tus demos fluyen donde los necesites.</value></data>
+  <data name="home_feat7_label" xml:space="preserve"><value>Espacio de Equipo</value></data>
+  <data name="home_feat7_title" xml:space="preserve"><value>Escala tu operación de demos.</value></data>
+  <data name="home_feat7_desc" xml:space="preserve"><value>Biblioteca de demos compartida, plantillas, control de versiones, permisos por rol y memoria de voz de marca IA para todo el equipo.</value></data>
+
+  <!-- Homepage Metrics -->
+  <data name="home_metrics_title" xml:space="preserve"><value>Resultados que hablan por sí solos</value></data>
+  <data name="home_metric1_value" xml:space="preserve"><value>10x</value></data>
+  <data name="home_metric1_label" xml:space="preserve"><value>Más rápido crear demos con IA</value></data>
+  <data name="home_metric2_value" xml:space="preserve"><value>47%</value></data>
+  <data name="home_metric2_label" xml:space="preserve"><value>Más leads cualificados</value></data>
+  <data name="home_metric3_value" xml:space="preserve"><value>&lt; 5 min</value></data>
+  <data name="home_metric3_label" xml:space="preserve"><value>Primera demo IA, sin capacitación</value></data>
+  <data name="home_metric4_value" xml:space="preserve"><value>2.4x</value></data>
+  <data name="home_metric4_label" xml:space="preserve"><value>Ciclo de ventas más rápido</value></data>
+
+  <!-- Homepage Testimonial -->
+  <data name="home_testimonial_quote" xml:space="preserve"><value>NavTour reemplazó todo nuestro entorno de demos. Nuestro equipo de ventas crea demos personalizadas en minutos en vez de días. Solo el copiloto IA nos ahorró 20 horas a la semana.</value></data>
+  <data name="home_testimonial_name" xml:space="preserve"><value>Sarah Chen</value></data>
+  <data name="home_testimonial_title" xml:space="preserve"><value>VP de Ingeniería de Ventas</value></data>
+  <data name="home_testimonial_company" xml:space="preserve"><value>CloudScale</value></data>
+  <data name="home_testimonial_metric" xml:space="preserve"><value>20 hrs/sem</value></data>
+  <data name="home_testimonial_metric_label" xml:space="preserve"><value>ahorradas con el copiloto IA</value></data>
+
+  <!-- Homepage CTA -->
+  <data name="home_cta_title" xml:space="preserve"><value>Deja que la IA cree, personalice y optimice tus demos — desde ahora</value></data>
+  <data name="home_cta_subtitle" xml:space="preserve"><value>Gratis para siempre — 1 demo, 10 frames. Sin tarjeta de crédito. Crea tu primera demo interactiva en menos de 10 minutos.</value></data>
+  <data name="home_cta_text" xml:space="preserve"><value>Empieza Gratis</value></data>
+  <data name="home_cta_secondary_text" xml:space="preserve"><value>Agenda una Demo</value></data>
+
+  <!-- Shared CTA Defaults -->
+  <data name="cta_default_title" xml:space="preserve"><value>¿Listo para transformar tus demos?</value></data>
+  <data name="cta_default_subtitle" xml:space="preserve"><value>Empieza a crear demos interactivas en minutos. Sin tarjeta de crédito.</value></data>
+  <data name="cta_default_text" xml:space="preserve"><value>Empieza Gratis</value></data>
+</root>

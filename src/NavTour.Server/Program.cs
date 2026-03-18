@@ -8,9 +8,13 @@ using NavTour.Server.Infrastructure.Data;
 using NavTour.Server.Infrastructure.MultiTenancy;
 using NavTour.Server.Services;
 using NavTour.Client.Services;
+using Microsoft.AspNetCore.Localization;
 using Radzen;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Localization
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
 // Database
 builder.Services.AddDbContext<NavTourDbContext>(options =>
@@ -146,6 +150,31 @@ if (!app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 }
 app.UseAntiforgery();
+
+// Localization middleware
+var supportedCultures = new[] { "en", "es" };
+app.UseRequestLocalization(options =>
+{
+    options.SetDefaultCulture("en");
+    options.AddSupportedCultures(supportedCultures);
+    options.AddSupportedUICultures(supportedCultures);
+    options.RequestCultureProviders.Clear();
+    options.RequestCultureProviders.Add(new QueryStringRequestCultureProvider());
+    options.RequestCultureProviders.Add(new CookieRequestCultureProvider());
+});
+
+app.Use(async (context, next) =>
+{
+    var culture = context.Request.Query["culture"].FirstOrDefault();
+    if (!string.IsNullOrEmpty(culture))
+    {
+        context.Response.Cookies.Append(
+            CookieRequestCultureProvider.DefaultCookieName,
+            CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+            new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) });
+    }
+    await next();
+});
 
 app.UseCors("AppCors");
 app.UseAuthentication();

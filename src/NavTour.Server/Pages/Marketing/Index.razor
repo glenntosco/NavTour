@@ -1,5 +1,6 @@
 @page "/"
 @layout MarketingLayout
+@inject IStringLocalizer<NavTour.Server.Resources.SharedResources> L
 
 <PageTitle>NavTour — AI-Powered Interactive Demo Platform</PageTitle>
 <HeadContent>
@@ -10,20 +11,20 @@
 
 @* 1. Hero *@
 <HeroSection
-    Eyebrow="AI-Powered Demo Platform"
-    Title="AI builds your demos.<br/>AI personalizes your demos.<br/>AI closes your deals."
-    Subtitle="Capture your product. AI creates interactive demos, personalizes them for every prospect, and tells you who's ready to buy."
-    PrimaryCtaText="Start Building Free"
+    Eyebrow="@L["home_eyebrow"].Value"
+    Title="@L["home_title"].Value"
+    Subtitle="@L["home_subtitle"].Value"
+    PrimaryCtaText="@L["home_cta_primary"].Value"
     PrimaryCtaUrl="/register"
-    SecondaryCtaText="See It In Action"
+    SecondaryCtaText="@L["home_cta_secondary"].Value"
     SecondaryCtaUrl="/contact" />
 
 @* 2. Social Proof / Logo Bar *@
 <section class="mkt-social-proof">
     <div class="mkt-container text-center">
-        <p>Trusted by product-led teams</p>
+        <p>@L["home_social_proof"]</p>
         <LogoGrid Companies='new() { "Apex Financial", "Meridian Health", "CloudScale", "TerraLogic", "Pinnacle SaaS", "Vantage CRM", "Horizon Ops", "NovaBridge" }' Columns="8" />
-        <p style="margin-top:var(--space-4);font-size:var(--text-xs);color:var(--neutral-400)">Rated 4.9/5 by users</p>
+        <p style="margin-top:var(--space-4);font-size:var(--text-xs);color:var(--neutral-400)">@L["home_social_proof_rating"]</p>
     </div>
 </section>
 
@@ -31,15 +32,15 @@
 <section class="mkt-section">
     <div class="mkt-container">
         <div class="mkt-section-heading reveal">
-            <h2>Demos for every stage of the buyer journey</h2>
+            <h2>@L["home_use_cases_title"]</h2>
         </div>
         <div class="mkt-grid mkt-grid-3 reveal-stagger">
-            <BuyerJourneyCard Icon="website" Title="Website Embeds" Description="Let visitors experience your product before talking to sales. Replace static screenshots with interactive, persona-specific tours." />
-            <BuyerJourneyCard Icon="discovery" Title="Outbound Sales" Description="Send personalized demo links within minutes of a discovery call. Each prospect sees their own version." />
-            <BuyerJourneyCard Icon="email" Title="Ad Campaigns" Description="Replace 'Request a Demo' with 'Take a Tour'. Convert ad traffic with instant interactive experiences." />
-            <BuyerJourneyCard Icon="champion" Title="Pre-Call Discovery" Description="Let prospects explore your product before the sales call. Qualify interest and identify their use case automatically." />
-            <BuyerJourneyCard Icon="tradeshow" Title="Post-Call Follow-Up" Description="Give champions a demo they can share internally. Help them sell your product inside their organization." />
-            <BuyerJourneyCard Icon="onboarding" Title="Help Docs &amp; Onboarding" Description="Self-serve product tours for new customers. Reduce time-to-value and eliminate scheduling bottlenecks." />
+            <BuyerJourneyCard Icon="website" Title="@L["home_uc1_title"].Value" Description="@L["home_uc1_desc"].Value" />
+            <BuyerJourneyCard Icon="discovery" Title="@L["home_uc2_title"].Value" Description="@L["home_uc2_desc"].Value" />
+            <BuyerJourneyCard Icon="email" Title="@L["home_uc3_title"].Value" Description="@L["home_uc3_desc"].Value" />
+            <BuyerJourneyCard Icon="champion" Title="@L["home_uc4_title"].Value" Description="@L["home_uc4_desc"].Value" />
+            <BuyerJourneyCard Icon="tradeshow" Title="@L["home_uc5_title"].Value" Description="@L["home_uc5_desc"].Value" />
+            <BuyerJourneyCard Icon="onboarding" Title="@L["home_uc6_title"].Value" Description="@L["home_uc6_desc"].Value" />
         </div>
     </div>
 </section>
@@ -48,14 +49,14 @@
 <section class="mkt-section-alt">
     <div class="mkt-container">
         <div class="mkt-section-heading reveal">
-            <h2>From capture to conversion in minutes</h2>
+            <h2>@L["home_how_title"]</h2>
         </div>
         <div class="reveal-stagger" style="display:flex;flex-direction:column;gap:var(--space-16)">
             <div class="mkt-step-row">
                 <div class="mkt-step-row-content">
-                    <div class="mkt-step-label">Step 1</div>
-                    <h3>Capture</h3>
-                    <p>Install the Chrome extension. Click through your product. NavTour records every screen automatically as an interactive HTML snapshot.</p>
+                    <div class="mkt-step-label">@L["home_step1_label"]</div>
+                    <h3>@L["home_step1_title"]</h3>
+                    <p>@L["home_step1_desc"]</p>
                 </div>
                 <div class="mkt-step-row-visual">
                     <div class="mkt-placeholder mkt-placeholder-feature">Chrome Extension Capture</div>
@@ -63,9 +64,9 @@
             </div>
             <div class="mkt-step-row">
                 <div class="mkt-step-row-content">
-                    <div class="mkt-step-label">Step 2</div>
-                    <h3>AI Builds Your Demo</h3>
-                    <p>AI Copilot writes your guide copy, anchors tooltips to the right elements, creates branching paths, and personalizes content — all while you grab coffee.</p>
+                    <div class="mkt-step-label">@L["home_step2_label"]</div>
+                    <h3>@L["home_step2_title"]</h3>
+                    <p>@L["home_step2_desc"]</p>
                 </div>
                 <div class="mkt-step-row-visual">
                     <div class="mkt-placeholder mkt-placeholder-feature">AI Copilot Building Demo</div>
@@ -73,9 +74,9 @@
             </div>
             <div class="mkt-step-row">
                 <div class="mkt-step-row-content">
-                    <div class="mkt-step-label">Step 3</div>
-                    <h3>Launch &amp; Measure</h3>
-                    <p>Embed anywhere. AI analytics tell you who's engaged, score buying intent, and feed signals directly to your CRM.</p>
+                    <div class="mkt-step-label">@L["home_step3_label"]</div>
+                    <h3>@L["home_step3_title"]</h3>
+                    <p>@L["home_step3_desc"]</p>
                 </div>
                 <div class="mkt-step-row-visual">
                     <div class="mkt-placeholder mkt-placeholder-feature">Analytics Dashboard + CRM Sync</div>
@@ -89,14 +90,14 @@
 <section class="mkt-section">
     <div class="mkt-container">
         <div class="mkt-section-heading reveal">
-            <h2>Everything you need to demo at scale</h2>
+            <h2>@L["home_features_title"]</h2>
         </div>
         <div class="reveal-stagger" style="display:flex;flex-direction:column;gap:var(--space-16)">
             <div class="mkt-step-row">
                 <div class="mkt-step-row-content">
-                    <div class="mkt-step-label">AI Copilot</div>
-                    <h3>Click through your product. AI does the rest.</h3>
-                    <p>AI auto-generates a complete demo draft — guide copy, tooltip anchors, story flow, and branching logic. Trained on best practices from thousands of high-performing demos.</p>
+                    <div class="mkt-step-label">@L["home_feat1_label"]</div>
+                    <h3>@L["home_feat1_title"]</h3>
+                    <p>@L["home_feat1_desc"]</p>
                 </div>
                 <div class="mkt-step-row-visual">
                     <div class="mkt-placeholder mkt-placeholder-feature">AI Copilot Interface</div>
@@ -104,9 +105,9 @@
             </div>
             <div class="mkt-step-row">
                 <div class="mkt-step-row-content">
-                    <div class="mkt-step-label">Smart Editor</div>
-                    <h3>Edit demos in plain English.</h3>
-                    <p>Tell AI what to change: "Replace all company names with fintech brands." It handles text, dates, pricing — across all your demos, instantly.</p>
+                    <div class="mkt-step-label">@L["home_feat2_label"]</div>
+                    <h3>@L["home_feat2_title"]</h3>
+                    <p>@L["home_feat2_desc"]</p>
                 </div>
                 <div class="mkt-step-row-visual">
                     <div class="mkt-placeholder mkt-placeholder-feature">Smart Editor Interface</div>
@@ -114,9 +115,9 @@
             </div>
             <div class="mkt-step-row">
                 <div class="mkt-step-row-content">
-                    <div class="mkt-step-label">AI Personalization Engine</div>
-                    <h3>Every prospect sees THEIR version.</h3>
-                    <p>Dynamic variables swap company name, logo, and data fields automatically. Bulk-generate 50 custom demos from one template. AI suggests what to personalize.</p>
+                    <div class="mkt-step-label">@L["home_feat3_label"]</div>
+                    <h3>@L["home_feat3_title"]</h3>
+                    <p>@L["home_feat3_desc"]</p>
                 </div>
                 <div class="mkt-step-row-visual">
                     <div class="mkt-placeholder mkt-placeholder-feature">Personalization Engine</div>
@@ -124,9 +125,9 @@
             </div>
             <div class="mkt-step-row">
                 <div class="mkt-step-row-content">
-                    <div class="mkt-step-label">AI Analytics &amp; Intent</div>
-                    <h3>AI tells you who's ready to buy.</h3>
-                    <p>AI scores viewer engagement and predicts buying intent. Identifies companies viewing demos without form fills. Signals feed directly to CRM.</p>
+                    <div class="mkt-step-label">@L["home_feat4_label"]</div>
+                    <h3>@L["home_feat4_title"]</h3>
+                    <p>@L["home_feat4_desc"]</p>
                 </div>
                 <div class="mkt-step-row-visual">
                     <div class="mkt-placeholder mkt-placeholder-feature">Intent Scoring Dashboard</div>
@@ -134,9 +135,9 @@
             </div>
             <div class="mkt-step-row">
                 <div class="mkt-step-row-content">
-                    <div class="mkt-step-label">No-Code Editor</div>
-                    <h3>Drag, drop, publish.</h3>
-                    <p>Hotspots, tooltips, modals, multi-step flows, conditional branching — all without writing a single line of code.</p>
+                    <div class="mkt-step-label">@L["home_feat5_label"]</div>
+                    <h3>@L["home_feat5_title"]</h3>
+                    <p>@L["home_feat5_desc"]</p>
                 </div>
                 <div class="mkt-step-row-visual">
                     <div class="mkt-placeholder mkt-placeholder-feature">Visual Demo Builder</div>
@@ -144,9 +145,9 @@
             </div>
             <div class="mkt-step-row">
                 <div class="mkt-step-row-content">
-                    <div class="mkt-step-label">Integrations</div>
-                    <h3>Connects to your stack.</h3>
-                    <p>HubSpot, Salesforce, Marketo, Slack, Zapier, REST API. Demo data flows wherever you need it.</p>
+                    <div class="mkt-step-label">@L["home_feat6_label"]</div>
+                    <h3>@L["home_feat6_title"]</h3>
+                    <p>@L["home_feat6_desc"]</p>
                 </div>
                 <div class="mkt-step-row-visual">
                     <div class="mkt-placeholder mkt-placeholder-feature">Integration Hub</div>
@@ -154,9 +155,9 @@
             </div>
             <div class="mkt-step-row">
                 <div class="mkt-step-row-content">
-                    <div class="mkt-step-label">Team Workspace</div>
-                    <h3>Scale your demo operation.</h3>
-                    <p>Shared demo library, templates, version control, role-based permissions, and AI brand voice memory across all team members.</p>
+                    <div class="mkt-step-label">@L["home_feat7_label"]</div>
+                    <h3>@L["home_feat7_title"]</h3>
+                    <p>@L["home_feat7_desc"]</p>
                 </div>
                 <div class="mkt-step-row-visual">
                     <div class="mkt-placeholder mkt-placeholder-feature">Team Workspace</div>
@@ -170,13 +171,13 @@
 <section class="mkt-section-alt" style="background:var(--nt-primary-light)">
     <div class="mkt-container">
         <div class="mkt-section-heading reveal">
-            <h2>Results that speak for themselves</h2>
+            <h2>@L["home_metrics_title"]</h2>
         </div>
         <div class="mkt-grid mkt-grid-4 reveal-stagger">
-            <MetricCard Value="10x" Label="Faster demo creation with AI" />
-            <MetricCard Value="47%" Label="Increase in qualified leads" />
-            <MetricCard Value="< 5 min" Label="First AI demo, no training" />
-            <MetricCard Value="2.4x" Label="Faster sales cycle" />
+            <MetricCard Value="@L["home_metric1_value"].Value" Label="@L["home_metric1_label"].Value" />
+            <MetricCard Value="@L["home_metric2_value"].Value" Label="@L["home_metric2_label"].Value" />
+            <MetricCard Value="@L["home_metric3_value"].Value" Label="@L["home_metric3_label"].Value" />
+            <MetricCard Value="@L["home_metric4_value"].Value" Label="@L["home_metric4_label"].Value" />
         </div>
     </div>
 </section>
@@ -185,20 +186,20 @@
 <section class="mkt-section">
     <div class="mkt-container reveal">
         <TestimonialCard Featured="true"
-            Quote="NavTour replaced our entire demo environment. Our sales team creates custom demos in minutes instead of days. The AI copilot alone saved us 20 hours a week."
-            Name="Sarah Chen"
-            Title="VP of Sales Engineering"
-            Company="CloudScale"
-            Metric="20 hrs/wk"
-            MetricLabel="saved with AI copilot" />
+            Quote="@L["home_testimonial_quote"].Value"
+            Name="@L["home_testimonial_name"].Value"
+            Title="@L["home_testimonial_title"].Value"
+            Company="@L["home_testimonial_company"].Value"
+            Metric="@L["home_testimonial_metric"].Value"
+            MetricLabel="@L["home_testimonial_metric_label"].Value" />
     </div>
 </section>
 
 @* 8. Bottom CTA *@
 <CtaSection Dark="true"
-    Title="Let AI build, personalize, and optimize your demos — starting now"
-    Subtitle="Free forever — 1 demo, 10 frames. No credit card. Build your first interactive demo in under 10 minutes."
-    CtaText="Start Building Free"
+    Title="@L["home_cta_title"].Value"
+    Subtitle="@L["home_cta_subtitle"].Value"
+    CtaText="@L["home_cta_text"].Value"
     CtaUrl="/register"
-    SecondaryCtaText="Book a Demo"
+    SecondaryCtaText="@L["home_cta_secondary_text"].Value"
     SecondaryCtaUrl="/contact" />

@@ -55,6 +55,30 @@
     gap: 12px;
     align-items: center;
 }
+::deep .mkt-lang-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+::deep .mkt-lang-toggle a {
+    color: var(--neutral-400, #94A3B8);
+    text-decoration: none;
+    padding: 2px 4px;
+    border-radius: 3px;
+    transition: color 150ms ease;
+}
+::deep .mkt-lang-toggle a:hover { color: var(--neutral-950, #0B1929); }
+::deep .mkt-lang-toggle a.active {
+    color: var(--nt-primary, #4F46E5);
+    font-weight: 700;
+}
+::deep .mkt-lang-toggle span {
+    color: var(--neutral-300, #CBD5E1);
+    user-select: none;
+}
 ::deep .mkt-hamburger {
     display: none;
     background: none;

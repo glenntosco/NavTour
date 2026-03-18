@@ -1,10 +1,12 @@
+@inject IStringLocalizer<NavTour.Server.Resources.SharedResources> L
+
 <footer class="mkt-footer">
     <div class="mkt-container">
         <div class="mkt-footer-grid" style="grid-template-columns:1.4fr 1fr 1fr 1fr">
             <div class="mkt-footer-col">
                 <div style="margin-bottom:var(--space-4)">
                     <a href="/" style="font-size:var(--text-xl);font-weight:var(--weight-bold);color:var(--text-primary);text-decoration:none">NavTour</a>
-                    <p style="font-size:var(--text-sm);color:var(--text-tertiary);margin-top:var(--space-2)">AI-powered demo platform</p>
+                    <p style="font-size:var(--text-sm);color:var(--text-tertiary);margin-top:var(--space-2)">@L["footer_tagline"]</p>
                 </div>
                 <div style="display:flex;gap:var(--space-4);margin-top:var(--space-4)">
                     <a href="#" aria-label="Twitter" style="color:var(--neutral-400)">
@@ -19,31 +21,31 @@
                 </div>
             </div>
             <div class="mkt-footer-col">
-                <h4>Product</h4>
-                <a href="/product">Features</a>
-                <a href="/product/ai">AI Platform</a>
-                <a href="/integrations">Integrations</a>
-                <a href="#">Changelog</a>
-                <a href="/docs">API Docs</a>
+                <h4>@L["footer_product"]</h4>
+                <a href="/product">@L["footer_features"]</a>
+                <a href="/product/ai">@L["footer_ai_platform"]</a>
+                <a href="/integrations">@L["footer_integrations"]</a>
+                <a href="#">@L["footer_changelog"]</a>
+                <a href="/docs">@L["footer_api_docs"]</a>
             </div>
             <div class="mkt-footer-col">
-                <h4>Resources</h4>
-                <a href="/blog">Blog</a>
-                <a href="#">Help Center</a>
-                <a href="#">Templates</a>
-                <a href="#">Webinars</a>
+                <h4>@L["footer_resources"]</h4>
+                <a href="/blog">@L["footer_blog"]</a>
+                <a href="#">@L["footer_help_center"]</a>
+                <a href="#">@L["footer_templates"]</a>
+                <a href="#">@L["footer_webinars"]</a>
             </div>
             <div class="mkt-footer-col">
-                <h4>Company</h4>
-                <a href="/about">About</a>
-                <a href="#">Careers</a>
-                <a href="/contact">Contact</a>
-                <a href="/security">Security</a>
-                <a href="#">Legal</a>
+                <h4>@L["footer_company"]</h4>
+                <a href="/about">@L["footer_about"]</a>
+                <a href="#">@L["footer_careers"]</a>
+                <a href="/contact">@L["footer_contact"]</a>
+                <a href="/security">@L["footer_security"]</a>
+                <a href="#">@L["footer_legal"]</a>
             </div>
         </div>
         <div class="mkt-footer-bottom">
-            <p>&copy; 2026 NavTour &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a> &middot; <a href="#">Status</a></p>
+            <p>@L["footer_copyright"] &middot; <a href="#">@L["footer_privacy"]</a> &middot; <a href="#">@L["footer_terms"]</a> &middot; <a href="#">@L["footer_status"]</a></p>
         </div>
     </div>
 </footer>
