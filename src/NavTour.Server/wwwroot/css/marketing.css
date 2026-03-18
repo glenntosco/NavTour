@@ -2,15 +2,15 @@
 
 /* ========== Design Tokens ========== */
 :root {
-    /* Brand — NavTour Indigo/Violet */
-    --nt-primary: #4F46E5;
-    --nt-primary-dark: #3730A3;
-    --nt-primary-deeper: #312E81;
-    --nt-primary-light: #EEF2FF;
-    --nt-primary-subtle: #F5F3FF;
-    --nt-accent: #8B5CF6;
-    --nt-accent-dark: #7C3AED;
-    --nt-accent-light: #DDD6FE;
+    /* Brand — NavTour Navy/Coral */
+    --nt-primary: #1E3A5F;
+    --nt-primary-dark: #152D4A;
+    --nt-primary-deeper: #0F2035;
+    --nt-primary-light: #E8EFF7;
+    --nt-primary-subtle: #F0F4F9;
+    --nt-accent: #E8523F;
+    --nt-accent-dark: #D4412F;
+    --nt-accent-light: #FDE8E5;
 
     --nt-success: #059669;
     --nt-warning: #D97706;
@@ -88,7 +88,7 @@
     --shadow-md: 0 4px 6px rgba(11, 25, 41, 0.06), 0 2px 4px rgba(11, 25, 41, 0.04);
     --shadow-lg: 0 10px 24px rgba(11, 25, 41, 0.08), 0 4px 8px rgba(11, 25, 41, 0.04);
     --shadow-xl: 0 20px 48px rgba(11, 25, 41, 0.10), 0 8px 16px rgba(11, 25, 41, 0.04);
-    --shadow-glow: 0 0 0 1px rgba(79, 70, 229, 0.08), 0 4px 16px rgba(79, 70, 229, 0.12);
+    --shadow-glow: 0 0 0 1px rgba(30, 58, 95, 0.08), 0 4px 16px rgba(30, 58, 95, 0.12);
 
     /* Radius */
     --radius-sm: 4px;
@@ -254,7 +254,7 @@
 }
 .mkt-card-featured {
     background: var(--surface-primary);
-    border: 1px solid rgba(79, 70, 229, 0.15);
+    border: 1px solid rgba(30, 58, 95, 0.15);
     border-radius: var(--radius-md);
     padding: var(--space-8);
     box-shadow: var(--shadow-glow);
@@ -375,7 +375,7 @@
     height: 14px;
     border-radius: 50%;
     background: var(--nt-primary-light);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M5.5 9.5L3 7l-.7.7L5.5 11l7-7-.7-.7L5.5 9.5z' fill='%234F46E5'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M5.5 9.5L3 7l-.7.7L5.5 11l7-7-.7-.7L5.5 9.5z' fill='%231E3A5F'/%3E%3C/svg%3E");
 }
 .mkt-pricing-highlighted {
     border-color: var(--nt-accent);
@@ -531,7 +531,7 @@
 .mkt-input:hover { border-color: var(--neutral-400); }
 .mkt-input:focus {
     border-color: var(--nt-primary);
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+    box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.12);
     outline: none;
 }
 .mkt-input::placeholder { color: var(--neutral-400); }
@@ -590,7 +590,7 @@
     height: 14px;
     border-radius: 50%;
     background: var(--nt-primary-light);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M5.5 9.5L3 7l-.7.7L5.5 11l7-7-.7-.7L5.5 9.5z' fill='%234F46E5'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M5.5 9.5L3 7l-.7.7L5.5 11l7-7-.7-.7L5.5 9.5z' fill='%231E3A5F'/%3E%3C/svg%3E");
 }
 
 /* ========== Metrics Row ========== */
@@ -757,7 +757,7 @@
 }
 .mkt-testimonial-featured {
     background: var(--surface-primary);
-    border: 1px solid rgba(79, 70, 229, 0.15);
+    border: 1px solid rgba(30, 58, 95, 0.15);
     border-radius: var(--radius-md);
     padding: var(--space-12) var(--space-10);
     box-shadow: var(--shadow-glow);
