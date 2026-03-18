@@ -14,7 +14,7 @@
         var isSelected = step.Id == SelectedStepId;
         <RadzenCard Style="@($"position:relative;padding:10px;cursor:pointer;{(isSelected ? "border:2px solid var(--rz-primary)" : "")}")"
             @onclick="() => OnStepSelected.InvokeAsync(step.Id)">
-            <button class="step-delete" @onclick="() => OnDeleteStep.InvokeAsync(step.Id)" @onclick:stopPropagation="true">&times;</button>
+            <button class="step-delete" @onclick="() => ConfirmDelete(step.Id)" @onclick:stopPropagation="true">&times;</button>
             <RadzenStack Gap="4px">
                 <RadzenText TextStyle="TextStyle.Subtitle2">Step @step.StepNumber</RadzenText>
                 <RadzenText TextStyle="TextStyle.Caption" Style="color:var(--rz-text-secondary-color)">
@@ -120,6 +120,22 @@
     }
 
     <RadzenButton Text="+ Add Step" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Style="width:100%" Click="OnAddStep" />
+
+    @if (confirmDeleteId != null)
+    {
+        <div class="sp-confirm-overlay" @onclick="() => confirmDeleteId = null">
+            <div class="sp-confirm-dialog" @onclick:stopPropagation="true">
+                <RadzenText TextStyle="TextStyle.Body2"><strong>Delete this step?</strong></RadzenText>
+                <RadzenText TextStyle="TextStyle.Caption" Style="color:var(--rz-text-secondary-color)">Annotations on this step will also be removed.</RadzenText>
+                <RadzenStack Orientation="Orientation.Horizontal" Gap="6px" Style="margin-top:8px">
+                    <RadzenButton Text="Delete" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.ExtraSmall"
+                        Click="() => ExecuteDelete()" />
+                    <RadzenButton Text="Cancel" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall"
+                        Click="() => confirmDeleteId = null" />
+                </RadzenStack>
+            </div>
+        </div>
+    }
 </RadzenStack>
 
 <style>
@@ -141,6 +157,22 @@
         letter-spacing: 0.5px;
         margin-bottom: 2px;
     }
+    .sp-confirm-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    }
+    .sp-confirm-dialog {
+        background: var(--rz-base-background-color);
+        border-radius: 10px;
+        padding: 16px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        min-width: 200px;
+    }
 </style>
 
 @code {
@@ -150,6 +182,22 @@
     [Parameter] public EventCallback OnAddStep { get; set; }
     [Parameter] public EventCallback<Guid> OnDeleteStep { get; set; }
     [Parameter] public EventCallback<StepResponse> OnStepSettingsChanged { get; set; }
+
+    private Guid? confirmDeleteId;
+
+    private void ConfirmDelete(Guid stepId)
+    {
+        confirmDeleteId = stepId;
+    }
+
+    private async Task ExecuteDelete()
+    {
+        if (confirmDeleteId != null)
+        {
+            await OnDeleteStep.InvokeAsync(confirmDeleteId.Value);
+            confirmDeleteId = null;
+        }
+    }
 
     private static readonly object[] triggerTypes =
     [
