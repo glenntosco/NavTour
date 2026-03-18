@@ -588,4 +588,67 @@
   <data name="ai_bottom_cta_subtitle" xml:space="preserve"><value>Sin tarjeta de crédito. Sin capacitación. La IA crea tu primera demo en menos de 5 minutos.</value></data>
   <data name="ai_bottom_cta_text" xml:space="preserve"><value>Empieza Gratis</value></data>
   <data name="ai_bottom_cta_secondary" xml:space="preserve"><value>Agenda una Demo</value></data>
+
+  <!-- About Page -->
+  <data name="about_page_title" xml:space="preserve"><value>Acerca de — NavTour</value></data>
+  <data name="about_meta_desc" xml:space="preserve"><value>NavTour fue creado por un equipo obsesionado con una idea: la mejor forma de vender software es dejar que la gente lo use.</value></data>
+  <data name="about_eyebrow" xml:space="preserve"><value>Acerca de NavTour</value></data>
+  <data name="about_title" xml:space="preserve"><value>Creemos que cada producto merece venderse solo</value></data>
+  <data name="about_subtitle" xml:space="preserve"><value>NavTour fue creado por un equipo obsesionado con una idea: la mejor forma de vender software es dejar que la gente lo use.</value></data>
+  <data name="about_hero_cta" xml:space="preserve"><value>Empieza Gratis</value></data>
+  <data name="about_hero_cta_secondary" xml:space="preserve"><value>Agenda una Demo</value></data>
+  <data name="about_mission_heading" xml:space="preserve"><value>Nuestra misi&#xF3;n</value></data>
+  <data name="about_mission_p1" xml:space="preserve"><value>Estamos construyendo la plataforma que hace que las demos interactivas sean f&#xE1;ciles. La IA se encarga del trabajo repetitivo — capturar, escribir, personalizar — para que tu equipo se enfoque en lo que importa: construir relaciones y cerrar negocios.</value></data>
+  <data name="about_mission_p2" xml:space="preserve"><value>Creamos NavTour porque vimos cu&#xE1;nto tiempo los equipos de ventas y marketing desperdiciaban en log&#xED;stica de demos. Agendar llamadas, crear presentaciones, grabar videos que nadie ve. Ten&#xED;a que haber una mejor forma.</value></data>
+  <data name="about_value1_title" xml:space="preserve"><value>Producto primero</value></data>
+  <data name="about_value1_desc" xml:space="preserve"><value>Construimos herramientas que nosotros mismos querr&#xED;amos usar. Cada funci&#xF3;n se lanza porque resuelve un problema real, no porque un competidor la tenga.</value></data>
+  <data name="about_value2_title" xml:space="preserve"><value>IA con prop&#xF3;sito</value></data>
+  <data name="about_value2_desc" xml:space="preserve"><value>Usamos IA para eliminar trabajo tedioso, no para reemplazar el juicio humano. La IA construye tus demos. T&#xFA; construyes tus relaciones.</value></data>
+  <data name="about_value3_title" xml:space="preserve"><value>Simplicidad radical</value></data>
+  <data name="about_value3_desc" xml:space="preserve"><value>Si toma m&#xE1;s de 5 minutos aprender, no hemos terminado de construirlo. La complejidad es un bug, no una funci&#xF3;n.</value></data>
+  <data name="about_metric1_value" xml:space="preserve"><value>10,000+</value></data>
+  <data name="about_metric1_label" xml:space="preserve"><value>demos creadas</value></data>
+  <data name="about_metric2_value" xml:space="preserve"><value>50+</value></data>
+  <data name="about_metric2_label" xml:space="preserve"><value>pa&#xED;ses</value></data>
+  <data name="about_metric3_value" xml:space="preserve"><value>&lt; 5 min</value></data>
+  <data name="about_metric3_label" xml:space="preserve"><value>tiempo a primera demo</value></data>
+  <data name="about_metric4_value" xml:space="preserve"><value>4.9/5</value></data>
+  <data name="about_metric4_label" xml:space="preserve"><value>satisfacci&#xF3;n de usuarios</value></data>
+  <data name="about_team_heading" xml:space="preserve"><value>Hecho por constructores</value></data>
+  <data name="about_team_desc" xml:space="preserve"><value>Somos un equipo peque&#xF1;o y enfocado de ingenieros, dise&#xF1;adores y operadores de go-to-market que hemos construido y vendido productos SaaS. Conocemos el dolor porque lo hemos vivido.</value></data>
+  <data name="about_cta_title" xml:space="preserve"><value>&#xBF;Quieres unirte?</value></data>
+  <data name="about_cta_subtitle" xml:space="preserve"><value>Siempre buscamos personas talentosas que se preocupen por construir grandes productos.</value></data>
+  <data name="about_cta_button" xml:space="preserve"><value>Ver Posiciones Abiertas</value></data>
+
+  <!-- Use Cases Page -->
+  <data name="usecases_page_title" xml:space="preserve"><value>Casos de Uso — NavTour</value></data>
+  <data name="usecases_meta_desc" xml:space="preserve"><value>Descubre c&#xF3;mo los equipos de marketing, ventas, preventa, &#xE9;xito del cliente, product marketing y growth usan las demos interactivas de NavTour.</value></data>
+  <data name="usecases_eyebrow" xml:space="preserve"><value>Casos de Uso</value></data>
+  <data name="usecases_title" xml:space="preserve"><value>Demos interactivas para cada equipo, cada etapa</value></data>
+  <data name="usecases_subtitle" xml:space="preserve"><value>Desde el primer contacto de marketing hasta la incorporaci&#xF3;n post-venta, NavTour se adapta a cada flujo de go-to-market.</value></data>
+  <data name="usecases_hero_cta" xml:space="preserve"><value>Empieza Gratis</value></data>
+  <data name="usecases_hero_cta_secondary" xml:space="preserve"><value>Agenda una Demo</value></data>
+  <data name="usecases_card1_title" xml:space="preserve"><value>Demos para Web y Campa&#xF1;as</value></data>
+  <data name="usecases_card1_desc" xml:space="preserve"><value>Inserta demos interactivas en landing pages, campa&#xF1;as de email y destinos de anuncios. Convierte visitantes pasivos en pipeline activo.</value></data>
+  <data name="usecases_card2_title" xml:space="preserve"><value>Demos de Ventas Personalizadas</value></data>
+  <data name="usecases_card2_desc" xml:space="preserve"><value>Env&#xED;a enlaces de demo personalizados con IA despu&#xE9;s de cada llamada de descubrimiento. Cada prospecto ve el nombre de su empresa, datos y funciones relevantes.</value></data>
+  <data name="usecases_card3_title" xml:space="preserve"><value>Bibliotecas de Demos Escalables</value></data>
+  <data name="usecases_card3_desc" xml:space="preserve"><value>Crea plantillas de demo reutilizables para cada vertical y caso de uso. Las demos de descubrimiento self-serve reducen el trabajo repetitivo de SEs en un 60%.</value></data>
+  <data name="usecases_card4_title" xml:space="preserve"><value>Incorporaci&#xF3;n y Adopci&#xF3;n</value></data>
+  <data name="usecases_card4_desc" xml:space="preserve"><value>Tours de producto self-serve para nuevos clientes. Gu&#xED;a a los usuarios por las funciones, reduce el tiempo a valor y disminuye tickets de soporte.</value></data>
+  <data name="usecases_card5_title" xml:space="preserve"><value>Lanzamientos de Producto y Habilitaci&#xF3;n</value></data>
+  <data name="usecases_card5_desc" xml:space="preserve"><value>Crea demos interactivas para lanzamientos de nuevas funciones. Habilita a ventas con experiencias de producto listas para compartir en cada release.</value></data>
+  <data name="usecases_card6_title" xml:space="preserve"><value>Experimentaci&#xF3;n con IA</value></data>
+  <data name="usecases_card6_desc" xml:space="preserve"><value>Usa anal&#xED;tica de IA para entender qu&#xE9; interacciones de demo predicen intenci&#xF3;n de compra. Optimiza flujos basados en datos de engagement.</value></data>
+  <data name="usecases_how_heading" xml:space="preserve"><value>C&#xF3;mo los equipos usan NavTour</value></data>
+  <data name="usecases_how1_title" xml:space="preserve"><value>Captura una vez, haz demos en todas partes</value></data>
+  <data name="usecases_how1_desc" xml:space="preserve"><value>Graba tu producto una vez con la extensi&#xF3;n de Chrome. La IA genera demos y las compartes en web, email, ventas, soporte — cada canal desde una sola captura.</value></data>
+  <data name="usecases_how2_title" xml:space="preserve"><value>Personaliza a escala con IA</value></data>
+  <data name="usecases_how2_desc" xml:space="preserve"><value>La IA intercambia nombres de empresa, logos, datos de industria y funciones destacadas para cada prospecto. Genera 50 demos &#xFA;nicas desde una plantilla — cada una se siente hecha a mano.</value></data>
+  <data name="usecases_how3_title" xml:space="preserve"><value>Mide lo que importa</value></data>
+  <data name="usecases_how3_desc" xml:space="preserve"><value>La IA rastrea engagement, califica intenci&#xF3;n de compra e identifica cuentas sin formularios. Sabe qui&#xE9;n est&#xE1; listo para comprar antes de que levanten la mano.</value></data>
+  <data name="usecases_cta_title" xml:space="preserve"><value>Ve NavTour en acci&#xF3;n para tu caso de uso</value></data>
+  <data name="usecases_cta_subtitle" xml:space="preserve"><value>Empieza gratis. Crea tu primera demo en menos de 5 minutos.</value></data>
+  <data name="usecases_cta_text" xml:space="preserve"><value>Empieza Gratis</value></data>
+  <data name="usecases_cta_secondary" xml:space="preserve"><value>Agenda una Demo</value></data>
 </root>
