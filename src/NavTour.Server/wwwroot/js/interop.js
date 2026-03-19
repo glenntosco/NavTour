@@ -11,6 +11,10 @@ window.annotationDrag = {
     }
 };
 
+window.copyToClipboard = function (text) {
+    navigator.clipboard.writeText(text);
+};
+
 window.authStorage = {
     save: function (token, tenantId) {
         localStorage.setItem("navtour_token", token);

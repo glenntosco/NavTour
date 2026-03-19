@@ -22,6 +22,8 @@
             Click="OpenPreview" />
         <RadzenButton Text="Publish" ButtonStyle="ButtonStyle.Success" Size="ButtonSize.Small"
             Click="PublishDemo" />
+        <RadzenButton Text="Share" Icon="share" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
+            Click='() => Nav.NavigateTo($"/demos/{DemoId}/settings#embed")' />
         <RadzenButton Text="Settings" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
             Click='() => Nav.NavigateTo($"/demos/{DemoId}/settings")' />
     </RadzenStack>

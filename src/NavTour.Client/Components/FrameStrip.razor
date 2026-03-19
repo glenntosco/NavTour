@@ -1,4 +1,5 @@
 @using NavTour.Shared.DTOs.Frames
+@inject DemoApiService DemoApi
 
 <div class="fs-container">
     <div class="fs-header">
@@ -12,16 +13,50 @@
             var frame = Frames[i];
             var index = i;
             var isSelected = frame.Id == SelectedFrameId;
-            var isFirst = i == 0;
-            var isLast = i == Frames.Count - 1;
 
-            <div class="fs-frame @(isSelected ? "fs-selected" : "")" @onclick="() => OnFrameSelected.InvokeAsync(frame.Id)">
-                <div class="fs-frame-info">
-                    <RadzenIcon Icon="web" Style="font-size:22px;color:var(--rz-text-secondary-color);flex-shrink:0" />
+            <div class="fs-frame @(isSelected ? "fs-selected" : "") @(dragOverIndex == index ? "fs-drag-over" : "") @(dragIndex == index ? "fs-dragging" : "")"
+                 draggable="true"
+                 @ondragstart="() => OnDragStart(index)"
+                 @ondragenter="() => OnDragEnter(index)"
+                 @ondragover:preventDefault
+                 @ondragend="OnDragEnd"
+                 @onclick="() => OnFrameSelected.InvokeAsync(frame.Id)">
+
+                @* Thumbnail preview *@
+                <div class="fs-thumbnail">
+                    @if (frameHtmlCache.TryGetValue(frame.Id, out var html))
+                    {
+                        <iframe class="fs-thumbnail-iframe" srcdoc="@html" sandbox="" scrolling="no" tabindex="-1"></iframe>
+                    }
+                    else
+                    {
+                        <div class="fs-thumbnail-placeholder">
+                            <RadzenIcon Icon="web" Style="font-size:24px;color:var(--rz-text-secondary-color);opacity:0.5" />
+                        </div>
+                    }
+                    <div class="fs-actions" @onclick:stopPropagation="true">
+                        <button class="fs-action-btn" title="Rename" @onclick="() => StartRename(frame)">
+                            <RadzenIcon Icon="edit" Style="font-size:13px" />
+                        </button>
+                        <button class="fs-action-btn fs-action-danger" title="Delete" @onclick="() => ConfirmDelete(frame.Id)">
+                            <RadzenIcon Icon="close" Style="font-size:13px" />
+                        </button>
+                    </div>
+                </div>
+
+                @* Frame label *@
+                <div class="fs-label">
+                    <div class="fs-drag-dots" title="Drag to reorder">
+                        <svg width="6" height="10" viewBox="0 0 6 10" fill="currentColor" opacity="0.3">
+                            <circle cx="1.5" cy="1.5" r="1"/><circle cx="4.5" cy="1.5" r="1"/>
+                            <circle cx="1.5" cy="5" r="1"/><circle cx="4.5" cy="5" r="1"/>
+                            <circle cx="1.5" cy="8.5" r="1"/><circle cx="4.5" cy="8.5" r="1"/>
+                        </svg>
+                    </div>
                     @if (renamingFrameId == frame.Id)
                     {
                         <input class="fs-rename-input" type="text" @bind="renameValue" @bind:event="oninput"
-                            @onkeydown="HandleRenameKey" @onblur="CommitRename" @ref="renameInput" />
+                            @onkeydown="HandleRenameKey" @onblur="CommitRename" />
                     }
                     else
                     {
@@ -29,26 +64,6 @@
                             @(frame.Name ?? $"Frame {frame.SequenceOrder}")
                         </span>
                     }
-                </div>
-                <div class="fs-actions" @onclick:stopPropagation="true">
-                    @if (!isFirst)
-                    {
-                        <button class="fs-action-btn" title="Move up" @onclick="() => MoveFrame(index, -1)">
-                            <RadzenIcon Icon="keyboard_arrow_up" Style="font-size:16px" />
-                        </button>
-                    }
-                    @if (!isLast)
-                    {
-                        <button class="fs-action-btn" title="Move down" @onclick="() => MoveFrame(index, 1)">
-                            <RadzenIcon Icon="keyboard_arrow_down" Style="font-size:16px" />
-                        </button>
-                    }
-                    <button class="fs-action-btn" title="Rename" @onclick="() => StartRename(frame)">
-                        <RadzenIcon Icon="edit" Style="font-size:14px" />
-                    </button>
-                    <button class="fs-action-btn fs-action-danger" title="Delete" @onclick="() => ConfirmDelete(frame.Id)">
-                        <RadzenIcon Icon="delete_outline" Style="font-size:14px" />
-                    </button>
                 </div>
             </div>
         }
@@ -76,7 +91,7 @@
 
 <style>
     .fs-container {
-        width: 170px;
+        width: 220px;
         min-height: 100%;
         display: flex;
         flex-direction: column;
@@ -118,28 +133,124 @@
     .fs-frame {
         position: relative;
         cursor: pointer;
-        padding: 8px;
         border-radius: 8px;
         border: 2px solid transparent;
         background: var(--rz-base-background-color);
-        transition: border-color 0.15s, background 0.15s;
+        transition: border-color 0.15s, background 0.15s, opacity 0.2s;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
     }
 
     .fs-frame:hover {
         border-color: var(--rz-border-color);
-        background: var(--rz-base-100);
     }
 
     .fs-selected {
         border-color: var(--rz-primary) !important;
-        background: rgba(67, 97, 238, 0.04);
     }
 
-    .fs-frame-info {
+    .fs-dragging {
+        opacity: 0.35;
+    }
+
+    .fs-drag-over {
+        border-top: 3px solid var(--rz-primary) !important;
+    }
+
+    /* Thumbnail area */
+    .fs-thumbnail {
+        position: relative;
+        width: 100%;
+        height: 110px;
+        overflow: hidden;
+        background: #f8fafc;
+        border-bottom: 1px solid var(--rz-border-color);
+    }
+
+    .fs-thumbnail-iframe {
+        width: 1280px;
+        height: 800px;
+        transform: scale(0.158);
+        transform-origin: top left;
+        border: none;
+        pointer-events: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .fs-thumbnail-placeholder {
+        width: 100%;
+        height: 100%;
         display: flex;
         align-items: center;
-        gap: 6px;
-        min-height: 24px;
+        justify-content: center;
+    }
+
+    /* Action buttons overlay on thumbnail */
+    .fs-actions {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        display: none;
+        flex-direction: row;
+        gap: 2px;
+        z-index: 2;
+    }
+
+    .fs-frame:hover .fs-actions {
+        display: flex;
+    }
+
+    .fs-action-btn {
+        background: rgba(255,255,255,0.9);
+        border: 1px solid var(--rz-border-color);
+        border-radius: 4px;
+        cursor: pointer;
+        padding: 2px;
+        display: flex;
+        align-items: center;
+        color: var(--rz-text-secondary-color);
+        transition: background 0.1s, color 0.1s;
+        backdrop-filter: blur(4px);
+    }
+
+    .fs-action-btn:hover {
+        background: #fff;
+        color: var(--rz-text-color);
+    }
+
+    .fs-action-danger:hover {
+        color: var(--rz-danger);
+    }
+
+    /* Label area */
+    .fs-label {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 6px 8px;
+        min-height: 28px;
+    }
+
+    .fs-drag-dots {
+        cursor: grab;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        padding: 2px 0;
+        color: var(--rz-text-secondary-color);
+        opacity: 0;
+        transition: opacity 0.15s;
+    }
+
+    .fs-frame:hover .fs-drag-dots {
+        opacity: 1;
+    }
+
+    .fs-drag-dots:active {
+        cursor: grabbing;
     }
 
     .fs-frame-name {
@@ -165,40 +276,6 @@
         background: var(--rz-base-background-color);
         color: var(--rz-text-color);
         font-family: inherit;
-    }
-
-    .fs-actions {
-        position: absolute;
-        top: 4px;
-        right: 4px;
-        display: none;
-        flex-direction: row;
-        gap: 1px;
-    }
-
-    .fs-frame:hover .fs-actions {
-        display: flex;
-    }
-
-    .fs-action-btn {
-        background: var(--rz-base-200);
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        padding: 2px;
-        display: flex;
-        align-items: center;
-        color: var(--rz-text-secondary-color);
-        transition: background 0.1s, color 0.1s;
-    }
-
-    .fs-action-btn:hover {
-        background: var(--rz-base-300);
-        color: var(--rz-text-color);
-    }
-
-    .fs-action-danger:hover {
-        color: var(--rz-danger);
     }
 
     .fs-confirm-overlay {
@@ -236,7 +313,62 @@
     private Guid? confirmDeleteId;
     private Guid? renamingFrameId;
     private string renameValue = "";
-    private ElementReference renameInput;
+
+    // Drag state
+    private int? dragIndex;
+    private int? dragOverIndex;
+
+    // Frame HTML cache for thumbnails
+    private Dictionary<Guid, string> frameHtmlCache = new();
+    private HashSet<Guid> loadedFrameIds = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        // Load frame HTML for thumbnails (lazy, only new ones)
+        foreach (var frame in Frames)
+        {
+            if (!loadedFrameIds.Contains(frame.Id))
+            {
+                loadedFrameIds.Add(frame.Id);
+                _ = LoadFrameHtml(frame.Id);
+            }
+        }
+    }
+
+    private async Task LoadFrameHtml(Guid frameId)
+    {
+        try
+        {
+            var detail = await DemoApi.GetFrameDetailAsync(frameId);
+            if (detail != null)
+            {
+                frameHtmlCache[frameId] = detail.HtmlContent;
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+        catch { }
+    }
+
+    private void OnDragStart(int index)
+    {
+        dragIndex = index;
+    }
+
+    private void OnDragEnter(int index)
+    {
+        if (dragIndex == null || dragIndex == index) return;
+        dragOverIndex = index;
+    }
+
+    private async Task OnDragEnd()
+    {
+        if (dragIndex != null && dragOverIndex != null && dragIndex != dragOverIndex)
+        {
+            await OnReorderFrame.InvokeAsync((dragIndex.Value, dragOverIndex.Value));
+        }
+        dragIndex = null;
+        dragOverIndex = null;
+    }
 
     private void ConfirmDelete(Guid frameId)
     {
@@ -274,12 +406,5 @@
             await CommitRename();
         else if (e.Key == "Escape")
             renamingFrameId = null;
-    }
-
-    private async Task MoveFrame(int currentIndex, int direction)
-    {
-        var newIndex = currentIndex + direction;
-        if (newIndex < 0 || newIndex >= Frames.Count) return;
-        await OnReorderFrame.InvokeAsync((currentIndex, newIndex));
     }
 }
