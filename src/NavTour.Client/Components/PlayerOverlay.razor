@@ -1,12 +1,18 @@
 @using NavTour.Shared.DTOs.Player
 
+<div style="position:absolute;inset:0;z-index:10;pointer-events:none">
 @foreach (var annotation in Annotations)
 {
-    <div style="position:absolute;left:@(annotation.PositionX)%;top:@(annotation.PositionY)%;width:@(annotation.Width)%;height:@(annotation.Height)%;z-index:10;pointer-events:none">
+    var style = ParseStyle(annotation.Style);
+    var opacityStr = style.GetValueOrDefault("opacity", "100");
+    var opacityStyle = int.TryParse(opacityStr, out var op) && op < 100 && annotation.Type != AnnotationType.Blur
+        ? $"opacity:{(op / 100.0):F2};" : "";
+
+    <div style="position:absolute;left:@(annotation.PositionX)%;top:@(annotation.PositionY)%;width:@(annotation.Width)%;height:@(annotation.Height)%;z-index:10;pointer-events:none;@opacityStyle">
         @switch (annotation.Type)
         {
             case AnnotationType.Tooltip:
-                var ts = ParseStyle(annotation.Style);
+                var ts = style;
                 <div style="position:relative;background:@ts.GetValueOrDefault("backgroundColor", "#1a1a2e");color:@ts.GetValueOrDefault("textColor", "#fff");border-radius:@ts.GetValueOrDefault("borderRadius", "8px");padding:12px 16px;font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,0.2);--arrow-bg:@ts.GetValueOrDefault("backgroundColor", "#1a1a2e")">
                     @if (annotation.ArrowDirection != null)
                     {
@@ -18,7 +24,7 @@
                 break;
 
             case AnnotationType.NumberedTooltip:
-                var nts = ParseStyle(annotation.Style);
+                var nts = style;
                 <div style="position:relative">
                     <div style="position:absolute;top:-12px;left:-12px;width:28px;height:28px;border-radius:50%;background:#4361ee;color:white;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(67,97,238,0.4);z-index:1">
                         @(annotation.BadgeNumber ?? 1)
@@ -55,7 +61,8 @@
                 break;
 
             case AnnotationType.Blur:
-                <div style="width:100%;height:100%;backdrop-filter:blur(8px);background:rgba(0,0,0,0.1);border-radius:4px"></div>
+                var blurOpacity = int.TryParse(style.GetValueOrDefault("opacity", "100"), out var bop) ? bop / 100.0 : 0.1;
+                <div style="width:100%;height:100%;backdrop-filter:blur(8px);background:rgba(0,0,0,@(blurOpacity.ToString("F2")));border-radius:4px"></div>
                 break;
 
             case AnnotationType.ClickZone:
@@ -64,6 +71,18 @@
         }
     </div>
 }
+</div>
+
+<style>
+    .tooltip-arrow { position: absolute; width: 0; height: 0; }
+    .tooltip-arrow-top { top: -8px; left: 16px; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 8px solid var(--arrow-bg, #1a1a2e); }
+    .tooltip-arrow-bottom { bottom: -8px; left: 16px; border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 8px solid var(--arrow-bg, #1a1a2e); }
+    .tooltip-arrow-left { left: -8px; top: 12px; border-top: 8px solid transparent; border-bottom: 8px solid transparent; border-right: 8px solid var(--arrow-bg, #1a1a2e); }
+    .tooltip-arrow-right { right: -8px; top: 12px; border-top: 8px solid transparent; border-bottom: 8px solid transparent; border-left: 8px solid var(--arrow-bg, #1a1a2e); }
+
+    @@keyframes pulse { 0%,100% { opacity:1;transform:scale(1) } 50% { opacity:0.7;transform:scale(1.1) } }
+    @@keyframes beacon-pulse { 0% { opacity:0.6;transform:translate(-50%,-50%) scale(1) } 100% { opacity:0;transform:translate(-50%,-50%) scale(2) } }
+</style>
 
 @code {
     [Parameter] public List<PlayerAnnotationDto> Annotations { get; set; } = [];

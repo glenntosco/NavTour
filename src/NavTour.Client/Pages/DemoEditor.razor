@@ -23,7 +23,7 @@
         <RadzenButton Text="Publish" ButtonStyle="ButtonStyle.Success" Size="ButtonSize.Small"
             Click="PublishDemo" />
         <RadzenButton Text="Share" Icon="share" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
-            Click='() => Nav.NavigateTo($"/demos/{DemoId}/settings#embed")' />
+            Click="() => showSharePopover = !showSharePopover" Style="position:relative" />
         <RadzenButton Text="Settings" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
             Click='() => Nav.NavigateTo($"/demos/{DemoId}/settings")' />
     </RadzenStack>
@@ -51,6 +51,59 @@
     </RadzenStack>
 </RadzenStack>
 
+@if (showSharePopover)
+{
+    <div style="position:fixed;inset:0;z-index:999" @onclick="() => showSharePopover = false"></div>
+    <div style="position:fixed;top:48px;right:180px;z-index:1000;background:white;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.18);padding:20px;width:420px;border:1px solid #e2e8f0">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+            <RadzenIcon Icon="share" Style="color:#4361ee" />
+            <RadzenText TextStyle="TextStyle.Subtitle1" class="rz-m-0" Style="font-weight:600">Share Demo</RadzenText>
+            <div style="flex:1"></div>
+            <button @onclick="() => showSharePopover = false"
+                style="background:none;border:none;font-size:18px;cursor:pointer;color:#999;padding:0 4px">&times;</button>
+        </div>
+
+        @if (demo?.Status == DemoStatus.Published)
+        {
+            <div style="display:flex;gap:4px;margin-bottom:12px">
+                <RadzenButton Text="Link" Size="ButtonSize.ExtraSmall"
+                    ButtonStyle="@(shareTab == "link" ? ButtonStyle.Primary : ButtonStyle.Light)"
+                    Click='() => shareTab = "link"' />
+                <RadzenButton Text="Iframe" Size="ButtonSize.ExtraSmall"
+                    ButtonStyle="@(shareTab == "iframe" ? ButtonStyle.Primary : ButtonStyle.Light)"
+                    Click='() => shareTab = "iframe"' />
+            </div>
+
+            @if (shareTab == "link")
+            {
+                <pre style="background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;padding:12px;font-size:0.8rem;white-space:pre-wrap;word-break:break-all;margin:0 0 8px;color:#334155">@DemoUrl</pre>
+                <RadzenButton Text="@shareCopyLabel" Icon="content_copy" ButtonStyle="ButtonStyle.Secondary"
+                    Size="ButtonSize.Small" Style="width:100%" Click="CopyShareLink" />
+            }
+            else
+            {
+                <div style="display:flex;gap:8px;margin-bottom:8px">
+                    <RadzenFormField Text="Width" Style="flex:1">
+                        <RadzenTextBox @bind-Value="embedWidth" Style="width:100%" />
+                    </RadzenFormField>
+                    <RadzenFormField Text="Height" Style="flex:1">
+                        <RadzenTextBox @bind-Value="embedHeight" Style="width:100%" />
+                    </RadzenFormField>
+                </div>
+                <pre style="background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;padding:12px;font-size:0.8rem;white-space:pre-wrap;word-break:break-all;margin:0 0 8px;color:#334155">@EmbedIframeCode</pre>
+                <RadzenButton Text="@shareCopyLabel" Icon="content_copy" ButtonStyle="ButtonStyle.Secondary"
+                    Size="ButtonSize.Small" Style="width:100%" Click="CopyShareIframe" />
+            }
+        }
+        else
+        {
+            <RadzenAlert AlertStyle="AlertStyle.Info" Shade="Shade.Lighter" AllowClose="false" Size="AlertSize.Small">
+                Publish your demo first to get a share link.
+            </RadzenAlert>
+        }
+    </div>
+}
+
 <InputFile id="frame-file-input" OnChange="HandleFileUpload" Accept=".html,.htm"
     style="display:none" />
 
@@ -66,7 +119,31 @@
     private List<AnnotationResponse>? currentAnnotations;
     private bool saving;
     private bool showFindReplace;
+    private bool showSharePopover;
+    private string shareTab = "link";
+    private string embedWidth = "100%";
+    private string embedHeight = "600";
+    private string shareCopyLabel = "Copy";
     private FrameEditor? frameEditor;
+
+    private string DemoUrl
+    {
+        get
+        {
+            var uri = new Uri(Nav.BaseUri);
+            return $"{uri.Scheme}://{uri.Authority}/demo/{demo?.Slug}";
+        }
+    }
+
+    private string EmbedIframeCode =>
+$@"<iframe
+  src=""{DemoUrl}""
+  width=""{embedWidth}""
+  height=""{embedHeight}""
+  frameborder=""0""
+  allowfullscreen
+  style=""border: 1px solid #e2e8f0; border-radius: 8px;"">
+</iframe>";
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -180,6 +257,16 @@
             if (result != null)
             {
                 frames = await DemoApi.GetFramesAsync(DemoId);
+
+                // Auto-create a step with a default annotation for the new frame
+                var stepNum = steps.Count + 1;
+                var newStep = new StepDto(null, result.Id, stepNum, null, NavigationAction.NextStep, null,
+                    [new AnnotationDto(null, AnnotationType.NumberedTooltip, "Step " + stepNum, "Click Next to continue",
+                        20, 30, 20, 20, null, null, "bottom", stepNum)]);
+                var allSteps = steps.Select(s => MapStepToDto(s)).Append(newStep).ToList();
+                await DemoApi.UpdateStepsAsync(DemoId, new UpdateStepsRequest(allSteps));
+                steps = await DemoApi.GetStepsAsync(DemoId);
+
                 await SelectFrame(result.Id);
                 Notification.Notify(NotificationSeverity.Success, "Frame added", file.Name);
             }
@@ -321,6 +408,24 @@
             steps[idx] = updatedStep;
             StateHasChanged();
         }
+    }
+
+    private async Task CopyShareLink()
+    {
+        await JS.InvokeVoidAsync("copyToClipboard", DemoUrl);
+        shareCopyLabel = "Copied!";
+        StateHasChanged();
+        await Task.Delay(2000);
+        shareCopyLabel = "Copy";
+    }
+
+    private async Task CopyShareIframe()
+    {
+        await JS.InvokeVoidAsync("copyToClipboard", EmbedIframeCode);
+        shareCopyLabel = "Copied!";
+        StateHasChanged();
+        await Task.Delay(2000);
+        shareCopyLabel = "Copy";
     }
 
     private static StepDto MapStepToDto(StepResponse s) => new StepDto(

@@ -174,7 +174,7 @@
         var badgeNum = (Annotations?.Count ?? 0) + 1;
         var request = new CreateAnnotationRequest(
             newType, "Step " + badgeNum, "Description here",
-            20, 30, 25, 15, null, null,
+            20, 30, 20, 20, null, null,
             newType is AnnotationType.Tooltip or AnnotationType.NumberedTooltip ? "bottom" : null,
             newType is AnnotationType.NumberedTooltip or AnnotationType.Beacon ? badgeNum : null);
 

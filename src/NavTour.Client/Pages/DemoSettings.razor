@@ -35,59 +35,6 @@
 
         <VariableEditor DemoId="DemoId" />
 
-        @* Embed & Share *@
-        <RadzenCard id="embed">
-            <RadzenStack Gap="12px">
-                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="8px">
-                    <RadzenIcon Icon="code" />
-                    <RadzenText TextStyle="TextStyle.H6" class="rz-m-0">Embed & Share</RadzenText>
-                </RadzenStack>
-
-                @if (demo.Status == DemoStatus.Published)
-                {
-                    @* Tab toggle *@
-                    <RadzenStack Orientation="Orientation.Horizontal" Gap="4px">
-                        <RadzenButton Text="Iframe" Size="ButtonSize.ExtraSmall"
-                            ButtonStyle="@(embedTab == "iframe" ? ButtonStyle.Primary : ButtonStyle.Light)"
-                            Click='() => embedTab = "iframe"' />
-                        <RadzenButton Text="Link" Size="ButtonSize.ExtraSmall"
-                            ButtonStyle="@(embedTab == "link" ? ButtonStyle.Primary : ButtonStyle.Light)"
-                            Click='() => embedTab = "link"' />
-                    </RadzenStack>
-
-                    @if (embedTab == "iframe")
-                    {
-                        <RadzenStack Orientation="Orientation.Horizontal" Gap="8px" AlignItems="AlignItems.End">
-                            <RadzenFormField Text="Width" Style="flex:1">
-                                <RadzenTextBox @bind-Value="embedWidth" Style="width:100%" />
-                            </RadzenFormField>
-                            <RadzenFormField Text="Height" Style="flex:1">
-                                <RadzenTextBox @bind-Value="embedHeight" Style="width:100%" />
-                            </RadzenFormField>
-                        </RadzenStack>
-
-                        <pre style="background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;padding:12px;font-size:0.8rem;white-space:pre-wrap;word-break:break-all;margin:0;color:#334155">@EmbedIframeCode</pre>
-
-                        <RadzenButton Text="@copyLabel" Icon="content_copy" ButtonStyle="ButtonStyle.Secondary"
-                            Size="ButtonSize.Small" Style="align-self:flex-end" Click="CopyIframeCode" />
-                    }
-                    else
-                    {
-                        <pre style="background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;padding:12px;font-size:0.8rem;white-space:pre-wrap;word-break:break-all;margin:0;color:#334155">@DemoUrl</pre>
-
-                        <RadzenButton Text="@copyLabel" Icon="content_copy" ButtonStyle="ButtonStyle.Secondary"
-                            Size="ButtonSize.Small" Style="align-self:flex-end" Click="CopyLink" />
-                    }
-                }
-                else
-                {
-                    <RadzenAlert AlertStyle="AlertStyle.Info" Shade="Shade.Lighter" AllowClose="false" Size="AlertSize.Small">
-                        Publish your demo to get embed code.
-                    </RadzenAlert>
-                }
-            </RadzenStack>
-        </RadzenCard>
-
         <RadzenCard>
             <RadzenStack Gap="8px">
                 <RadzenText TextStyle="TextStyle.H6" Style="color:var(--rz-danger)">Danger Zone</RadzenText>
@@ -107,32 +54,6 @@
     private bool saving;
     private List<string> locales = ["en", "es"];
 
-    // Embed state
-    private string embedTab = "iframe";
-    private string embedWidth = "100%";
-    private string embedHeight = "600";
-    private string copyLabel = "Copy Code";
-
-    private string DemoUrl => $"{BaseUrl}/demo/{demo?.Slug}";
-
-    private string EmbedIframeCode =>
-$@"<iframe
-  src=""{DemoUrl}""
-  width=""{embedWidth}""
-  height=""{embedHeight}""
-  frameborder=""0""
-  allowfullscreen
-  style=""border: 1px solid #e2e8f0; border-radius: 8px;"">
-</iframe>";
-
-    private string BaseUrl
-    {
-        get
-        {
-            var uri = new Uri(Nav.BaseUri);
-            return $"{uri.Scheme}://{uri.Authority}";
-        }
-    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -155,24 +76,6 @@ $@"<iframe
         await DemoApi.UpdateDemoAsync(DemoId, new UpdateDemoRequest(name, description, locale, null));
         Notification.Notify(NotificationSeverity.Success, "Saved");
         saving = false;
-    }
-
-    private async Task CopyIframeCode()
-    {
-        await JS.InvokeVoidAsync("copyToClipboard", EmbedIframeCode);
-        copyLabel = "Copied!";
-        StateHasChanged();
-        await Task.Delay(2000);
-        copyLabel = "Copy Code";
-    }
-
-    private async Task CopyLink()
-    {
-        await JS.InvokeVoidAsync("copyToClipboard", DemoUrl);
-        copyLabel = "Copied!";
-        StateHasChanged();
-        await Task.Delay(2000);
-        copyLabel = "Copy Code";
     }
 
     private async Task DeleteDemo()
