@@ -20,23 +20,23 @@
         </div>
     }
     <RadzenButton Text="+ Add" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Style="width:100%" Click="OnAddFrame" />
-
-    @if (confirmDeleteId != null)
-    {
-        <div class="fs-confirm-overlay" @onclick="() => confirmDeleteId = null">
-            <div class="fs-confirm-dialog" @onclick:stopPropagation="true">
-                <RadzenText TextStyle="TextStyle.Body2"><strong>Delete this frame?</strong></RadzenText>
-                <RadzenText TextStyle="TextStyle.Caption" Style="color:var(--rz-text-secondary-color)">This cannot be undone.</RadzenText>
-                <RadzenStack Orientation="Orientation.Horizontal" Gap="6px" Style="margin-top:8px">
-                    <RadzenButton Text="Delete" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.ExtraSmall"
-                        Click="() => OnDeleteFrame.InvokeAsync(confirmDeleteId.Value)" />
-                    <RadzenButton Text="Cancel" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall"
-                        Click="() => confirmDeleteId = null" />
-                </RadzenStack>
-            </div>
-        </div>
-    }
 </RadzenStack>
+
+@if (confirmDeleteId != null)
+{
+    <div class="fs-confirm-overlay" @onclick="() => confirmDeleteId = null">
+        <div class="fs-confirm-dialog" @onclick:stopPropagation="true">
+            <RadzenText TextStyle="TextStyle.Body2"><strong>Delete this frame?</strong></RadzenText>
+            <RadzenText TextStyle="TextStyle.Caption" Style="color:var(--rz-text-secondary-color)">This cannot be undone.</RadzenText>
+            <RadzenStack Orientation="Orientation.Horizontal" Gap="6px" Style="margin-top:8px">
+                <RadzenButton Text="Delete" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.ExtraSmall"
+                    Click="ExecuteDelete" />
+                <RadzenButton Text="Cancel" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall"
+                    Click="() => confirmDeleteId = null" />
+            </RadzenStack>
+        </div>
+    </div>
+}
 
 <style>
     .fs-frame {
@@ -73,12 +73,15 @@
     .fs-action-danger:hover { color: var(--rz-danger); }
     .fs-confirm-overlay {
         position: fixed;
-        inset: 0;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
         background: rgba(0,0,0,0.3);
         display: flex;
         align-items: center;
         justify-content: center;
-        z-index: 1000;
+        z-index: 10000;
     }
     .fs-confirm-dialog {
         background: var(--rz-base-background-color);
@@ -102,5 +105,15 @@
     private void ConfirmDelete(Guid frameId)
     {
         confirmDeleteId = frameId;
+    }
+
+    private async Task ExecuteDelete()
+    {
+        if (confirmDeleteId != null)
+        {
+            var id = confirmDeleteId.Value;
+            confirmDeleteId = null;
+            await OnDeleteFrame.InvokeAsync(id);
+        }
     }
 }

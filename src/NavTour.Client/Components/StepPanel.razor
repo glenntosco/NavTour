@@ -120,23 +120,23 @@
     }
 
     <RadzenButton Text="+ Add Step" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Style="width:100%" Click="OnAddStep" />
-
-    @if (confirmDeleteId != null)
-    {
-        <div class="sp-confirm-overlay" @onclick="() => confirmDeleteId = null">
-            <div class="sp-confirm-dialog" @onclick:stopPropagation="true">
-                <RadzenText TextStyle="TextStyle.Body2"><strong>Delete this step?</strong></RadzenText>
-                <RadzenText TextStyle="TextStyle.Caption" Style="color:var(--rz-text-secondary-color)">Annotations on this step will also be removed.</RadzenText>
-                <RadzenStack Orientation="Orientation.Horizontal" Gap="6px" Style="margin-top:8px">
-                    <RadzenButton Text="Delete" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.ExtraSmall"
-                        Click="() => ExecuteDelete()" />
-                    <RadzenButton Text="Cancel" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall"
-                        Click="() => confirmDeleteId = null" />
-                </RadzenStack>
-            </div>
-        </div>
-    }
 </RadzenStack>
+
+@if (confirmDeleteId != null)
+{
+    <div class="sp-confirm-overlay" @onclick="() => confirmDeleteId = null">
+        <div class="sp-confirm-dialog" @onclick:stopPropagation="true">
+            <RadzenText TextStyle="TextStyle.Body2"><strong>Delete this step?</strong></RadzenText>
+            <RadzenText TextStyle="TextStyle.Caption" Style="color:var(--rz-text-secondary-color)">Annotations on this step will also be removed.</RadzenText>
+            <RadzenStack Orientation="Orientation.Horizontal" Gap="6px" Style="margin-top:8px">
+                <RadzenButton Text="Delete" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.ExtraSmall"
+                    Click="() => ExecuteDelete()" />
+                <RadzenButton Text="Cancel" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall"
+                    Click="() => confirmDeleteId = null" />
+            </RadzenStack>
+        </div>
+    </div>
+}
 
 <style>
     .step-delete {
@@ -159,12 +159,15 @@
     }
     .sp-confirm-overlay {
         position: fixed;
-        inset: 0;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
         background: rgba(0,0,0,0.3);
         display: flex;
         align-items: center;
         justify-content: center;
-        z-index: 1000;
+        z-index: 10000;
     }
     .sp-confirm-dialog {
         background: var(--rz-base-background-color);
