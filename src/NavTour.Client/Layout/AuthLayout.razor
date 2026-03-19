@@ -2,12 +2,36 @@
 
 <div class="auth-page">
     <div class="auth-form-side">
-        @Body
+        <div class="auth-form-inner">
+            @Body
+        </div>
+        <div class="auth-form-footer">
+            <span>&copy; 2026 NavTour. All rights reserved.</span>
+        </div>
     </div>
     <div class="auth-brand-side">
+        <div class="auth-brand-glow"></div>
+        <div class="auth-brand-grid"></div>
         <div class="auth-brand-content">
-            <img src="images/NavTourNoTag.webp" alt="NavTour" class="auth-brand-logo" />
-            <p class="auth-brand-tagline">Interactive product demos that close deals faster</p>
+            <img src="images/NavTour.webp" alt="NavTour" class="auth-brand-logo" />
+            <div class="auth-brand-divider"></div>
+            <p class="auth-brand-tagline">Interactive product demos<br />that close deals faster</p>
+            <div class="auth-brand-stats">
+                <div class="auth-stat">
+                    <span class="auth-stat-value">10x</span>
+                    <span class="auth-stat-label">Faster demo creation</span>
+                </div>
+                <div class="auth-stat-sep"></div>
+                <div class="auth-stat">
+                    <span class="auth-stat-value">5x</span>
+                    <span class="auth-stat-label">More engagement</span>
+                </div>
+                <div class="auth-stat-sep"></div>
+                <div class="auth-stat">
+                    <span class="auth-stat-value">3x</span>
+                    <span class="auth-stat-label">Pipeline velocity</span>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -20,36 +44,62 @@
     .auth-page {
         min-height: 100vh;
         display: flex;
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     }
 
+    /* ── Left: Form Side ── */
     .auth-form-side {
         flex: 0 0 480px;
         display: flex;
-        align-items: center;
+        flex-direction: column;
         justify-content: center;
-        padding: 48px 40px;
+        padding: 48px 56px;
         background: #fff;
+        position: relative;
     }
 
+    .auth-form-inner {
+        flex: 1;
+        display: flex;
+        align-items: center;
+    }
+
+    .auth-form-footer {
+        font-size: 0.75rem;
+        color: #94A3B8;
+        text-align: center;
+        padding-top: 16px;
+    }
+
+    /* ── Right: Brand Side ── */
     .auth-brand-side {
         flex: 1;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(135deg, #0B1929 0%, #1E3A5F 50%, #0A5FAD 100%);
+        background: #0B1929;
         position: relative;
         overflow: hidden;
     }
 
-    .auth-brand-side::before {
-        content: '';
+    /* Accent glow */
+    .auth-brand-glow {
         position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle at 30% 70%, rgba(67, 97, 238, 0.12) 0%, transparent 50%),
-                    radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.04) 0%, transparent 50%);
+        width: 600px;
+        height: 600px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: radial-gradient(circle, rgba(67, 97, 238, 0.15) 0%, rgba(10, 95, 173, 0.08) 40%, transparent 70%);
+        pointer-events: none;
+    }
+
+    /* Subtle dot grid pattern */
+    .auth-brand-grid {
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+        background-size: 32px 32px;
         pointer-events: none;
     }
 
@@ -58,35 +108,108 @@
         z-index: 1;
         text-align: center;
         padding: 48px;
+        max-width: 520px;
     }
 
     .auth-brand-logo {
-        width: 280px;
+        width: 420px;
+        max-width: 100%;
         height: auto;
         filter: brightness(0) invert(1);
-        margin-bottom: 24px;
+        margin-bottom: 32px;
+        animation: auth-logo-in 800ms cubic-bezier(0.1, 0.9, 0.2, 1) both;
+    }
+
+    .auth-brand-divider {
+        width: 48px;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, rgba(67, 97, 238, 0.6), transparent);
+        margin: 0 auto 28px;
+        animation: auth-fade-in 600ms 200ms cubic-bezier(0.1, 0.9, 0.2, 1) both;
     }
 
     .auth-brand-tagline {
-        color: rgba(255, 255, 255, 0.6);
-        font-size: 1.125rem;
+        color: rgba(255, 255, 255, 0.55);
+        font-size: 1.25rem;
         font-weight: 400;
         line-height: 1.6;
-        max-width: 320px;
-        margin: 0 auto;
+        letter-spacing: -0.01em;
+        margin: 0 0 48px;
+        animation: auth-fade-in 600ms 300ms cubic-bezier(0.1, 0.9, 0.2, 1) both;
     }
 
-    @@media (max-width: 900px) {
-        .auth-page {
-            flex-direction: column;
-        }
+    /* Stats row */
+    .auth-brand-stats {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 28px;
+        animation: auth-fade-in 600ms 500ms cubic-bezier(0.1, 0.9, 0.2, 1) both;
+    }
+
+    .auth-stat {
+        text-align: center;
+    }
+
+    .auth-stat-value {
+        display: block;
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+    }
+
+    .auth-stat-label {
+        display: block;
+        font-size: 0.6875rem;
+        color: rgba(255, 255, 255, 0.35);
+        margin-top: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .auth-stat-sep {
+        width: 1px;
+        height: 36px;
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Animations */
+    @@keyframes auth-logo-in {
+        from { opacity: 0; transform: translateY(16px) scale(0.96); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @@keyframes auth-fade-in {
+        from { opacity: 0; transform: translateY(12px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive */
+    @@media (max-width: 960px) {
+        .auth-page { flex-direction: column-reverse; }
         .auth-brand-side {
-            display: none;
+            flex: 0 0 auto;
+            padding: 48px 24px;
+            min-height: 280px;
         }
+        .auth-brand-logo { width: 240px; }
+        .auth-brand-stats { display: none; }
         .auth-form-side {
             flex: 1;
-            min-height: 100vh;
-            background: #F4F8FC;
+            padding: 32px 24px;
+        }
+    }
+
+    @@media (prefers-reduced-motion: reduce) {
+        .auth-brand-logo,
+        .auth-brand-divider,
+        .auth-brand-tagline,
+        .auth-brand-stats {
+            animation: none;
+            opacity: 1;
+            transform: none;
         }
     }
 </style>
