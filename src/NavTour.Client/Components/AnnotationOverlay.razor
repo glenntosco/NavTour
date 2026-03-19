@@ -205,8 +205,10 @@
         if (!isDragging) return;
         var dx = e.ClientX - dragStartMouseX;
         var dy = e.ClientY - dragStartMouseY;
-        dragX = Math.Clamp(dragStartPosX + (dx / parentWidth * 100), 0, 100 - Annotation.Width);
-        dragY = Math.Clamp(dragStartPosY + (dy / parentHeight * 100), 0, 100 - Annotation.Height);
+        var maxX = Annotation.Type == AnnotationType.Beacon ? 100 : 100 - Annotation.Width;
+        var maxY = Annotation.Type == AnnotationType.Beacon ? 100 : 100 - Annotation.Height;
+        dragX = Math.Clamp(dragStartPosX + (dx / parentWidth * 100), 0, maxX);
+        dragY = Math.Clamp(dragStartPosY + (dy / parentHeight * 100), 0, maxY);
         StateHasChanged();
     }
 
@@ -225,7 +227,11 @@
     {
         var posX = isDragging ? dragX : Annotation.PositionX;
         var posY = isDragging ? dragY : Annotation.PositionY;
-        var style = $"position:absolute;left:{posX:F2}%;top:{posY:F2}%;width:{Annotation.Width}%;height:{Annotation.Height}%;z-index:10;pointer-events:none";
+        string style;
+        if (Annotation.Type == AnnotationType.Beacon)
+            style = $"position:absolute;left:{posX:F2}%;top:{posY:F2}%;width:auto;height:auto;transform:translate(-50%,-50%);z-index:10;pointer-events:none";
+        else
+            style = $"position:absolute;left:{posX:F2}%;top:{posY:F2}%;width:{Annotation.Width}%;height:{Annotation.Height}%;z-index:10;pointer-events:none";
         var parsed = ParseStyle();
         if (int.TryParse(parsed.GetValueOrDefault("opacity", "100"), out var op) && op < 100 && Annotation.Type != AnnotationType.Blur)
             style += $";opacity:{(op / 100.0):F2}";

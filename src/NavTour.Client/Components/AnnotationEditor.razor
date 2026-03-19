@@ -35,14 +35,17 @@
                     @if (editingId == ann.Id)
                     {
                         <div class="ae-edit-form">
-                            <div class="ae-field-row">
-                                <RadzenTextBox @bind-Value="editTitle" Placeholder="Title" Style="flex:1;font-size:12px" />
-                                <VariableInsertButton DemoId="DemoId" OnInsert="InsertIntoTitle" />
-                            </div>
-                            <div class="ae-field-row">
-                                <RadzenTextArea @bind-Value="editContent" Placeholder="Content..." Style="flex:1;font-size:12px;min-height:50px" />
-                                <VariableInsertButton DemoId="DemoId" OnInsert="InsertIntoContent" />
-                            </div>
+                            @if (ann.Type != AnnotationType.Beacon)
+                            {
+                                <div class="ae-field-row">
+                                    <RadzenTextBox @bind-Value="editTitle" Placeholder="Title" Style="flex:1;font-size:12px" />
+                                    <VariableInsertButton DemoId="DemoId" OnInsert="InsertIntoTitle" />
+                                </div>
+                                <div class="ae-field-row">
+                                    <RadzenTextArea @bind-Value="editContent" Placeholder="Content..." Style="flex:1;font-size:12px;min-height:50px" />
+                                    <VariableInsertButton DemoId="DemoId" OnInsert="InsertIntoContent" />
+                                </div>
+                            }
 
                             @if (ann.Type == AnnotationType.NumberedTooltip || ann.Type == AnnotationType.Beacon)
                             {
@@ -50,22 +53,28 @@
                                     Style="width:100%;font-size:12px" Placeholder="Badge #" />
                             }
 
-                            <div class="ae-row">
-                                <label style="font-size:11px;color:var(--rz-text-secondary-color)">Arrow</label>
-                                <RadzenDropDown TValue="string" @bind-Value="editArrowDirection"
-                                    Data='new[] { "", "top", "bottom", "left", "right" }'
-                                    Style="width:100%;font-size:12px" Placeholder="None" />
-                            </div>
+                            @if (ann.Type != AnnotationType.Beacon)
+                            {
+                                <div class="ae-row">
+                                    <label style="font-size:11px;color:var(--rz-text-secondary-color)">Arrow</label>
+                                    <RadzenDropDown TValue="string" @bind-Value="editArrowDirection"
+                                        Data='new[] { "", "top", "bottom", "left", "right" }'
+                                        Style="width:100%;font-size:12px" Placeholder="None" />
+                                </div>
+                            }
 
                             <div class="ae-row">
                                 <label style="font-size:11px;color:var(--rz-text-secondary-color)">Background Color</label>
                                 <RadzenColorPicker @bind-Value="editBgColor" Style="width:100%" ShowHSV="true" ShowRGBA="true" ShowButton="false" />
                             </div>
 
-                            <div class="ae-row">
-                                <label style="font-size:11px;color:var(--rz-text-secondary-color)">Text Color</label>
-                                <RadzenColorPicker @bind-Value="editTextColor" Style="width:100%" ShowHSV="true" ShowRGBA="true" ShowButton="false" />
-                            </div>
+                            @if (ann.Type != AnnotationType.Beacon)
+                            {
+                                <div class="ae-row">
+                                    <label style="font-size:11px;color:var(--rz-text-secondary-color)">Text Color</label>
+                                    <RadzenColorPicker @bind-Value="editTextColor" Style="width:100%" ShowHSV="true" ShowRGBA="true" ShowButton="false" />
+                                </div>
+                            }
 
                             <div class="ae-row">
                                 <label style="font-size:11px;color:var(--rz-text-secondary-color)">Opacity (@(editOpacity)%)</label>
@@ -80,13 +89,16 @@
                                 </div>
                             </div>
 
-                            <div class="ae-row">
-                                <label style="font-size:11px;color:var(--rz-text-secondary-color)">Size (%)</label>
-                                <div style="display:flex;gap:4px">
-                                    <RadzenNumeric TValue="double" @bind-Value="editW" Min="1" Max="100" Style="flex:1;font-size:11px" Placeholder="W" />
-                                    <RadzenNumeric TValue="double" @bind-Value="editH" Min="1" Max="100" Style="flex:1;font-size:11px" Placeholder="H" />
+                            @if (ann.Type != AnnotationType.Beacon)
+                            {
+                                <div class="ae-row">
+                                    <label style="font-size:11px;color:var(--rz-text-secondary-color)">Size (%)</label>
+                                    <div style="display:flex;gap:4px">
+                                        <RadzenNumeric TValue="double" @bind-Value="editW" Min="1" Max="100" Style="flex:1;font-size:11px" Placeholder="W" />
+                                        <RadzenNumeric TValue="double" @bind-Value="editH" Min="1" Max="100" Style="flex:1;font-size:11px" Placeholder="H" />
+                                    </div>
                                 </div>
-                            </div>
+                            }
 
                             <RadzenButton Text="Save" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.ExtraSmall"
                                 Click="SaveEdit" Style="width:100%" />
@@ -172,9 +184,10 @@
         if (StepId == null) return;
 
         var badgeNum = (Annotations?.Count ?? 0) + 1;
+        var isBeacon = newType == AnnotationType.Beacon;
         var request = new CreateAnnotationRequest(
-            newType, "Step " + badgeNum, "Description here",
-            20, 30, 20, 20, null, null,
+            newType, isBeacon ? null : "Step " + badgeNum, isBeacon ? null : "Description here",
+            20, 30, isBeacon ? 3 : 20, isBeacon ? 3 : 20, null, null,
             newType is AnnotationType.Tooltip or AnnotationType.NumberedTooltip ? "bottom" : null,
             newType is AnnotationType.NumberedTooltip or AnnotationType.Beacon ? badgeNum : null);
 
