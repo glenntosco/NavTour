@@ -4,23 +4,78 @@
 @inject AuthService Auth
 @inject NavigationManager Nav
 
-<RadzenStack Gap="16px" Style="max-width:400px;margin:60px auto">
-    <img src="favicon.svg" alt="NavTour" style="height:40px;width:auto;align-self:center" />
-    <RadzenText TextStyle="TextStyle.H4">Sign In to NavTour</RadzenText>
+<div class="login-form">
+    <img src="favicon.svg" alt="NavTour" class="login-logo" />
+    <h1 class="login-title">Welcome back</h1>
+    <p class="login-subtitle">Sign in to your NavTour account</p>
 
     @if (errorMessage != null)
     {
-        <RadzenAlert AlertStyle="AlertStyle.Danger" ShowIcon="true">@errorMessage</RadzenAlert>
+        <RadzenAlert AlertStyle="AlertStyle.Danger" ShowIcon="true" Style="margin-bottom:8px">@errorMessage</RadzenAlert>
     }
 
-    <RadzenTextBox @bind-Value="email" Placeholder="Email" Style="width:100%" />
-    <RadzenPassword @bind-Value="password" Placeholder="Password" Style="width:100%" />
-    <RadzenButton Text="Sign In" ButtonStyle="ButtonStyle.Primary" Style="width:100%" Click="HandleLogin" IsBusy="loading" />
+    <div class="login-field">
+        <label>Email</label>
+        <RadzenTextBox @bind-Value="email" Placeholder="you@company.com" Style="width:100%" />
+    </div>
 
-    <RadzenText>
+    <div class="login-field">
+        <label>Password</label>
+        <RadzenPassword @bind-Value="password" Placeholder="Password" Style="width:100%" />
+    </div>
+
+    <RadzenButton Text="Sign In" ButtonStyle="ButtonStyle.Primary" Style="width:100%;margin-top:8px" Click="HandleLogin" IsBusy="loading" />
+
+    <p class="login-footer">
         Don't have an account? <RadzenLink Path="/register">Register</RadzenLink>
-    </RadzenText>
-</RadzenStack>
+    </p>
+</div>
+
+<style>
+    .login-form {
+        width: 100%;
+        max-width: 360px;
+    }
+
+    .login-logo {
+        height: 36px;
+        width: auto;
+        margin-bottom: 32px;
+    }
+
+    .login-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #0B1929;
+        margin: 0 0 4px;
+        line-height: 1.2;
+    }
+
+    .login-subtitle {
+        font-size: 0.875rem;
+        color: #64748B;
+        margin: 0 0 24px;
+    }
+
+    .login-field {
+        margin-bottom: 16px;
+    }
+
+    .login-field label {
+        display: block;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: #475B73;
+        margin-bottom: 4px;
+    }
+
+    .login-footer {
+        margin-top: 20px;
+        font-size: 0.875rem;
+        color: #64748B;
+        text-align: center;
+    }
+</style>
 
 @code {
     private string email = "";
