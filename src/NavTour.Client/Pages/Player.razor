@@ -48,7 +48,9 @@ else
 
             @if (currentStep != null)
             {
-                <PlayerOverlay Annotations="currentStep.Annotations" OnClickZone="HandleClickZone" />
+                <PlayerOverlay Annotations="currentStep.Annotations" OnClickZone="HandleClickZone"
+                    StepIndex="currentStepIndex" TotalSteps="@(manifest?.Steps.Count ?? 0)"
+                    OnNavigate="HandleAnnotationNavigate" />
             }
 
             @* Timer progress indicator *@
@@ -60,26 +62,7 @@ else
             }
         </div>
 
-        @* Progress bar and navigation *@
-        <div style="display:flex;align-items:center;padding:8px 16px;background:white;border-top:1px solid #e0e0e0;gap:12px">
-            <RadzenButton Text="Back" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
-                Disabled="@(currentStepIndex <= 0)" Click="PreviousStep" />
-            <div style="flex:1">
-                <RadzenProgressBar Value="@progressPercent" ShowValue="false" Style="height:6px" />
-            </div>
-            <RadzenText TextStyle="TextStyle.Caption">Step @(currentStepIndex + 1) of @manifest.Steps.Count</RadzenText>
-            @if (currentStep?.TriggerType == TriggerType.ButtonClick || currentStep?.TriggerType == null)
-            {
-                <RadzenButton Text="@(currentStepIndex >= manifest.Steps.Count - 1 ? "Finish" : "Next")"
-                    ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" Click="NextStep" />
-            }
-            else
-            {
-                <span style="font-size:12px;color:#999;font-style:italic">
-                    @GetTriggerHint(currentStep)
-                </span>
-            }
-        </div>
+        @* Navigation is handled via annotation card Back/Next buttons *@
     </div>
 
     @* Escape View overlay *@
@@ -321,6 +304,12 @@ else
     private async Task HandleClickZone(PlayerAnnotationDto annotation)
     {
         await NextStep();
+    }
+
+    private async Task HandleAnnotationNavigate(string direction)
+    {
+        if (direction == "next") await NextStep();
+        else if (direction == "previous") await PreviousStep();
     }
 
     private void DismissEscapeView()

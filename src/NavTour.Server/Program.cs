@@ -113,6 +113,10 @@ builder.Services.AddScoped<IAnnotationService, AnnotationService>();
 builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 builder.Services.AddScoped<ILeadService, LeadService>();
 
+// Team & Email Services
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<ITeamService, TeamService>();
+
 // Client Services (needed for SSR pre-rendering of Blazor components)
 // HttpClient that forwards auth cookie for server-side rendering
 builder.Services.AddScoped(sp =>
@@ -134,6 +138,7 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<DemoApiService>();
 builder.Services.AddScoped<PlayerApiService>();
 builder.Services.AddScoped<AnalyticsApiService>();
+builder.Services.AddScoped<TeamApiService>();
 
 var app = builder.Build();
 

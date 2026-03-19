@@ -47,6 +47,12 @@ public class DemoApiService
         return response.IsSuccessStatusCode;
     }
 
+    public async Task<bool> UnpublishDemoAsync(Guid id)
+    {
+        var response = await _http.PostAsync($"api/v1/demos/{id}/unpublish", null);
+        return response.IsSuccessStatusCode;
+    }
+
     // Frames
     public async Task<List<FrameResponse>> GetFramesAsync(Guid demoId)
         => await _http.GetFromJsonAsync<List<FrameResponse>>($"api/v1/demos/{demoId}/frames") ?? [];

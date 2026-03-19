@@ -20,8 +20,14 @@
             Click="SaveSteps" IsBusy="saving" />
         <RadzenButton Text="Preview" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
             Click="OpenPreview" />
-        <RadzenButton Text="Publish" ButtonStyle="ButtonStyle.Success" Size="ButtonSize.Small"
-            Click="PublishDemo" />
+        @if (demo?.Status == DemoStatus.Published)
+        {
+            <button @onclick="UnpublishDemo" style="border-radius:8px;padding:6px 16px;font-weight:600;cursor:pointer;background:#059669;color:white;border:none;font-size:13px;line-height:1.4">Published</button>
+        }
+        else
+        {
+            <button @onclick="PublishDemo" style="border-radius:8px;padding:6px 16px;font-weight:600;cursor:pointer;background:#f1f5f9;color:#64748b;border:1px solid #e2e8f0;font-size:13px;line-height:1.4">Draft</button>
+        }
         <RadzenButton Text="Share" Icon="share" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
             Click="() => showSharePopover = !showSharePopover" Style="position:relative" />
         <RadzenButton Text="Settings" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
@@ -65,35 +71,37 @@
 
         @if (demo?.Status == DemoStatus.Published)
         {
-            <div style="display:flex;gap:4px;margin-bottom:12px">
-                <RadzenButton Text="Link" Size="ButtonSize.ExtraSmall"
-                    ButtonStyle="@(shareTab == "link" ? ButtonStyle.Primary : ButtonStyle.Light)"
-                    Click='() => shareTab = "link"' />
-                <RadzenButton Text="Iframe" Size="ButtonSize.ExtraSmall"
-                    ButtonStyle="@(shareTab == "iframe" ? ButtonStyle.Primary : ButtonStyle.Light)"
-                    Click='() => shareTab = "iframe"' />
+            <div style="display:flex;gap:8px;margin-bottom:12px">
+                <button @onclick="CopyShareLink"
+                    style="flex:1;padding:10px 16px;background:#4361ee;color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
+                    <RadzenIcon Icon="content_copy" Style="font-size:16px" /> @shareCopyLabel
+                </button>
+                <button @onclick="ShareWhatsApp"
+                    style="flex:1;padding:10px 16px;background:#25D366;color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
+                    WhatsApp
+                </button>
             </div>
 
-            @if (shareTab == "link")
-            {
-                <pre style="background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;padding:12px;font-size:0.8rem;white-space:pre-wrap;word-break:break-all;margin:0 0 8px;color:#334155">@DemoUrl</pre>
-                <RadzenButton Text="@shareCopyLabel" Icon="content_copy" ButtonStyle="ButtonStyle.Secondary"
-                    Size="ButtonSize.Small" Style="width:100%" Click="CopyShareLink" />
-            }
-            else
-            {
-                <div style="display:flex;gap:8px;margin-bottom:8px">
-                    <RadzenFormField Text="Width" Style="flex:1">
-                        <RadzenTextBox @bind-Value="embedWidth" Style="width:100%" />
-                    </RadzenFormField>
-                    <RadzenFormField Text="Height" Style="flex:1">
-                        <RadzenTextBox @bind-Value="embedHeight" Style="width:100%" />
-                    </RadzenFormField>
+            <pre style="background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;padding:12px;font-size:0.8rem;white-space:pre-wrap;word-break:break-all;margin:0 0 12px;color:#334155">@DemoUrl</pre>
+
+            <details style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
+                <summary style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:600;color:#334155;background:#f8fafc;user-select:none">Embed Code (iframe)</summary>
+                <div style="padding:12px">
+                    <div style="display:flex;gap:8px;margin-bottom:8px">
+                        <RadzenFormField Text="Width" Style="flex:1">
+                            <RadzenTextBox @bind-Value="embedWidth" Style="width:100%" />
+                        </RadzenFormField>
+                        <RadzenFormField Text="Height" Style="flex:1">
+                            <RadzenTextBox @bind-Value="embedHeight" Style="width:100%" />
+                        </RadzenFormField>
+                    </div>
+                    <pre style="background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;padding:12px;font-size:0.75rem;white-space:pre-wrap;word-break:break-all;margin:0 0 8px;color:#334155">@EmbedIframeCode</pre>
+                    <button @onclick="CopyShareIframe"
+                        style="width:100%;padding:8px;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer">
+                        @embedCopyLabel
+                    </button>
                 </div>
-                <pre style="background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;padding:12px;font-size:0.8rem;white-space:pre-wrap;word-break:break-all;margin:0 0 8px;color:#334155">@EmbedIframeCode</pre>
-                <RadzenButton Text="@shareCopyLabel" Icon="content_copy" ButtonStyle="ButtonStyle.Secondary"
-                    Size="ButtonSize.Small" Style="width:100%" Click="CopyShareIframe" />
-            }
+            </details>
         }
         else
         {
@@ -120,10 +128,10 @@
     private bool saving;
     private bool showFindReplace;
     private bool showSharePopover;
-    private string shareTab = "link";
     private string embedWidth = "100%";
     private string embedHeight = "600";
-    private string shareCopyLabel = "Copy";
+    private string shareCopyLabel = "Copy Link";
+    private string embedCopyLabel = "Copy Embed Code";
     private FrameEditor? frameEditor;
 
     private string DemoUrl
@@ -262,7 +270,7 @@ $@"<iframe
                 var stepNum = steps.Count + 1;
                 var newStep = new StepDto(null, result.Id, stepNum, null, NavigationAction.NextStep, null,
                     [new AnnotationDto(null, AnnotationType.NumberedTooltip, "Step " + stepNum, "Click Next to continue",
-                        20, 30, 20, 20, null, null, "bottom", stepNum)]);
+                        20, 30, 20, 20, "{\"backgroundColor\":\"#ffffff\",\"textColor\":\"#334155\"}", null, "bottom", stepNum)]);
                 var allSteps = steps.Select(s => MapStepToDto(s)).Append(newStep).ToList();
                 await DemoApi.UpdateStepsAsync(DemoId, new UpdateStepsRequest(allSteps));
                 steps = await DemoApi.GetStepsAsync(DemoId);
@@ -391,13 +399,31 @@ $@"<iframe
 
     private async Task PublishDemo()
     {
-        // Save edits before publishing
-        if (frameEditor?.HasUnsavedEdits == true)
-            await SaveFrameEdits();
+        try
+        {
+            // Save steps before publishing
+            var stepDtos = steps.Select(s => MapStepToDto(s)).ToList();
+            await DemoApi.UpdateStepsAsync(DemoId, new UpdateStepsRequest(stepDtos));
 
-        await DemoApi.PublishDemoAsync(DemoId);
-        demo = await DemoApi.GetDemoAsync(DemoId);
-        Notification.Notify(NotificationSeverity.Success, "Published", $"Demo is live at /demo/{demo?.Slug}");
+            // Save frame edits if any
+            if (frameEditor?.HasUnsavedEdits == true)
+                await SaveFrameEdits();
+
+            var success = await DemoApi.PublishDemoAsync(DemoId);
+            if (success)
+            {
+                demo = await DemoApi.GetDemoAsync(DemoId);
+                Notification.Notify(NotificationSeverity.Success, "Published", $"Demo is live at /demo/{demo?.Slug}");
+            }
+            else
+            {
+                Notification.Notify(NotificationSeverity.Error, "Publish failed", "Could not publish demo.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Notification.Notify(NotificationSeverity.Error, "Publish error", ex.Message);
+        }
     }
 
     private void HandleStepSettingsChanged(StepResponse updatedStep)
@@ -410,22 +436,45 @@ $@"<iframe
         }
     }
 
+    private async Task UnpublishDemo()
+    {
+        var confirmed = await JS.InvokeAsync<bool>("confirm", "Unpublish this demo? It will no longer be accessible via the share link.");
+        if (!confirmed) return;
+
+        var success = await DemoApi.UnpublishDemoAsync(DemoId);
+        if (success)
+        {
+            demo = await DemoApi.GetDemoAsync(DemoId);
+            Notification.Notify(NotificationSeverity.Success, "Unpublished", "Demo is now a draft.");
+        }
+        else
+        {
+            Notification.Notify(NotificationSeverity.Error, "Error", "Could not unpublish demo.");
+        }
+    }
+
+    private async Task ShareWhatsApp()
+    {
+        var encodedUrl = Uri.EscapeDataString(DemoUrl);
+        await JS.InvokeVoidAsync("open", $"https://wa.me/?text={encodedUrl}", "_blank");
+    }
+
     private async Task CopyShareLink()
     {
         await JS.InvokeVoidAsync("copyToClipboard", DemoUrl);
         shareCopyLabel = "Copied!";
         StateHasChanged();
         await Task.Delay(2000);
-        shareCopyLabel = "Copy";
+        shareCopyLabel = "Copy Link";
     }
 
     private async Task CopyShareIframe()
     {
         await JS.InvokeVoidAsync("copyToClipboard", EmbedIframeCode);
-        shareCopyLabel = "Copied!";
+        embedCopyLabel = "Copied!";
         StateHasChanged();
         await Task.Delay(2000);
-        shareCopyLabel = "Copy";
+        embedCopyLabel = "Copy Embed Code";
     }
 
     private static StepDto MapStepToDto(StepResponse s) => new StepDto(

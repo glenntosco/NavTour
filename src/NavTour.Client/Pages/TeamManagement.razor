@@ -1,0 +1,373 @@
+@page "/team"
+@rendermode InteractiveServer
+@inject TeamApiService TeamApi
+@inject AuthService Auth
+@inject NavigationManager Nav
+@inject NotificationService Notification
+@inject DialogService Dialog
+
+<RadzenStack Gap="24px" Style="max-width:900px">
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+        <RadzenStack Gap="2px">
+            <RadzenText TextStyle="TextStyle.H4" Style="margin:0;font-weight:700;color:#0B1929">Team</RadzenText>
+            <RadzenText TextStyle="TextStyle.Body2" Style="color:#64748B">
+                @if (team != null)
+                {
+                    @($"{team.SeatsUsed} of {(team.SeatsTotal == int.MaxValue ? "∞" : team.SeatsTotal.ToString())} seats used")
+                }
+            </RadzenText>
+        </RadzenStack>
+        @if (isOwnerOrAdmin)
+        {
+            <RadzenButton Text="Invite Member" Icon="person_add" ButtonStyle="ButtonStyle.Primary" Click="ShowInviteDialog" />
+        }
+    </RadzenStack>
+
+    @if (team != null && team.SeatsUsed >= team.SeatsTotal && team.SeatsTotal != int.MaxValue)
+    {
+        <div style="background:#FFF7ED;border:1px solid #FED7AA;border-radius:8px;padding:16px;display:flex;align-items:center;gap:12px">
+            <RadzenIcon Icon="warning" Style="color:#EA580C" />
+            <span style="color:#9A3412;font-size:0.875rem">
+                All seats are in use. <strong>Upgrade your plan</strong> to invite more team members.
+            </span>
+        </div>
+    }
+
+    @if (loading)
+    {
+        <RadzenStack AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Style="min-height:200px">
+            <RadzenProgressBarCircular ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+        </RadzenStack>
+    }
+    else if (team != null)
+    {
+        <RadzenDataGrid Data="@team.Members" TItem="TeamMemberResponse" AllowSorting="true"
+                        Style="border:1px solid #E2E8F0;border-radius:8px;overflow:hidden">
+            <Columns>
+                <RadzenDataGridColumn TItem="TeamMemberResponse" Property="FullName" Title="Name" Width="200px">
+                    <Template Context="member">
+                        <span style="font-weight:600;color:#0B1929">@(string.IsNullOrEmpty(member.FullName) ? "—" : member.FullName)</span>
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="TeamMemberResponse" Property="Email" Title="Email" />
+                <RadzenDataGridColumn TItem="TeamMemberResponse" Property="Role" Title="Role" Width="120px">
+                    <Template Context="member">
+                        <span class="role-badge role-@member.Role.ToString().ToLower()">@member.Role</span>
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="TeamMemberResponse" Property="IsActive" Title="Status" Width="110px">
+                    <Template Context="member">
+                        <span class="status-badge @(member.IsActive ? "status-active" : "status-deactivated")">
+                            @(member.IsActive ? "Active" : "Deactivated")
+                        </span>
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="TeamMemberResponse" Property="CreatedAt" Title="Joined" Width="120px" FormatString="{0:MMM d, yyyy}" />
+                @if (isOwnerOrAdmin)
+                {
+                    <RadzenDataGridColumn TItem="TeamMemberResponse" Title="Actions" Width="140px" Sortable="false">
+                        <Template Context="member">
+                            @if (member.Role != NavTour.Shared.Enums.UserRole.Owner)
+                            {
+                                <RadzenStack Orientation="Orientation.Horizontal" Gap="4px">
+                                    <RadzenButton Icon="edit" Size="ButtonSize.Small" Variant="Variant.Text" ButtonStyle="ButtonStyle.Info"
+                                                  Click="@(() => ShowRoleDialog(member))" title="Change role" />
+                                    @if (member.IsActive)
+                                    {
+                                        <RadzenButton Icon="block" Size="ButtonSize.Small" Variant="Variant.Text" ButtonStyle="ButtonStyle.Danger"
+                                                      Click="@(() => DeactivateMember(member))" title="Deactivate" />
+                                    }
+                                    else
+                                    {
+                                        <RadzenButton Icon="check_circle" Size="ButtonSize.Small" Variant="Variant.Text" ButtonStyle="ButtonStyle.Success"
+                                                      Click="@(() => ReactivateMember(member))" title="Reactivate" />
+                                    }
+                                </RadzenStack>
+                            }
+                        </Template>
+                    </RadzenDataGridColumn>
+                }
+            </Columns>
+        </RadzenDataGrid>
+    }
+</RadzenStack>
+
+@* Invite Dialog *@
+@if (showInviteDialog)
+{
+    <div class="dialog-overlay" @onclick="CloseInviteDialog">
+        <div class="dialog-card" @onclick:stopPropagation="true">
+            <h3 class="dialog-title">Invite Team Member</h3>
+
+            @if (inviteResult != null && inviteResult.TempPassword != null)
+            {
+                <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:16px;margin-bottom:16px">
+                    <p style="margin:0 0 8px;color:#166534;font-weight:600">Member invited successfully!</p>
+                    <p style="margin:0 0 4px;font-size:0.875rem;color:#64748B">Temporary password:</p>
+                    <code style="display:block;background:#fff;padding:8px 12px;border-radius:4px;font-size:0.9375rem;color:#0B1929;border:1px solid #E2E8F0">@inviteResult.TempPassword</code>
+                    <p style="margin:8px 0 0;font-size:0.8125rem;color:#64748B">Share this password securely with the new team member.</p>
+                </div>
+                <RadzenButton Text="Done" ButtonStyle="ButtonStyle.Primary" Click="CloseInviteDialog" Style="width:100%" />
+            }
+            else
+            {
+                @if (inviteError != null)
+                {
+                    <div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:12px;margin-bottom:16px">
+                        <span style="color:#991B1B;font-size:0.875rem">@inviteError</span>
+                    </div>
+                }
+
+                <RadzenStack Gap="16px">
+                    <RadzenFormField Text="Email" Style="width:100%">
+                        <RadzenTextBox @bind-Value="inviteEmail" Placeholder="colleague@company.com" Style="width:100%" />
+                    </RadzenFormField>
+                    <RadzenFormField Text="Full Name (optional)" Style="width:100%">
+                        <RadzenTextBox @bind-Value="inviteFullName" Placeholder="Jane Doe" Style="width:100%" />
+                    </RadzenFormField>
+                    <RadzenFormField Text="Role" Style="width:100%">
+                        <RadzenDropDown @bind-Value="inviteRole" Data="@availableRoles" TextProperty="Text" ValueProperty="Value" Style="width:100%" />
+                    </RadzenFormField>
+                    <RadzenStack Orientation="Orientation.Horizontal" Gap="8px" JustifyContent="JustifyContent.End">
+                        <RadzenButton Text="Cancel" Variant="Variant.Text" ButtonStyle="ButtonStyle.Light" Click="CloseInviteDialog" />
+                        <RadzenButton Text="Send Invite" ButtonStyle="ButtonStyle.Primary" Click="InviteMember" IsBusy="inviting" />
+                    </RadzenStack>
+                </RadzenStack>
+            }
+        </div>
+    </div>
+}
+
+@* Role Change Dialog *@
+@if (showRoleDialog)
+{
+    <div class="dialog-overlay" @onclick="CloseRoleDialog">
+        <div class="dialog-card" @onclick:stopPropagation="true">
+            <h3 class="dialog-title">Change Role</h3>
+            <p style="font-size:0.875rem;color:#64748B;margin:0 0 16px">Update role for <strong>@roleChangeMember?.Email</strong></p>
+            <RadzenFormField Text="New Role" Style="width:100%;margin-bottom:16px">
+                <RadzenDropDown @bind-Value="newRole" Data="@availableRoles" TextProperty="Text" ValueProperty="Value" Style="width:100%" />
+            </RadzenFormField>
+            <RadzenStack Orientation="Orientation.Horizontal" Gap="8px" JustifyContent="JustifyContent.End">
+                <RadzenButton Text="Cancel" Variant="Variant.Text" ButtonStyle="ButtonStyle.Light" Click="CloseRoleDialog" />
+                <RadzenButton Text="Save" ButtonStyle="ButtonStyle.Primary" Click="ConfirmRoleChange" IsBusy="changingRole" />
+            </RadzenStack>
+        </div>
+    </div>
+}
+
+<style>
+    .role-badge {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 12px;
+        font-size: 0.8125rem;
+        font-weight: 600;
+    }
+
+    .role-owner { background: #EDE9FE; color: #5B21B6; }
+    .role-admin { background: #DBEAFE; color: #1E40AF; }
+    .role-editor { background: #FEF3C7; color: #92400E; }
+    .role-viewer { background: #F1F5F9; color: #475569; }
+
+    .status-badge {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 12px;
+        font-size: 0.8125rem;
+        font-weight: 600;
+    }
+
+    .status-active { background: #DCFCE7; color: #166534; }
+    .status-deactivated { background: #FEE2E2; color: #991B1B; }
+
+    .dialog-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    }
+
+    .dialog-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 28px;
+        width: 100%;
+        max-width: 440px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    }
+
+    .dialog-title {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: #0B1929;
+        margin: 0 0 20px;
+    }
+</style>
+
+@code {
+    private TeamSummaryResponse? team;
+    private bool loading = true;
+    private bool isOwnerOrAdmin;
+
+    // Invite dialog
+    private bool showInviteDialog;
+    private string inviteEmail = "";
+    private string inviteFullName = "";
+    private NavTour.Shared.Enums.UserRole inviteRole = NavTour.Shared.Enums.UserRole.Editor;
+    private bool inviting;
+    private string? inviteError;
+    private TeamApiService.InviteResult? inviteResult;
+
+    // Role dialog
+    private bool showRoleDialog;
+    private TeamMemberResponse? roleChangeMember;
+    private NavTour.Shared.Enums.UserRole newRole;
+    private bool changingRole;
+
+    private readonly List<object> availableRoles = new()
+    {
+        new { Text = "Admin", Value = NavTour.Shared.Enums.UserRole.Admin },
+        new { Text = "Editor", Value = NavTour.Shared.Enums.UserRole.Editor },
+        new { Text = "Viewer", Value = NavTour.Shared.Enums.UserRole.Viewer }
+    };
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        await Auth.TryRestoreAsync();
+        if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
+
+        await LoadTeam();
+
+        if (team != null)
+        {
+            isOwnerOrAdmin = team.CurrentUserRole == "Owner" || team.CurrentUserRole == "Admin";
+        }
+        loading = false;
+        StateHasChanged();
+    }
+
+    private async Task LoadTeam()
+    {
+        try
+        {
+            team = await TeamApi.GetTeamAsync();
+        }
+        catch
+        {
+            Notification.Notify(NotificationSeverity.Error, "Failed to load team");
+        }
+    }
+
+    private void ShowInviteDialog()
+    {
+        inviteEmail = "";
+        inviteFullName = "";
+        inviteRole = NavTour.Shared.Enums.UserRole.Editor;
+        inviteError = null;
+        inviteResult = null;
+        showInviteDialog = true;
+    }
+
+    private void CloseInviteDialog()
+    {
+        showInviteDialog = false;
+        if (inviteResult?.TempPassword != null)
+            _ = RefreshTeam();
+    }
+
+    private async Task InviteMember()
+    {
+        if (string.IsNullOrWhiteSpace(inviteEmail))
+        {
+            inviteError = "Email is required.";
+            return;
+        }
+
+        inviting = true;
+        inviteError = null;
+
+        var result = await TeamApi.InviteAsync(new NavTour.Shared.DTOs.Team.InviteMemberRequest(
+            inviteEmail.Trim(), inviteRole, string.IsNullOrWhiteSpace(inviteFullName) ? null : inviteFullName.Trim()));
+
+        if (result?.Error != null)
+            inviteError = result.Error;
+        else
+            inviteResult = result;
+
+        inviting = false;
+    }
+
+    private void ShowRoleDialog(TeamMemberResponse member)
+    {
+        roleChangeMember = member;
+        newRole = member.Role;
+        showRoleDialog = true;
+    }
+
+    private void CloseRoleDialog()
+    {
+        showRoleDialog = false;
+        roleChangeMember = null;
+    }
+
+    private async Task ConfirmRoleChange()
+    {
+        if (roleChangeMember == null) return;
+        changingRole = true;
+
+        var result = await TeamApi.UpdateRoleAsync(roleChangeMember.Id,
+            new NavTour.Shared.DTOs.Team.UpdateMemberRoleRequest(newRole));
+
+        if (result != null)
+        {
+            Notification.Notify(NotificationSeverity.Success, "Role updated");
+            await RefreshTeam();
+        }
+        else
+        {
+            Notification.Notify(NotificationSeverity.Error, "Failed to update role");
+        }
+
+        changingRole = false;
+        CloseRoleDialog();
+    }
+
+    private async Task DeactivateMember(TeamMemberResponse member)
+    {
+        var success = await TeamApi.DeactivateAsync(member.Id);
+        if (success)
+        {
+            Notification.Notify(NotificationSeverity.Success, $"{member.Email} deactivated");
+            await RefreshTeam();
+        }
+        else
+        {
+            Notification.Notify(NotificationSeverity.Error, "Failed to deactivate member");
+        }
+    }
+
+    private async Task ReactivateMember(TeamMemberResponse member)
+    {
+        var success = await TeamApi.ReactivateAsync(member.Id);
+        if (success)
+        {
+            Notification.Notify(NotificationSeverity.Success, $"{member.Email} reactivated");
+            await RefreshTeam();
+        }
+        else
+        {
+            Notification.Notify(NotificationSeverity.Error, "Failed to reactivate — seat limit may be reached");
+        }
+    }
+
+    private async Task RefreshTeam()
+    {
+        team = await TeamApi.GetTeamAsync();
+        StateHasChanged();
+    }
+}

@@ -135,6 +135,15 @@
   <data name="home_feat7_label" xml:space="preserve"><value>Espacio de Equipo</value></data>
   <data name="home_feat7_title" xml:space="preserve"><value>Escala tu operación de demos.</value></data>
   <data name="home_feat7_desc" xml:space="preserve"><value>Biblioteca de demos compartida, plantillas, control de versiones, permisos por rol y memoria de voz de marca IA para todo el equipo.</value></data>
+  <data name="home_feat8_label" xml:space="preserve"><value>Control de Publicación</value></data>
+  <data name="home_feat8_title" xml:space="preserve"><value>Publica cuando estés listo.</value></data>
+  <data name="home_feat8_desc" xml:space="preserve"><value>Publica y despublica demos al instante con un solo clic. El modo borrador te permite iterar de forma segura mientras las demos en producción permanecen intactas.</value></data>
+  <data name="home_feat9_label" xml:space="preserve"><value>Navegación Guiada</value></data>
+  <data name="home_feat9_title" xml:space="preserve"><value>Tarjetas de navegación que guían cada clic.</value></data>
+  <data name="home_feat9_desc" xml:space="preserve"><value>Tarjetas blancas con botones Atrás y Siguiente reemplazan las barras inferiores. Los espectadores siempre saben dónde están y hacia dónde ir. Contadores de pasos y etiquetas contextuales mantienen la experiencia intuitiva.</value></data>
+  <data name="home_feat10_label" xml:space="preserve"><value>Compartir Social</value></data>
+  <data name="home_feat10_title" xml:space="preserve"><value>Comparte demos en un clic.</value></data>
+  <data name="home_feat10_desc" xml:space="preserve"><value>Copia un enlace, envía por WhatsApp o toma un código de inserción — todo desde un solo popover. Tus demos llegan a los prospectos donde ya están, sin fricción.</value></data>
 
   <!-- Homepage Metrics -->
   <data name="home_metrics_title" xml:space="preserve"><value>Resultados que hablan por sí solos</value></data>
@@ -539,6 +548,15 @@
   <data name="product_feat12_label" xml:space="preserve"><value>Soporte Multi-Idioma</value></data>
   <data name="product_feat12_title" xml:space="preserve"><value>Demos en cualquier idioma</value></data>
   <data name="product_feat12_desc" xml:space="preserve"><value>Crea demos en inglés, español, portugués y más. La IA traduce automáticamente el contenido preservando tu voz de marca. Sirve el idioma correcto según la localización del visitante.</value></data>
+  <data name="product_feat13_label" xml:space="preserve"><value>Control de Publicación</value></data>
+  <data name="product_feat13_title" xml:space="preserve"><value>Publica y despublica con un clic</value></data>
+  <data name="product_feat13_desc" xml:space="preserve"><value>Alterna entre borrador y publicado con un solo clic. Un chip de estado muestra el estado actual: verde para en vivo, gris para borrador. Despublicar elimina el acceso público al instante. Perfecto para lanzamientos sincronizados con campañas o demos estacionales.</value></data>
+  <data name="product_feat14_label" xml:space="preserve"><value>Tarjetas de Navegación</value></data>
+  <data name="product_feat14_title" xml:space="preserve"><value>Tarjetas blancas que guían a los espectadores</value></data>
+  <data name="product_feat14_desc" xml:space="preserve"><value>Reemplaza la vieja barra inferior con elegantes tarjetas blancas ancladas directamente a cada anotación. Los botones Atrás y Siguiente viven dentro de la tarjeta. Contadores de pasos, títulos contextuales y un botón Finalizar crean una experiencia pulida y superior a la competencia.</value></data>
+  <data name="product_feat15_label" xml:space="preserve"><value>Compartir Social</value></data>
+  <data name="product_feat15_title" xml:space="preserve"><value>Comparte donde sea — enlace, WhatsApp, embed</value></data>
+  <data name="product_feat15_desc" xml:space="preserve"><value>Un popover de compartir rediseñado pone Copiar Enlace y WhatsApp como acciones rápidas. La URL siempre está visible y una sección colapsable de Código de Inserción ofrece un iframe responsivo con dimensiones configurables. Tus demos llegan donde están tus prospectos en segundos.</value></data>
   <data name="product_cta_title" xml:space="preserve"><value>Ve todas las funciones en acción</value></data>
   <data name="product_cta_subtitle" xml:space="preserve"><value>Crea tu primera demo con IA en menos de 10 minutos. Gratis para siempre.</value></data>
   <data name="product_cta_text" xml:space="preserve"><value>Empieza Gratis</value></data>

@@ -57,4 +57,10 @@ public class DemosController : ControllerBase
     {
         return await _demoService.PublishAsync(id) ? Ok() : NotFound();
     }
+
+    [HttpPost("{id:guid}/unpublish")]
+    public async Task<IActionResult> Unpublish(Guid id)
+    {
+        return await _demoService.UnpublishAsync(id) ? Ok() : NotFound();
+    }
 }

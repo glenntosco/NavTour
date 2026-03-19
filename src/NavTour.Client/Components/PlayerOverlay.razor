@@ -25,17 +25,34 @@
 
             case AnnotationType.NumberedTooltip:
                 var nts = style;
-                <div style="position:relative">
+                var cardBg = nts.GetValueOrDefault("backgroundColor", "#ffffff");
+                var cardColor = nts.GetValueOrDefault("textColor", "#334155");
+                var isLastStep = StepIndex >= TotalSteps - 1;
+                var isFirstStep = StepIndex <= 0;
+                <div style="position:relative;pointer-events:all">
                     <div style="position:absolute;top:-12px;left:-12px;width:28px;height:28px;border-radius:50%;background:#4361ee;color:white;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(67,97,238,0.4);z-index:1">
                         @(annotation.BadgeNumber ?? 1)
                     </div>
-                    <div style="position:relative;background:@nts.GetValueOrDefault("backgroundColor", "#1a1a2e");color:@nts.GetValueOrDefault("textColor", "#fff");border-radius:@nts.GetValueOrDefault("borderRadius", "8px");padding:12px 16px;font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,0.2);margin-top:8px;--arrow-bg:@nts.GetValueOrDefault("backgroundColor", "#1a1a2e")">
+                    <div style="position:relative;background:@cardBg;color:@cardColor;border-radius:12px;padding:16px 20px;font-size:14px;box-shadow:0 4px 20px rgba(0,0,0,0.12);margin-top:8px;min-width:260px;--arrow-bg:@cardBg;border:1px solid #e2e8f0">
                         @if (annotation.ArrowDirection != null)
                         {
                             <div class="tooltip-arrow tooltip-arrow-@annotation.ArrowDirection"></div>
                         }
-                        @if (annotation.Title != null) { <strong>@annotation.Title</strong> }
-                        @if (annotation.Content != null) { <p style="margin:4px 0 0">@annotation.Content</p> }
+                        @if (annotation.Title != null) { <div style="font-weight:600;font-size:15px;margin-bottom:4px">@annotation.Title</div> }
+                        @if (annotation.Content != null) { <p style="margin:0 0 14px;color:#64748b;font-size:13px;line-height:1.5">@annotation.Content</p> }
+                        <div style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid #f1f5f9;padding-top:12px;margin-top:4px">
+                            <span style="font-size:12px;color:#94a3b8;font-weight:500">@(StepIndex + 1) of @TotalSteps</span>
+                            <div style="display:flex;gap:8px">
+                                <button disabled="@isFirstStep" @onclick="NavigatePrevious"
+                                    style="padding:6px 14px;border-radius:6px;font-size:13px;font-weight:500;cursor:@(isFirstStep ? "default" : "pointer");border:1px solid #e2e8f0;background:@(isFirstStep ? "#f8fafc" : "#ffffff");color:@(isFirstStep ? "#cbd5e1" : "#64748b")">
+                                    Back
+                                </button>
+                                <button @onclick="NavigateNext"
+                                    style="padding:6px 14px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:#4361ee;color:white">
+                                    @(isLastStep ? "Finish" : "Next")
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 break;
@@ -87,6 +104,12 @@
 @code {
     [Parameter] public List<PlayerAnnotationDto> Annotations { get; set; } = [];
     [Parameter] public EventCallback<PlayerAnnotationDto> OnClickZone { get; set; }
+    [Parameter] public int StepIndex { get; set; }
+    [Parameter] public int TotalSteps { get; set; }
+    [Parameter] public EventCallback<string> OnNavigate { get; set; }
+
+    private async Task NavigateNext() => await OnNavigate.InvokeAsync("next");
+    private async Task NavigatePrevious() => await OnNavigate.InvokeAsync("previous");
 
     private Dictionary<string, string> ParseStyle(string? style)
     {

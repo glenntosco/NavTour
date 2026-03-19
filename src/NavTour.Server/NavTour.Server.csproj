@@ -23,6 +23,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="*" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="*" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="*" />
+    <PackageReference Include="Azure.Communication.Email" Version="*" />
   </ItemGroup>
 
 </Project>

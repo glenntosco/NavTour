@@ -135,6 +135,15 @@
   <data name="home_feat7_label" xml:space="preserve"><value>Team Workspace</value></data>
   <data name="home_feat7_title" xml:space="preserve"><value>Scale your demo operation.</value></data>
   <data name="home_feat7_desc" xml:space="preserve"><value>Shared demo library, templates, version control, role-based permissions, and AI brand voice memory across all team members.</value></data>
+  <data name="home_feat8_label" xml:space="preserve"><value>Publish Control</value></data>
+  <data name="home_feat8_title" xml:space="preserve"><value>Go live on your terms.</value></data>
+  <data name="home_feat8_desc" xml:space="preserve"><value>Publish and unpublish demos instantly with a single click. Draft mode lets you iterate safely while live demos stay untouched. Take demos offline the moment a campaign ends.</value></data>
+  <data name="home_feat9_label" xml:space="preserve"><value>Guided Navigation</value></data>
+  <data name="home_feat9_title" xml:space="preserve"><value>Navigation cards that guide every click.</value></data>
+  <data name="home_feat9_desc" xml:space="preserve"><value>White navigation cards with Back and Next buttons replace clunky bottom bars. Viewers always know where they are and where to go next. Step counters and contextual labels keep the experience intuitive.</value></data>
+  <data name="home_feat10_label" xml:space="preserve"><value>Social Sharing</value></data>
+  <data name="home_feat10_title" xml:space="preserve"><value>Share demos everywhere in one click.</value></data>
+  <data name="home_feat10_desc" xml:space="preserve"><value>Copy a link, send via WhatsApp, or grab an embed code — all from a single share popover. Your demos reach prospects wherever they already are, with zero friction.</value></data>
 
   <!-- Homepage Metrics -->
   <data name="home_metrics_title" xml:space="preserve"><value>Results that speak for themselves</value></data>
@@ -539,6 +548,15 @@
   <data name="product_feat12_label" xml:space="preserve"><value>Multi-Language Support</value></data>
   <data name="product_feat12_title" xml:space="preserve"><value>Demos in every language</value></data>
   <data name="product_feat12_desc" xml:space="preserve"><value>Create demos in English, Spanish, Portuguese, and more. AI auto-translates demo content while preserving your brand voice. Serve the right language based on viewer locale.</value></data>
+  <data name="product_feat13_label" xml:space="preserve"><value>Publish Control</value></data>
+  <data name="product_feat13_title" xml:space="preserve"><value>One-click publish and unpublish</value></data>
+  <data name="product_feat13_desc" xml:space="preserve"><value>Toggle demos between draft and published with a single click. A prominent status chip shows the current state at a glance — green for live, gray for draft. Unpublishing instantly removes public access while preserving all your work. Perfect for campaign-aligned launches or rotating seasonal demos.</value></data>
+  <data name="product_feat14_label" xml:space="preserve"><value>Navigation Cards</value></data>
+  <data name="product_feat14_title" xml:space="preserve"><value>White navigation cards that guide viewers</value></data>
+  <data name="product_feat14_desc" xml:space="preserve"><value>Replace the old bottom navigation bar with sleek white cards anchored directly to each annotation. Back and Next buttons live inside the card — viewers navigate without ever looking away from the content. Step counters, contextual titles, and a Finish button on the last step create a polished, competitor-beating experience.</value></data>
+  <data name="product_feat15_label" xml:space="preserve"><value>Social Sharing</value></data>
+  <data name="product_feat15_title" xml:space="preserve"><value>Share anywhere — link, WhatsApp, embed</value></data>
+  <data name="product_feat15_desc" xml:space="preserve"><value>A redesigned share popover puts Copy Link and WhatsApp side by side as quick actions. The demo URL is always visible, and a collapsible Embed Code section lets you grab a responsive iframe with configurable dimensions. Your demos go wherever your prospects are — website, chat, social, email — in seconds.</value></data>
   <data name="product_cta_title" xml:space="preserve"><value>See every feature in action</value></data>
   <data name="product_cta_subtitle" xml:space="preserve"><value>Build your first AI-powered demo in under 10 minutes. Free forever.</value></data>
   <data name="product_cta_text" xml:space="preserve"><value>Start Building Free</value></data>

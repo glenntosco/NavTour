@@ -101,4 +101,14 @@ public class DemoService : IDemoService
         await _db.SaveChangesAsync();
         return true;
     }
+
+    public async Task<bool> UnpublishAsync(Guid id)
+    {
+        var demo = await _db.Demos.FindAsync(id);
+        if (demo == null) return false;
+
+        demo.Status = DemoStatus.Draft;
+        await _db.SaveChangesAsync();
+        return true;
+    }
 }

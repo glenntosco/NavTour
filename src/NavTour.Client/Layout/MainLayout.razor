@@ -27,6 +27,7 @@
 
             <div class="sidebar-category">Manage</div>
             <RadzenPanelMenu Style="width:100%">
+                <RadzenPanelMenuItem Text="Team" Icon="group" Path="team" Style="@NavItemStyle("/team")" />
                 <RadzenPanelMenuItem Text="Settings" Icon="settings" Path="settings" Style="@NavItemStyle("/settings")" />
             </RadzenPanelMenu>
         </div>
@@ -96,6 +97,7 @@
         if (uri.Contains("/dashboard", StringComparison.OrdinalIgnoreCase)) return "Product Demos";
         if (uri.Contains("/analytics", StringComparison.OrdinalIgnoreCase)) return "Analytics";
         if (uri.Contains("/leads", StringComparison.OrdinalIgnoreCase)) return "Leads";
+        if (uri.Contains("/team", StringComparison.OrdinalIgnoreCase)) return "Team";
         if (uri.Contains("/settings", StringComparison.OrdinalIgnoreCase)) return "Settings";
         if (uri.Contains("/demos/", StringComparison.OrdinalIgnoreCase) && uri.Contains("/edit", StringComparison.OrdinalIgnoreCase)) return "Product Demos / Edit Demo";
         if (uri.Contains("/demos/", StringComparison.OrdinalIgnoreCase) && uri.Contains("/analytics", StringComparison.OrdinalIgnoreCase)) return "Product Demos / Analytics";
