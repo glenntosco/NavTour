@@ -57,6 +57,12 @@ public class FramesController : ControllerBase
         return frame == null ? NotFound() : Ok(frame);
     }
 
+    [HttpPatch("api/v1/frames/{id:guid}/rename")]
+    public async Task<IActionResult> Rename(Guid id, RenameFrameRequest request)
+    {
+        return await _frameService.RenameAsync(id, request.Name) ? Ok() : NotFound();
+    }
+
     [HttpDelete("api/v1/frames/{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {

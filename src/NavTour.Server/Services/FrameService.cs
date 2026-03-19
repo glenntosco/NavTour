@@ -20,7 +20,7 @@ public class FrameService : IFrameService
         return await _db.Frames
             .Where(f => f.DemoId == demoId)
             .OrderBy(f => f.SequenceOrder)
-            .Select(f => new FrameResponse(f.Id, f.SequenceOrder, f.ThumbnailUrl, f.CreatedAt))
+            .Select(f => new FrameResponse(f.Id, f.Name, f.SequenceOrder, f.ThumbnailUrl, f.CreatedAt))
             .ToListAsync();
     }
 
@@ -28,7 +28,7 @@ public class FrameService : IFrameService
     {
         return await _db.Frames
             .Where(f => f.Id == id)
-            .Select(f => new FrameDetailResponse(f.Id, f.SequenceOrder, f.HtmlContent, f.CssContent, f.CreatedAt))
+            .Select(f => new FrameDetailResponse(f.Id, f.Name, f.SequenceOrder, f.HtmlContent, f.CssContent, f.CreatedAt))
             .FirstOrDefaultAsync();
     }
 
@@ -60,7 +60,7 @@ public class FrameService : IFrameService
         _db.Frames.Add(frame);
         await _db.SaveChangesAsync();
 
-        return new FrameResponse(frame.Id, frame.SequenceOrder, frame.ThumbnailUrl, frame.CreatedAt);
+        return new FrameResponse(frame.Id, frame.Name, frame.SequenceOrder, frame.ThumbnailUrl, frame.CreatedAt);
     }
 
     public async Task<bool> DeleteAsync(Guid id)
@@ -82,7 +82,17 @@ public class FrameService : IFrameService
         frame.CssContent = cssContent;
         await _db.SaveChangesAsync();
 
-        return new FrameDetailResponse(frame.Id, frame.SequenceOrder, frame.HtmlContent, frame.CssContent, frame.CreatedAt);
+        return new FrameDetailResponse(frame.Id, frame.Name, frame.SequenceOrder, frame.HtmlContent, frame.CssContent, frame.CreatedAt);
+    }
+
+    public async Task<bool> RenameAsync(Guid id, string name)
+    {
+        var frame = await _db.Frames.FindAsync(id);
+        if (frame == null) return false;
+
+        frame.Name = name;
+        await _db.SaveChangesAsync();
+        return true;
     }
 
     public async Task<bool> ReorderAsync(Guid demoId, ReorderFramesRequest request)

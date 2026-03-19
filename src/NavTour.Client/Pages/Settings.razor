@@ -54,15 +54,6 @@
             </RadzenStack>
         </div>
 
-        @* API Key *@
-        <div class="settings-card">
-            <h3 class="settings-card-title">API Access</h3>
-            <p style="font-size:0.875rem;color:#64748B;margin:0 0 12px">Use your API key to embed demos or integrate with external tools.</p>
-            <RadzenFormField Text="API Key" Style="width:100%">
-                <RadzenTextBox Value="@apiKey" ReadOnly="true" Style="width:100%;font-family:'Cascadia Code',monospace;font-size:0.8125rem" />
-            </RadzenFormField>
-        </div>
-
         @* Danger Zone *@
         <div class="settings-card settings-danger">
             <h3 class="settings-card-title" style="color:#C62828">Danger Zone</h3>
@@ -99,7 +90,6 @@
     private string plan = "";
     private string email = "";
     private string fullName = "";
-    private string apiKey = "";
     private bool loading = true;
     private bool saving;
     private bool savingProfile;
@@ -120,7 +110,6 @@
                 plan = settings.Plan;
                 email = settings.Email;
                 fullName = settings.FullName;
-                apiKey = settings.ApiKey;
             }
         }
         catch
@@ -162,5 +151,5 @@
         savingProfile = false;
     }
 
-    private record WorkspaceSettings(string CompanyName, string Slug, string Plan, string Email, string FullName, string ApiKey);
+    private record WorkspaceSettings(string CompanyName, string Slug, string Plan, string Email, string FullName);
 }

@@ -40,8 +40,7 @@ public class SettingsController : ControllerBase
             Slug = tenant?.Slug ?? "",
             Plan = tenant?.Plan ?? "Starter",
             Email = user.Email ?? "",
-            FullName = user.FullName ?? "",
-            ApiKey = _tenantProvider.TenantId.ToString("N")[..16]
+            FullName = user.FullName ?? ""
         });
     }
 

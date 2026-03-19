@@ -1,26 +1,62 @@
-<RadzenStack Gap="4px" Style="width:140px;min-height:100%;overflow-y:auto;border-right:1px solid var(--rz-border-color);padding:8px">
-    @for (int i = 0; i < Frames.Count; i++)
-    {
-        var frame = Frames[i];
-        var index = i;
-        var isSelected = frame.Id == SelectedFrameId;
-        <div class="fs-frame @(isSelected ? "fs-selected" : "")" @onclick="() => OnFrameSelected.InvokeAsync(frame.Id)">
-            <RadzenStack AlignItems="AlignItems.Center" Gap="2px">
-                <RadzenIcon Icon="web" Style="font-size:28px;color:var(--rz-text-secondary-color)" />
-                <RadzenText TextStyle="TextStyle.Caption" Style="margin:0">Frame @frame.SequenceOrder</RadzenText>
-            </RadzenStack>
-            <div class="fs-actions">
-                <button class="fs-action-btn" title="Insert frame before" @onclick="() => OnInsertFrame.InvokeAsync(index)" @onclick:stopPropagation="true">
-                    <RadzenIcon Icon="add_circle_outline" Style="font-size:14px" />
-                </button>
-                <button class="fs-action-btn fs-action-danger" title="Delete frame" @onclick="() => ConfirmDelete(frame.Id)" @onclick:stopPropagation="true">
-                    <RadzenIcon Icon="delete_outline" Style="font-size:14px" />
-                </button>
+@using NavTour.Shared.DTOs.Frames
+
+<div class="fs-container">
+    <div class="fs-header">
+        <span class="fs-header-title">Frames</span>
+        <span class="fs-header-count">@Frames.Count</span>
+    </div>
+
+    <div class="fs-list">
+        @for (int i = 0; i < Frames.Count; i++)
+        {
+            var frame = Frames[i];
+            var index = i;
+            var isSelected = frame.Id == SelectedFrameId;
+            var isFirst = i == 0;
+            var isLast = i == Frames.Count - 1;
+
+            <div class="fs-frame @(isSelected ? "fs-selected" : "")" @onclick="() => OnFrameSelected.InvokeAsync(frame.Id)">
+                <div class="fs-frame-info">
+                    <RadzenIcon Icon="web" Style="font-size:22px;color:var(--rz-text-secondary-color);flex-shrink:0" />
+                    @if (renamingFrameId == frame.Id)
+                    {
+                        <input class="fs-rename-input" type="text" @bind="renameValue" @bind:event="oninput"
+                            @onkeydown="HandleRenameKey" @onblur="CommitRename" @ref="renameInput" />
+                    }
+                    else
+                    {
+                        <span class="fs-frame-name" @ondblclick="() => StartRename(frame)" @ondblclick:stopPropagation="true">
+                            @(frame.Name ?? $"Frame {frame.SequenceOrder}")
+                        </span>
+                    }
+                </div>
+                <div class="fs-actions" @onclick:stopPropagation="true">
+                    @if (!isFirst)
+                    {
+                        <button class="fs-action-btn" title="Move up" @onclick="() => MoveFrame(index, -1)">
+                            <RadzenIcon Icon="keyboard_arrow_up" Style="font-size:16px" />
+                        </button>
+                    }
+                    @if (!isLast)
+                    {
+                        <button class="fs-action-btn" title="Move down" @onclick="() => MoveFrame(index, 1)">
+                            <RadzenIcon Icon="keyboard_arrow_down" Style="font-size:16px" />
+                        </button>
+                    }
+                    <button class="fs-action-btn" title="Rename" @onclick="() => StartRename(frame)">
+                        <RadzenIcon Icon="edit" Style="font-size:14px" />
+                    </button>
+                    <button class="fs-action-btn fs-action-danger" title="Delete" @onclick="() => ConfirmDelete(frame.Id)">
+                        <RadzenIcon Icon="delete_outline" Style="font-size:14px" />
+                    </button>
+                </div>
             </div>
-        </div>
-    }
-    <RadzenButton Text="+ Add" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Style="width:100%" Click="OnAddFrame" />
-</RadzenStack>
+        }
+    </div>
+
+    <RadzenButton Text="+ Add Frame" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
+        Style="width:100%;margin-top:4px" Click="OnAddFrame" />
+</div>
 
 @if (confirmDeleteId != null)
 {
@@ -39,6 +75,46 @@
 }
 
 <style>
+    .fs-container {
+        width: 170px;
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid var(--rz-border-color);
+        padding: 8px;
+        overflow-y: auto;
+    }
+
+    .fs-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 4px 4px 8px;
+    }
+
+    .fs-header-title {
+        font-size: 0.6875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--rz-text-secondary-color);
+    }
+
+    .fs-header-count {
+        font-size: 0.6875rem;
+        background: var(--rz-base-200);
+        border-radius: 10px;
+        padding: 1px 8px;
+        color: var(--rz-text-secondary-color);
+    }
+
+    .fs-list {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        flex: 1;
+    }
+
     .fs-frame {
         position: relative;
         cursor: pointer;
@@ -46,19 +122,64 @@
         border-radius: 8px;
         border: 2px solid transparent;
         background: var(--rz-base-background-color);
-        transition: border-color 0.15s;
+        transition: border-color 0.15s, background 0.15s;
     }
-    .fs-frame:hover { border-color: var(--rz-border-color); }
-    .fs-selected { border-color: var(--rz-primary) !important; }
+
+    .fs-frame:hover {
+        border-color: var(--rz-border-color);
+        background: var(--rz-base-100);
+    }
+
+    .fs-selected {
+        border-color: var(--rz-primary) !important;
+        background: rgba(67, 97, 238, 0.04);
+    }
+
+    .fs-frame-info {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        min-height: 24px;
+    }
+
+    .fs-frame-name {
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: var(--rz-text-color);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        cursor: default;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .fs-rename-input {
+        font-size: 0.75rem;
+        font-weight: 500;
+        padding: 2px 4px;
+        border: 1px solid var(--rz-primary);
+        border-radius: 4px;
+        outline: none;
+        width: 100%;
+        background: var(--rz-base-background-color);
+        color: var(--rz-text-color);
+        font-family: inherit;
+    }
+
     .fs-actions {
         position: absolute;
         top: 4px;
         right: 4px;
         display: none;
-        flex-direction: column;
-        gap: 2px;
+        flex-direction: row;
+        gap: 1px;
     }
-    .fs-frame:hover .fs-actions { display: flex; }
+
+    .fs-frame:hover .fs-actions {
+        display: flex;
+    }
+
     .fs-action-btn {
         background: var(--rz-base-200);
         border: none;
@@ -68,9 +189,18 @@
         display: flex;
         align-items: center;
         color: var(--rz-text-secondary-color);
+        transition: background 0.1s, color 0.1s;
     }
-    .fs-action-btn:hover { background: var(--rz-base-300); color: var(--rz-text-color); }
-    .fs-action-danger:hover { color: var(--rz-danger); }
+
+    .fs-action-btn:hover {
+        background: var(--rz-base-300);
+        color: var(--rz-text-color);
+    }
+
+    .fs-action-danger:hover {
+        color: var(--rz-danger);
+    }
+
     .fs-confirm-overlay {
         position: fixed;
         top: 0;
@@ -83,6 +213,7 @@
         justify-content: center;
         z-index: 10000;
     }
+
     .fs-confirm-dialog {
         background: var(--rz-base-background-color);
         border-radius: 10px;
@@ -99,8 +230,13 @@
     [Parameter] public EventCallback OnAddFrame { get; set; }
     [Parameter] public EventCallback<Guid> OnDeleteFrame { get; set; }
     [Parameter] public EventCallback<int> OnInsertFrame { get; set; }
+    [Parameter] public EventCallback<(int OldIndex, int NewIndex)> OnReorderFrame { get; set; }
+    [Parameter] public EventCallback<(Guid FrameId, string Name)> OnRenameFrame { get; set; }
 
     private Guid? confirmDeleteId;
+    private Guid? renamingFrameId;
+    private string renameValue = "";
+    private ElementReference renameInput;
 
     private void ConfirmDelete(Guid frameId)
     {
@@ -115,5 +251,35 @@
             confirmDeleteId = null;
             await OnDeleteFrame.InvokeAsync(id);
         }
+    }
+
+    private void StartRename(FrameResponse frame)
+    {
+        renamingFrameId = frame.Id;
+        renameValue = frame.Name ?? $"Frame {frame.SequenceOrder}";
+    }
+
+    private async Task CommitRename()
+    {
+        if (renamingFrameId != null && !string.IsNullOrWhiteSpace(renameValue))
+        {
+            await OnRenameFrame.InvokeAsync((renamingFrameId.Value, renameValue.Trim()));
+        }
+        renamingFrameId = null;
+    }
+
+    private async Task HandleRenameKey(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+            await CommitRename();
+        else if (e.Key == "Escape")
+            renamingFrameId = null;
+    }
+
+    private async Task MoveFrame(int currentIndex, int direction)
+    {
+        var newIndex = currentIndex + direction;
+        if (newIndex < 0 || newIndex >= Frames.Count) return;
+        await OnReorderFrame.InvokeAsync((currentIndex, newIndex));
     }
 }

@@ -75,6 +75,12 @@ public class DemoApiService
         return response.IsSuccessStatusCode;
     }
 
+    public async Task<bool> RenameFrameAsync(Guid frameId, string name)
+    {
+        var response = await _http.PatchAsJsonAsync($"api/v1/frames/{frameId}/rename", new RenameFrameRequest(name));
+        return response.IsSuccessStatusCode;
+    }
+
     public async Task<bool> ReorderFramesAsync(Guid demoId, List<Guid> frameIds)
     {
         var response = await _http.PutAsJsonAsync($"api/v1/demos/{demoId}/frames/reorder", new ReorderFramesRequest(frameIds));

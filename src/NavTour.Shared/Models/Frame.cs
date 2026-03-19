@@ -3,6 +3,7 @@ namespace NavTour.Shared.Models;
 public class Frame : TenantEntity
 {
     public Guid DemoId { get; set; }
+    public string? Name { get; set; }
     public int SequenceOrder { get; set; }
     public string HtmlContent { get; set; } = string.Empty;
     public string? CssContent { get; set; }

@@ -9,5 +9,6 @@ public interface IFrameService
     Task<FrameResponse> UploadAsync(Guid demoId, IFormFile file);
     Task<bool> DeleteAsync(Guid id);
     Task<FrameDetailResponse?> UpdateAsync(Guid id, string htmlContent, string? cssContent);
+    Task<bool> RenameAsync(Guid id, string name);
     Task<bool> ReorderAsync(Guid demoId, ReorderFramesRequest request);
 }

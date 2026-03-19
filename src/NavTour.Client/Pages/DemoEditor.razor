@@ -30,7 +30,8 @@
     <RadzenStack Orientation="Orientation.Horizontal" Style="flex:1;overflow:hidden">
         <FrameStrip Frames="frames" SelectedFrameId="selectedFrameId"
             OnFrameSelected="SelectFrame" OnAddFrame="AddFrame"
-            OnDeleteFrame="DeleteFrame" OnInsertFrame="InsertFrame" />
+            OnDeleteFrame="DeleteFrame" OnInsertFrame="InsertFrame"
+            OnReorderFrame="ReorderFrame" OnRenameFrame="RenameFrame" />
 
         <FrameEditor @ref="frameEditor" DemoId="@DemoId" HtmlContent="@currentFrameHtml"
             Annotations="@currentAnnotations"
@@ -222,6 +223,28 @@
     private async Task InsertFrame(int index)
     {
         await JS.InvokeVoidAsync("clickElement", "frame-file-input");
+    }
+
+    private async Task ReorderFrame((int OldIndex, int NewIndex) move)
+    {
+        if (move.OldIndex < 0 || move.NewIndex < 0 || move.OldIndex >= frames.Count || move.NewIndex >= frames.Count)
+            return;
+
+        var item = frames[move.OldIndex];
+        frames.RemoveAt(move.OldIndex);
+        frames.Insert(move.NewIndex, item);
+
+        var frameIds = frames.Select(f => f.Id).ToList();
+        await DemoApi.ReorderFramesAsync(DemoId, frameIds);
+        frames = await DemoApi.GetFramesAsync(DemoId);
+        StateHasChanged();
+    }
+
+    private async Task RenameFrame((Guid FrameId, string Name) rename)
+    {
+        await DemoApi.RenameFrameAsync(rename.FrameId, rename.Name);
+        frames = await DemoApi.GetFramesAsync(DemoId);
+        StateHasChanged();
     }
 
     private async Task AddStep()
