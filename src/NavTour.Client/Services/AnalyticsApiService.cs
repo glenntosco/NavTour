@@ -15,6 +15,9 @@ public class AnalyticsApiService
     public async Task<AnalyticsSummaryResponse?> GetSummaryAsync(Guid demoId)
         => await _http.GetFromJsonAsync<AnalyticsSummaryResponse>($"api/v1/demos/{demoId}/analytics");
 
+    public async Task<AnalyticsSummaryResponse?> GetGlobalSummaryAsync()
+        => await _http.GetFromJsonAsync<AnalyticsSummaryResponse>("api/v1/analytics/summary");
+
     public async Task<List<SessionListResponse>> GetSessionsAsync(Guid? demoId = null)
     {
         var url = demoId.HasValue ? $"api/v1/analytics/sessions?demoId={demoId}" : "api/v1/analytics/sessions";

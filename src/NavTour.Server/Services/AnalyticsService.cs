@@ -137,6 +137,38 @@ public class AnalyticsService : IAnalyticsService
         return new AnalyticsSummaryResponse(totalViews, completions, avgTime, completionRate, viewsOverTime, funnel, topSources);
     }
 
+    public async Task<AnalyticsSummaryResponse> GetGlobalSummaryAsync()
+    {
+        var sessions = await _db.DemoSessions.ToListAsync();
+
+        var totalViews = sessions.Count;
+        var completions = sessions.Count(s => s.CompletedAt.HasValue);
+        var avgTime = sessions
+            .Where(s => s.CompletedAt.HasValue)
+            .Select(s => (s.CompletedAt!.Value - s.StartedAt).TotalSeconds)
+            .DefaultIfEmpty(0)
+            .Average();
+        var completionRate = totalViews > 0 ? (double)completions / totalViews * 100 : 0;
+
+        var thirtyDaysAgo = DateTime.UtcNow.AddDays(-30).Date;
+        var viewsOverTime = sessions
+            .Where(s => s.StartedAt >= thirtyDaysAgo)
+            .GroupBy(s => s.StartedAt.Date)
+            .Select(g => new DailyViewCount(g.Key, g.Count()))
+            .OrderBy(d => d.Date)
+            .ToList();
+
+        var topSources = sessions
+            .Where(s => s.Source != null)
+            .GroupBy(s => s.Source!)
+            .Select(g => new SourceEntry(g.Key, g.Count()))
+            .OrderByDescending(s => s.Count)
+            .Take(10)
+            .ToList();
+
+        return new AnalyticsSummaryResponse(totalViews, completions, avgTime, completionRate, viewsOverTime, [], topSources);
+    }
+
     public async Task<List<SessionListResponse>> GetSessionsAsync(Guid? demoId)
     {
         var query = _db.DemoSessions.AsQueryable();

@@ -1,0 +1,166 @@
+@page "/settings"
+@rendermode InteractiveServer
+@inject HttpClient Http
+@inject AuthService Auth
+@inject NavigationManager Nav
+@inject NotificationService Notification
+
+<RadzenStack Gap="24px" Style="max-width:640px">
+    <RadzenStack Gap="2px">
+        <RadzenText TextStyle="TextStyle.H4" Style="margin:0;font-weight:700;color:#0B1929">Settings</RadzenText>
+        <RadzenText TextStyle="TextStyle.Body2" Style="color:#64748B">Manage your workspace and account</RadzenText>
+    </RadzenStack>
+
+    @if (loading)
+    {
+        <RadzenStack AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Style="min-height:200px">
+            <RadzenProgressBarCircular ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+        </RadzenStack>
+    }
+    else
+    {
+        @* Workspace *@
+        <div class="settings-card">
+            <h3 class="settings-card-title">Workspace</h3>
+            <RadzenStack Gap="16px">
+                <RadzenFormField Text="Company Name" Style="width:100%">
+                    <RadzenTextBox @bind-Value="companyName" Style="width:100%" />
+                </RadzenFormField>
+                <RadzenFormField Text="Workspace URL" Style="width:100%">
+                    <RadzenTextBox Value="@workspaceSlug" Disabled="true" Style="width:100%" />
+                </RadzenFormField>
+                <RadzenFormField Text="Plan" Style="width:100%">
+                    <RadzenTextBox Value="@plan" Disabled="true" Style="width:100%" />
+                </RadzenFormField>
+                <RadzenStack Orientation="Orientation.Horizontal" Gap="8px">
+                    <RadzenButton Text="Save Changes" ButtonStyle="ButtonStyle.Primary" Click="SaveWorkspace" IsBusy="saving" />
+                </RadzenStack>
+            </RadzenStack>
+        </div>
+
+        @* Account *@
+        <div class="settings-card">
+            <h3 class="settings-card-title">Account</h3>
+            <RadzenStack Gap="16px">
+                <RadzenFormField Text="Email" Style="width:100%">
+                    <RadzenTextBox Value="@email" Disabled="true" Style="width:100%" />
+                </RadzenFormField>
+                <RadzenFormField Text="Full Name" Style="width:100%">
+                    <RadzenTextBox @bind-Value="fullName" Style="width:100%" />
+                </RadzenFormField>
+                <RadzenStack Orientation="Orientation.Horizontal" Gap="8px">
+                    <RadzenButton Text="Update Profile" ButtonStyle="ButtonStyle.Primary" Click="SaveProfile" IsBusy="savingProfile" />
+                </RadzenStack>
+            </RadzenStack>
+        </div>
+
+        @* API Key *@
+        <div class="settings-card">
+            <h3 class="settings-card-title">API Access</h3>
+            <p style="font-size:0.875rem;color:#64748B;margin:0 0 12px">Use your API key to embed demos or integrate with external tools.</p>
+            <RadzenFormField Text="API Key" Style="width:100%">
+                <RadzenTextBox Value="@apiKey" ReadOnly="true" Style="width:100%;font-family:'Cascadia Code',monospace;font-size:0.8125rem" />
+            </RadzenFormField>
+        </div>
+
+        @* Danger Zone *@
+        <div class="settings-card settings-danger">
+            <h3 class="settings-card-title" style="color:#C62828">Danger Zone</h3>
+            <p style="font-size:0.875rem;color:#64748B;margin:0 0 12px">Permanently delete your workspace and all associated data. This action cannot be undone.</p>
+            <RadzenButton Text="Delete Workspace" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Outlined" Size="ButtonSize.Small" />
+        </div>
+    }
+</RadzenStack>
+
+<style>
+    .settings-card {
+        background: #fff;
+        border: 1px solid #E2E8F0;
+        border-radius: 8px;
+        padding: 24px;
+        box-shadow: 0 1px 3px rgba(11, 25, 41, 0.08), 0 1px 2px rgba(11, 25, 41, 0.04);
+    }
+
+    .settings-card-title {
+        font-size: 0.9375rem;
+        font-weight: 600;
+        color: #1E3A5F;
+        margin: 0 0 16px;
+    }
+
+    .settings-danger {
+        border-color: #FECACA;
+    }
+</style>
+
+@code {
+    private string companyName = "";
+    private string workspaceSlug = "";
+    private string plan = "";
+    private string email = "";
+    private string fullName = "";
+    private string apiKey = "";
+    private bool loading = true;
+    private bool saving;
+    private bool savingProfile;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        await Auth.TryRestoreAsync();
+        if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
+
+        try
+        {
+            var settings = await Http.GetFromJsonAsync<WorkspaceSettings>("api/v1/settings");
+            if (settings != null)
+            {
+                companyName = settings.CompanyName;
+                workspaceSlug = settings.Slug;
+                plan = settings.Plan;
+                email = settings.Email;
+                fullName = settings.FullName;
+                apiKey = settings.ApiKey;
+            }
+        }
+        catch
+        {
+            // Settings endpoint may not exist yet — show empty state
+        }
+
+        loading = false;
+        StateHasChanged();
+    }
+
+    private async Task SaveWorkspace()
+    {
+        saving = true;
+        try
+        {
+            await Http.PutAsJsonAsync("api/v1/settings/workspace", new { Name = companyName });
+            Notification.Notify(NotificationSeverity.Success, "Workspace updated");
+        }
+        catch
+        {
+            Notification.Notify(NotificationSeverity.Error, "Failed to save");
+        }
+        saving = false;
+    }
+
+    private async Task SaveProfile()
+    {
+        savingProfile = true;
+        try
+        {
+            await Http.PutAsJsonAsync("api/v1/settings/profile", new { FullName = fullName });
+            Notification.Notify(NotificationSeverity.Success, "Profile updated");
+        }
+        catch
+        {
+            Notification.Notify(NotificationSeverity.Error, "Failed to save");
+        }
+        savingProfile = false;
+    }
+
+    private record WorkspaceSettings(string CompanyName, string Slug, string Plan, string Email, string FullName, string ApiKey);
+}

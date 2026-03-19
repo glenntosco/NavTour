@@ -31,6 +31,13 @@ public class AnalyticsController : ControllerBase
         return Ok(await _analyticsService.GetSummaryAsync(demoId));
     }
 
+    [HttpGet("api/v1/analytics/summary")]
+    [Authorize]
+    public async Task<ActionResult<AnalyticsSummaryResponse>> GetGlobalSummary()
+    {
+        return Ok(await _analyticsService.GetGlobalSummaryAsync());
+    }
+
     [HttpGet("api/v1/analytics/sessions")]
     [Authorize]
     public async Task<ActionResult<List<SessionListResponse>>> GetSessions([FromQuery] Guid? demoId)

@@ -1,0 +1,263 @@
+@page "/analytics"
+@rendermode InteractiveServer
+@using NavTour.Client.Services
+@using NavTour.Shared.DTOs.Analytics
+@using NavTour.Shared.DTOs.Demos
+@using NavTour.Shared.DTOs.Leads
+@inject AnalyticsApiService AnalyticsApi
+@inject DemoApiService DemoApi
+@inject HttpClient Http
+@inject AuthService Auth
+@inject NavigationManager Nav
+
+<RadzenStack Gap="24px">
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+        <RadzenStack Gap="2px">
+            <RadzenText TextStyle="TextStyle.H4" Style="margin:0;font-weight:700;color:#0B1929">Analytics</RadzenText>
+            <RadzenText TextStyle="TextStyle.Body2" Style="color:#64748B">Performance across all demos — last 30 days</RadzenText>
+        </RadzenStack>
+    </RadzenStack>
+
+    @if (loading)
+    {
+        <RadzenStack AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Style="min-height:300px">
+            <RadzenProgressBarCircular ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+        </RadzenStack>
+    }
+    else if (summary != null)
+    {
+        @* KPI stat cards *@
+        <RadzenRow Gap="16px">
+            <RadzenColumn SizeMD="3" Size="6">
+                <div class="analytics-stat-card">
+                    <span class="analytics-stat-icon" style="background:#E8F1FA;color:#0A5FAD">
+                        <RadzenIcon Icon="visibility" />
+                    </span>
+                    <span class="analytics-stat-value">@summary.TotalViews</span>
+                    <span class="analytics-stat-label">Total Views</span>
+                </div>
+            </RadzenColumn>
+            <RadzenColumn SizeMD="3" Size="6">
+                <div class="analytics-stat-card">
+                    <span class="analytics-stat-icon" style="background:#E8F5E9;color:#2E7D32">
+                        <RadzenIcon Icon="check_circle" />
+                    </span>
+                    <span class="analytics-stat-value">@summary.Completions</span>
+                    <span class="analytics-stat-label">Completions</span>
+                </div>
+            </RadzenColumn>
+            <RadzenColumn SizeMD="3" Size="6">
+                <div class="analytics-stat-card">
+                    <span class="analytics-stat-icon" style="background:#FFF4E5;color:#E89A2E">
+                        <RadzenIcon Icon="percent" />
+                    </span>
+                    <span class="analytics-stat-value">@summary.CompletionRate.ToString("F1")%</span>
+                    <span class="analytics-stat-label">Completion Rate</span>
+                </div>
+            </RadzenColumn>
+            <RadzenColumn SizeMD="3" Size="6">
+                <div class="analytics-stat-card">
+                    <span class="analytics-stat-icon" style="background:#F3E5F5;color:#7B1FA2">
+                        <RadzenIcon Icon="schedule" />
+                    </span>
+                    <span class="analytics-stat-value">@TimeSpan.FromSeconds(summary.AvgTimeSeconds).ToString(@"m\:ss")</span>
+                    <span class="analytics-stat-label">Avg Time</span>
+                </div>
+            </RadzenColumn>
+        </RadzenRow>
+
+        @* Views over time chart *@
+        <div class="analytics-card">
+            <h3 class="analytics-card-title">Views Over Time</h3>
+            @if (summary.ViewsOverTime.Count > 0)
+            {
+                <RadzenChart Style="height:280px">
+                    <RadzenAreaSeries Data="@summary.ViewsOverTime" CategoryProperty="Date" ValueProperty="Count"
+                        Stroke="rgba(10, 95, 173, 1)" Fill="rgba(10, 95, 173, 0.08)" StrokeWidth="2" />
+                    <RadzenCategoryAxis FormatString="{0:MMM dd}" />
+                    <RadzenValueAxis />
+                </RadzenChart>
+            }
+            else
+            {
+                <div class="analytics-empty">No view data yet</div>
+            }
+        </div>
+
+        <RadzenRow Gap="16px">
+            @* Per-demo breakdown *@
+            <RadzenColumn SizeMD="7" Size="12">
+                <div class="analytics-card">
+                    <h3 class="analytics-card-title">Demo Performance</h3>
+                    @if (demos.Count > 0)
+                    {
+                        <RadzenDataGrid Data="@demos" TItem="DemoListItemResponse" AllowSorting="true">
+                            <Columns>
+                                <RadzenDataGridColumn Property="Name" Title="Demo">
+                                    <Template Context="d">
+                                        <RadzenLink Path="@($"/demos/{d.Id}/analytics")" Style="font-weight:600;color:#0A5FAD">@d.Name</RadzenLink>
+                                    </Template>
+                                </RadzenDataGridColumn>
+                                <RadzenDataGridColumn Property="Status" Title="Status" Width="90px">
+                                    <Template Context="d">
+                                        <RadzenBadge Text="@d.Status.ToString()"
+                                            BadgeStyle="@(d.Status == NavTour.Shared.Enums.DemoStatus.Published ? BadgeStyle.Success : BadgeStyle.Light)"
+                                            Style="font-size:0.6875rem" />
+                                    </Template>
+                                </RadzenDataGridColumn>
+                                <RadzenDataGridColumn Property="ViewCount" Title="Views" Width="80px" TextAlign="TextAlign.Right" />
+                                <RadzenDataGridColumn Property="FrameCount" Title="Frames" Width="80px" TextAlign="TextAlign.Right" />
+                                <RadzenDataGridColumn Property="StepCount" Title="Steps" Width="80px" TextAlign="TextAlign.Right" />
+                            </Columns>
+                        </RadzenDataGrid>
+                    }
+                    else
+                    {
+                        <div class="analytics-empty">No demos yet</div>
+                    }
+                </div>
+            </RadzenColumn>
+
+            @* Top sources *@
+            <RadzenColumn SizeMD="5" Size="12">
+                <div class="analytics-card">
+                    <h3 class="analytics-card-title">Top Sources</h3>
+                    @if (summary.TopSources.Count > 0)
+                    {
+                        <RadzenDataGrid Data="@summary.TopSources" TItem="SourceEntry">
+                            <Columns>
+                                <RadzenDataGridColumn Property="Source" Title="Source" />
+                                <RadzenDataGridColumn Property="Count" Title="Views" Width="80px" TextAlign="TextAlign.Right" />
+                            </Columns>
+                        </RadzenDataGrid>
+                    }
+                    else
+                    {
+                        <div class="analytics-empty">No source data yet</div>
+                    }
+                </div>
+            </RadzenColumn>
+        </RadzenRow>
+
+        @* Leads summary *@
+        <div class="analytics-card">
+            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center">
+                <RadzenStack Gap="2px">
+                    <h3 class="analytics-card-title" style="margin:0">Leads Captured</h3>
+                    <span style="font-size:2rem;font-weight:700;color:#0B1929">@leadCount</span>
+                </RadzenStack>
+                <RadzenButton Text="View All Leads" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
+                    Click='() => Nav.NavigateTo("/leads")' />
+            </RadzenStack>
+        </div>
+
+        @* Recent sessions *@
+        <div class="analytics-card">
+            <h3 class="analytics-card-title">Recent Sessions</h3>
+            <RadzenDataGrid Data="@sessions" TItem="SessionListResponse" AllowPaging="true" PageSize="10" AllowSorting="true">
+                <Columns>
+                    <RadzenDataGridColumn Property="StartedAt" Title="Started" FormatString="{0:g}" Width="160px" />
+                    <RadzenDataGridColumn Property="StepsViewed" Title="Steps Viewed" Width="120px" TextAlign="TextAlign.Center" />
+                    <RadzenDataGridColumn Property="TotalSteps" Title="Total Steps" Width="110px" TextAlign="TextAlign.Center" />
+                    <RadzenDataGridColumn Property="Completed" Title="Status" Width="100px">
+                        <Template Context="session">
+                            <RadzenBadge Text="@(session.Completed ? "Completed" : "Dropped")"
+                                BadgeStyle="@(session.Completed ? BadgeStyle.Success : BadgeStyle.Light)"
+                                Style="font-size:0.6875rem" />
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn Property="Source" Title="Source" />
+                </Columns>
+            </RadzenDataGrid>
+        </div>
+    }
+</RadzenStack>
+
+<style>
+    .analytics-stat-card {
+        background: #fff;
+        border: 1px solid #E2E8F0;
+        border-radius: 8px;
+        padding: 20px 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        box-shadow: 0 1px 3px rgba(11, 25, 41, 0.08), 0 1px 2px rgba(11, 25, 41, 0.04);
+    }
+
+    .analytics-stat-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        font-size: 18px;
+    }
+
+    .analytics-stat-value {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #0B1929;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+    }
+
+    .analytics-stat-label {
+        font-size: 0.8125rem;
+        color: #64748B;
+        font-weight: 500;
+    }
+
+    .analytics-card {
+        background: #fff;
+        border: 1px solid #E2E8F0;
+        border-radius: 8px;
+        padding: 24px;
+        box-shadow: 0 1px 3px rgba(11, 25, 41, 0.08), 0 1px 2px rgba(11, 25, 41, 0.04);
+    }
+
+    .analytics-card-title {
+        font-size: 0.9375rem;
+        font-weight: 600;
+        color: #1E3A5F;
+        margin: 0 0 16px;
+    }
+
+    .analytics-empty {
+        text-align: center;
+        padding: 40px 16px;
+        color: #94A3B8;
+        font-size: 0.875rem;
+    }
+</style>
+
+@code {
+    private AnalyticsSummaryResponse? summary;
+    private List<DemoListItemResponse> demos = [];
+    private List<SessionListResponse> sessions = [];
+    private int leadCount;
+    private bool loading = true;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        await Auth.TryRestoreAsync();
+        if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
+
+        var summaryTask = AnalyticsApi.GetGlobalSummaryAsync();
+        var demosTask = DemoApi.GetDemosAsync();
+        var sessionsTask = AnalyticsApi.GetSessionsAsync();
+        var leadsTask = Http.GetFromJsonAsync<List<LeadResponse>>("api/v1/leads");
+
+        await Task.WhenAll(summaryTask, demosTask, sessionsTask, leadsTask);
+
+        summary = summaryTask.Result;
+        demos = demosTask.Result ?? [];
+        sessions = sessionsTask.Result ?? [];
+        leadCount = leadsTask.Result?.Count ?? 0;
+
+        loading = false;
+        StateHasChanged();
+    }
+}
