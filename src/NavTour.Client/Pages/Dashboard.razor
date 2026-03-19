@@ -26,63 +26,80 @@ else if (!Auth.IsAuthenticated)
 }
 else
 {
-    <RadzenStack Gap="24px">
-        @* Header: Title + Create button *@
-        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center">
-            <RadzenText TextStyle="TextStyle.H4" Style="margin:0;font-weight:700">
-                Product Demos <span style="font-weight:400;color:var(--rz-text-secondary-color)">(@demos.Count)</span>
-            </RadzenText>
-            <RadzenButton Text="+ Create Demo" ButtonStyle="ButtonStyle.Secondary" Click="CreateNewDemo" />
-        </RadzenStack>
+    <div class="dash">
+        @* Header *@
+        <div class="dash-header">
+            <div>
+                <h1 class="dash-title">Product Demos</h1>
+                <p class="dash-subtitle">@demos.Count demo@(demos.Count != 1 ? "s" : "") in your workspace</p>
+            </div>
+            <button class="dash-create-btn" @onclick="CreateNewDemo">
+                <span class="dash-create-icon">+</span>
+                Create Demo
+            </button>
+        </div>
 
-        @* Search bar *@
-        <div class="demo-search-bar">
-            <RadzenIcon Icon="search" Style="color:var(--rz-text-secondary-color)" />
-            <RadzenTextBox Placeholder="Search demos..." @bind-Value="searchText" Change="@OnSearchChanged" Style="flex:1;max-width:400px" />
+        @* Search *@
+        <div class="dash-search">
+            <svg class="dash-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <RadzenTextBox Placeholder="Search demos..." @bind-Value="searchText" Change="@OnSearchChanged" Style="flex:1;border:none;box-shadow:none;background:transparent;font-size:0.875rem" />
         </div>
 
         @if (filteredDemos.Count == 0 && demos.Count > 0)
         {
-            <RadzenCard Style="text-align:center;padding:40px">
-                <RadzenText TextStyle="TextStyle.H6" Style="color:var(--rz-text-secondary-color)">No demos match your search</RadzenText>
-            </RadzenCard>
+            <div class="dash-empty">
+                <p>No demos match "<strong>@searchText</strong>"</p>
+            </div>
         }
         else if (demos.Count == 0)
         {
-            <RadzenCard Style="text-align:center;padding:60px">
-                <RadzenIcon Icon="apps" Style="font-size:3rem;color:var(--rz-text-secondary-color);margin-bottom:16px" />
-                <RadzenText TextStyle="TextStyle.H5" Style="margin-bottom:8px">No demos yet</RadzenText>
-                <RadzenText Style="color:var(--rz-text-secondary-color);margin-bottom:24px">Create your first interactive demo to get started.</RadzenText>
-                <RadzenButton Text="+ Create Demo" ButtonStyle="ButtonStyle.Secondary" Click="CreateNewDemo" />
-            </RadzenCard>
+            <div class="dash-empty-state">
+                <div class="dash-empty-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:#94A3B8">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+                    </svg>
+                </div>
+                <h3>No demos yet</h3>
+                <p>Create your first interactive demo to start converting prospects.</p>
+                <button class="dash-create-btn" @onclick="CreateNewDemo">
+                    <span class="dash-create-icon">+</span>
+                    Create Demo
+                </button>
+            </div>
         }
         else
         {
-            @* Demo cards grid *@
-            <div class="demo-cards-grid">
+            <div class="dash-grid">
                 @foreach (var demo in filteredDemos)
                 {
-                    <div class="demo-card" @onclick='() => Nav.NavigateTo($"/demos/{demo.Id}/edit")'>
-                        <div class="demo-card-thumbnail">
-                            <span>Demo Preview</span>
+                    <div class="dash-card" @onclick='() => Nav.NavigateTo($"/demos/{demo.Id}/edit")'>
+                        <div class="dash-card-preview">
+                            <div class="dash-card-preview-inner">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+                                </svg>
+                                <span>@demo.FrameCount frames</span>
+                            </div>
                         </div>
-                        <div class="demo-card-body">
-                            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-                                <span class="demo-card-name">@demo.Name</span>
-                                <span class="demo-status-badge @(demo.Status == DemoStatus.Published ? "demo-status-published" : "demo-status-draft")">
-                                    @demo.Status.ToString()
+                        <div class="dash-card-info">
+                            <div class="dash-card-row">
+                                <span class="dash-card-name">@demo.Name</span>
+                                <span class="dash-badge @(demo.Status == DemoStatus.Published ? "dash-badge-live" : "dash-badge-draft")">
+                                    @(demo.Status == DemoStatus.Published ? "Live" : "Draft")
                                 </span>
                             </div>
-                            <div class="demo-card-meta">
+                            <div class="dash-card-meta">
                                 <span>@demo.FrameCount frames</span>
-                                <span>&middot;</span>
+                                <span class="dash-dot"></span>
                                 <span>@demo.ViewCount views</span>
+                                <span class="dash-dot"></span>
+                                <span>@demo.StepCount steps</span>
                             </div>
-                            <div class="demo-card-actions">
-                                <RadzenButton Text="Edit" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
-                                    Click='() => Nav.NavigateTo($"/demos/{demo.Id}/edit")' />
-                                <RadzenButton Text="Analytics" ButtonStyle="ButtonStyle.Info" Variant="Variant.Text" Size="ButtonSize.Small"
-                                    Click='() => Nav.NavigateTo($"/demos/{demo.Id}/analytics")' />
+                            <div class="dash-card-actions" @onclick:stopPropagation="true">
+                                <button class="dash-action-btn" @onclick='() => Nav.NavigateTo($"/demos/{demo.Id}/edit")'>Edit</button>
+                                <button class="dash-action-btn dash-action-secondary" @onclick='() => Nav.NavigateTo($"/demos/{demo.Id}/analytics")'>Analytics</button>
                             </div>
                         </div>
                     </div>
@@ -90,21 +107,307 @@ else
             </div>
         }
 
-        @* Get started section for new users *@
-        @if (demos.Count < 3)
+        @* Tips card *@
+        @if (demos.Count < 5)
         {
-            <RadzenCard Style="background:linear-gradient(135deg, #F8FAFC 0%, #EEF2F7 100%);border:1px solid #E2E8F0;margin-top:8px">
-                <RadzenStack Gap="8px">
-                    <RadzenText TextStyle="TextStyle.H6" Style="margin:0;font-weight:600">Get started with NavTour</RadzenText>
-                    <RadzenText Style="color:var(--rz-text-secondary-color);margin:0">
-                        Best practices for creating interactive demos that convert prospects into customers.
-                    </RadzenText>
-                    <RadzenLink Path="https://navtour.com/docs" Text="Explore docs" Style="font-weight:500" />
-                </RadzenStack>
-            </RadzenCard>
+            <div class="dash-tips">
+                <div class="dash-tips-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                </div>
+                <div>
+                    <strong>Getting started</strong>
+                    <p>Install the Chrome extension to capture pages from your product, then build guided tours in the editor.</p>
+                </div>
+            </div>
         }
-    </RadzenStack>
+    </div>
 }
+
+<style>
+    .dash {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 8px 0;
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    /* Header */
+    .dash-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 28px;
+    }
+
+    .dash-title {
+        font-size: 1.625rem;
+        font-weight: 700;
+        color: #0B1929;
+        margin: 0 0 2px;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+    }
+
+    .dash-subtitle {
+        font-size: 0.8125rem;
+        color: #64748B;
+        margin: 0;
+    }
+
+    .dash-create-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 9px 20px;
+        background: #0A5FAD;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 150ms, transform 100ms, box-shadow 200ms;
+        font-family: inherit;
+    }
+
+    .dash-create-btn:hover {
+        background: #084A8A;
+        box-shadow: 0 4px 12px rgba(10, 95, 173, 0.25);
+    }
+
+    .dash-create-btn:active {
+        transform: scale(0.98);
+    }
+
+    .dash-create-icon {
+        font-size: 1.125rem;
+        line-height: 1;
+        font-weight: 300;
+    }
+
+    /* Search */
+    .dash-search {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0 14px;
+        background: #fff;
+        border: 1px solid #E2E8F0;
+        border-radius: 8px;
+        margin-bottom: 24px;
+        transition: border-color 150ms, box-shadow 150ms;
+    }
+
+    .dash-search:focus-within {
+        border-color: #0A5FAD;
+        box-shadow: 0 0 0 3px rgba(10, 95, 173, 0.08);
+    }
+
+    .dash-search-icon {
+        color: #94A3B8;
+        flex-shrink: 0;
+    }
+
+    /* Grid */
+    .dash-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+    }
+
+    /* Card */
+    .dash-card {
+        background: #fff;
+        border: 1px solid #E2E8F0;
+        border-radius: 10px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: border-color 200ms, box-shadow 250ms cubic-bezier(0.1, 0.9, 0.2, 1),
+                    transform 250ms cubic-bezier(0.1, 0.9, 0.2, 1);
+    }
+
+    .dash-card:hover {
+        border-color: #CBD5E1;
+        box-shadow: 0 8px 24px rgba(11, 25, 41, 0.08), 0 2px 8px rgba(11, 25, 41, 0.04);
+        transform: translateY(-3px);
+    }
+
+    .dash-card-preview {
+        height: 160px;
+        background: linear-gradient(145deg, #F8FAFC 0%, #EEF2F7 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-bottom: 1px solid #F1F5F9;
+        position: relative;
+    }
+
+    .dash-card-preview-inner {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        color: #94A3B8;
+    }
+
+    .dash-card-preview-inner span {
+        font-size: 0.75rem;
+        font-weight: 500;
+        letter-spacing: 0.02em;
+    }
+
+    .dash-card-info {
+        padding: 16px 20px 20px;
+    }
+
+    .dash-card-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 6px;
+    }
+
+    .dash-card-name {
+        font-size: 0.9375rem;
+        font-weight: 600;
+        color: #0B1929;
+        letter-spacing: -0.01em;
+    }
+
+    .dash-badge {
+        font-size: 0.625rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        padding: 2px 8px;
+        border-radius: 10px;
+    }
+
+    .dash-badge-live {
+        background: #ECFDF5;
+        color: #059669;
+    }
+
+    .dash-badge-draft {
+        background: #F1F5F9;
+        color: #64748B;
+    }
+
+    .dash-card-meta {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.75rem;
+        color: #94A3B8;
+        margin-bottom: 14px;
+    }
+
+    .dash-dot {
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: #CBD5E1;
+    }
+
+    .dash-card-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .dash-action-btn {
+        padding: 6px 16px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 150ms, color 150ms;
+        font-family: inherit;
+        background: #F1F5F9;
+        color: #1E3A5F;
+        border: none;
+    }
+
+    .dash-action-btn:hover {
+        background: #E2E8F0;
+    }
+
+    .dash-action-secondary {
+        background: transparent;
+        color: #0A5FAD;
+    }
+
+    .dash-action-secondary:hover {
+        background: #EEF2FF;
+    }
+
+    /* Empty states */
+    .dash-empty {
+        text-align: center;
+        padding: 48px 24px;
+        color: #64748B;
+        font-size: 0.875rem;
+    }
+
+    .dash-empty-state {
+        text-align: center;
+        padding: 80px 24px;
+    }
+
+    .dash-empty-icon {
+        margin-bottom: 20px;
+    }
+
+    .dash-empty-state h3 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #0B1929;
+        margin: 0 0 8px;
+    }
+
+    .dash-empty-state p {
+        font-size: 0.875rem;
+        color: #64748B;
+        margin: 0 0 24px;
+        max-width: 320px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Tips card */
+    .dash-tips {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+        margin-top: 28px;
+        padding: 16px 20px;
+        background: #F8FAFC;
+        border: 1px solid #E2E8F0;
+        border-radius: 10px;
+    }
+
+    .dash-tips-icon {
+        flex-shrink: 0;
+        color: #0A5FAD;
+        margin-top: 1px;
+    }
+
+    .dash-tips strong {
+        display: block;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: #0B1929;
+        margin-bottom: 2px;
+    }
+
+    .dash-tips p {
+        font-size: 0.8125rem;
+        color: #64748B;
+        margin: 0;
+        line-height: 1.5;
+    }
+</style>
 
 @code {
     private List<DemoListItemResponse> demos = [];
