@@ -244,3 +244,146 @@ code {
 .rz-sidebar .rz-panel-menu .rz-navigation-item-link.active .rz-navigation-item-icon {
     color: white;
 }
+
+/* ============================================
+   Syncfusion Tooltip Overrides (dark style)
+   ============================================ */
+.e-tooltip-wrap.nt-tooltip {
+    background: #1a1a2e;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    max-width: 260px;
+}
+.e-tooltip-wrap.nt-tooltip .e-tip-content {
+    color: #fff;
+    font-size: 12px;
+    padding: 8px 12px;
+    line-height: 1.4;
+}
+.e-tooltip-wrap.nt-tooltip .e-arrow-tip-outer,
+.e-tooltip-wrap.nt-tooltip .e-arrow-tip-inner {
+    color: #1a1a2e;
+}
+.nt-tooltip .e-arrow-tip-outer.e-tip-bottom { border-top-color: #1a1a2e; }
+.nt-tooltip .e-arrow-tip-outer.e-tip-top    { border-bottom-color: #1a1a2e; }
+.nt-tooltip .e-arrow-tip-outer.e-tip-left   { border-right-color: #1a1a2e; }
+.nt-tooltip .e-arrow-tip-outer.e-tip-right  { border-left-color: #1a1a2e; }
+.tt-title {
+    font-weight: 600;
+    margin-bottom: 3px;
+    font-size: 12px;
+}
+.tt-desc {
+    color: #cbd5e1;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+/* ============================================
+   Frame ↔ Step linking badge
+   ============================================ */
+.frame-badge {
+    background: #e8f0fe;
+    color: #1E3A5F;
+    font-size: 9px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+    white-space: nowrap;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+}
+
+/* ============================================
+   Onboarding Tour
+   ============================================ */
+.tour-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: all;
+}
+.tour-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 9998;
+}
+.tour-spotlight {
+    position: fixed;
+    z-index: 9999;
+    border-radius: 8px;
+    box-shadow: 0 0 0 9999px rgba(0,0,0,0.5);
+    pointer-events: none;
+    transition: all 0.35s ease;
+}
+.tour-card {
+    position: fixed;
+    z-index: 10000;
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    max-width: 320px;
+    transition: all 0.35s ease;
+}
+.tour-card h3 {
+    margin: 0 0 8px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1a1a2e;
+}
+.tour-card p {
+    margin: 0 0 16px;
+    font-size: 13px;
+    color: #64748b;
+    line-height: 1.5;
+}
+.tour-dots {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+.tour-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    transition: background 0.2s;
+}
+.tour-dot.active {
+    background: #1E3A5F;
+}
+.tour-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.tour-btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+}
+.tour-btn-primary {
+    background: #1E3A5F;
+    color: #fff;
+}
+.tour-btn-primary:hover { background: #152D4A; }
+.tour-btn-secondary {
+    background: #f1f5f9;
+    color: #64748b;
+}
+.tour-btn-secondary:hover { background: #e2e8f0; }
+.tour-btn-skip {
+    background: none;
+    color: #94a3b8;
+    font-size: 12px;
+    padding: 4px 8px;
+}
+.tour-btn-skip:hover { color: #64748b; }

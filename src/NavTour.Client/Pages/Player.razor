@@ -68,19 +68,25 @@ else
                 style="padding:8px 20px;border-radius:8px;font-size:13px;font-weight:500;cursor:@(currentStepIndex <= 0 ? "default" : "pointer");border:1px solid #e2e8f0;background:@(currentStepIndex <= 0 ? "#f8fafc" : "#ffffff");color:@(currentStepIndex <= 0 ? "#cbd5e1" : "#64748b")">
                 &larr; Back
             </button>
-            <div style="display:flex;align-items:center;gap:6px">
-                @if ((manifest?.Steps.Count ?? 0) <= 20)
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+                @if (currentStep != null && currentStep.TriggerType != TriggerType.ButtonClick)
                 {
-                    @for (int i = 0; i < (manifest?.Steps.Count ?? 0); i++)
+                    <span style="font-size:12px;color:#4361ee;font-weight:500">@GetTriggerHint(currentStep)</span>
+                }
+                <div style="display:flex;align-items:center;gap:6px">
+                    @if ((manifest?.Steps.Count ?? 0) <= 20)
                     {
-                        var idx = i;
-                        <div style="width:8px;height:8px;border-radius:50%;background:@(idx == currentStepIndex ? "#4361ee" : idx < currentStepIndex ? "#a5b4fc" : "#e2e8f0");transition:background 0.2s"></div>
+                        @for (int i = 0; i < (manifest?.Steps.Count ?? 0); i++)
+                        {
+                            var idx = i;
+                            <div style="width:8px;height:8px;border-radius:50%;background:@(idx == currentStepIndex ? "#4361ee" : idx < currentStepIndex ? "#a5b4fc" : "#e2e8f0");transition:background 0.2s"></div>
+                        }
                     }
-                }
-                else
-                {
-                    <span style="font-size:13px;color:#64748b">Step @(currentStepIndex + 1) of @manifest!.Steps.Count</span>
-                }
+                    else
+                    {
+                        <span style="font-size:13px;color:#64748b">Step @(currentStepIndex + 1) of @manifest!.Steps.Count</span>
+                    }
+                </div>
             </div>
             <button @onclick="NextStep"
                 style="padding:8px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:#4361ee;color:white">
@@ -178,10 +184,26 @@ else
             await JS.InvokeVoidAsync("playerInterop.focusElement", playerContainer);
         }
 
-        // Set up trigger for current step after render
+        // Set up trigger for current step after render — wait for iframe to load first
         if (manifest != null && currentStep != null && dotnetRef != null)
         {
-            await SetupTriggerForStep(currentStep);
+            await SetupCurrentStepTrigger();
+        }
+    }
+
+    private async Task SetupCurrentStepTrigger()
+    {
+        if (currentStep == null || dotnetRef == null) return;
+
+        try
+        {
+            var loaded = await JS.InvokeAsync<bool>("playerInterop.waitForIframeLoad", "iframe");
+            if (loaded)
+                await SetupTriggerForStep(currentStep);
+        }
+        catch
+        {
+            // Iframe may not be available during dispose
         }
     }
 
@@ -203,7 +225,7 @@ else
         }
         catch
         {
-            // Iframe may not be ready yet, or selector not found — graceful fallback
+            // Selector not found — graceful fallback
         }
     }
 

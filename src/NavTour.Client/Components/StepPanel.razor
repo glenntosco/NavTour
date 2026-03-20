@@ -1,5 +1,6 @@
 @using NavTour.Shared.DTOs.Steps
 @using NavTour.Shared.DTOs.Annotations
+@using NavTour.Shared.DTOs.Frames
 
 <RadzenStack Gap="8px" Style="width:300px;min-height:100%;overflow-y:auto;border-left:1px solid var(--rz-border-color);padding:12px">
     <RadzenText TextStyle="TextStyle.H6">Steps</RadzenText>
@@ -14,9 +15,15 @@
         var isSelected = step.Id == SelectedStepId;
         <RadzenCard Style="@($"position:relative;padding:10px;cursor:pointer;{(isSelected ? "border:2px solid var(--rz-primary)" : "")}")"
             @onclick="() => OnStepSelected.InvokeAsync(step.Id)">
-            <button class="step-delete" @onclick="() => ConfirmDelete(step.Id)" @onclick:stopPropagation="true">&times;</button>
+            <SfTooltip Content="Remove this step and its annotations" CssClass="nt-tooltip" Position="Position.TopCenter" OpenDelay="300" ShowTipPointer="true">
+                <ChildContent><button class="step-delete" @onclick="() => ConfirmDelete(step.Id)" @onclick:stopPropagation="true">&times;</button></ChildContent>
+            </SfTooltip>
             <RadzenStack Gap="4px">
-                <RadzenText TextStyle="TextStyle.Subtitle2">Step @step.StepNumber</RadzenText>
+                <div style="display:flex;align-items:center;gap:6px">
+                    <RadzenText TextStyle="TextStyle.Subtitle2" class="rz-m-0">Step @step.StepNumber</RadzenText>
+                    @{ var frameName = Frames.FirstOrDefault(f => f.Id == step.FrameId)?.Name ?? "Untitled"; }
+                    <span class="frame-badge">@frameName</span>
+                </div>
                 <RadzenText TextStyle="TextStyle.Caption" Style="color:var(--rz-text-secondary-color)">
                     @step.NavigationAction.ToString()
                     @if (step.TriggerType != TriggerType.ButtonClick)
@@ -40,10 +47,15 @@
                     @* Trigger Type *@
                     <div class="step-field">
                         <label>Trigger</label>
-                        <RadzenDropDown TValue="TriggerType" Data="@triggerTypes"
-                            Value="@step.TriggerType" TextProperty="Text" ValueProperty="Value"
-                            Change="@(EventCallback.Factory.Create<object>(this, v => UpdateTriggerType(step, (TriggerType)v)))"
-                            Style="width:100%;font-size:12px" />
+                        <SfTooltip CssClass="nt-tooltip" Position="Position.LeftCenter" OpenDelay="300" ShowTipPointer="true">
+                            <ContentTemplate><div class="tt-title">Step Trigger</div><div class="tt-desc">How the viewer advances past this step</div></ContentTemplate>
+                            <ChildContent>
+                                <RadzenDropDown TValue="TriggerType" Data="@triggerTypes"
+                                    Value="@step.TriggerType" TextProperty="Text" ValueProperty="Value"
+                                    Change="@(EventCallback.Factory.Create<object>(this, v => UpdateTriggerType(step, (TriggerType)v)))"
+                                    Style="width:100%;font-size:12px" />
+                            </ChildContent>
+                        </SfTooltip>
                     </div>
 
                     @* Element selector (for ElementClick/TextInput) *@
@@ -51,9 +63,14 @@
                     {
                         <div class="step-field">
                             <label>CSS Selector</label>
-                            <RadzenTextBox Value="@(step.ClickTargetSelector ?? "")" Style="width:100%;font-size:12px"
-                                Placeholder="e.g. #submit-btn, .nav-link"
-                                Change="@((string v) => UpdateSelector(step, v))" />
+                            <SfTooltip CssClass="nt-tooltip" Position="Position.LeftCenter" OpenDelay="300" ShowTipPointer="true">
+                                <ContentTemplate><div class="tt-title">CSS Selector</div><div class="tt-desc">The CSS selector targeting the element the viewer interacts with (e.g., #submit-btn, .nav-link)</div></ContentTemplate>
+                                <ChildContent>
+                                    <RadzenTextBox Value="@(step.ClickTargetSelector ?? "")" Style="width:100%;font-size:12px"
+                                        Placeholder="e.g. #submit-btn, .nav-link"
+                                        Change="@((string v) => UpdateSelector(step, v))" />
+                                </ChildContent>
+                            </SfTooltip>
                         </div>
                     }
 
@@ -71,10 +88,15 @@
                     @* Navigation Action *@
                     <div class="step-field">
                         <label>Action</label>
-                        <RadzenDropDown TValue="NavigationAction" Data="@navigationActions"
-                            Value="@step.NavigationAction" TextProperty="Text" ValueProperty="Value"
-                            Change="@(EventCallback.Factory.Create<object>(this, v => UpdateNavAction(step, (NavigationAction)v)))"
-                            Style="width:100%;font-size:12px" />
+                        <SfTooltip CssClass="nt-tooltip" Position="Position.LeftCenter" OpenDelay="300" ShowTipPointer="true">
+                            <ContentTemplate><div class="tt-title">Navigation Action</div><div class="tt-desc">What happens after the trigger fires</div></ContentTemplate>
+                            <ChildContent>
+                                <RadzenDropDown TValue="NavigationAction" Data="@navigationActions"
+                                    Value="@step.NavigationAction" TextProperty="Text" ValueProperty="Value"
+                                    Change="@(EventCallback.Factory.Create<object>(this, v => UpdateNavAction(step, (NavigationAction)v)))"
+                                    Style="width:100%;font-size:12px" />
+                            </ChildContent>
+                        </SfTooltip>
                     </div>
 
                     @* Navigation Target (for GoToStep, OpenUrl, StartFlow) *@
@@ -109,17 +131,25 @@
                     @* Backdrop Level *@
                     <div class="step-field">
                         <label>Backdrop</label>
-                        <RadzenDropDown TValue="string" Data="@backdropLevels"
-                            Value="@(step.BackdropLevel ?? "none")" TextProperty="Text" ValueProperty="Value"
-                            Change="@(EventCallback.Factory.Create<object>(this, v => UpdateBackdrop(step, (string)v)))"
-                            Style="width:100%;font-size:12px" />
+                        <SfTooltip CssClass="nt-tooltip" Position="Position.LeftCenter" OpenDelay="300" ShowTipPointer="true">
+                            <ContentTemplate><div class="tt-title">Backdrop Overlay</div><div class="tt-desc">Dim the background to focus attention on annotations</div></ContentTemplate>
+                            <ChildContent>
+                                <RadzenDropDown TValue="string" Data="@backdropLevels"
+                                    Value="@(step.BackdropLevel ?? "none")" TextProperty="Text" ValueProperty="Value"
+                                    Change="@(EventCallback.Factory.Create<object>(this, v => UpdateBackdrop(step, (string)v)))"
+                                    Style="width:100%;font-size:12px" />
+                            </ChildContent>
+                        </SfTooltip>
                     </div>
                 </div>
             }
         </RadzenCard>
     }
 
-    <RadzenButton Text="+ Add Step" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Style="width:100%" Click="OnAddStep" />
+    <SfTooltip CssClass="nt-tooltip" Position="Position.LeftCenter" OpenDelay="300" ShowTipPointer="true">
+        <ContentTemplate><div class="tt-title">Add Step</div><div class="tt-desc">Create a new step on the currently selected frame</div></ContentTemplate>
+        <ChildContent><RadzenButton Text="+ Add Step" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Style="width:100%" Click="OnAddStep" /></ChildContent>
+    </SfTooltip>
 </RadzenStack>
 
 @if (confirmDeleteId != null)
@@ -180,6 +210,7 @@
 
 @code {
     [Parameter] public List<StepResponse> Steps { get; set; } = [];
+    [Parameter] public List<FrameResponse> Frames { get; set; } = [];
     [Parameter] public Guid? SelectedStepId { get; set; }
     [Parameter] public EventCallback<Guid> OnStepSelected { get; set; }
     [Parameter] public EventCallback OnAddStep { get; set; }

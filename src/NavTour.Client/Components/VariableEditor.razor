@@ -5,8 +5,10 @@
     <RadzenStack Gap="12px">
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
             <RadzenText TextStyle="TextStyle.H6">Personalization Variables</RadzenText>
-            <RadzenButton Text="+ Add" Icon="add" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall"
-                Click="AddVariable" />
+            <SfTooltip CssClass="nt-tooltip" Position="Position.LeftCenter" OpenDelay="300" ShowTipPointer="true">
+                <ContentTemplate><div class="tt-title">Add Variable</div><div class="tt-desc">Create a new personalization variable</div></ContentTemplate>
+                <ChildContent><RadzenButton Text="+ Add" Icon="add" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall" Click="AddVariable" /></ChildContent>
+            </SfTooltip>
         </RadzenStack>
 
         <RadzenText Style="color:var(--rz-text-secondary-color);font-size:13px">
@@ -22,12 +24,20 @@
         @foreach (var v in variables)
         {
             <div class="var-row">
-                <RadzenFormField Text="Key" Style="flex:1">
-                    <RadzenTextBox Value="@v.Key" Change="val => v.Key = val" Placeholder="company" Style="width:100%" />
-                </RadzenFormField>
-                <RadzenFormField Text="Default Value" Style="flex:2">
-                    <RadzenTextBox Value="@v.DefaultValue" Change="val => v.DefaultValue = val" Placeholder="Acme Corp" Style="width:100%" />
-                </RadzenFormField>
+                <SfTooltip Content="The token name used in content, e.g. &quot;company&quot; for {{company}}" CssClass="nt-tooltip" Position="Position.TopCenter" OpenDelay="300" ShowTipPointer="true">
+                    <ChildContent>
+                        <RadzenFormField Text="Key" Style="flex:1">
+                            <RadzenTextBox Value="@v.Key" Change="val => v.Key = val" Placeholder="company" Style="width:100%" />
+                        </RadzenFormField>
+                    </ChildContent>
+                </SfTooltip>
+                <SfTooltip Content="Shown when no personalized value is provided via URL parameters" CssClass="nt-tooltip" Position="Position.TopCenter" OpenDelay="300" ShowTipPointer="true">
+                    <ChildContent>
+                        <RadzenFormField Text="Default Value" Style="flex:2">
+                            <RadzenTextBox Value="@v.DefaultValue" Change="val => v.DefaultValue = val" Placeholder="Acme Corp" Style="width:100%" />
+                        </RadzenFormField>
+                    </ChildContent>
+                </SfTooltip>
                 <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Text"
                     Size="ButtonSize.Small" Click="() => RemoveVariable(v)" Style="align-self:flex-end;margin-bottom:4px" />
             </div>

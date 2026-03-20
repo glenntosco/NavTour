@@ -15,6 +15,24 @@ window.copyToClipboard = function (text) {
     navigator.clipboard.writeText(text);
 };
 
+window.tourInterop = {
+    isCompleted: function () {
+        return localStorage.getItem("navtour_tour_completed") === "true";
+    },
+    markCompleted: function () {
+        localStorage.setItem("navtour_tour_completed", "true");
+    },
+    reset: function () {
+        localStorage.removeItem("navtour_tour_completed");
+    },
+    getElementRect: function (selector) {
+        var el = document.querySelector(selector);
+        if (!el) return null;
+        var rect = el.getBoundingClientRect();
+        return { left: rect.left, top: rect.top, width: rect.width, height: rect.height };
+    }
+};
+
 window.authStorage = {
     save: function (token, tenantId) {
         localStorage.setItem("navtour_token", token);

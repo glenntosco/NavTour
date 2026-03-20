@@ -2,6 +2,24 @@
 window.playerInterop = {
     _cleanup: null,
 
+    // Wait for iframe to finish loading its srcdoc content
+    waitForIframeLoad: function (iframeSelector) {
+        return new Promise(function (resolve) {
+            var iframe = document.querySelector(iframeSelector);
+            if (!iframe) { resolve(false); return; }
+            // Check if content is already loaded
+            if (iframe.contentDocument && iframe.contentDocument.body && iframe.contentDocument.body.children.length > 0) {
+                resolve(true); return;
+            }
+            // Wait for the load event
+            var timeout = setTimeout(function () { resolve(false); }, 5000);
+            iframe.addEventListener('load', function () {
+                clearTimeout(timeout);
+                resolve(true);
+            }, { once: true });
+        });
+    },
+
     // Set up trigger detection inside the iframe
     setupTrigger: function (dotnetRef, iframeSelector, triggerType, selector, durationMs) {
         this.clearTrigger();

@@ -9,52 +9,85 @@
 <RadzenStack Gap="0" Style="height:calc(100vh - 80px)">
     @* Toolbar *@
     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="8px"
+        class="editor-toolbar"
         Style="padding:8px 12px;border-bottom:1px solid var(--rz-border-color)">
         <RadzenText TextStyle="TextStyle.H6" class="rz-m-0">@(demo?.Name ?? "Loading...")</RadzenText>
         <div style="flex:1"></div>
-        <RadzenButton Text="Find & Replace" Icon="find_replace" ButtonStyle="ButtonStyle.Light"
-            Size="ButtonSize.Small" Click="() => showFindReplace = !showFindReplace" />
-        <RadzenButton Text="Save Edits" Icon="save_alt" ButtonStyle="ButtonStyle.Warning"
-            Size="ButtonSize.Small" Click="SaveFrameEdits" Visible="@(frameEditor?.HasUnsavedEdits == true)" />
-        <RadzenButton Text="Save" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small"
-            Click="SaveSteps" IsBusy="saving" />
-        <RadzenButton Text="Preview" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
-            Click="OpenPreview" />
+        <SfTooltip CssClass="nt-tooltip" Position="Position.BottomCenter" OpenDelay="300" ShowTipPointer="true">
+            <ContentTemplate><div class="tt-title">Find & Replace</div><div class="tt-desc">Search and replace text across the current frame's HTML</div></ContentTemplate>
+            <ChildContent><RadzenButton Text="Find & Replace" Icon="find_replace" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Click="() => showFindReplace = !showFindReplace" /></ChildContent>
+        </SfTooltip>
+        <SfTooltip CssClass="nt-tooltip" Position="Position.BottomCenter" OpenDelay="300" ShowTipPointer="true">
+            <ContentTemplate><div class="tt-title">Save Frame Edits</div><div class="tt-desc">Save changes made to the current frame's HTML content</div></ContentTemplate>
+            <ChildContent><RadzenButton Text="Save Edits" Icon="save_alt" ButtonStyle="ButtonStyle.Warning" Size="ButtonSize.Small" Click="SaveFrameEdits" Visible="@(frameEditor?.HasUnsavedEdits == true)" /></ChildContent>
+        </SfTooltip>
+        <SfTooltip CssClass="nt-tooltip" Position="Position.BottomCenter" OpenDelay="300" ShowTipPointer="true">
+            <ContentTemplate><div class="tt-title">Save All Steps</div><div class="tt-desc">Persist all step configurations, triggers, and annotations</div></ContentTemplate>
+            <ChildContent><RadzenButton Text="Save" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" Click="SaveSteps" IsBusy="saving" /></ChildContent>
+        </SfTooltip>
+        <SfTooltip CssClass="nt-tooltip" Position="Position.BottomCenter" OpenDelay="300" ShowTipPointer="true">
+            <ContentTemplate><div class="tt-title">Preview Demo</div><div class="tt-desc">Opens the demo player in a new tab as viewers will see it</div></ContentTemplate>
+            <ChildContent><RadzenButton Text="Preview" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Click="OpenPreview" class="preview-btn" /></ChildContent>
+        </SfTooltip>
         @if (demo?.Status == DemoStatus.Published)
         {
-            <button @onclick="UnpublishDemo" style="border-radius:8px;padding:6px 16px;font-weight:600;cursor:pointer;background:#059669;color:white;border:none;font-size:13px;line-height:1.4">Published</button>
+            <SfTooltip CssClass="nt-tooltip" Position="Position.BottomCenter" OpenDelay="300" ShowTipPointer="true">
+                <ContentTemplate><div class="tt-title">Publication Status</div><div class="tt-desc">Currently published. Click to unpublish and make it a draft.</div></ContentTemplate>
+                <ChildContent><button @onclick="UnpublishDemo" style="border-radius:8px;padding:6px 16px;font-weight:600;cursor:pointer;background:#059669;color:white;border:none;font-size:13px;line-height:1.4">Published</button></ChildContent>
+            </SfTooltip>
         }
         else
         {
-            <button @onclick="PublishDemo" style="border-radius:8px;padding:6px 16px;font-weight:600;cursor:pointer;background:#f1f5f9;color:#64748b;border:1px solid #e2e8f0;font-size:13px;line-height:1.4">Draft</button>
+            <SfTooltip CssClass="nt-tooltip" Position="Position.BottomCenter" OpenDelay="300" ShowTipPointer="true">
+                <ContentTemplate><div class="tt-title">Publication Status</div><div class="tt-desc">Currently a draft. Click to publish and make it accessible via share link.</div></ContentTemplate>
+                <ChildContent><button @onclick="PublishDemo" style="border-radius:8px;padding:6px 16px;font-weight:600;cursor:pointer;background:#f1f5f9;color:#64748b;border:1px solid #e2e8f0;font-size:13px;line-height:1.4">Draft</button></ChildContent>
+            </SfTooltip>
         }
-        <RadzenButton Text="Share" Icon="share" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
-            Click="() => showSharePopover = !showSharePopover" Style="position:relative" />
-        <RadzenButton Text="Settings" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
-            Click='() => Nav.NavigateTo($"/demos/{DemoId}/settings")' />
+        <SfTooltip CssClass="nt-tooltip" Position="Position.BottomCenter" OpenDelay="300" ShowTipPointer="true">
+            <ContentTemplate><div class="tt-title">Share Demo</div><div class="tt-desc">Copy share link, share on WhatsApp, or get embed code</div></ContentTemplate>
+            <ChildContent><RadzenButton Text="Share" Icon="share" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Click="() => showSharePopover = !showSharePopover" Style="position:relative" /></ChildContent>
+        </SfTooltip>
+        <SfTooltip CssClass="nt-tooltip" Position="Position.BottomCenter" OpenDelay="300" ShowTipPointer="true">
+            <ContentTemplate><div class="tt-title">Demo Settings</div><div class="tt-desc">Configure demo name, slug, lead capture, and personalization</div></ContentTemplate>
+            <ChildContent><RadzenButton Text="Settings" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Click='() => Nav.NavigateTo($"/demos/{DemoId}/settings")' /></ChildContent>
+        </SfTooltip>
+        <SfTooltip CssClass="nt-tooltip" Position="Position.BottomCenter" OpenDelay="300" ShowTipPointer="true">
+            <ContentTemplate><div class="tt-title">Onboarding Tour</div><div class="tt-desc">Replay the guided tour of the demo builder</div></ContentTemplate>
+            <ChildContent><button @onclick="() => showTour = true" style="background:none;border:1px solid var(--rz-border-color);border-radius:8px;padding:4px 8px;cursor:pointer;font-size:14px;color:var(--rz-text-secondary-color)">&#10068;</button></ChildContent>
+        </SfTooltip>
     </RadzenStack>
 
     @* Main workspace *@
     <RadzenStack Orientation="Orientation.Horizontal" Style="flex:1;overflow:hidden">
-        <FrameStrip Frames="frames" SelectedFrameId="selectedFrameId"
-            OnFrameSelected="SelectFrame" OnAddFrame="AddFrame"
-            OnDeleteFrame="DeleteFrame" OnInsertFrame="InsertFrame"
-            OnReorderFrame="ReorderFrame" OnRenameFrame="RenameFrame" />
+        <div class="frame-strip">
+            <FrameStrip Frames="frames" SelectedFrameId="selectedFrameId"
+                OnFrameSelected="SelectFrame" OnAddFrame="AddFrame"
+                OnDeleteFrame="DeleteFrame" OnInsertFrame="InsertFrame"
+                OnReorderFrame="ReorderFrame" OnRenameFrame="RenameFrame" />
+        </div>
 
-        <FrameEditor @ref="frameEditor" DemoId="@DemoId" HtmlContent="@currentFrameHtml"
-            Annotations="@currentAnnotations"
-            ShowFindReplace="@showFindReplace"
-            ShowFindReplaceChanged="(v) => showFindReplace = v"
-            OnHtmlChanged="OnFrameHtmlSaved"
-            OnAnnotationMoved="HandleAnnotationMoved" />
+        <div class="frame-editor" style="flex:1;display:flex;overflow:hidden">
+            <FrameEditor @ref="frameEditor" DemoId="@DemoId" HtmlContent="@currentFrameHtml"
+                Annotations="@currentAnnotations"
+                ShowFindReplace="@showFindReplace"
+                ShowFindReplaceChanged="(v) => showFindReplace = v"
+                OnHtmlChanged="OnFrameHtmlSaved"
+                OnAnnotationMoved="HandleAnnotationMoved" />
+        </div>
 
-        <StepPanel Steps="steps" SelectedStepId="selectedStepId"
-            OnStepSelected="SelectStep" OnAddStep="AddStep" OnDeleteStep="DeleteStep"
-            OnStepSettingsChanged="HandleStepSettingsChanged" />
+        <div class="step-panel">
+            <StepPanel Steps="steps" Frames="frames" SelectedStepId="selectedStepId"
+                OnStepSelected="SelectStep" OnAddStep="AddStep" OnDeleteStep="DeleteStep"
+                OnStepSettingsChanged="HandleStepSettingsChanged" />
+        </div>
 
-        <AnnotationEditor DemoId="@DemoId" StepId="@selectedStepId" Annotations="@currentAnnotations"
-            OnAnnotationsChanged="RefreshAnnotations" />
+        <div class="annotation-editor">
+            <AnnotationEditor DemoId="@DemoId" StepId="@selectedStepId" Annotations="@currentAnnotations"
+                OnAnnotationsChanged="RefreshAnnotations" />
+        </div>
     </RadzenStack>
+
+    <OnboardingTour @bind-Visible="showTour" />
 </RadzenStack>
 
 @if (showSharePopover)
@@ -128,6 +161,7 @@
     private bool saving;
     private bool showFindReplace;
     private bool showSharePopover;
+    private bool showTour;
     private string embedWidth = "100%";
     private string embedHeight = "600";
     private string shareCopyLabel = "Copy Link";
