@@ -4,6 +4,43 @@ All notable changes to NavTour are documented in this file.
 
 ---
 
+## [1.2.0] - 2026-03-20
+
+### Added
+- **Support page** (`/support`) — Email support (support@navtour.cloud), FAQ links, and general inquiry card. Linked from footer only.
+- **Privacy Policy page** (`/privacy`) — Full privacy policy covering data collection, browser extension, cookies, data retention, and user rights. Required for Chrome Web Store submission.
+- **Chrome Web Store promo tiles** — Small (440x280) and marquee (1400x560) promotional images for the extension listing.
+- **Onboarding tour** — Syncfusion tooltips guiding new users through the demo builder.
+- **Persistent bottom navigation bar** in the demo player.
+- **Analytics and Settings pages** — Global analytics dashboard and app settings.
+- **Embed code & share section** in demo settings.
+- **Frame reorder and rename** with improved frame strip UI.
+- **Team member management** with Azure Communication Email invites.
+- **Lead email templates** for captured lead notifications.
+
+### Changed
+- **Extension version** bumped to 1.2.0.
+- **Extension permissions** — Removed all `host_permissions` (including localhost). Moved `<all_urls>` and `https://navtour.cloud/*` to `optional_host_permissions` to avoid Chrome Web Store in-depth review. Permissions are requested on-demand when the user starts a capture session.
+- **Login session** extended to 24 hours.
+- **Extension auto-login** — Retry on token expiry with fresh cookie before showing login form. Removed localhost from candidate URLs.
+- **Annotation editor** — Added `@onclick:stopPropagation` on edit form to prevent parent click from resetting field values (fixes save, opacity, and position bugs).
+- **Player overlay** — Beacon annotations now use `transform:translate(-50%,-50%)` and `width:auto;height:auto` for correct centering, matching editor positioning.
+- **Tooltips** — Switched to Syncfusion light-style tooltips across the builder.
+- **Premium dashboard redesign** with refined cards and typography.
+- **Login page** — Split layout with large brand logo, stats panel, and WebGL gradient animation.
+
+### Fixed
+- Annotation editor fields (name, description, opacity) resetting on every click inside the edit form.
+- Beacon position mismatch between editor and player preview.
+- Player navigation and step creation bugs.
+- Frame deletion, nav collapse, editor width, and toolbar branding issues.
+- Step deletion confirmation dialog not functioning.
+- Confirmation dialogs clipped by `overflow:hidden` parents.
+- Header contrast — white background with dark text.
+- Favicons and extension dist packaging.
+
+---
+
 ## [Unreleased] - 2026-03-18
 
 ### Added

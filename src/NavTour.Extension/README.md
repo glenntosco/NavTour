@@ -2,6 +2,9 @@
 
 Chrome Manifest V3 extension for capturing product screenshots as interactive HTML/CSS demo frames.
 
+**Version:** 1.2.0
+**Chrome Web Store:** [NavTour Capture](https://chrome.google.com/webstore/detail/navtour-capture)
+
 ## Setup
 
 ```bash
@@ -11,6 +14,18 @@ npm run watch     # Watch mode for development
 ```
 
 Load unpacked extension in Chrome from this directory (`src/NavTour.Extension/`).
+
+## Permissions
+
+| Permission | Type | Justification |
+|------------|------|---------------|
+| `activeTab` | Required | Capture the HTML/CSS content of the currently active tab when the user clicks the extension icon or initiates a capture. Only accesses the tab the user is actively interacting with. |
+| `storage` | Required | Store the user's authentication session (JWT token) and capture state locally so they persist across popup opens. |
+| `scripting` | Required | Inject the capture toolbar and DOM snapshot script into the active page during a capture session. |
+| `tabs` | Required | Read the active tab's URL to detect page navigation during auto-capture mode and to display the current page title. |
+| `cookies` | Required | Read the `navtour_auth` authentication cookie from navtour.cloud for silent auto-login when the user is already signed into the web app. |
+| `https://navtour.cloud/*` | Optional host | Access the NavTour API and read authentication cookies. Requested on first use. |
+| `<all_urls>` | Optional host | Inject capture scripts into any webpage the user chooses to capture. Requested when the user starts a capture session. |
 
 ## Authentication
 

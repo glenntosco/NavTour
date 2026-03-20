@@ -4,10 +4,8 @@
   "version": "1.2.0",
   "description": "Capture your application and build interactive product demos in NavTour, we make interactive demo easy.",
   "permissions": ["activeTab", "storage", "scripting", "tabs", "cookies"],
-  "host_permissions": [
-    "http://localhost:5017/*",
-    "http://127.0.0.1:5017/*",
-    "https://localhost:7048/*",
+  "optional_host_permissions": [
+    "https://navtour.cloud/*",
     "<all_urls>"
   ],
   "action": {

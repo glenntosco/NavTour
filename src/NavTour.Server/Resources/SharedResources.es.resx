@@ -86,6 +86,44 @@
   <data name="support_enterprise_title" xml:space="preserve"><value>¿Necesitas soporte dedicado?</value></data>
   <data name="support_enterprise_desc" xml:space="preserve"><value>Los planes Enterprise incluyen un gerente de éxito del cliente dedicado y SLA prioritario.</value></data>
   <data name="support_enterprise_cta" xml:space="preserve"><value>Hablar con Ventas</value></data>
+
+  <!-- Privacy Policy Page -->
+  <data name="privacy_page_title" xml:space="preserve"><value>Política de Privacidad — NavTour</value></data>
+  <data name="privacy_meta_desc" xml:space="preserve"><value>Política de privacidad de NavTour. Conoce cómo recopilamos, usamos y protegemos tu información.</value></data>
+  <data name="privacy_heading" xml:space="preserve"><value>Política de Privacidad</value></data>
+  <data name="privacy_last_updated" xml:space="preserve"><value>Última actualización: 20 de marzo de 2026</value></data>
+  <data name="privacy_s1_title" xml:space="preserve"><value>Introducción</value></data>
+  <data name="privacy_s1_body" xml:space="preserve"><value>NavTour ("nosotros", "nuestro") opera la plataforma navtour.cloud y la extensión de navegador NavTour Capture. Esta Política de Privacidad explica cómo recopilamos, usamos, divulgamos y protegemos tu información cuando utilizas nuestros servicios.</value></data>
+  <data name="privacy_s2_title" xml:space="preserve"><value>Información que Recopilamos</value></data>
+  <data name="privacy_s2_intro" xml:space="preserve"><value>Recopilamos información que proporcionas directamente e información generada a través del uso de nuestros servicios:</value></data>
+  <data name="privacy_s2_item1" xml:space="preserve"><value>Información de cuenta: nombre, correo electrónico y nombre de empresa al registrarte.</value></data>
+  <data name="privacy_s2_item2" xml:space="preserve"><value>Contenido de demos: capturas HTML y CSS de las páginas que capturas con la extensión del navegador. Estas capturas se almacenan para crear tus demos interactivos.</value></data>
+  <data name="privacy_s2_item3" xml:space="preserve"><value>Datos de uso: vistas de demos, duración de sesión y eventos de interacción para proporcionarte análisis de tus demos.</value></data>
+  <data name="privacy_s2_item4" xml:space="preserve"><value>Datos de leads: información que los visitantes de tus demos envían voluntariamente a través de formularios que integras en tus demos.</value></data>
+  <data name="privacy_s3_title" xml:space="preserve"><value>Cómo Usamos tu Información</value></data>
+  <data name="privacy_s3_intro" xml:space="preserve"><value>Usamos la información que recopilamos para:</value></data>
+  <data name="privacy_s3_item1" xml:space="preserve"><value>Proveer, operar y mantener la plataforma NavTour y la extensión del navegador.</value></data>
+  <data name="privacy_s3_item2" xml:space="preserve"><value>Entregar análisis de demos y datos de leads a tu panel de control.</value></data>
+  <data name="privacy_s3_item3" xml:space="preserve"><value>Enviar correos transaccionales como invitaciones de equipo y restablecimiento de contraseña.</value></data>
+  <data name="privacy_s4_title" xml:space="preserve"><value>Extensión del Navegador</value></data>
+  <data name="privacy_s4_body" xml:space="preserve"><value>La extensión NavTour Capture para Chrome solicita acceso para capturar el contenido visible de la página (HTML/CSS) solo cuando inicias activamente una sesión de captura. La extensión no se ejecuta en segundo plano, no recopila historial de navegación y no transmite ningún dato excepto las capturas de página que eliges explícitamente capturar. Todos los datos capturados se envían directamente a tu cuenta de NavTour mediante HTTPS.</value></data>
+  <data name="privacy_s5_title" xml:space="preserve"><value>Almacenamiento y Seguridad de Datos</value></data>
+  <data name="privacy_s5_body" xml:space="preserve"><value>Tus datos se almacenan en infraestructura de Microsoft Azure con cifrado en reposo y en tránsito. Implementamos medidas de seguridad estándar de la industria incluyendo TLS 1.2+, autenticación JWT y consultas de base de datos aisladas por inquilino. No vendemos, alquilamos ni compartimos tu información personal con terceros con fines de marketing.</value></data>
+  <data name="privacy_s6_title" xml:space="preserve"><value>Retención de Datos</value></data>
+  <data name="privacy_s6_body" xml:space="preserve"><value>Conservamos los datos de tu cuenta y el contenido de tus demos mientras tu cuenta esté activa. Cuando eliminas un demo, su contenido se elimina de forma lógica y se purga permanentemente en 30 días. Cuando eliminas tu cuenta, todos los datos asociados se eliminan permanentemente en 30 días.</value></data>
+  <data name="privacy_s7_title" xml:space="preserve"><value>Tus Derechos</value></data>
+  <data name="privacy_s7_intro" xml:space="preserve"><value>Tienes derecho a:</value></data>
+  <data name="privacy_s7_item1" xml:space="preserve"><value>Acceder a los datos personales que tenemos sobre ti.</value></data>
+  <data name="privacy_s7_item2" xml:space="preserve"><value>Solicitar la corrección de datos inexactos.</value></data>
+  <data name="privacy_s7_item3" xml:space="preserve"><value>Solicitar la eliminación de tus datos y cuenta.</value></data>
+  <data name="privacy_s7_item4" xml:space="preserve"><value>Exportar tus datos en un formato portátil.</value></data>
+  <data name="privacy_s8_title" xml:space="preserve"><value>Cookies</value></data>
+  <data name="privacy_s8_body" xml:space="preserve"><value>Usamos una única cookie de autenticación (navtour_auth) para mantenerte conectado. No usamos cookies de rastreo de terceros, cookies publicitarias ni cookies de análisis. Las sesiones de visitantes de demos usan identificadores de sesión anónimos que no rastrean individuos entre sitios.</value></data>
+  <data name="privacy_s9_title" xml:space="preserve"><value>Cambios a Esta Política</value></data>
+  <data name="privacy_s9_body" xml:space="preserve"><value>Podemos actualizar esta Política de Privacidad periódicamente. Te notificaremos de cambios importantes publicando la política actualizada en esta página y actualizando la fecha de "Última actualización". Tu uso continuado de nuestros servicios después de los cambios constituye la aceptación de la política actualizada.</value></data>
+  <data name="privacy_contact_title" xml:space="preserve"><value>¿Preguntas?</value></data>
+  <data name="privacy_contact_body" xml:space="preserve"><value>Si tienes alguna pregunta sobre esta Política de Privacidad o cómo manejamos tus datos, contáctanos en:</value></data>
+
   <data name="footer_privacy" xml:space="preserve"><value>Privacidad</value></data>
   <data name="footer_terms" xml:space="preserve"><value>Términos</value></data>
   <data name="footer_status" xml:space="preserve"><value>Estado</value></data>

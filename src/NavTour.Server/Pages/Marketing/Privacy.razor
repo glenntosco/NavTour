@@ -1,0 +1,89 @@
+@page "/privacy"
+@layout MarketingLayout
+@inject IStringLocalizer<NavTour.Server.SharedResources> L
+
+<PageTitle>@L["privacy_page_title"]</PageTitle>
+<HeadContent>
+    <meta name="description" content="@L["privacy_meta_desc"].Value" />
+</HeadContent>
+
+<section class="mkt-section">
+    <div class="mkt-container" style="max-width:760px">
+        <div class="reveal">
+            <h1 style="font-size:var(--text-4xl)">@L["privacy_heading"]</h1>
+            <p style="margin-top:var(--space-3);color:var(--text-secondary)">@L["privacy_last_updated"]</p>
+        </div>
+
+        <div class="reveal" style="margin-top:var(--space-12);display:flex;flex-direction:column;gap:var(--space-10)">
+
+            <div>
+                <h2 style="font-size:var(--text-2xl);margin-bottom:var(--space-4)">@L["privacy_s1_title"]</h2>
+                <p style="line-height:var(--leading-normal);color:var(--text-secondary)">@L["privacy_s1_body"]</p>
+            </div>
+
+            <div>
+                <h2 style="font-size:var(--text-2xl);margin-bottom:var(--space-4)">@L["privacy_s2_title"]</h2>
+                <p style="line-height:var(--leading-normal);color:var(--text-secondary);margin-bottom:var(--space-4)">@L["privacy_s2_intro"]</p>
+                <ul style="padding-left:var(--space-6);color:var(--text-secondary);display:flex;flex-direction:column;gap:var(--space-3)">
+                    <li>@L["privacy_s2_item1"]</li>
+                    <li>@L["privacy_s2_item2"]</li>
+                    <li>@L["privacy_s2_item3"]</li>
+                    <li>@L["privacy_s2_item4"]</li>
+                </ul>
+            </div>
+
+            <div>
+                <h2 style="font-size:var(--text-2xl);margin-bottom:var(--space-4)">@L["privacy_s3_title"]</h2>
+                <p style="line-height:var(--leading-normal);color:var(--text-secondary);margin-bottom:var(--space-4)">@L["privacy_s3_intro"]</p>
+                <ul style="padding-left:var(--space-6);color:var(--text-secondary);display:flex;flex-direction:column;gap:var(--space-3)">
+                    <li>@L["privacy_s3_item1"]</li>
+                    <li>@L["privacy_s3_item2"]</li>
+                    <li>@L["privacy_s3_item3"]</li>
+                </ul>
+            </div>
+
+            <div>
+                <h2 style="font-size:var(--text-2xl);margin-bottom:var(--space-4)">@L["privacy_s4_title"]</h2>
+                <p style="line-height:var(--leading-normal);color:var(--text-secondary)">@L["privacy_s4_body"]</p>
+            </div>
+
+            <div>
+                <h2 style="font-size:var(--text-2xl);margin-bottom:var(--space-4)">@L["privacy_s5_title"]</h2>
+                <p style="line-height:var(--leading-normal);color:var(--text-secondary)">@L["privacy_s5_body"]</p>
+            </div>
+
+            <div>
+                <h2 style="font-size:var(--text-2xl);margin-bottom:var(--space-4)">@L["privacy_s6_title"]</h2>
+                <p style="line-height:var(--leading-normal);color:var(--text-secondary)">@L["privacy_s6_body"]</p>
+            </div>
+
+            <div>
+                <h2 style="font-size:var(--text-2xl);margin-bottom:var(--space-4)">@L["privacy_s7_title"]</h2>
+                <p style="line-height:var(--leading-normal);color:var(--text-secondary);margin-bottom:var(--space-4)">@L["privacy_s7_intro"]</p>
+                <ul style="padding-left:var(--space-6);color:var(--text-secondary);display:flex;flex-direction:column;gap:var(--space-3)">
+                    <li>@L["privacy_s7_item1"]</li>
+                    <li>@L["privacy_s7_item2"]</li>
+                    <li>@L["privacy_s7_item3"]</li>
+                    <li>@L["privacy_s7_item4"]</li>
+                </ul>
+            </div>
+
+            <div>
+                <h2 style="font-size:var(--text-2xl);margin-bottom:var(--space-4)">@L["privacy_s8_title"]</h2>
+                <p style="line-height:var(--leading-normal);color:var(--text-secondary)">@L["privacy_s8_body"]</p>
+            </div>
+
+            <div>
+                <h2 style="font-size:var(--text-2xl);margin-bottom:var(--space-4)">@L["privacy_s9_title"]</h2>
+                <p style="line-height:var(--leading-normal);color:var(--text-secondary)">@L["privacy_s9_body"]</p>
+            </div>
+
+            <div style="padding:var(--space-8);background:var(--surface-secondary);border-radius:var(--radius-md);border:1px solid var(--neutral-200)">
+                <h3 style="margin-bottom:var(--space-3)">@L["privacy_contact_title"]</h3>
+                <p style="color:var(--text-secondary)">@L["privacy_contact_body"]</p>
+                <a href="mailto:support@navtour.cloud" style="color:var(--p4-blue);font-weight:var(--weight-semibold);margin-top:var(--space-3);display:inline-block">support@navtour.cloud</a>
+            </div>
+
+        </div>
+    </div>
+</section>

@@ -52,7 +52,11 @@ function clearSelectOptions(select: HTMLSelectElement) {
 // Silent cookie auto-login — bonus path, not primary
 async function tryAutoLogin(): Promise<boolean> {
   try {
-    const candidateUrls = [SERVER_URL, "http://localhost:5017"];
+    // Cookie auto-login only works if host permission was previously granted
+    const hasAccess = await chrome.permissions.contains({ origins: ["https://navtour.cloud/*"] });
+    if (!hasAccess) return false;
+
+    const candidateUrls = [SERVER_URL];
 
     // Add active tab origin
     try {
@@ -208,6 +212,8 @@ btnRetry.addEventListener("click", async () => {
   btnRetry.textContent = "Checking...";
 
   try {
+    // Request cookie access (user gesture allows the prompt)
+    await chrome.permissions.request({ origins: ["https://navtour.cloud/*"] });
     const ok = await tryAutoLogin();
     if (ok) {
       await loadDemos();
@@ -256,6 +262,13 @@ btnStart.addEventListener("click", async () => {
     demoName = selected?.name ?? "Demo";
   } else {
     showStatus(selectError, "Select a demo or enter a name for a new one", "error");
+    return;
+  }
+
+  // Request host access for capturing pages and reading NavTour cookies
+  const granted = await chrome.permissions.request({ origins: ["<all_urls>", "https://navtour.cloud/*"] });
+  if (!granted) {
+    showStatus(selectError, "Permission needed to capture pages. Please allow when prompted.", "error");
     return;
   }
 

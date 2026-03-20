@@ -86,6 +86,44 @@
   <data name="support_enterprise_title" xml:space="preserve"><value>Need dedicated support?</value></data>
   <data name="support_enterprise_desc" xml:space="preserve"><value>Enterprise plans include a dedicated customer success manager and priority SLA.</value></data>
   <data name="support_enterprise_cta" xml:space="preserve"><value>Talk to Sales</value></data>
+
+  <!-- Privacy Policy Page -->
+  <data name="privacy_page_title" xml:space="preserve"><value>Privacy Policy — NavTour</value></data>
+  <data name="privacy_meta_desc" xml:space="preserve"><value>NavTour privacy policy. Learn how we collect, use, and protect your data.</value></data>
+  <data name="privacy_heading" xml:space="preserve"><value>Privacy Policy</value></data>
+  <data name="privacy_last_updated" xml:space="preserve"><value>Last updated: March 20, 2026</value></data>
+  <data name="privacy_s1_title" xml:space="preserve"><value>Introduction</value></data>
+  <data name="privacy_s1_body" xml:space="preserve"><value>NavTour ("we", "our", "us") operates the navtour.cloud platform and the NavTour Capture browser extension. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our services.</value></data>
+  <data name="privacy_s2_title" xml:space="preserve"><value>Information We Collect</value></data>
+  <data name="privacy_s2_intro" xml:space="preserve"><value>We collect information you provide directly and information generated through your use of our services:</value></data>
+  <data name="privacy_s2_item1" xml:space="preserve"><value>Account information: name, email address, and company name when you register.</value></data>
+  <data name="privacy_s2_item2" xml:space="preserve"><value>Demo content: HTML and CSS snapshots of pages you capture using the browser extension. These snapshots are stored to power your interactive demos.</value></data>
+  <data name="privacy_s2_item3" xml:space="preserve"><value>Usage data: demo views, session duration, and interaction events to provide analytics on your demos.</value></data>
+  <data name="privacy_s2_item4" xml:space="preserve"><value>Lead capture data: information that demo viewers voluntarily submit through forms you embed in your demos.</value></data>
+  <data name="privacy_s3_title" xml:space="preserve"><value>How We Use Your Information</value></data>
+  <data name="privacy_s3_intro" xml:space="preserve"><value>We use the information we collect to:</value></data>
+  <data name="privacy_s3_item1" xml:space="preserve"><value>Provide, operate, and maintain the NavTour platform and browser extension.</value></data>
+  <data name="privacy_s3_item2" xml:space="preserve"><value>Deliver demo analytics and lead capture data to your dashboard.</value></data>
+  <data name="privacy_s3_item3" xml:space="preserve"><value>Send transactional emails such as team invitations and password resets.</value></data>
+  <data name="privacy_s4_title" xml:space="preserve"><value>Browser Extension</value></data>
+  <data name="privacy_s4_body" xml:space="preserve"><value>The NavTour Capture Chrome extension requests access to capture visible page content (HTML/CSS) only when you actively initiate a capture session. The extension does not run in the background, does not collect browsing history, and does not transmit any data except the page snapshots you explicitly choose to capture. All captured data is sent directly to your NavTour account over HTTPS.</value></data>
+  <data name="privacy_s5_title" xml:space="preserve"><value>Data Storage and Security</value></data>
+  <data name="privacy_s5_body" xml:space="preserve"><value>Your data is stored on Microsoft Azure infrastructure with encryption at rest and in transit. We implement industry-standard security measures including TLS 1.2+, JWT authentication, and tenant-isolated database queries. We do not sell, rent, or share your personal information with third parties for marketing purposes.</value></data>
+  <data name="privacy_s6_title" xml:space="preserve"><value>Data Retention</value></data>
+  <data name="privacy_s6_body" xml:space="preserve"><value>We retain your account data and demo content for as long as your account is active. When you delete a demo, its content is soft-deleted and permanently purged within 30 days. When you delete your account, all associated data is permanently removed within 30 days.</value></data>
+  <data name="privacy_s7_title" xml:space="preserve"><value>Your Rights</value></data>
+  <data name="privacy_s7_intro" xml:space="preserve"><value>You have the right to:</value></data>
+  <data name="privacy_s7_item1" xml:space="preserve"><value>Access the personal data we hold about you.</value></data>
+  <data name="privacy_s7_item2" xml:space="preserve"><value>Request correction of inaccurate data.</value></data>
+  <data name="privacy_s7_item3" xml:space="preserve"><value>Request deletion of your data and account.</value></data>
+  <data name="privacy_s7_item4" xml:space="preserve"><value>Export your data in a portable format.</value></data>
+  <data name="privacy_s8_title" xml:space="preserve"><value>Cookies</value></data>
+  <data name="privacy_s8_body" xml:space="preserve"><value>We use a single authentication cookie (navtour_auth) to keep you signed in. We do not use third-party tracking cookies, advertising cookies, or analytics cookies. Demo viewer sessions use anonymous session identifiers that do not track individuals across sites.</value></data>
+  <data name="privacy_s9_title" xml:space="preserve"><value>Changes to This Policy</value></data>
+  <data name="privacy_s9_body" xml:space="preserve"><value>We may update this Privacy Policy from time to time. We will notify you of material changes by posting the updated policy on this page and updating the "Last updated" date. Your continued use of our services after changes constitutes acceptance of the updated policy.</value></data>
+  <data name="privacy_contact_title" xml:space="preserve"><value>Questions?</value></data>
+  <data name="privacy_contact_body" xml:space="preserve"><value>If you have any questions about this Privacy Policy or how we handle your data, contact us at:</value></data>
+
   <data name="footer_privacy" xml:space="preserve"><value>Privacy</value></data>
   <data name="footer_terms" xml:space="preserve"><value>Terms</value></data>
   <data name="footer_status" xml:space="preserve"><value>Status</value></data>
