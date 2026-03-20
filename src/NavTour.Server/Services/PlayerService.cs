@@ -14,12 +14,16 @@ public class PlayerService : IPlayerService
     private readonly NavTourDbContext _db;
     private readonly ITenantProvider _tenantProvider;
     private readonly IPersonalizationService _personalization;
+    private readonly IEmailService _emailService;
+    private readonly ILogger<PlayerService> _logger;
 
-    public PlayerService(NavTourDbContext db, ITenantProvider tenantProvider, IPersonalizationService personalization)
+    public PlayerService(NavTourDbContext db, ITenantProvider tenantProvider, IPersonalizationService personalization, IEmailService emailService, ILogger<PlayerService> logger)
     {
         _db = db;
         _tenantProvider = tenantProvider;
         _personalization = personalization;
+        _emailService = emailService;
+        _logger = logger;
     }
 
     public async Task<PlayerManifestResponse?> GetManifestAsync(string slug, IReadOnlyDictionary<string, string?>? queryParams = null)
@@ -104,6 +108,23 @@ public class PlayerService : IPlayerService
 
         if (demo == null) throw new InvalidOperationException("Demo not found");
 
+        // Ensure session exists (may not if events failed to flush before lead capture)
+        var sessionExists = await _db.DemoSessions
+            .IgnoreQueryFilters()
+            .AnyAsync(s => s.Id == sessionId);
+
+        if (!sessionExists)
+        {
+            _db.DemoSessions.Add(new DemoSession
+            {
+                Id = sessionId,
+                TenantId = demo.TenantId,
+                DemoId = demo.Id,
+                StartedAt = DateTime.UtcNow
+            });
+            await _db.SaveChangesAsync();
+        }
+
         var lead = new Lead
         {
             TenantId = demo.TenantId,
@@ -116,6 +137,31 @@ public class PlayerService : IPlayerService
 
         _db.Leads.Add(lead);
         await _db.SaveChangesAsync();
+
+        // Fire-and-forget lead notification email
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                var template = await _db.LeadEmailTemplates
+                    .IgnoreQueryFilters()
+                    .FirstOrDefaultAsync(t => t.TenantId == demo.TenantId && !t.IsDeleted);
+
+                if (template is { IsEnabled: true })
+                {
+                    await _emailService.SendLeadEmailAsync(
+                        request.Email,
+                        request.Name,
+                        demo.Name,
+                        template);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to send lead notification email for demo {Slug}", slug);
+            }
+        });
+
         return lead.Id;
     }
 }

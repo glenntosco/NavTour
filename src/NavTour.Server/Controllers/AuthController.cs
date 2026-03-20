@@ -65,7 +65,7 @@ public class AuthController : ControllerBase
         var refreshToken = _jwtService.GenerateRefreshToken();
 
         SetAuthCookie(accessToken);
-        return Ok(new LoginResponse(accessToken, refreshToken, DateTime.UtcNow.AddHours(1), tenant.Id));
+        return Ok(new LoginResponse(accessToken, refreshToken, DateTime.UtcNow.AddHours(24), tenant.Id));
     }
 
     [HttpPost("login")]
@@ -82,7 +82,7 @@ public class AuthController : ControllerBase
         var refreshToken = _jwtService.GenerateRefreshToken();
 
         SetAuthCookie(accessToken);
-        return Ok(new LoginResponse(accessToken, refreshToken, DateTime.UtcNow.AddHours(1), user.TenantId));
+        return Ok(new LoginResponse(accessToken, refreshToken, DateTime.UtcNow.AddHours(24), user.TenantId));
     }
 
     [HttpPost("logout")]
@@ -106,7 +106,7 @@ public class AuthController : ControllerBase
             SameSite = SameSiteMode.Lax,
             Secure = false, // Set true in production with HTTPS
             Path = "/",
-            Expires = DateTimeOffset.UtcNow.AddHours(8),
+            Expires = DateTimeOffset.UtcNow.AddHours(24),
         });
     }
 }

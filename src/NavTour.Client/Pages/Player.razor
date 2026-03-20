@@ -33,18 +33,14 @@ else
         </div>
 
         @* Frame content with overlays *@
-        <div style="flex:1;position:relative;overflow:hidden">
+        <div @ref="frameContainer" class="player-frame-container" style="flex:1;position:relative;overflow:hidden">
             @if (currentFrame != null)
             {
                 <iframe @ref="iframeRef" sandbox="allow-same-origin" style="width:100%;height:100%;border:none"
                     srcdoc="@currentFrame.HtmlContent"></iframe>
             }
 
-            @* Backdrop overlay (after iframe so it renders on top) *@
-            @if (currentStep != null && !string.IsNullOrEmpty(currentStep.BackdropLevel) && currentStep.BackdropLevel != "none")
-            {
-                <div style="position:absolute;inset:0;z-index:5;pointer-events:none;@GetBackdropStyle(currentStep.BackdropLevel)"></div>
-            }
+            @* Spotlight overlay is managed by JS (playerSpotlight) *@
 
             @if (currentStep != null)
             {
@@ -56,14 +52,14 @@ else
             @* Timer progress indicator *@
             @if (currentStep?.TriggerType == TriggerType.Timer && currentStep.TriggerDurationMs > 0)
             {
-                <div style="position:absolute;bottom:0;left:0;right:0;height:3px;z-index:20">
+                <div style="position:absolute;bottom:0;left:0;right:0;height:3px;z-index:150">
                     <div class="timer-progress" style="animation-duration:@(currentStep.TriggerDurationMs)ms"></div>
                 </div>
             }
         </div>
 
         @* Bottom navigation bar *@
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:white;border-top:1px solid #e0e0e0">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:white;box-shadow:0 -1px 4px rgba(0,0,0,0.05)">
             <button disabled="@(currentStepIndex <= 0)" @onclick="PreviousStep"
                 style="padding:8px 20px;border-radius:8px;font-size:13px;font-weight:500;cursor:@(currentStepIndex <= 0 ? "default" : "pointer");border:1px solid #e2e8f0;background:@(currentStepIndex <= 0 ? "#f8fafc" : "#ffffff");color:@(currentStepIndex <= 0 ? "#cbd5e1" : "#64748b")">
                 &larr; Back
@@ -71,7 +67,7 @@ else
             <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
                 @if (currentStep != null && currentStep.TriggerType != TriggerType.ButtonClick)
                 {
-                    <span style="font-size:12px;color:#4361ee;font-weight:500">@GetTriggerHint(currentStep)</span>
+                    <span class="trigger-hint-pulse" style="font-size:12px;color:#4361ee;font-weight:500">@GetTriggerHint(currentStep)</span>
                 }
                 <div style="display:flex;align-items:center;gap:6px">
                     @if ((manifest?.Steps.Count ?? 0) <= 20)
@@ -144,6 +140,7 @@ else
     private PlayerManifestResponse? manifest;
     private bool loading = true;
     private int currentStepIndex;
+    private bool _navigating;
     private Guid? sessionId;
     private bool showLeadForm;
     private bool showEscapeView;
@@ -152,6 +149,7 @@ else
     private System.Threading.Timer? flushTimer;
     private ElementReference playerContainer;
     private ElementReference iframeRef;
+    private ElementReference frameContainer;
     private DotNetObjectReference<Player>? dotnetRef;
 
     private PlayerStepDto? currentStep => manifest?.Steps.ElementAtOrDefault(currentStepIndex);
@@ -188,6 +186,12 @@ else
         if (manifest != null && currentStep != null && dotnetRef != null)
         {
             await SetupCurrentStepTrigger();
+        }
+
+        // Update spotlight for current step
+        if (manifest != null && currentStep != null)
+        {
+            await UpdateSpotlight();
         }
     }
 
@@ -232,6 +236,7 @@ else
     [JSInvokable]
     public async Task OnTriggerFired()
     {
+        if (_navigating) return;
         await InvokeAsync(async () =>
         {
             await NextStep();
@@ -260,7 +265,10 @@ else
 
     private async Task NextStep()
     {
-        if (manifest == null) return;
+        if (manifest == null || _navigating) return;
+        _navigating = true;
+        try
+        {
 
         var step = currentStep;
         var timeOnStep = (int)(DateTime.UtcNow - stepStartTime).TotalMilliseconds;
@@ -333,11 +341,15 @@ else
         stepStartTime = DateTime.UtcNow;
         BufferEvent(EventType.StepViewed, currentStepIndex + 1, null);
         StateHasChanged();
+
+        } finally { _navigating = false; }
     }
 
     private async Task PreviousStep()
     {
-        if (currentStepIndex > 0)
+        if (currentStepIndex <= 0 || _navigating) return;
+        _navigating = true;
+        try
         {
             try { await JS.InvokeVoidAsync("playerInterop.clearTrigger"); } catch { }
             currentStepIndex--;
@@ -345,6 +357,7 @@ else
             BufferEvent(EventType.StepViewed, currentStepIndex + 1, null);
             StateHasChanged();
         }
+        finally { _navigating = false; }
     }
 
     private async Task HandleClickZone(PlayerAnnotationDto annotation)
@@ -371,13 +384,57 @@ else
         showLeadForm = true;
     }
 
-    private static string GetBackdropStyle(string? level) => level switch
+    private async Task UpdateSpotlight()
     {
-        "light" => "background:rgba(0,0,0,0.15);",
-        "medium" => "background:rgba(0,0,0,0.35);",
-        "heavy" => "background:rgba(0,0,0,0.55);",
-        _ => ""
-    };
+        if (currentStep == null) return;
+        try
+        {
+            var backdrop = currentStep.BackdropLevel;
+            if (string.IsNullOrEmpty(backdrop) || backdrop == "none")
+            {
+                await JS.InvokeVoidAsync("playerSpotlight.hide");
+                return;
+            }
+
+            double opacity = backdrop switch
+            {
+                "light" => 0.15,
+                "medium" => 0.35,
+                "heavy" => 0.55,
+                _ => 0.35
+            };
+
+            // Find the primary spotlight target annotation
+            var target = GetSpotlightTarget(currentStep);
+            if (target != null)
+            {
+                // Pad the spotlight around the annotation (2% padding)
+                var pad = 2.0;
+                var x = Math.Max(0, target.PositionX - pad);
+                var y = Math.Max(0, target.PositionY - pad);
+                var w = Math.Min(100 - x, target.Width + pad * 2);
+                var h = Math.Min(100 - y, target.Height + pad * 2);
+                await JS.InvokeVoidAsync("playerSpotlight.show", frameContainer, x, y, w, h, opacity);
+            }
+            else
+            {
+                // No spotlight target — use flat backdrop
+                await JS.InvokeVoidAsync("playerSpotlight.showFlat", frameContainer, opacity);
+            }
+        }
+        catch { /* Component may be disposing */ }
+    }
+
+    private static PlayerAnnotationDto? GetSpotlightTarget(PlayerStepDto step)
+    {
+        // Priority: NumberedTooltip > Tooltip > Hotspot > Beacon > Modal
+        var annotations = step.Annotations;
+        return annotations.FirstOrDefault(a => a.Type == AnnotationType.NumberedTooltip)
+            ?? annotations.FirstOrDefault(a => a.Type == AnnotationType.Tooltip)
+            ?? annotations.FirstOrDefault(a => a.Type == AnnotationType.Hotspot)
+            ?? annotations.FirstOrDefault(a => a.Type == AnnotationType.Beacon)
+            ?? annotations.FirstOrDefault(a => a.Type == AnnotationType.Modal);
+    }
 
     private static string GetTriggerHint(PlayerStepDto step) => step.TriggerType switch
     {
@@ -419,5 +476,6 @@ else
         flushTimer?.Dispose();
         dotnetRef?.Dispose();
         _ = FlushEvents();
+        try { _ = JS.InvokeVoidAsync("playerSpotlight.hide"); } catch { }
     }
 }

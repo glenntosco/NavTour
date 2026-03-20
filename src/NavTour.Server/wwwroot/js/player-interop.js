@@ -1,3 +1,60 @@
+// Spotlight overlay — premium box-shadow cutout effect
+window.playerSpotlight = {
+    _el: null,
+    _container: null,
+
+    show: function (containerEl, xPct, yPct, wPct, hPct, opacity) {
+        var container = containerEl || document.querySelector('.player-frame-container');
+        if (!container) return;
+        this._container = container;
+
+        if (!this._el) {
+            this._el = document.createElement('div');
+            this._el.className = 'player-spotlight';
+            this._el.style.cssText = 'position:absolute;border-radius:8px;pointer-events:none;transition:all 0.35s ease;z-index:100;';
+            container.appendChild(this._el);
+        }
+
+        var op = opacity != null ? opacity : 0.5;
+        this._el.style.left = xPct + '%';
+        this._el.style.top = yPct + '%';
+        this._el.style.width = wPct + '%';
+        this._el.style.height = hPct + '%';
+        this._el.style.boxShadow = '0 0 0 9999px rgba(0,0,0,' + op + ')';
+        this._el.style.display = '';
+    },
+
+    morphTo: function (xPct, yPct, wPct, hPct) {
+        if (!this._el) return;
+        this._el.style.left = xPct + '%';
+        this._el.style.top = yPct + '%';
+        this._el.style.width = wPct + '%';
+        this._el.style.height = hPct + '%';
+    },
+
+    showFlat: function (containerEl, opacity) {
+        var container = containerEl || document.querySelector('.player-frame-container');
+        if (!container) return;
+        this._container = container;
+
+        if (!this._el) {
+            this._el = document.createElement('div');
+            this._el.className = 'player-spotlight';
+            container.appendChild(this._el);
+        }
+
+        var op = opacity != null ? opacity : 0.35;
+        this._el.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:100;background:rgba(0,0,0,' + op + ');transition:all 0.35s ease;';
+    },
+
+    hide: function () {
+        if (this._el) {
+            this._el.remove();
+            this._el = null;
+        }
+    }
+};
+
 // Player JS interop — handles iframe trigger detection
 window.playerInterop = {
     _cleanup: null,

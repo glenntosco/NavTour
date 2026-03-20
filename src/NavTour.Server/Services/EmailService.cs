@@ -1,5 +1,6 @@
 using Azure;
 using Azure.Communication.Email;
+using NavTour.Shared.Models;
 
 namespace NavTour.Server.Services;
 
@@ -71,6 +72,82 @@ public class EmailService : IEmailService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to send welcome email to {Email}", toEmail);
+        }
+    }
+
+    public async Task SendLeadEmailAsync(string toEmail, string? leadName, string demoName, LeadEmailTemplate template)
+    {
+        if (_client == null)
+        {
+            _logger.LogWarning("Email client not configured — skipping lead email to {Email}", toEmail);
+            return;
+        }
+
+        var displayName = string.IsNullOrWhiteSpace(leadName) ? "there" : leadName;
+
+        // Resolve template variables
+        string Resolve(string text) => text
+            .Replace("{{name}}", displayName)
+            .Replace("{{email}}", toEmail)
+            .Replace("{{demo_name}}", demoName)
+            .Replace("{{company}}", "");
+
+        var subject = Resolve(template.Subject);
+        var heading = Resolve(template.Heading);
+        var body = Resolve(template.Body);
+        var ctaText = Resolve(template.CtaText);
+        var accent = template.AccentColor;
+
+        var ctaHtml = !string.IsNullOrWhiteSpace(template.CtaUrl)
+            ? $"""
+                <div style="text-align:center;margin:32px 0 24px">
+                    <a href="{template.CtaUrl}" style="display:inline-block;background:{accent};color:#fff;text-decoration:none;padding:14px 36px;border-radius:6px;font-size:15px;font-weight:600;letter-spacing:0.2px">{ctaText}</a>
+                </div>
+              """
+            : "";
+
+        var htmlBody = $"""
+            <!DOCTYPE html>
+            <html>
+            <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>
+            <body style="margin:0;padding:0;background:#F1F5F9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+                <div style="max-width:600px;margin:0 auto;padding:40px 20px">
+                    <div style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 6px -1px rgba(0,0,0,0.07),0 2px 4px -2px rgba(0,0,0,0.05)">
+                        <div style="height:4px;background:linear-gradient(90deg,{accent},{accent}dd)"></div>
+                        <div style="padding:40px 36px">
+                            <div style="text-align:center;margin-bottom:28px">
+                                <div style="display:inline-block;width:44px;height:44px;background:{accent};border-radius:10px;line-height:44px;text-align:center">
+                                    <span style="color:#fff;font-size:20px;font-weight:700">N</span>
+                                </div>
+                            </div>
+                            <h1 style="color:#0B1929;font-size:22px;font-weight:700;text-align:center;margin:0 0 16px;line-height:1.3">{heading}</h1>
+                            <div style="color:#475569;font-size:15px;line-height:1.7;text-align:center;margin:0 0 8px;white-space:pre-line">{body}</div>
+                            {ctaHtml}
+                        </div>
+                        <div style="background:#F8FAFC;padding:20px 36px;border-top:1px solid #E2E8F0">
+                            <p style="color:#94A3B8;font-size:12px;text-align:center;margin:0;line-height:1.5">
+                                You received this email because you explored a demo. If you didn't expect this, you can safely ignore it.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </body>
+            </html>
+            """;
+
+        try
+        {
+            var message = new EmailMessage(
+                senderAddress: _senderAddress,
+                recipientAddress: toEmail,
+                content: new EmailContent(subject) { Html = htmlBody });
+
+            await _client.SendAsync(WaitUntil.Started, message);
+            _logger.LogInformation("Lead email sent to {Email} for demo {Demo}", toEmail, demoName);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to send lead email to {Email}", toEmail);
         }
     }
 }

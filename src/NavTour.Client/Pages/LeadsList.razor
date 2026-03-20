@@ -5,7 +5,11 @@
 @inject NavigationManager Nav
 
 <RadzenStack Gap="16px">
-    <RadzenText TextStyle="TextStyle.H4">Captured Leads</RadzenText>
+    <RadzenRow AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+        <RadzenText TextStyle="TextStyle.H4">Captured Leads</RadzenText>
+        <RadzenButton Text="Export to Excel" Icon="download" ButtonStyle="ButtonStyle.Light"
+                      Click="@(() => Nav.NavigateTo("/api/v1/leads/export", forceLoad: true))" />
+    </RadzenRow>
 
     @if (loading)
     {

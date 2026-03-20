@@ -1,44 +1,5 @@
 @inject IJSRuntime JS
-
-@if (isActive)
-{
-    <div class="tour-overlay" @onclick="HandleOverlayClick">
-        @if (spotlightRect != null)
-        {
-            <div class="tour-spotlight" style="left:@(spotlightRect.Left - 4)px;top:@(spotlightRect.Top - 4)px;width:@(spotlightRect.Width + 8)px;height:@(spotlightRect.Height + 8)px"></div>
-        }
-
-        <div class="tour-card" style="@GetCardPosition()" @onclick:stopPropagation="true">
-            <h3>@tourSteps[currentIndex].Title</h3>
-            <p>@tourSteps[currentIndex].Description</p>
-
-            <div class="tour-dots">
-                @for (int i = 0; i < tourSteps.Length; i++)
-                {
-                    <div class="tour-dot @(i == currentIndex ? "active" : "")"></div>
-                }
-            </div>
-
-            <div class="tour-actions">
-                <button class="tour-btn tour-btn-skip" @onclick="Skip">Skip tour</button>
-                <div style="display:flex;gap:8px">
-                    @if (currentIndex > 0)
-                    {
-                        <button class="tour-btn tour-btn-secondary" @onclick="Previous">Back</button>
-                    }
-                    @if (currentIndex < tourSteps.Length - 1)
-                    {
-                        <button class="tour-btn tour-btn-primary" @onclick="Next">Next</button>
-                    }
-                    else
-                    {
-                        <button class="tour-btn tour-btn-primary" @onclick="Complete">Finish</button>
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
-}
+@implements IDisposable
 
 @code {
     [Parameter] public bool Visible { get; set; }
@@ -46,29 +7,31 @@
 
     private bool isActive;
     private int currentIndex;
-    private ElementRect? spotlightRect;
+    private DotNetObjectReference<OnboardingTour>? objRef;
 
     private static readonly TourStep[] tourSteps =
     [
-        new("Frame Strip", "These are your captured pages. Click to select and edit, drag to reorder.", ".frame-strip", "right"),
-        new("Frame Editor", "Click any element to edit text, replace images, blur, or hide it.", ".frame-editor", "left"),
-        new("Steps Panel", "Steps define your demo's guided flow. Set triggers and navigation actions for each step.", ".step-panel", "left"),
-        new("Annotations", "Add tooltips, modals, hotspots, and beacons to guide viewers through each step.", ".annotation-editor", "left"),
-        new("Toolbar", "Save your work, preview the demo, toggle publication status, and share.", ".editor-toolbar", "bottom"),
-        new("Preview", "Click Preview to see your demo exactly as viewers will experience it.", ".preview-btn", "bottom"),
+        new("Frame Strip", "These are your captured pages. Click to select and edit, drag to reorder.", ".frame-strip"),
+        new("Frame Editor", "Click any element to edit text, replace images, blur, or hide it.", ".frame-editor"),
+        new("Steps Panel", "Steps define your demo's guided flow. Set triggers and navigation actions for each step.", ".step-panel"),
+        new("Annotations", "Add tooltips, modals, hotspots, and beacons to guide viewers through each step.", ".annotation-editor"),
+        new("Toolbar", "Save your work, preview the demo, toggle publication status, and share.", ".editor-toolbar"),
+        new("Preview", "Click Preview to see your demo exactly as viewers will experience it.", ".preview-btn"),
     ];
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
+            objRef = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("tourInterop._registerDotNet", objRef);
+
             try
             {
                 var completed = await JS.InvokeAsync<bool>("tourInterop.isCompleted");
                 if (!completed)
                 {
-                    // Auto-start tour after a short delay to let the editor render
-                    await Task.Delay(1500);
+                    await Task.Delay(2500);
                     await StartTour();
                 }
             }
@@ -88,46 +51,43 @@
     {
         currentIndex = 0;
         isActive = true;
-        await UpdateSpotlight();
-        StateHasChanged();
+        await ShowCurrentStep();
     }
 
-    private async Task UpdateSpotlight()
+    private async Task ShowCurrentStep()
     {
-        try
-        {
-            spotlightRect = await JS.InvokeAsync<ElementRect?>("tourInterop.getElementRect", tourSteps[currentIndex].Selector);
-        }
-        catch
-        {
-            spotlightRect = null;
-        }
+        var step = tourSteps[currentIndex];
+        await JS.InvokeVoidAsync("tourInterop.show",
+            step.Selector, step.Title, step.Description,
+            tourSteps.Length, currentIndex, currentIndex > 0);
     }
 
-    private async Task Next()
+    [JSInvokable]
+    public async Task OnTourNext()
     {
         if (currentIndex < tourSteps.Length - 1)
         {
             currentIndex++;
-            await UpdateSpotlight();
+            await ShowCurrentStep();
+        }
+        else
+        {
+            await MarkCompleted();
         }
     }
 
-    private async Task Previous()
+    [JSInvokable]
+    public async Task OnTourBack()
     {
         if (currentIndex > 0)
         {
             currentIndex--;
-            await UpdateSpotlight();
+            await ShowCurrentStep();
         }
     }
 
-    private async Task Skip()
-    {
-        await MarkCompleted();
-    }
-
-    private async Task Complete()
+    [JSInvokable]
+    public async Task OnTourSkip()
     {
         await MarkCompleted();
     }
@@ -135,41 +95,15 @@
     private async Task MarkCompleted()
     {
         isActive = false;
+        await JS.InvokeVoidAsync("tourInterop.hide");
         try { await JS.InvokeVoidAsync("tourInterop.markCompleted"); } catch { }
         await VisibleChanged.InvokeAsync(false);
     }
 
-    private void HandleOverlayClick()
+    public void Dispose()
     {
-        // Don't dismiss on overlay click — user must use buttons
+        objRef?.Dispose();
     }
 
-    private string GetCardPosition()
-    {
-        if (spotlightRect == null)
-            return "top:50%;left:50%;transform:translate(-50%,-50%)";
-
-        var step = tourSteps[currentIndex];
-        return step.Position switch
-        {
-            "right" => $"top:{spotlightRect.Top}px;left:{spotlightRect.Left + spotlightRect.Width + 16}px",
-            "left" => $"top:{spotlightRect.Top}px;right:{GetRightOffset(spotlightRect)}px",
-            "bottom" => $"top:{spotlightRect.Top + spotlightRect.Height + 12}px;left:{spotlightRect.Left}px",
-            "top" => $"bottom:{GetBottomOffset(spotlightRect)}px;left:{spotlightRect.Left}px",
-            _ => $"top:{spotlightRect.Top}px;left:{spotlightRect.Left + spotlightRect.Width + 16}px"
-        };
-    }
-
-    private static double GetRightOffset(ElementRect rect) => 16; // from right edge of spotlight
-    private static double GetBottomOffset(ElementRect rect) => 16;
-
-    private record TourStep(string Title, string Description, string Selector, string Position);
-
-    private class ElementRect
-    {
-        public double Left { get; set; }
-        public double Top { get; set; }
-        public double Width { get; set; }
-        public double Height { get; set; }
-    }
+    private record TourStep(string Title, string Description, string Selector);
 }

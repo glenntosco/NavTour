@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using NavTour.Server.Infrastructure.Data;
 using NavTour.Server.Infrastructure.MultiTenancy;
 using NavTour.Server.Infrastructure.Auth;
+using NavTour.Server.Services;
+using NavTour.Shared.DTOs.Settings;
 using NavTour.Shared.Models;
 
 namespace NavTour.Server.Controllers;
@@ -17,12 +19,14 @@ public class SettingsController : ControllerBase
     private readonly NavTourDbContext _db;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ITenantProvider _tenantProvider;
+    private readonly IEmailService _emailService;
 
-    public SettingsController(NavTourDbContext db, UserManager<ApplicationUser> userManager, ITenantProvider tenantProvider)
+    public SettingsController(NavTourDbContext db, UserManager<ApplicationUser> userManager, ITenantProvider tenantProvider, IEmailService emailService)
     {
         _db = db;
         _userManager = userManager;
         _tenantProvider = tenantProvider;
+        _emailService = emailService;
     }
 
     [HttpGet]
@@ -64,6 +68,54 @@ public class SettingsController : ControllerBase
 
         user.FullName = request.FullName;
         await _userManager.UpdateAsync(user);
+        return Ok();
+    }
+
+    [HttpGet("lead-email")]
+    public async Task<IActionResult> GetLeadEmailTemplate()
+    {
+        var template = await _db.LeadEmailTemplates.FirstOrDefaultAsync();
+
+        // Return defaults if no template exists yet
+        var defaults = template ?? new LeadEmailTemplate();
+        return Ok(new LeadEmailTemplateResponse(
+            defaults.Subject, defaults.Heading, defaults.Body,
+            defaults.CtaText, defaults.CtaUrl, defaults.AccentColor, defaults.IsEnabled));
+    }
+
+    [HttpPut("lead-email")]
+    public async Task<IActionResult> UpdateLeadEmailTemplate([FromBody] UpdateLeadEmailTemplateRequest request)
+    {
+        var template = await _db.LeadEmailTemplates.FirstOrDefaultAsync();
+
+        if (template == null)
+        {
+            template = new LeadEmailTemplate();
+            _db.LeadEmailTemplates.Add(template);
+        }
+
+        template.Subject = request.Subject;
+        template.Heading = request.Heading;
+        template.Body = request.Body;
+        template.CtaText = request.CtaText;
+        template.CtaUrl = request.CtaUrl;
+        template.AccentColor = request.AccentColor;
+        template.IsEnabled = request.IsEnabled;
+
+        await _db.SaveChangesAsync();
+        return Ok();
+    }
+
+    [HttpPost("lead-email/test")]
+    public async Task<IActionResult> SendTestLeadEmail()
+    {
+        var userId = _userManager.GetUserId(User);
+        var user = await _userManager.FindByIdAsync(userId!);
+        if (user?.Email == null) return BadRequest("No email on account");
+
+        var template = await _db.LeadEmailTemplates.FirstOrDefaultAsync() ?? new LeadEmailTemplate();
+
+        await _emailService.SendLeadEmailAsync(user.Email, user.FullName ?? "Test User", "Sample Demo", template);
         return Ok();
     }
 

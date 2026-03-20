@@ -29,6 +29,7 @@ public class NavTourDbContext : IdentityDbContext<ApplicationUser, IdentityRole<
     public DbSet<ApiKey> ApiKeys => Set<ApiKey>();
     public DbSet<PersonalizationVariable> PersonalizationVariables => Set<PersonalizationVariable>();
     public DbSet<ContactSubmission> ContactSubmissions => Set<ContactSubmission>();
+    public DbSet<LeadEmailTemplate> LeadEmailTemplates => Set<LeadEmailTemplate>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -114,6 +115,19 @@ public class NavTourDbContext : IdentityDbContext<ApplicationUser, IdentityRole<
             e.HasIndex(pv => new { pv.DemoId, pv.Key }).IsUnique();
         });
 
+        // LeadEmailTemplate (one per tenant)
+        builder.Entity<LeadEmailTemplate>(e =>
+        {
+            e.HasQueryFilter(t => t.TenantId == _tenantProvider.TenantId && !t.IsDeleted);
+            e.Property(t => t.Subject).HasMaxLength(500);
+            e.Property(t => t.Heading).HasMaxLength(200);
+            e.Property(t => t.Body).HasMaxLength(4000);
+            e.Property(t => t.CtaText).HasMaxLength(100);
+            e.Property(t => t.CtaUrl).HasMaxLength(500);
+            e.Property(t => t.AccentColor).HasMaxLength(7);
+            e.HasIndex(t => t.TenantId).IsUnique();
+        });
+
         // ApiKey
         builder.Entity<ApiKey>(e =>
         {
@@ -141,7 +155,8 @@ public class NavTourDbContext : IdentityDbContext<ApplicationUser, IdentityRole<
         {
             if (entry.State == EntityState.Added)
             {
-                entry.Entity.TenantId = _tenantProvider.TenantId;
+                if (entry.Entity.TenantId == Guid.Empty)
+                    entry.Entity.TenantId = _tenantProvider.TenantId;
                 entry.Entity.CreatedAt = DateTime.UtcNow;
             }
             else if (entry.State == EntityState.Modified)

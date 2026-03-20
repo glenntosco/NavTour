@@ -1,14 +1,15 @@
 @using NavTour.Shared.DTOs.Player
 
-<div style="position:absolute;inset:0;z-index:10;pointer-events:none">
+<div class="@_animClass" @key="StepIndex" style="position:absolute;inset:0;z-index:100;pointer-events:none">
 @foreach (var annotation in Annotations)
 {
     var style = ParseStyle(annotation.Style);
     var opacityStr = style.GetValueOrDefault("opacity", "100");
     var opacityStyle = int.TryParse(opacityStr, out var op) && op < 100 && annotation.Type != AnnotationType.Blur
         ? $"opacity:{(op / 100.0):F2};" : "";
+    var zIndex = GetAnnotationZIndex(annotation.Type);
 
-    <div style="position:absolute;left:@(annotation.PositionX)%;top:@(annotation.PositionY)%;width:@(annotation.Width)%;height:@(annotation.Height)%;z-index:10;pointer-events:none;@opacityStyle">
+    <div style="position:absolute;left:@(annotation.PositionX)%;top:@(annotation.PositionY)%;width:@(annotation.Width)%;height:@(annotation.Height)%;z-index:@zIndex;pointer-events:none;@opacityStyle">
         @switch (annotation.Type)
         {
             case AnnotationType.Tooltip:
@@ -26,29 +27,55 @@
             case AnnotationType.NumberedTooltip:
                 var nts = style;
                 var cardBg = nts.GetValueOrDefault("backgroundColor", "#ffffff");
-                var cardColor = nts.GetValueOrDefault("textColor", "#334155");
+                var cardColor = nts.GetValueOrDefault("textColor", "#000000");
                 var isLastStep = StepIndex >= TotalSteps - 1;
                 var isFirstStep = StepIndex <= 0;
+                var showDots = TotalSteps <= 15;
                 <div style="position:relative;pointer-events:all">
-                    <div style="position:absolute;top:-12px;left:-12px;width:28px;height:28px;border-radius:50%;background:#4361ee;color:white;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(67,97,238,0.4);z-index:1">
-                        @(annotation.BadgeNumber ?? 1)
-                    </div>
-                    <div style="position:relative;background:@cardBg;color:@cardColor;border-radius:12px;padding:16px 20px;font-size:14px;box-shadow:0 4px 20px rgba(0,0,0,0.12);margin-top:8px;min-width:260px;--arrow-bg:@cardBg;border:1px solid #e2e8f0">
+                    @if (!showDots)
+                    {
+                        <div style="position:absolute;top:-12px;left:-12px;width:28px;height:28px;border-radius:50%;background:#4361ee;color:white;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(67,97,238,0.4);z-index:1">
+                            @(annotation.BadgeNumber ?? 1)
+                        </div>
+                    }
+                    <div style="position:relative;background:@cardBg;color:@cardColor;border-radius:12px;padding:20px;font-size:14px;box-shadow:0 8px 32px rgba(0,0,0,0.15);min-width:260px;max-width:320px;--arrow-bg:@cardBg">
                         @if (annotation.ArrowDirection != null)
                         {
                             <div class="tooltip-arrow tooltip-arrow-@annotation.ArrowDirection"></div>
                         }
-                        @if (annotation.Title != null) { <div style="font-weight:600;font-size:15px;margin-bottom:4px">@annotation.Title</div> }
-                        @if (annotation.Content != null) { <p style="margin:0 0 14px;color:#64748b;font-size:13px;line-height:1.5">@annotation.Content</p> }
-                        <div style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid #f1f5f9;padding-top:12px;margin-top:4px">
-                            <span style="font-size:12px;color:#94a3b8;font-weight:500">@(StepIndex + 1) of @TotalSteps</span>
+                        @if (annotation.Title != null) { <div style="font-weight:600;font-size:16px;margin-bottom:6px;color:@cardColor">@annotation.Title</div> }
+                        @if (annotation.Content != null) { <p style="margin:0 0 16px;color:#64748b;font-size:13px;line-height:1.5">@annotation.Content</p> }
+
+                        @if (showDots)
+                        {
+                            <div style="display:flex;gap:6px;margin-bottom:16px">
+                                @for (int d = 0; d < TotalSteps; d++)
+                                {
+                                    var dotIdx = d;
+                                    <div style="width:6px;height:6px;border-radius:50%;background:@(dotIdx == StepIndex ? "#4361ee" : "#d1d5db");transition:background 0.2s"></div>
+                                }
+                            </div>
+                        }
+
+                        <div style="display:flex;align-items:center;justify-content:space-between">
+                            @if (!showDots)
+                            {
+                                <span style="font-size:12px;color:#94a3b8;font-weight:500">@(StepIndex + 1) of @TotalSteps</span>
+                            }
+                            else
+                            {
+                                <span></span>
+                            }
                             <div style="display:flex;gap:8px">
-                                <button disabled="@isFirstStep" @onclick="NavigatePrevious"
-                                    style="padding:6px 14px;border-radius:6px;font-size:13px;font-weight:500;cursor:@(isFirstStep ? "default" : "pointer");border:1px solid #e2e8f0;background:@(isFirstStep ? "#f8fafc" : "#ffffff");color:@(isFirstStep ? "#cbd5e1" : "#64748b")">
-                                    Back
-                                </button>
+                                @if (!isFirstStep)
+                                {
+                                    <button @onclick="NavigatePrevious"
+                                        style="padding:6px 16px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid #d1d5db;background:#fff;color:#64748b">
+                                        Back
+                                    </button>
+                                }
                                 <button @onclick="NavigateNext"
-                                    style="padding:6px 14px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:#4361ee;color:white">
+                                    style="padding:6px 16px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:#4361ee;color:white">
                                     @(isLastStep ? "Finish" : "Next")
                                 </button>
                             </div>
@@ -108,8 +135,33 @@
     [Parameter] public int TotalSteps { get; set; }
     [Parameter] public EventCallback<string> OnNavigate { get; set; }
 
+    private int _prevStepIndex = -1;
+    private string _animClass = "player-annotation-enter";
+
+    protected override void OnParametersSet()
+    {
+        if (StepIndex != _prevStepIndex)
+        {
+            _prevStepIndex = StepIndex;
+            // Toggle animation class to re-trigger CSS animation on step change
+            _animClass = _animClass == "player-annotation-enter" ? "player-annotation-enter " : "player-annotation-enter";
+        }
+    }
+
     private async Task NavigateNext() => await OnNavigate.InvokeAsync("next");
     private async Task NavigatePrevious() => await OnNavigate.InvokeAsync("previous");
+
+    private static int GetAnnotationZIndex(AnnotationType type) => type switch
+    {
+        AnnotationType.Blur => 110,
+        AnnotationType.ClickZone => 120,
+        AnnotationType.Hotspot => 130,
+        AnnotationType.Beacon => 130,
+        AnnotationType.Tooltip => 140,
+        AnnotationType.NumberedTooltip => 140,
+        AnnotationType.Modal => 140,
+        _ => 110
+    };
 
     private Dictionary<string, string> ParseStyle(string? style)
     {
