@@ -9,7 +9,12 @@
         ? $"opacity:{(op / 100.0):F2};" : "";
     var zIndex = GetAnnotationZIndex(annotation.Type);
 
-    <div style="position:absolute;left:@(annotation.PositionX)%;top:@(annotation.PositionY)%;width:@(annotation.Width)%;height:@(annotation.Height)%;z-index:@zIndex;pointer-events:none;@opacityStyle">
+    var isBeacon = annotation.Type == AnnotationType.Beacon;
+    var posStyle = isBeacon
+        ? $"position:absolute;left:{annotation.PositionX}%;top:{annotation.PositionY}%;width:auto;height:auto;transform:translate(-50%,-50%);z-index:{zIndex};pointer-events:none;{opacityStyle}"
+        : $"position:absolute;left:{annotation.PositionX}%;top:{annotation.PositionY}%;width:{annotation.Width}%;height:{annotation.Height}%;z-index:{zIndex};pointer-events:none;{opacityStyle}";
+
+    <div style="@posStyle">
         @switch (annotation.Type)
         {
             case AnnotationType.Tooltip:

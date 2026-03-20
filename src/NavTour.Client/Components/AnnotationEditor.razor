@@ -39,7 +39,7 @@
 
                     @if (editingId == ann.Id)
                     {
-                        <div class="ae-edit-form">
+                        <div class="ae-edit-form" @onclick:stopPropagation="true">
                             @if (ann.Type != AnnotationType.Beacon)
                             {
                                 <div class="ae-field-row">

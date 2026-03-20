@@ -124,11 +124,17 @@ async function init() {
       } else {
         loadDemos()
           .then(() => showScreen(screenSelect))
-          .catch(() => {
-            // Token expired — clear and show login
+          .catch(async () => {
+            // Token expired — clear stored session and try fresh cookie
             chrome.storage.local.remove(["session"]);
             session = null;
-            showScreen(screenLogin);
+            const autoOk = await tryAutoLogin();
+            if (autoOk) {
+              await loadDemos();
+              showScreen(screenSelect);
+            } else {
+              showScreen(screenLogin);
+            }
           });
       }
     });
