@@ -66,8 +66,26 @@
   <data name="footer_careers" xml:space="preserve"><value>Empleos</value></data>
   <data name="footer_contact" xml:space="preserve"><value>Contacto</value></data>
   <data name="footer_security" xml:space="preserve"><value>Seguridad</value></data>
+  <data name="footer_support" xml:space="preserve"><value>Soporte</value></data>
   <data name="footer_legal" xml:space="preserve"><value>Legal</value></data>
   <data name="footer_copyright" xml:space="preserve"><value>© 2026 NavTour</value></data>
+
+  <!-- Support Page -->
+  <data name="support_page_title" xml:space="preserve"><value>Soporte — NavTour</value></data>
+  <data name="support_meta_desc" xml:space="preserve"><value>Obtén ayuda con NavTour. Contacta a nuestro equipo de soporte, consulta las preguntas frecuentes o escríbenos directamente.</value></data>
+  <data name="support_heading" xml:space="preserve"><value>¿Cómo podemos ayudarte?</value></data>
+  <data name="support_subheading" xml:space="preserve"><value>Nuestro equipo está aquí para ayudarte a aprovechar NavTour al máximo. Escríbenos y te responderemos en 24 horas.</value></data>
+  <data name="support_email_title" xml:space="preserve"><value>Soporte por Email</value></data>
+  <data name="support_email_desc" xml:space="preserve"><value>Envíanos un mensaje y nuestro equipo te responderá en un día hábil.</value></data>
+  <data name="support_faq_title" xml:space="preserve"><value>Preguntas Frecuentes</value></data>
+  <data name="support_faq_desc" xml:space="preserve"><value>Encuentra respuestas rápidas sobre funciones, facturación e integraciones.</value></data>
+  <data name="support_faq_link" xml:space="preserve"><value>Ver Preguntas Frecuentes</value></data>
+  <data name="support_contact_title" xml:space="preserve"><value>Consultas Generales</value></data>
+  <data name="support_contact_desc" xml:space="preserve"><value>¿Tienes alguna pregunta sobre alianzas, ventas u otro tema? Nos encantaría saber de ti.</value></data>
+  <data name="support_contact_link" xml:space="preserve"><value>Contáctanos</value></data>
+  <data name="support_enterprise_title" xml:space="preserve"><value>¿Necesitas soporte dedicado?</value></data>
+  <data name="support_enterprise_desc" xml:space="preserve"><value>Los planes Enterprise incluyen un gerente de éxito del cliente dedicado y SLA prioritario.</value></data>
+  <data name="support_enterprise_cta" xml:space="preserve"><value>Hablar con Ventas</value></data>
   <data name="footer_privacy" xml:space="preserve"><value>Privacidad</value></data>
   <data name="footer_terms" xml:space="preserve"><value>Términos</value></data>
   <data name="footer_status" xml:space="preserve"><value>Estado</value></data>

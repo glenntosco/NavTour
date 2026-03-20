@@ -1,0 +1,62 @@
+@page "/support"
+@layout MarketingLayout
+@inject IStringLocalizer<NavTour.Server.SharedResources> L
+
+<PageTitle>@L["support_page_title"]</PageTitle>
+<HeadContent>
+    <meta name="description" content="@L["support_meta_desc"].Value" />
+</HeadContent>
+
+<section class="mkt-section">
+    <div class="mkt-container" style="max-width:720px">
+        <div class="reveal" style="text-align:center">
+            <h1 style="font-size:var(--text-4xl)">@L["support_heading"]</h1>
+            <p style="margin-top:var(--space-4);font-size:var(--text-lg);color:var(--text-secondary);max-width:540px;margin-left:auto;margin-right:auto">
+                @L["support_subheading"]
+            </p>
+        </div>
+
+        <div class="reveal" style="margin-top:var(--space-16);display:flex;flex-direction:column;gap:var(--space-8)">
+
+            <div style="padding:var(--space-8);background:var(--surface-elevated);border:1px solid var(--neutral-200);border-radius:var(--radius-md);box-shadow:var(--shadow-sm)">
+                <div style="display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-4)">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--p4-blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                    <h3 style="margin:0;font-size:var(--text-xl)">@L["support_email_title"]</h3>
+                </div>
+                <p style="color:var(--text-secondary);margin-bottom:var(--space-5)">@L["support_email_desc"]</p>
+                <a href="mailto:support@navtour.cloud" class="mkt-btn mkt-btn-primary" style="display:inline-flex;align-items:center;gap:var(--space-2)">
+                    support@navtour.cloud
+                </a>
+            </div>
+
+            <div style="padding:var(--space-8);background:var(--surface-elevated);border:1px solid var(--neutral-200);border-radius:var(--radius-md);box-shadow:var(--shadow-sm)">
+                <div style="display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-4)">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--p4-blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+                    <h3 style="margin:0;font-size:var(--text-xl)">@L["support_faq_title"]</h3>
+                </div>
+                <p style="color:var(--text-secondary);margin-bottom:var(--space-5)">@L["support_faq_desc"]</p>
+                <a href="/pricing#faq" class="mkt-btn mkt-btn-secondary" style="display:inline-flex;align-items:center;gap:var(--space-2)">
+                    @L["support_faq_link"]
+                </a>
+            </div>
+
+            <div style="padding:var(--space-8);background:var(--surface-elevated);border:1px solid var(--neutral-200);border-radius:var(--radius-md);box-shadow:var(--shadow-sm)">
+                <div style="display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-4)">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--p4-blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    <h3 style="margin:0;font-size:var(--text-xl)">@L["support_contact_title"]</h3>
+                </div>
+                <p style="color:var(--text-secondary);margin-bottom:var(--space-5)">@L["support_contact_desc"]</p>
+                <a href="/contact" class="mkt-btn mkt-btn-secondary" style="display:inline-flex;align-items:center;gap:var(--space-2)">
+                    @L["support_contact_link"]
+                </a>
+            </div>
+
+        </div>
+
+        <div class="reveal" style="margin-top:var(--space-16);text-align:center;padding:var(--space-10);background:var(--p4-blue-subtle);border-radius:var(--radius-md)">
+            <h3 style="margin-bottom:var(--space-3)">@L["support_enterprise_title"]</h3>
+            <p style="color:var(--text-secondary);max-width:480px;margin:0 auto var(--space-6)">@L["support_enterprise_desc"]</p>
+            <a href="/contact" class="mkt-btn mkt-btn-primary">@L["support_enterprise_cta"]</a>
+        </div>
+    </div>
+</section>

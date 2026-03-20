@@ -66,8 +66,26 @@
   <data name="footer_careers" xml:space="preserve"><value>Careers</value></data>
   <data name="footer_contact" xml:space="preserve"><value>Contact</value></data>
   <data name="footer_security" xml:space="preserve"><value>Security</value></data>
+  <data name="footer_support" xml:space="preserve"><value>Support</value></data>
   <data name="footer_legal" xml:space="preserve"><value>Legal</value></data>
   <data name="footer_copyright" xml:space="preserve"><value>© 2026 NavTour</value></data>
+
+  <!-- Support Page -->
+  <data name="support_page_title" xml:space="preserve"><value>Support — NavTour</value></data>
+  <data name="support_meta_desc" xml:space="preserve"><value>Get help with NavTour. Reach our support team, browse FAQs, or contact us directly.</value></data>
+  <data name="support_heading" xml:space="preserve"><value>How can we help?</value></data>
+  <data name="support_subheading" xml:space="preserve"><value>Our team is here to help you get the most out of NavTour. Reach out and we'll respond within 24 hours.</value></data>
+  <data name="support_email_title" xml:space="preserve"><value>Email Support</value></data>
+  <data name="support_email_desc" xml:space="preserve"><value>Send us a message and our team will get back to you within one business day.</value></data>
+  <data name="support_faq_title" xml:space="preserve"><value>Frequently Asked Questions</value></data>
+  <data name="support_faq_desc" xml:space="preserve"><value>Find quick answers to common questions about features, billing, and integrations.</value></data>
+  <data name="support_faq_link" xml:space="preserve"><value>Browse FAQs</value></data>
+  <data name="support_contact_title" xml:space="preserve"><value>General Inquiries</value></data>
+  <data name="support_contact_desc" xml:space="preserve"><value>Have a question about partnerships, sales, or something else? We'd love to hear from you.</value></data>
+  <data name="support_contact_link" xml:space="preserve"><value>Contact Us</value></data>
+  <data name="support_enterprise_title" xml:space="preserve"><value>Need dedicated support?</value></data>
+  <data name="support_enterprise_desc" xml:space="preserve"><value>Enterprise plans include a dedicated customer success manager and priority SLA.</value></data>
+  <data name="support_enterprise_cta" xml:space="preserve"><value>Talk to Sales</value></data>
   <data name="footer_privacy" xml:space="preserve"><value>Privacy</value></data>
   <data name="footer_terms" xml:space="preserve"><value>Terms</value></data>
   <data name="footer_status" xml:space="preserve"><value>Status</value></data>
