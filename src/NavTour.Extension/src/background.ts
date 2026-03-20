@@ -57,7 +57,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       removeToolbarFromAll();
 
       if (message.openBuilder && demoId) {
-        const serverUrl = state.serverUrl || "http://localhost:5017";
+        const serverUrl = state.serverUrl || "https://navtour.cloud";
         // Cookie auth — just open the builder, browser sends cookie automatically
         chrome.tabs.create({ url: `${serverUrl}/demos/${demoId}/edit` });
       }
@@ -100,8 +100,11 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     !tab.url.startsWith("chrome-extension://") &&
     !tab.url.startsWith("about:")
   ) {
-    getState().then((state) => {
+    getState().then(async (state) => {
       if (!state.active) return;
+
+      const allowed = await hasHostPermission();
+      if (!allowed) return;
 
       // Inject toolbar (always, regardless of mode)
       chrome.scripting
@@ -144,16 +147,17 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
 // Inject toolbar when switching tabs
 chrome.tabs.onActivated.addListener((activeInfo) => {
-  getState().then((state) => {
-    if (state.active) {
-      chrome.scripting
-        .executeScript({
-          target: { tabId: activeInfo.tabId },
-          func: injectToolbarUI,
-          args: [state.demoName, state.frameCount, "", state.captureMode],
-        })
-        .catch(() => {});
-    }
+  getState().then(async (state) => {
+    if (!state.active) return;
+    const allowed = await hasHostPermission();
+    if (!allowed) return;
+    chrome.scripting
+      .executeScript({
+        target: { tabId: activeInfo.tabId },
+        func: injectToolbarUI,
+        args: [state.demoName, state.frameCount, "", state.captureMode],
+      })
+      .catch(() => {});
   });
 });
 
@@ -230,8 +234,17 @@ async function captureTab(tabId: number, state: CaptureState) {
   }
 }
 
+async function hasHostPermission(): Promise<boolean> {
+  return chrome.permissions.contains({ origins: ["<all_urls>"] });
+}
+
 async function injectToolbar(state: CaptureState) {
   try {
+    const allowed = await hasHostPermission();
+    if (!allowed) {
+      console.warn("[NavTour] No host permission — toolbar cannot be injected. Grant permission via the popup.");
+      return;
+    }
     const [tab] = await chrome.tabs.query({
       active: true,
       lastFocusedWindow: true,
