@@ -209,6 +209,15 @@ code {
     width: 64px !important;
     transition: width 0.2s ease;
 }
+/* Override Radzen layout grid when sidebar is collapsed */
+.rz-layout:has(.sidebar-closed) {
+    grid-template-columns: 64px 1fr !important;
+    transition: grid-template-columns 0.2s ease;
+}
+.rz-layout:has(.sidebar-open) {
+    grid-template-columns: 250px 1fr !important;
+    transition: grid-template-columns 0.2s ease;
+}
 
 /* ============================================
    Search bar
