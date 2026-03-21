@@ -131,10 +131,12 @@ window.tourInterop = {
 };
 
 window.sidebarToggle = {
-    toggle: function(expanded) {
-        const sidebar = document.querySelector('.e-sidebar');
+    _open: false,
+    toggle: function() {
+        this._open = !this._open;
+        var sidebar = document.querySelector('.e-sidebar');
         if (!sidebar) return;
-        if (expanded) {
+        if (this._open) {
             sidebar.classList.remove('e-close');
             sidebar.classList.add('e-open');
             sidebar.style.width = '250px';

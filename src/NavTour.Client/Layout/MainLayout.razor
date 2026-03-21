@@ -2,7 +2,6 @@
 @using Syncfusion.Blazor.Navigations
 @inject AuthService Auth
 @inject NavigationManager Nav
-@inject IJSRuntime JS
 
 <div id="app-wrapper">
     <SfSidebar @ref="sidebarObj" Width="250px" DockSize="56px" EnableDock="true"
@@ -63,7 +62,7 @@
 
     <div class="app-main">
         <div class="app-header">
-            <button class="header-toggle" @onclick="Toggle">
+            <button class="header-toggle" onclick="sidebarToggle.toggle()">
                 <svg viewBox="0 0 24 24" width="20" height="20"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" fill="currentColor"/></svg>
             </button>
             <span class="header-breadcrumb">@GetBreadcrumb()</span>
@@ -154,12 +153,6 @@
             await Auth.TryRestoreAsync();
             StateHasChanged();
         }
-    }
-
-    private async Task Toggle()
-    {
-        sidebarExpanded = !sidebarExpanded;
-        await JS.InvokeVoidAsync("sidebarToggle.toggle", sidebarExpanded);
     }
 
     private void Navigate(string path) => Nav.NavigateTo(path);
