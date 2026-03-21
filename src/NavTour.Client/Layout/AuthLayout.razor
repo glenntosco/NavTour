@@ -102,7 +102,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: #0B1929;
+        background: linear-gradient(135deg, #0B1929 0%, #1E3A5F 40%, #4361ee 100%);
         position: relative;
         overflow: hidden;
     }
@@ -120,7 +120,7 @@
         --gradient-color-4: #0ea5e9;
     }
 
-    /* Static glow fallback (hidden when canvas active, shown for reduced-motion) */
+    /* Static glow fallback — visible by default, hidden once WebGL canvas is active */
     .auth-brand-glow {
         position: absolute;
         width: 600px;
@@ -130,7 +130,6 @@
         transform: translate(-50%, -50%);
         background: radial-gradient(circle, rgba(67, 97, 238, 0.15) 0%, rgba(10, 95, 173, 0.08) 40%, transparent 70%);
         pointer-events: none;
-        display: none;
     }
 
     /* Subtle dot grid pattern */

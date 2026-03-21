@@ -503,6 +503,9 @@ window.initStripeGradient = function () {
         var gradient = new Gradient();
         gradient.initGradient("#gradient-canvas");
         window._stripeGradient = gradient;
+        // Hide the static CSS glow fallback now that WebGL is running
+        var glow = document.querySelector(".auth-brand-glow");
+        if (glow) glow.style.display = "none";
     } catch (e) {
         console.warn("Stripe gradient init failed:", e);
     }
