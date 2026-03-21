@@ -24,6 +24,7 @@ const captureDemoName = document.getElementById("capture-demo-name")!;
 const captureFrameCount = document.getElementById("capture-frame-count")!;
 const btnFinish = document.getElementById("btn-finish") as HTMLButtonElement;
 const btnBack = document.getElementById("btn-back") as HTMLButtonElement;
+const btnLogoutCapture = document.getElementById("btn-logout-capture") as HTMLButtonElement;
 const captureStatus = document.getElementById("capture-status")!;
 
 let api = new NavTourApi(SERVER_URL);
@@ -231,13 +232,15 @@ btnRetry.addEventListener("click", async () => {
   }
 });
 
-// Logout
-btnLogout.addEventListener("click", async () => {
+// Logout (from both screens)
+async function doLogout() {
   chrome.runtime.sendMessage({ type: "STOP_CAPTURE" });
   await chrome.storage.local.remove(["session"]);
   session = null;
   showScreen(screenLogin);
-});
+}
+btnLogout.addEventListener("click", doLogout);
+btnLogoutCapture.addEventListener("click", doLogout);
 
 // Start capturing
 btnStart.addEventListener("click", async () => {

@@ -38,6 +38,9 @@
                 <RadzenButton Text="Logout" Icon="logout" ButtonStyle="ButtonStyle.Light" Variant="Variant.Text" Click="Logout" Style="width:100%;justify-content:flex-start;color:rgba(255,255,255,0.6)" />
             </div>
         }
+        <div style="padding:8px 20px 12px;text-align:center">
+            <span style="font-size:11px;color:rgba(255,255,255,0.25)">v@AppVersion</span>
+        </div>
     </RadzenSidebar>
     <RadzenHeader Style="background:#fff;border-bottom:1px solid #E2E8F0">
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="0" Style="padding:0 16px;width:100%">
@@ -62,6 +65,9 @@
 @code {
     private bool sidebarExpanded = true;
     private bool _restored;
+
+    private static string AppVersion =>
+        typeof(MainLayout).Assembly.GetName().Version?.ToString(3) ?? "0.0.0";
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

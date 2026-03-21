@@ -113,7 +113,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
           func: injectToolbarUI,
           args: [state.demoName, state.frameCount, "Capturing...", state.captureMode],
         })
-        .catch(() => {});
+        .catch((e) => console.error("[NavTour] Toolbar inject failed:", e));
 
       // Only auto-capture in "auto" mode
       if (state.captureMode !== "auto") {
