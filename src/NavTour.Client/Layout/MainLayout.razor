@@ -2,6 +2,7 @@
 @using Syncfusion.Blazor.Navigations
 @inject AuthService Auth
 @inject NavigationManager Nav
+@inject IJSRuntime JS
 
 <div id="wrapper">
     <SfSidebar @ref="sidebarObj" Width="250px" DockSize="72px" EnableDock="true"
@@ -211,12 +212,10 @@
         }
     }
 
-    private void OnToolbarClicked(ClickEventArgs args)
+    private async Task OnToolbarClicked(ClickEventArgs args)
     {
-        if (args.Item.TooltipText == "Menu")
-        {
-            sidebarExpanded = !sidebarExpanded;
-        }
+        sidebarExpanded = !sidebarExpanded;
+        await JS.InvokeVoidAsync("sidebarToggle.toggle", sidebarExpanded);
     }
 
     private async Task Logout()

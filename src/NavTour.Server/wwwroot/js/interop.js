@@ -132,15 +132,16 @@ window.tourInterop = {
 
 window.sidebarToggle = {
     toggle: function(expanded) {
-        const sidebar = document.querySelector('.rz-sidebar');
-        const layout = document.querySelector('.rz-layout');
-        if (!sidebar || !layout) return;
+        const sidebar = document.querySelector('.e-sidebar');
+        if (!sidebar) return;
         if (expanded) {
+            sidebar.classList.remove('e-close');
+            sidebar.classList.add('e-open');
             sidebar.style.width = '250px';
-            layout.style.gridTemplateColumns = '250px 1fr';
         } else {
-            sidebar.style.width = '64px';
-            layout.style.gridTemplateColumns = '64px 1fr';
+            sidebar.classList.remove('e-open');
+            sidebar.classList.add('e-close');
+            sidebar.style.width = '';
         }
     }
 };
