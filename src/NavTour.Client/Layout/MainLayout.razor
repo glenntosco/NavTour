@@ -62,17 +62,12 @@
     </SfSidebar>
 
     <div class="main-content-area">
-        <SfToolbar CssClass="app-toolbar">
-            <ToolbarEvents Clicked="OnToolbarClicked" />
-            <ToolbarItems>
-                <ToolbarItem PrefixIcon="e-icons e-menu" TooltipText="Menu" />
-                <ToolbarItem>
-                    <Template>
-                        <div class="toolbar-breadcrumb">@GetBreadcrumb()</div>
-                    </Template>
-                </ToolbarItem>
-            </ToolbarItems>
-        </SfToolbar>
+        <div class="app-toolbar">
+            <button class="toolbar-toggle" @onclick="ToggleSidebar">
+                <span class="e-icons e-menu"></span>
+            </button>
+            <span class="toolbar-breadcrumb">@GetBreadcrumb()</span>
+        </div>
         <div class="page-content @(IsEditorPage ? "" : "padded")">
             @Body
         </div>
@@ -93,7 +88,6 @@
 
     /* Sidebar */
     .e-sidebar {
-        background: #0B1929 !important;
         display: flex !important;
         flex-direction: column !important;
     }
@@ -106,7 +100,7 @@
         min-height: 56px;
     }
     .sidebar-logo-link { display: flex; align-items: center; text-decoration: none; }
-    .sidebar-logo { height: 28px; width: auto; filter: brightness(0) invert(1); }
+    .sidebar-logo { height: 28px; width: auto; }
 
     .sidebar-nav {
         flex: 1;
@@ -119,7 +113,7 @@
         align-items: center;
         gap: 12px;
         padding: 10px 20px;
-        color: rgba(255,255,255,0.7);
+        color: #424242;
         text-decoration: none;
         font-size: 14px;
         font-weight: 500;
@@ -129,16 +123,16 @@
         overflow: hidden;
         transition: background 0.15s, color 0.15s;
     }
-    .nav-link:hover { background: rgba(255,255,255,0.08); color: white; }
-    .nav-link.active { background: rgba(67,97,238,0.2); color: white; font-weight: 600; }
-    .nav-icon { font-size: 20px; flex-shrink: 0; }
+    .nav-link:hover { background: #f5f5f5; color: #1a1a1a; }
+    .nav-link.active { background: #e8eafd; color: #4361ee; font-weight: 600; }
+    .nav-icon { font-size: 20px; flex-shrink: 0; color: #616161; }
     .nav-link.active .nav-icon { color: #4361ee; }
 
     .nav-divider {
         padding: 16px 20px 6px;
         font-size: 11px;
         font-weight: 700;
-        color: rgba(255,255,255,0.3);
+        color: #9e9e9e;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         white-space: nowrap;
@@ -156,13 +150,13 @@
     .e-dock.e-close .nav-divider { display: none; }
 
     .sidebar-footer {
-        border-top: 1px solid rgba(255,255,255,0.1);
+        border-top: 1px solid #e0e0e0;
         padding: 8px 0 12px;
     }
     .sidebar-version {
         text-align: center;
         font-size: 11px;
-        color: rgba(255,255,255,0.25);
+        color: #9e9e9e;
         padding-top: 4px;
     }
 
@@ -175,16 +169,31 @@
         min-width: 0;
     }
 
-    .app-toolbar.e-toolbar {
+    .app-toolbar {
         border-bottom: 1px solid #e5e7eb;
         background: #fff;
-        min-height: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        padding: 0 12px;
+        gap: 8px;
+        flex-shrink: 0;
     }
+    .toolbar-toggle {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 6px;
+        color: #424242;
+        display: flex;
+        align-items: center;
+    }
+    .toolbar-toggle:hover { background: #f5f5f5; }
     .toolbar-breadcrumb {
         font-size: 0.875rem;
         color: #64748B;
         font-weight: 500;
-        margin-left: 4px;
     }
 
     .page-content {
@@ -212,7 +221,7 @@
         }
     }
 
-    private async Task OnToolbarClicked(ClickEventArgs args)
+    private async Task ToggleSidebar()
     {
         sidebarExpanded = !sidebarExpanded;
         await JS.InvokeVoidAsync("sidebarToggle.toggle", sidebarExpanded);
