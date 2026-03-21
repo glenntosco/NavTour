@@ -81,7 +81,7 @@
                 OnStepSettingsChanged="HandleStepSettingsChanged" />
         </div>
 
-        <div class="annotation-editor">
+        <div class="annotation-editor" style="overflow-y:auto;max-height:100%">
             <AnnotationEditor DemoId="@DemoId" StepId="@selectedStepId" Annotations="@currentAnnotations"
                 OnAnnotationsChanged="RefreshAnnotations" />
         </div>
