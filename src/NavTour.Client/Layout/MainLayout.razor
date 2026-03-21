@@ -4,71 +4,71 @@
 @inject NavigationManager Nav
 @inject IJSRuntime JS
 
-<div id="wrapper">
-    <SfSidebar @ref="sidebarObj" Width="250px" DockSize="72px" EnableDock="true"
+<div id="app-wrapper">
+    <SfSidebar @ref="sidebarObj" Width="250px" DockSize="56px" EnableDock="true"
                @bind-IsOpen="sidebarExpanded" MediaQuery="(min-width: 600px)">
         <ChildContent>
-            <div class="sidebar-header">
-                <a href="/dashboard" class="sidebar-logo-link">
+            <div class="sb-header">
+                <a href="/dashboard" class="sb-logo-link">
                     @if (sidebarExpanded)
                     {
-                        <img src="images/NavTourNoTag.webp" alt="NavTour" class="sidebar-logo" />
+                        <img src="images/NavTourNoTag.webp" alt="NavTour" class="sb-logo" />
                     }
                     else
                     {
-                        <img src="favicon.svg" alt="N" style="height:28px;width:28px" />
+                        <img src="favicon.svg" alt="N" class="sb-logo-sm" />
                     }
                 </a>
             </div>
-            <nav class="sidebar-nav">
-                <a href="/dashboard" class="nav-link @ActiveClass("/dashboard")">
-                    <span class="material-icons nav-icon">apps</span>
-                    <span class="nav-label">Product Demos</span>
-                </a>
-                <div class="nav-divider">Analyze</div>
-                <a href="/analytics" class="nav-link @ActiveClass("/analytics")">
-                    <span class="material-icons nav-icon">bar_chart</span>
-                    <span class="nav-label">Analytics</span>
-                </a>
-                <div class="nav-divider">Leads</div>
-                <a href="/leads" class="nav-link @ActiveClass("/leads")">
-                    <span class="material-icons nav-icon">people</span>
-                    <span class="nav-label">Leads</span>
-                </a>
-                <div class="nav-divider">Manage</div>
-                <a href="/team" class="nav-link @ActiveClass("/team")">
-                    <span class="material-icons nav-icon">group</span>
-                    <span class="nav-label">Team</span>
-                </a>
-                <a href="/settings" class="nav-link @ActiveClass("/settings")">
-                    <span class="material-icons nav-icon">settings</span>
-                    <span class="nav-label">Settings</span>
-                </a>
-            </nav>
+            <ul class="sb-menu">
+                <li class="sb-item @ActiveClass("/dashboard")" @onclick='() => Navigate("/dashboard")'>
+                    <svg class="sb-icon" viewBox="0 0 24 24"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
+                    <span class="sb-text">Product Demos</span>
+                </li>
+                <li class="sb-divider">Analyze</li>
+                <li class="sb-item @ActiveClass("/analytics")" @onclick='() => Navigate("/analytics")'>
+                    <svg class="sb-icon" viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg>
+                    <span class="sb-text">Analytics</span>
+                </li>
+                <li class="sb-divider">Leads</li>
+                <li class="sb-item @ActiveClass("/leads")" @onclick='() => Navigate("/leads")'>
+                    <svg class="sb-icon" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                    <span class="sb-text">Leads</span>
+                </li>
+                <li class="sb-divider">Manage</li>
+                <li class="sb-item @ActiveClass("/team")" @onclick='() => Navigate("/team")'>
+                    <svg class="sb-icon" viewBox="0 0 24 24"><path d="M12 12.75c1.63 0 3.07.39 4.24.9 1.08.48 1.76 1.56 1.76 2.73V18H6v-1.61c0-1.18.68-2.26 1.76-2.73 1.17-.52 2.61-.91 4.24-.91zM4 13c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm1.13 1.1c-.37-.06-.74-.1-1.13-.1-.99 0-1.93.21-2.78.58C.48 14.9 0 15.62 0 16.43V18h4.5v-1.61c0-.83.23-1.61.63-2.29zM20 13c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm4 3.43c0-.81-.48-1.53-1.22-1.85-.85-.37-1.79-.58-2.78-.58-.39 0-.76.04-1.13.1.4.68.63 1.46.63 2.29V18H24v-1.57zM12 6c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3z"/></svg>
+                    <span class="sb-text">Team</span>
+                </li>
+                <li class="sb-item @ActiveClass("/settings")" @onclick='() => Navigate("/settings")'>
+                    <svg class="sb-icon" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+                    <span class="sb-text">Settings</span>
+                </li>
+            </ul>
             @if (Auth.IsAuthenticated)
             {
-                <div class="sidebar-footer">
-                    <a @onclick="Logout" @onclick:preventDefault href="#" class="nav-link">
-                        <span class="material-icons nav-icon">logout</span>
-                        <span class="nav-label">Logout</span>
-                    </a>
+                <div class="sb-footer">
+                    <li class="sb-item" @onclick="Logout">
+                        <svg class="sb-icon" viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+                        <span class="sb-text">Logout</span>
+                    </li>
                     @if (sidebarExpanded)
                     {
-                        <div class="sidebar-version">v@(AppVersion)</div>
+                        <div class="sb-version">v@(AppVersion)</div>
                     }
                 </div>
             }
         </ChildContent>
     </SfSidebar>
 
-    <div class="main-content-area">
-        <div class="app-toolbar">
-            <button class="toolbar-toggle" @onclick="ToggleSidebar">
-                <span class="e-icons e-menu"></span>
+    <div class="app-main">
+        <div class="app-header">
+            <button class="header-toggle" @onclick="Toggle">
+                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" fill="currentColor"/></svg>
             </button>
-            <span class="toolbar-breadcrumb">@GetBreadcrumb()</span>
+            <span class="header-breadcrumb">@GetBreadcrumb()</span>
         </div>
-        <div class="page-content @(IsEditorPage ? "" : "padded")">
+        <div class="app-body @(IsEditorPage ? "" : "padded")">
             @Body
         </div>
     </div>
@@ -80,127 +80,62 @@
 <RadzenContextMenu />
 
 <style>
-    #wrapper {
-        display: flex;
-        height: 100vh;
-        overflow: hidden;
+    #app-wrapper { display:flex; height:100vh; overflow:hidden; }
+
+    .e-sidebar { display:flex !important; flex-direction:column !important; border-right:1px solid #e5e7eb; }
+
+    .sb-header { padding:12px 16px; display:flex; align-items:center; justify-content:center; min-height:48px; border-bottom:1px solid #f0f0f0; }
+    .sb-logo-link { display:flex; align-items:center; text-decoration:none; }
+    .sb-logo { height:26px; width:auto; }
+    .sb-logo-sm { height:24px; width:24px; }
+
+    .sb-menu { list-style:none; padding:8px 0; margin:0; flex:1; overflow-y:auto; }
+
+    .sb-item {
+        display:flex; align-items:center; gap:12px; padding:9px 18px;
+        cursor:pointer; color:#424242; font-size:13px; font-weight:500;
+        border-radius:6px; margin:1px 8px; transition:background 0.12s;
+        white-space:nowrap; overflow:hidden;
+    }
+    .sb-item:hover { background:#f5f5f5; }
+    .sb-item.active { background:#e8eafd; color:#4361ee; font-weight:600; }
+    .sb-item.active .sb-icon { fill:#4361ee; }
+
+    .sb-icon { width:20px; height:20px; flex-shrink:0; fill:#616161; }
+
+    .sb-text { overflow:hidden; text-overflow:ellipsis; }
+
+    .sb-divider {
+        list-style:none; padding:14px 18px 5px; font-size:10px; font-weight:700;
+        color:#9e9e9e; text-transform:uppercase; letter-spacing:0.6px;
+        overflow:hidden; white-space:nowrap;
     }
 
-    /* Sidebar */
-    .e-sidebar {
-        display: flex !important;
-        flex-direction: column !important;
-    }
+    /* Docked mode */
+    .e-dock.e-close .sb-text { display:none; }
+    .e-dock.e-close .sb-divider { display:none; }
+    .e-dock.e-close .sb-item { justify-content:center; padding:10px; margin:1px 4px; gap:0; }
+    .e-dock.e-close .sb-header { padding:12px 8px; }
 
-    .sidebar-header {
-        padding: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 56px;
-    }
-    .sidebar-logo-link { display: flex; align-items: center; text-decoration: none; }
-    .sidebar-logo { height: 28px; width: auto; }
+    .sb-footer { border-top:1px solid #e5e7eb; padding:6px 0 8px; }
+    .sb-version { text-align:center; font-size:10px; color:#bbb; padding-top:4px; }
 
-    .sidebar-nav {
-        flex: 1;
-        overflow-y: auto;
-        padding: 4px 0;
-    }
+    /* Main area */
+    .app-main { flex:1; display:flex; flex-direction:column; overflow:hidden; min-width:0; }
 
-    .nav-link {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 10px 20px;
-        color: #424242;
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: 500;
-        border-radius: 8px;
-        margin: 2px 12px;
-        white-space: nowrap;
-        overflow: hidden;
-        transition: background 0.15s, color 0.15s;
+    .app-header {
+        height:48px; display:flex; align-items:center; padding:0 14px; gap:10px;
+        border-bottom:1px solid #e5e7eb; background:#fff; flex-shrink:0;
     }
-    .nav-link:hover { background: #f5f5f5; color: #1a1a1a; }
-    .nav-link.active { background: #e8eafd; color: #4361ee; font-weight: 600; }
-    .nav-icon { font-size: 20px; flex-shrink: 0; color: #616161; }
-    .nav-link.active .nav-icon { color: #4361ee; }
+    .header-toggle {
+        background:none; border:none; cursor:pointer; padding:6px;
+        border-radius:6px; color:#424242; display:flex; align-items:center;
+    }
+    .header-toggle:hover { background:#f5f5f5; }
+    .header-breadcrumb { font-size:13px; color:#757575; font-weight:500; }
 
-    .nav-divider {
-        padding: 16px 20px 6px;
-        font-size: 11px;
-        font-weight: 700;
-        color: #9e9e9e;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        white-space: nowrap;
-        overflow: hidden;
-    }
-
-    /* Docked (icon-only) mode */
-    .e-dock.e-close .nav-label { display: none; }
-    .e-dock.e-close .nav-link {
-        justify-content: center;
-        padding: 12px;
-        margin: 2px 8px;
-        gap: 0;
-    }
-    .e-dock.e-close .nav-divider { display: none; }
-
-    .sidebar-footer {
-        border-top: 1px solid #e0e0e0;
-        padding: 8px 0 12px;
-    }
-    .sidebar-version {
-        text-align: center;
-        font-size: 11px;
-        color: #9e9e9e;
-        padding-top: 4px;
-    }
-
-    /* Main content */
-    .main-content-area {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        min-width: 0;
-    }
-
-    .app-toolbar {
-        border-bottom: 1px solid #e5e7eb;
-        background: #fff;
-        height: 48px;
-        display: flex;
-        align-items: center;
-        padding: 0 12px;
-        gap: 8px;
-        flex-shrink: 0;
-    }
-    .toolbar-toggle {
-        background: none;
-        border: none;
-        cursor: pointer;
-        padding: 8px;
-        border-radius: 6px;
-        color: #424242;
-        display: flex;
-        align-items: center;
-    }
-    .toolbar-toggle:hover { background: #f5f5f5; }
-    .toolbar-breadcrumb {
-        font-size: 0.875rem;
-        color: #64748B;
-        font-weight: 500;
-    }
-
-    .page-content {
-        flex: 1;
-        overflow-y: auto;
-    }
-    .page-content.padded { padding: 16px; }
+    .app-body { flex:1; overflow-y:auto; }
+    .app-body.padded { padding:16px; }
 </style>
 
 @code {
@@ -221,11 +156,13 @@
         }
     }
 
-    private async Task ToggleSidebar()
+    private async Task Toggle()
     {
         sidebarExpanded = !sidebarExpanded;
         await JS.InvokeVoidAsync("sidebarToggle.toggle", sidebarExpanded);
     }
+
+    private void Navigate(string path) => Nav.NavigateTo(path);
 
     private async Task Logout()
     {
