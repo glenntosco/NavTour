@@ -87,6 +87,17 @@ public class DemoService : IDemoService
         var demo = await _db.Demos.FindAsync(id);
         if (demo == null) return false;
 
+        // Cascade soft-delete to child entities
+        var frames = await _db.Frames.Where(f => f.DemoId == id).ToListAsync();
+        foreach (var f in frames) f.IsDeleted = true;
+
+        var steps = await _db.Steps.Where(s => s.DemoId == id).ToListAsync();
+        foreach (var s in steps) s.IsDeleted = true;
+
+        var stepIds = steps.Select(s => s.Id).ToList();
+        var annotations = await _db.Annotations.Where(a => stepIds.Contains(a.StepId)).ToListAsync();
+        foreach (var a in annotations) a.IsDeleted = true;
+
         demo.IsDeleted = true;
         await _db.SaveChangesAsync();
         return true;

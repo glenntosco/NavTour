@@ -4,6 +4,7 @@
 @inject NavigationManager Nav
 @inject NotificationService Notification
 @inject AuthService Auth
+@inject DialogService DialogService
 @inject IJSRuntime JS
 
 <RadzenStack Gap="16px" Style="max-width:600px">
@@ -38,7 +39,8 @@
         <RadzenCard>
             <RadzenStack Gap="8px">
                 <RadzenText TextStyle="TextStyle.H6" Style="color:var(--rz-danger)">Danger Zone</RadzenText>
-                <RadzenButton Text="Delete Demo" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Outlined" Click="DeleteDemo" />
+                <RadzenText Style="font-size:13px;color:var(--rz-text-secondary-color)">This will permanently delete the demo, all frames, steps, and annotations. This action cannot be undone.</RadzenText>
+                <RadzenButton Text="Delete Demo" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Outlined" Click="ConfirmDelete" />
             </RadzenStack>
         </RadzenCard>
     }
@@ -78,9 +80,18 @@
         saving = false;
     }
 
-    private async Task DeleteDemo()
+    private async Task ConfirmDelete()
     {
-        await DemoApi.DeleteDemoAsync(DemoId);
-        Nav.NavigateTo("/dashboard");
+        var confirmed = await DialogService.Confirm(
+            "This will permanently delete the demo, all frames, steps, and annotations. This action cannot be undone.",
+            "Delete Demo?",
+            new ConfirmOptions { OkButtonText = "Delete", CancelButtonText = "Cancel" });
+
+        if (confirmed == true)
+        {
+            await DemoApi.DeleteDemoAsync(DemoId);
+            Notification.Notify(NotificationSeverity.Success, "Demo deleted");
+            Nav.NavigateTo("/dashboard");
+        }
     }
 }
