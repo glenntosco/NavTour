@@ -74,6 +74,11 @@ Controllers at `api/v1/{resource}` with `[Authorize]`. DTOs follow: `CreateXyzRe
 
 Demo → Frames (HTML/CSS snapshots) → Steps (guided interactions) → Annotations (tooltips, modals, hotspots, blur). DemoSession tracks viewer engagement. Lead captures form submissions. PersonalizationVariable enables `{{company}}`-style tokens.
 
+### MCP Tools
+
+- **Radzen Blazor MCP** (`mcp__radzen-blazor__search`): Use this to look up Radzen component APIs, properties, and usage patterns before guessing. Query it for correct component configuration (e.g., sidebar toggle, data grid features, form validation).
+- **Syncfusion Blazor MCP** (`syncfusion-blazor`): Use this to look up Syncfusion Blazor component APIs and usage. Currently used for `SfTooltip` components in the app.
+
 ## Conventions
 
 - Route Dashboard at `/dashboard` (not `/`). Marketing landing page owns `/`.

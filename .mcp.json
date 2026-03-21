@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "syncfusion-blazor": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@anthropic-ai/mcp-proxy@latest",
+        "--transport",
+        "sse",
+        "https://blazor-mcp.syncfusion.com/sse?api_key=wBrvhLVsQ+FLKjoScNCScbU9Pvu098ZeXznGE8dQdt8ai4TxrMjg9Zc2k8SnI8qYGQNgLlc9Kgd9HLjlLHx+qA=="
+      ]
+    }
+  }
+}

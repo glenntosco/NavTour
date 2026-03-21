@@ -3,30 +3,37 @@
 @inject NavigationManager Nav
 
 <RadzenLayout>
-    <RadzenSidebar @bind-Expanded="@sidebarExpanded" Style="width:250px;background:var(--rz-primary-darker)">
-        <div style="padding:20px 20px 12px;display:flex;align-items:center">
+    <RadzenSidebar @bind-Expanded="@sidebarExpanded" Responsive="false" Style="width:max-content;background:var(--rz-primary-darker)">
+        <div style="padding:20px @(sidebarExpanded ? "20px" : "12px") 12px;display:flex;align-items:center;justify-content:center">
             <a href="/dashboard" style="display:flex;align-items:center;text-decoration:none">
-                <img src="images/NavTourNoTag.webp" alt="NavTour" style="height:28px;width:auto;filter:brightness(0) invert(1)" />
+                @if (sidebarExpanded)
+                {
+                    <img src="images/NavTourNoTag.webp" alt="NavTour" style="height:28px;width:auto;filter:brightness(0) invert(1)" />
+                }
+                else
+                {
+                    <RadzenIcon Icon="apps" Style="color:white;font-size:24px" />
+                }
             </a>
         </div>
 
         <div style="flex:1;overflow-y:auto;padding-top:8px">
-            <RadzenPanelMenu Style="width:100%">
+            <RadzenPanelMenu DisplayStyle="@SidebarDisplayStyle" ShowArrow="false" Style="width:100%">
                 <RadzenPanelMenuItem Text="Product Demos" Icon="apps" Path="dashboard" Style="@NavItemStyle("/dashboard")" />
             </RadzenPanelMenu>
 
-            <div class="sidebar-category">Analyze</div>
-            <RadzenPanelMenu Style="width:100%">
+            @if (sidebarExpanded) { <div class="sidebar-category">Analyze</div> }
+            <RadzenPanelMenu DisplayStyle="@SidebarDisplayStyle" ShowArrow="false" Style="width:100%">
                 <RadzenPanelMenuItem Text="Analytics" Icon="bar_chart" Path="analytics" Style="@NavItemStyle("/analytics")" />
             </RadzenPanelMenu>
 
-            <div class="sidebar-category">Leads</div>
-            <RadzenPanelMenu Style="width:100%">
+            @if (sidebarExpanded) { <div class="sidebar-category">Leads</div> }
+            <RadzenPanelMenu DisplayStyle="@SidebarDisplayStyle" ShowArrow="false" Style="width:100%">
                 <RadzenPanelMenuItem Text="Leads" Icon="people" Path="leads" Style="@NavItemStyle("/leads")" />
             </RadzenPanelMenu>
 
-            <div class="sidebar-category">Manage</div>
-            <RadzenPanelMenu Style="width:100%">
+            @if (sidebarExpanded) { <div class="sidebar-category">Manage</div> }
+            <RadzenPanelMenu DisplayStyle="@SidebarDisplayStyle" ShowArrow="false" Style="width:100%">
                 <RadzenPanelMenuItem Text="Team" Icon="group" Path="team" Style="@NavItemStyle("/team")" />
                 <RadzenPanelMenuItem Text="Settings" Icon="settings" Path="settings" Style="@NavItemStyle("/settings")" />
             </RadzenPanelMenu>
@@ -34,18 +41,21 @@
 
         @if (Auth.IsAuthenticated)
         {
-            <div style="padding:16px 20px;border-top:1px solid rgba(255,255,255,0.1)">
-                <RadzenButton Text="Logout" Icon="logout" ButtonStyle="ButtonStyle.Light" Variant="Variant.Text" Click="Logout" Style="width:100%;justify-content:flex-start;color:rgba(255,255,255,0.6)" />
+            <div style="padding:16px @(sidebarExpanded ? "20px" : "12px");border-top:1px solid rgba(255,255,255,0.1)">
+                <RadzenButton Text="@(sidebarExpanded ? "Logout" : "")" Icon="logout" ButtonStyle="ButtonStyle.Light" Variant="Variant.Text" Click="Logout" Style="@($"width:100%;justify-content:{(sidebarExpanded ? "flex-start" : "center")};color:rgba(255,255,255,0.6)")" />
             </div>
         }
-        <div style="padding:8px 20px 12px;text-align:center">
-            <span style="font-size:11px;color:rgba(255,255,255,0.25)">v@(AppVersion)</span>
-        </div>
+        @if (sidebarExpanded)
+        {
+            <div style="padding:8px 20px 12px;text-align:center">
+                <span style="font-size:11px;color:rgba(255,255,255,0.25)">v@(AppVersion)</span>
+            </div>
+        }
     </RadzenSidebar>
     <RadzenHeader Style="background:#fff;border-bottom:1px solid #E2E8F0">
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="0" Style="padding:0 16px;width:100%">
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="8px">
-                <RadzenSidebarToggle Style="color:#1E3A5F" />
+                <RadzenButton Icon="menu" Click="@(() => sidebarExpanded = !sidebarExpanded)" ButtonStyle="ButtonStyle.Light" Variant="Variant.Text" Size="ButtonSize.Medium" Style="color:#1E3A5F" />
                 <span style="font-size:0.875rem;color:#64748B">@GetBreadcrumb()</span>
             </RadzenStack>
         </RadzenStack>
@@ -65,6 +75,9 @@
 @code {
     private bool sidebarExpanded = true;
     private bool _restored;
+
+    private MenuItemDisplayStyle SidebarDisplayStyle =>
+        sidebarExpanded ? MenuItemDisplayStyle.IconAndText : MenuItemDisplayStyle.Icon;
 
     private static string AppVersion =>
         typeof(MainLayout).Assembly.GetName().Version?.ToString(3) ?? "0.0.0";
