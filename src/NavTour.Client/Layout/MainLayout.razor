@@ -3,8 +3,8 @@
 @inject NavigationManager Nav
 
 <RadzenLayout>
-    <RadzenSidebar @bind-Expanded="@sidebarExpanded" Responsive="false" Style="width:max-content;background:var(--rz-primary-darker)">
-        <div style="padding:20px @(sidebarExpanded ? "20px" : "12px") 12px;display:flex;align-items:center;justify-content:center">
+    <RadzenSidebar Responsive="false" class="@(sidebarExpanded ? "sidebar-open" : "sidebar-closed")" Style="background:var(--rz-primary-darker);overflow:hidden">
+        <div style="padding:16px 12px 12px;display:flex;align-items:center;justify-content:center;overflow:hidden">
             <a href="/dashboard" style="display:flex;align-items:center;text-decoration:none">
                 @if (sidebarExpanded)
                 {
@@ -41,8 +41,10 @@
 
         @if (Auth.IsAuthenticated)
         {
-            <div style="padding:16px @(sidebarExpanded ? "20px" : "12px");border-top:1px solid rgba(255,255,255,0.1)">
-                <RadzenButton Text="@(sidebarExpanded ? "Logout" : "")" Icon="logout" ButtonStyle="ButtonStyle.Light" Variant="Variant.Text" Click="Logout" Style="@($"width:100%;justify-content:{(sidebarExpanded ? "flex-start" : "center")};color:rgba(255,255,255,0.6)")" />
+            <div style="padding:8px;border-top:1px solid rgba(255,255,255,0.1)">
+                <RadzenButton Icon="logout" ButtonStyle="ButtonStyle.Light" Variant="Variant.Text" Click="Logout"
+                    Style="@($"width:100%;justify-content:{(sidebarExpanded ? "flex-start" : "center")};color:rgba(255,255,255,0.6)")"
+                    Text="@(sidebarExpanded ? "Logout" : "")" />
             </div>
         }
         @if (sidebarExpanded)
@@ -53,11 +55,10 @@
         }
     </RadzenSidebar>
     <RadzenHeader Style="background:#fff;border-bottom:1px solid #E2E8F0">
-        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="0" Style="padding:0 16px;width:100%">
-            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="8px">
-                <RadzenButton Icon="menu" Click="@(() => sidebarExpanded = !sidebarExpanded)" ButtonStyle="ButtonStyle.Light" Variant="Variant.Text" Size="ButtonSize.Medium" Style="color:#1E3A5F" />
-                <span style="font-size:0.875rem;color:#64748B">@GetBreadcrumb()</span>
-            </RadzenStack>
+        <RadzenStack Orientation="Radzen.Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="8px" Style="padding:0 16px;width:100%">
+            <RadzenButton Icon="menu" Click="@(() => sidebarExpanded = !sidebarExpanded)"
+                ButtonStyle="ButtonStyle.Light" Variant="Variant.Text" Size="ButtonSize.Medium" Style="color:#1E3A5F" />
+            <span style="font-size:0.875rem;color:#64748B">@GetBreadcrumb()</span>
         </RadzenStack>
     </RadzenHeader>
     <RadzenBody>

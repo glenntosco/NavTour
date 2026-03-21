@@ -16,6 +16,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="*" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="*" />
     <PackageReference Include="Radzen.Blazor" Version="*" />
+    <PackageReference Include="Syncfusion.Blazor.Navigations" Version="33.1.44" />
     <PackageReference Include="Syncfusion.Blazor.Popups" Version="*" />
   </ItemGroup>
 

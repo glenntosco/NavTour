@@ -200,6 +200,16 @@ code {
     padding: 20px 20px 8px;
 }
 
+/* Sidebar collapse toggle */
+.rz-sidebar.sidebar-open {
+    width: 250px !important;
+    transition: width 0.2s ease;
+}
+.rz-sidebar.sidebar-closed {
+    width: 64px !important;
+    transition: width 0.2s ease;
+}
+
 /* ============================================
    Search bar
    ============================================ */
