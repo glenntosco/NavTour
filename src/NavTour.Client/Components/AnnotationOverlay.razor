@@ -1,7 +1,7 @@
 @using NavTour.Shared.DTOs.Annotations
 @inject IJSRuntime JS
 
-<div @ref="selfRef" style="@GetStyle()" class="annotation-overlay @(Mode == AnnotationOverlayMode.Edit ? "editable" : "") @(isDragging ? "dragging" : "")"
+<div @ref="selfRef" style="@GetStyle()" class="annotation-overlay @(Mode == AnnotationOverlayMode.Edit ? "editable" : "") @(isDragging ? "dragging" : "") @(isResizing ? "resizing" : "")"
      @onmousedown="OnMouseDown" @onmousedown:stopPropagation="true">
     @switch (Annotation.Type)
     {
@@ -84,6 +84,11 @@
             }
             break;
     }
+
+    @if (Mode == AnnotationOverlayMode.Edit && CanResize)
+    {
+        <div class="resize-handle" @onmousedown="OnResizeStart" @onmousedown:stopPropagation="true"></div>
+    }
 </div>
 
 @if (isDragging)
@@ -93,11 +98,32 @@
          @onmouseup="OnMouseUp" @onmouseleave="OnMouseUp"></div>
 }
 
+@if (isResizing)
+{
+    <div class="drag-capture-overlay"
+         style="cursor:nwse-resize"
+         @onmousemove="OnResizeMove" @onmousemove:preventDefault="true"
+         @onmouseup="OnResizeEnd" @onmouseleave="OnResizeEnd"></div>
+}
+
 <style>
     .annotation-overlay.editable { cursor: move; pointer-events: all !important; }
     .annotation-overlay.editable:hover { outline: 2px dashed rgba(67,97,238,0.5); outline-offset: 2px; }
     .annotation-overlay.dragging { outline: 2px solid #4361ee; outline-offset: 2px; opacity: 0.85; z-index: 100 !important; }
+    .annotation-overlay.resizing { outline: 2px solid #4361ee; outline-offset: 2px; z-index: 100 !important; }
     .drag-capture-overlay { position: absolute; inset: 0; z-index: 9999; cursor: move; }
+
+    .resize-handle {
+        position: absolute; bottom: 0; right: 0;
+        width: 12px; height: 12px;
+        cursor: nwse-resize;
+        background: #4361ee;
+        border-radius: 2px;
+        opacity: 0;
+        transition: opacity 0.15s;
+    }
+    .annotation-overlay.editable:hover .resize-handle { opacity: 0.6; }
+    .annotation-overlay.editable .resize-handle:hover { opacity: 1; }
 
     .click-zone-edit {
         width: 100%; height: 100%;
@@ -122,6 +148,7 @@
     [Parameter] public AnnotationResponse Annotation { get; set; } = null!;
     [Parameter] public AnnotationOverlayMode Mode { get; set; } = AnnotationOverlayMode.View;
     [Parameter] public EventCallback<AnnotationPositionChange> OnPositionChanged { get; set; }
+    [Parameter] public EventCallback<AnnotationSizeChange> OnSizeChanged { get; set; }
 
     private ElementReference selfRef;
     private bool isDragging;
@@ -129,6 +156,14 @@
     private double dragStartPosX, dragStartPosY;
     private double dragX, dragY;
     private double parentWidth, parentHeight;
+
+    // Resize state
+    private bool isResizing;
+    private double resizeStartMouseX, resizeStartMouseY;
+    private double resizeStartW, resizeStartH;
+    private double resizeW, resizeH;
+
+    private bool CanResize => Annotation.Type != AnnotationType.Beacon && Annotation.Type != AnnotationType.Hotspot;
 
     private async Task OnMouseDown(MouseEventArgs e)
     {
@@ -176,15 +211,63 @@
         StateHasChanged();
     }
 
+    private async Task OnResizeStart(MouseEventArgs e)
+    {
+        if (Mode != AnnotationOverlayMode.Edit || !CanResize) return;
+        try
+        {
+            var size = await JS.InvokeAsync<double[]>("annotationDrag.getParentSize", selfRef);
+            parentWidth = size[0];
+            parentHeight = size[1];
+        }
+        catch
+        {
+            parentWidth = 1200;
+            parentHeight = 700;
+        }
+        isResizing = true;
+        resizeStartMouseX = e.ClientX;
+        resizeStartMouseY = e.ClientY;
+        resizeStartW = Annotation.Width;
+        resizeStartH = Annotation.Height;
+        resizeW = Annotation.Width;
+        resizeH = Annotation.Height;
+    }
+
+    private void OnResizeMove(MouseEventArgs e)
+    {
+        if (!isResizing) return;
+        var dx = e.ClientX - resizeStartMouseX;
+        var dy = e.ClientY - resizeStartMouseY;
+        var posX = Annotation.PositionX;
+        var posY = Annotation.PositionY;
+        resizeW = Math.Clamp(resizeStartW + (dx / parentWidth * 100), 1, 100 - posX);
+        resizeH = Math.Clamp(resizeStartH + (dy / parentHeight * 100), 1, 100 - posY);
+        StateHasChanged();
+    }
+
+    private async Task OnResizeEnd(MouseEventArgs e)
+    {
+        if (!isResizing) return;
+        isResizing = false;
+        if (Math.Abs(resizeW - resizeStartW) > 0.5 || Math.Abs(resizeH - resizeStartH) > 0.5)
+        {
+            await OnSizeChanged.InvokeAsync(new AnnotationSizeChange(Annotation.Id, resizeW, resizeH));
+        }
+        StateHasChanged();
+    }
+
     private string GetStyle()
     {
         var posX = isDragging ? dragX : Annotation.PositionX;
         var posY = isDragging ? dragY : Annotation.PositionY;
+        var w = isResizing ? resizeW : Annotation.Width;
+        var h = isResizing ? resizeH : Annotation.Height;
         string style;
         if (Annotation.Type == AnnotationType.Beacon)
             style = $"position:absolute;left:{posX:F2}%;top:{posY:F2}%;width:auto;height:auto;transform:translate(-50%,-50%);z-index:10;pointer-events:none";
         else
-            style = $"position:absolute;left:{posX:F2}%;top:{posY:F2}%;width:{Annotation.Width}%;height:{Annotation.Height}%;z-index:10;pointer-events:none";
+            style = $"position:absolute;left:{posX:F2}%;top:{posY:F2}%;width:{w:F2}%;height:{h:F2}%;z-index:10;pointer-events:none";
         var parsed = ParseStyle();
         if (int.TryParse(parsed.GetValueOrDefault("opacity", "100"), out var op) && op < 100 && Annotation.Type != AnnotationType.Blur)
             style += $";opacity:{(op / 100.0):F2}";
@@ -203,4 +286,5 @@
 
     public enum AnnotationOverlayMode { View, Edit }
     public record AnnotationPositionChange(Guid AnnotationId, double PositionX, double PositionY);
+    public record AnnotationSizeChange(Guid AnnotationId, double Width, double Height);
 }

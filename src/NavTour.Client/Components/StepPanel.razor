@@ -10,14 +10,21 @@
         <RadzenText Style="color:var(--rz-text-secondary-color);font-size:13px">No steps configured. Add frames first, then create steps.</RadzenText>
     }
 
-    @foreach (var step in Steps.OrderBy(s => s.StepNumber))
+    @{ var orderedSteps = OrderedSteps; }
+    @foreach (var step in orderedSteps)
     {
         var isSelected = step.Id == SelectedStepId;
+        var isFirst = step.Id == orderedSteps[0].Id;
+        var isLast = step.Id == orderedSteps[^1].Id;
         <RadzenCard Style="@($"position:relative;padding:10px;cursor:pointer;{(isSelected ? "border:2px solid var(--rz-primary)" : "")}")"
             @onclick="() => OnStepSelected.InvokeAsync(step.Id)">
-            <SfTooltip Content="Remove this step and its annotations" CssClass="nt-tooltip" Position="Position.TopCenter" OpenDelay="300" ShowTipPointer="true">
-                <ChildContent><button class="step-delete" @onclick="() => ConfirmDelete(step.Id)" @onclick:stopPropagation="true">&times;</button></ChildContent>
-            </SfTooltip>
+            <div class="step-actions" @onclick:stopPropagation="true">
+                <button class="step-reorder" disabled="@isFirst" @onclick="() => MoveUp(step)" title="Move up">&#9650;</button>
+                <button class="step-reorder" disabled="@isLast" @onclick="() => MoveDown(step)" title="Move down">&#9660;</button>
+                <SfTooltip Content="Remove this step and its annotations" CssClass="nt-tooltip" Position="Position.TopCenter" OpenDelay="300" ShowTipPointer="true">
+                    <ChildContent><button class="step-delete-btn" @onclick="() => ConfirmDelete(step.Id)">&times;</button></ChildContent>
+                </SfTooltip>
+            </div>
             <RadzenStack Gap="4px">
                 <div style="display:flex;align-items:center;gap:6px">
                     <RadzenText TextStyle="TextStyle.Subtitle2" class="rz-m-0">Step @step.StepNumber</RadzenText>
@@ -169,12 +176,21 @@
 }
 
 <style>
-    .step-delete {
+    .step-actions {
         position: absolute; top: 4px; right: 6px;
-        background: none; border: none; color: #aaa; font-size: 16px;
-        cursor: pointer; padding: 0 4px; line-height: 1; z-index: 1;
+        display: flex; align-items: center; gap: 2px; z-index: 1;
     }
-    .step-delete:hover { color: #ef4444; }
+    .step-reorder {
+        background: none; border: none; color: #aaa; font-size: 10px;
+        cursor: pointer; padding: 2px 4px; line-height: 1;
+    }
+    .step-reorder:hover:not(:disabled) { color: #4361ee; }
+    .step-reorder:disabled { color: #ddd; cursor: default; }
+    .step-delete-btn {
+        background: none; border: none; color: #aaa; font-size: 16px;
+        cursor: pointer; padding: 0 4px; line-height: 1;
+    }
+    .step-delete-btn:hover { color: #ef4444; }
     .step-field {
         margin-top: 6px;
     }
@@ -215,9 +231,22 @@
     [Parameter] public EventCallback<Guid> OnStepSelected { get; set; }
     [Parameter] public EventCallback OnAddStep { get; set; }
     [Parameter] public EventCallback<Guid> OnDeleteStep { get; set; }
+    [Parameter] public EventCallback<(Guid StepId, int Direction)> OnReorderStep { get; set; }
     [Parameter] public EventCallback<StepResponse> OnStepSettingsChanged { get; set; }
 
     private Guid? confirmDeleteId;
+
+    private List<StepResponse> OrderedSteps => Steps.OrderBy(s => s.StepNumber).ToList();
+
+    private async Task MoveUp(StepResponse step)
+    {
+        await OnReorderStep.InvokeAsync((step.Id, -1));
+    }
+
+    private async Task MoveDown(StepResponse step)
+    {
+        await OnReorderStep.InvokeAsync((step.Id, 1));
+    }
 
     private void ConfirmDelete(Guid stepId)
     {

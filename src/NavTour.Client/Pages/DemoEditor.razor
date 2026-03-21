@@ -72,13 +72,14 @@
                 ShowFindReplace="@showFindReplace"
                 ShowFindReplaceChanged="(v) => showFindReplace = v"
                 OnHtmlChanged="OnFrameHtmlSaved"
-                OnAnnotationMoved="HandleAnnotationMoved" />
+                OnAnnotationMoved="HandleAnnotationMoved"
+                OnAnnotationResized="HandleAnnotationResized" />
         </div>
 
         <div class="step-panel">
             <StepPanel Steps="steps" Frames="frames" SelectedStepId="selectedStepId"
                 OnStepSelected="SelectStep" OnAddStep="AddStep" OnDeleteStep="DeleteStep"
-                OnStepSettingsChanged="HandleStepSettingsChanged" />
+                OnReorderStep="ReorderStep" OnStepSettingsChanged="HandleStepSettingsChanged" />
         </div>
 
         <div class="annotation-editor" style="overflow-y:auto;max-height:100%">
@@ -229,6 +230,22 @@ $@"<iframe
             ann.Type, ann.Title, ann.Content,
             Math.Round(change.PositionX, 2), Math.Round(change.PositionY, 2),
             ann.Width, ann.Height, ann.Style,
+            ann.TargetSelector, ann.ArrowDirection, ann.BadgeNumber);
+
+        await DemoApi.UpdateAnnotationAsync(selectedStepId.Value, ann.Id, request);
+        await RefreshAnnotations();
+    }
+
+    private async Task HandleAnnotationResized(AnnotationOverlay.AnnotationSizeChange change)
+    {
+        if (selectedStepId == null) return;
+        var ann = currentAnnotations?.FirstOrDefault(a => a.Id == change.AnnotationId);
+        if (ann == null) return;
+
+        var request = new CreateAnnotationRequest(
+            ann.Type, ann.Title, ann.Content,
+            ann.PositionX, ann.PositionY,
+            Math.Round(change.Width, 2), Math.Round(change.Height, 2), ann.Style,
             ann.TargetSelector, ann.ArrowDirection, ann.BadgeNumber);
 
         await DemoApi.UpdateAnnotationAsync(selectedStepId.Value, ann.Id, request);
@@ -413,6 +430,32 @@ $@"<iframe
         }
 
         Notification.Notify(NotificationSeverity.Success, "Step deleted");
+        StateHasChanged();
+    }
+
+    private async Task ReorderStep((Guid StepId, int Direction) args)
+    {
+        var ordered = steps.OrderBy(s => s.StepNumber).ToList();
+        var idx = ordered.FindIndex(s => s.Id == args.StepId);
+        if (idx < 0) return;
+
+        var targetIdx = idx + args.Direction;
+        if (targetIdx < 0 || targetIdx >= ordered.Count) return;
+
+        // Swap step numbers
+        var currentStep = ordered[idx];
+        var adjacentStep = ordered[targetIdx];
+        var tempNumber = currentStep.StepNumber;
+        ordered[idx] = currentStep with { StepNumber = adjacentStep.StepNumber };
+        ordered[targetIdx] = adjacentStep with { StepNumber = tempNumber };
+
+        // Update local list
+        steps = ordered;
+
+        // Persist
+        var stepDtos = steps.Select(s => MapStepToDto(s)).ToList();
+        await DemoApi.UpdateStepsAsync(DemoId, new UpdateStepsRequest(stepDtos));
+        steps = await DemoApi.GetStepsAsync(DemoId);
         StateHasChanged();
     }
 

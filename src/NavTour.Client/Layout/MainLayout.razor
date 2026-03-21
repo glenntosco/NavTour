@@ -1,6 +1,7 @@
 @inherits LayoutComponentBase
 @inject AuthService Auth
 @inject NavigationManager Nav
+@inject IJSRuntime JS
 
 <RadzenLayout>
     <RadzenSidebar Responsive="false" class="@(sidebarExpanded ? "sidebar-open" : "sidebar-closed")" Style="background:var(--rz-primary-darker);overflow:hidden">
@@ -56,7 +57,7 @@
     </RadzenSidebar>
     <RadzenHeader Style="background:#fff;border-bottom:1px solid #E2E8F0">
         <RadzenStack Orientation="Radzen.Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="8px" Style="padding:0 16px;width:100%">
-            <RadzenButton Icon="menu" Click="@(() => sidebarExpanded = !sidebarExpanded)"
+            <RadzenButton Icon="menu" Click="ToggleSidebar"
                 ButtonStyle="ButtonStyle.Light" Variant="Variant.Text" Size="ButtonSize.Medium" Style="color:#1E3A5F" />
             <span style="font-size:0.875rem;color:#64748B">@GetBreadcrumb()</span>
         </RadzenStack>
@@ -82,6 +83,12 @@
 
     private static string AppVersion =>
         typeof(MainLayout).Assembly.GetName().Version?.ToString(3) ?? "0.0.0";
+
+    private async Task ToggleSidebar()
+    {
+        sidebarExpanded = !sidebarExpanded;
+        await JS.InvokeVoidAsync("sidebarToggle.toggle", sidebarExpanded);
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
