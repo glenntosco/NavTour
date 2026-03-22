@@ -25,24 +25,49 @@ export async function captureDOM(): Promise<CaptureResult> {
     eventAttrs.forEach((attr) => el.removeAttribute(attr));
   });
 
-  // Inline external stylesheets
-  const links = clone.querySelectorAll('link[rel="stylesheet"]');
-  for (const link of Array.from(links)) {
-    const href = link.getAttribute("href");
-    if (!href) continue;
+  // Remove existing link[rel=stylesheet] tags (will be replaced by inlined styles)
+  clone.querySelectorAll('link[rel="stylesheet"]').forEach((el) => el.remove());
 
-    const absoluteUrl = new URL(href, document.baseURI).href;
+  // Inline ALL stylesheets from document.styleSheets (captures JS-injected styles too)
+  const inlinedCss: string[] = [];
+  for (const sheet of Array.from(document.styleSheets)) {
     try {
-      const res = await fetch(absoluteUrl);
-      if (res.ok) {
-        const css = await res.text();
-        const style = document.createElement("style");
-        style.textContent = css;
-        link.replaceWith(style);
+      const rules = Array.from(sheet.cssRules);
+      let css = rules.map((r) => r.cssText).join("\n");
+
+      // Absolutize url() references in CSS
+      if (sheet.href) {
+        const baseUrl = sheet.href;
+        css = css.replace(/url\(["']?(?!data:)([^"')]+)["']?\)/g, (_match, url) => {
+          if (url.startsWith("http") || url.startsWith("data:")) return _match;
+          try {
+            return `url("${new URL(url, baseUrl).href}")`;
+          } catch {
+            return _match;
+          }
+        });
       }
+
+      inlinedCss.push(css);
     } catch {
-      // Keep the link tag if fetch fails
+      // Cross-origin stylesheet — try fetching it
+      if (sheet.href) {
+        try {
+          const res = await fetch(sheet.href);
+          if (res.ok) inlinedCss.push(await res.text());
+        } catch {
+          // Skip unreachable stylesheets
+        }
+      }
     }
+  }
+
+  if (inlinedCss.length > 0) {
+    const styleEl = document.createElement("style");
+    styleEl.textContent = inlinedCss.join("\n");
+    const head = clone.querySelector("head");
+    if (head) head.appendChild(styleEl);
+    else clone.insertBefore(styleEl, clone.firstChild);
   }
 
   // Absolutize image src URLs
