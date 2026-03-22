@@ -30,7 +30,7 @@ else
             <span style="font-size:14px;font-weight:500">@manifest.DemoName</span>
             <div style="flex:1"></div>
             <span style="font-size:13px;color:#999">@(currentStepIndex + 1) / @manifest.Steps.Count</span>
-            <button onclick="var m=voiceover.toggleMute();this.textContent=m?'🔇':'🔊';this.title=m?'Click to enable audio':'Click to mute'" class="voice-btn" title="Click to enable audio">🔇</button>
+            <button onclick="var m=voiceover.toggleMute();this.textContent=m?'🔇':'🔊'" class="voice-btn" title="Toggle audio">🔊</button>
         </div>
 
         @* Frame content with overlays *@
@@ -68,6 +68,20 @@ else
         }
     </div>
 
+    @* Start Demo overlay — provides user interaction to unlock audio *@
+    <div id="start-overlay" onclick="this.style.display='none';if(typeof voiceover!=='undefined'){var u=document.querySelector('[data-first-audio]');if(u&&u.dataset.firstAudio)voiceover.play(u.dataset.firstAudio)}" class="start-overlay">
+        <div class="start-card">
+            <img src="favicon.svg" alt="NavTour" style="height:40px;width:40px;margin-bottom:16px" />
+            <h2 style="margin:0 0 4px;font-size:22px;font-weight:700;color:#1a1a2e">@manifest.DemoName</h2>
+            <p style="margin:0 0 24px;color:#666;font-size:14px">@(manifest.Steps.Count) steps &middot; Interactive product demo</p>
+            <button class="start-btn">
+                <svg viewBox="0 0 24 24" width="20" height="20" style="fill:white"><path d="M8 5v14l11-7z"/></svg>
+                Start Demo
+            </button>
+        </div>
+    </div>
+    <span hidden data-first-audio="@(currentStep?.VoiceoverAudioUrl)"></span>
+
     @* Escape View overlay *@
     @if (showEscapeView)
     {
@@ -104,6 +118,25 @@ else
         padding: 4px 8px; border-radius: 4px; opacity: 0.6;
     }
     .voice-btn:hover { opacity: 1; background: #f0f0f0; }
+
+    .start-overlay {
+        position: fixed; inset: 0; z-index: 2000;
+        background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer;
+    }
+    .start-card {
+        background: white; border-radius: 20px; padding: 40px 48px;
+        text-align: center; box-shadow: 0 24px 80px rgba(0,0,0,0.25);
+        max-width: 400px;
+    }
+    .start-btn {
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 14px 36px; background: #4361ee; color: white;
+        border: none; border-radius: 12px; font-size: 16px; font-weight: 600;
+        cursor: pointer; transition: background 0.15s;
+    }
+    .start-btn:hover { background: #3451d1; }
 
     .timer-progress {
         height: 100%;

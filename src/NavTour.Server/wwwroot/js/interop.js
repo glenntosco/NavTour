@@ -149,7 +149,7 @@ window.sidebarToggle = {
 };
 
 window.voiceover = {
-    _muted: true,
+    _muted: false,
     _audio: null,
     play: function(url) {
         if (this._muted || !url) return;
