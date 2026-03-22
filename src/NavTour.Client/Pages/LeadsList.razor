@@ -68,6 +68,7 @@
             {
                 leads.Remove(lead);
                 Notification.Notify(NotificationSeverity.Success, "Lead deleted");
+                StateHasChanged();
             }
             else
             {
