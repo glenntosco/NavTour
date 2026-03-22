@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NavTour.Server.Infrastructure.Data;
 using NavTour.Server.Services;
 using NavTour.Shared.DTOs.Steps;
@@ -35,7 +36,7 @@ public class StepsController : ControllerBase
     [AllowAnonymous]
     public async Task<IActionResult> GetAudio(Guid stepId)
     {
-        var step = await _db.Steps.FindAsync(stepId);
+        var step = await _db.Steps.IgnoreQueryFilters().FirstOrDefaultAsync(s => s.Id == stepId && !s.IsDeleted);
         if (step?.VoiceoverAudio == null) return NotFound();
         return File(step.VoiceoverAudio, "audio/mpeg");
     }
