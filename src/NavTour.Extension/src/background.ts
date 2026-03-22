@@ -716,6 +716,43 @@ function updateToolbarStatus(frameCount: number, status: string) {
 }
 
 function capturePageDOM(): { html: string; title: string; url: string } {
+  // Critical CSS properties to inline on every element
+  const CRITICAL_PROPS = [
+    "display","position","float","clear","box-sizing",
+    "width","height","min-width","min-height","max-width","max-height",
+    "margin","margin-top","margin-right","margin-bottom","margin-left",
+    "padding","padding-top","padding-right","padding-bottom","padding-left",
+    "border","border-top","border-right","border-bottom","border-left",
+    "border-radius","border-collapse","border-spacing",
+    "background","background-color","background-image","background-size","background-position","background-repeat",
+    "color","font-family","font-size","font-weight","font-style","line-height","letter-spacing",
+    "text-align","text-decoration","text-transform","text-overflow","white-space","word-break","overflow",
+    "vertical-align","list-style","list-style-type",
+    "flex","flex-direction","flex-wrap","flex-grow","flex-shrink","flex-basis",
+    "align-items","align-self","justify-content","gap",
+    "grid-template-columns","grid-template-rows","grid-column","grid-row",
+    "opacity","visibility","z-index","cursor","pointer-events",
+    "transform","box-shadow","outline","table-layout",
+  ];
+
+  // Collect all CSS from stylesheets
+  const inlinedCss: string[] = [];
+  for (const sheet of Array.from(document.styleSheets)) {
+    try {
+      const rules = Array.from(sheet.cssRules);
+      let css = rules.map((r) => r.cssText).join("\n");
+      if (sheet.href) {
+        css = css.replace(/url\(["']?(?!data:)([^"')]+)["']?\)/g, (_m, u) => {
+          if (u.startsWith("http") || u.startsWith("data:")) return _m;
+          try { return `url("${new URL(u, sheet.href!).href}")`; } catch { return _m; }
+        });
+      }
+      inlinedCss.push(css);
+    } catch {
+      // Cross-origin stylesheet — skip
+    }
+  }
+
   const clone = document.documentElement.cloneNode(true) as HTMLElement;
   const bar = clone.querySelector("#navtour-capture-bar");
   if (bar) bar.remove();
@@ -727,6 +764,39 @@ function capturePageDOM(): { html: string; title: string; url: string } {
     eventAttrs.forEach((attr) => el.removeAttribute(attr));
   });
 
+  // Remove link[rel=stylesheet] tags (replaced by inlined styles)
+  clone.querySelectorAll('link[rel="stylesheet"]').forEach((el) => el.remove());
+
+  // Inline computed styles on every visible element
+  const origElements = document.querySelectorAll("body *");
+  const cloneElements = clone.querySelectorAll("body *");
+  origElements.forEach((origEl, i) => {
+    if (i >= cloneElements.length) return;
+    const cloneEl = cloneElements[i] as HTMLElement;
+    const computed = window.getComputedStyle(origEl);
+    const styles: string[] = [];
+    for (const prop of CRITICAL_PROPS) {
+      const val = computed.getPropertyValue(prop);
+      if (val && val !== "" && val !== "none" && val !== "normal" && val !== "auto" && val !== "0px") {
+        styles.push(`${prop}:${val}`);
+      }
+    }
+    if (styles.length > 0) {
+      const existing = cloneEl.getAttribute("style") || "";
+      cloneEl.setAttribute("style", existing + ";" + styles.join(";"));
+    }
+  });
+
+  // Add collected CSS as a style block
+  if (inlinedCss.length > 0) {
+    const styleEl = document.createElement("style");
+    styleEl.textContent = inlinedCss.join("\n");
+    const head = clone.querySelector("head");
+    if (head) head.appendChild(styleEl);
+    else clone.insertBefore(styleEl, clone.firstChild);
+  }
+
+  // Absolutize image src URLs
   clone.querySelectorAll("img[src]").forEach((img) => {
     const src = img.getAttribute("src");
     if (src && !src.startsWith("data:")) {
@@ -734,10 +804,14 @@ function capturePageDOM(): { html: string; title: string; url: string } {
     }
   });
 
-  clone.querySelectorAll('link[rel="stylesheet"]').forEach((link) => {
-    const href = link.getAttribute("href");
-    if (href) {
-      try { link.setAttribute("href", new URL(href, document.baseURI).href); } catch {}
+  // Absolutize background images in inline styles
+  clone.querySelectorAll("[style]").forEach((el) => {
+    const style = el.getAttribute("style");
+    if (style && style.includes("url(")) {
+      el.setAttribute("style", style.replace(/url\(["']?([^"')]+)["']?\)/g, (_m, u) => {
+        if (u.startsWith("data:") || u.startsWith("http")) return _m;
+        try { return `url("${new URL(u, document.baseURI).href}")`; } catch { return _m; }
+      }));
     }
   });
 
