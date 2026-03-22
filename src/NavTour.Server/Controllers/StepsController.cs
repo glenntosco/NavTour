@@ -14,10 +14,13 @@ public class StepsController : ControllerBase
     private readonly IStepService _stepService;
     private readonly NavTourDbContext _db;
 
-    public StepsController(IStepService stepService, NavTourDbContext db)
+    private readonly ElevenLabsService _elevenLabs;
+
+    public StepsController(IStepService stepService, NavTourDbContext db, ElevenLabsService elevenLabs)
     {
         _stepService = stepService;
         _db = db;
+        _elevenLabs = elevenLabs;
     }
 
     [HttpGet("api/v1/demos/{demoId:guid}/steps")]
@@ -40,4 +43,22 @@ public class StepsController : ControllerBase
         if (step?.VoiceoverAudio == null) return NotFound();
         return File(step.VoiceoverAudio, "audio/mpeg");
     }
+
+    [HttpGet("api/v1/voices")]
+    public async Task<IActionResult> GetVoices()
+    {
+        var voices = await _elevenLabs.GetVoicesAsync();
+        return Ok(voices);
+    }
+
+    [HttpPost("api/v1/voice-preview")]
+    public async Task<IActionResult> PreviewVoice([FromBody] VoicePreviewRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Text)) return BadRequest("Text is required");
+        var audio = await _elevenLabs.GenerateSpeechAsync(request.Text, request.VoiceId);
+        if (audio == null) return StatusCode(500, "Failed to generate audio");
+        return File(audio, "audio/mpeg");
+    }
+
+    public record VoicePreviewRequest(string Text, string? VoiceId);
 }

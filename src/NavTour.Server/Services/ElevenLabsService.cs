@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 namespace NavTour.Server.Services;
 
 public class ElevenLabsService
@@ -20,7 +22,7 @@ public class ElevenLabsService
         var id = voiceId ?? _voiceId;
         _logger.LogInformation("Generating speech for {Length} chars with voice {VoiceId}", text.Length, id);
         var body = new { text, model_id = "eleven_monolingual_v1" };
-        var json = System.Text.Json.JsonSerializer.Serialize(body);
+        var json = JsonSerializer.Serialize(body);
         var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
         try
@@ -38,8 +40,40 @@ public class ElevenLabsService
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"ElevenLabs exception: {ex.Message}");
+            _logger.LogError(ex, "ElevenLabs exception");
             return null;
         }
     }
+
+    public async Task<List<VoiceInfo>> GetVoicesAsync()
+    {
+        try
+        {
+            var response = await _http.GetAsync("v1/voices");
+            if (!response.IsSuccessStatusCode) return [];
+
+            var json = await response.Content.ReadAsStringAsync();
+            using var doc = JsonDocument.Parse(json);
+            var voices = new List<VoiceInfo>();
+
+            foreach (var v in doc.RootElement.GetProperty("voices").EnumerateArray())
+            {
+                var labels = v.TryGetProperty("labels", out var l) ? l : default;
+                voices.Add(new VoiceInfo(
+                    v.GetProperty("voice_id").GetString()!,
+                    v.GetProperty("name").GetString()!,
+                    labels.ValueKind == JsonValueKind.Object && labels.TryGetProperty("gender", out var g) ? g.GetString() : null
+                ));
+            }
+
+            return voices;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to fetch ElevenLabs voices");
+            return [];
+        }
+    }
+
+    public record VoiceInfo(string Id, string Name, string? Gender);
 }

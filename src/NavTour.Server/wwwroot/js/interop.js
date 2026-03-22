@@ -168,6 +168,26 @@ window.voiceover = {
     },
     isMuted: function() {
         return this._muted;
+    },
+    preview: async function(text, voiceId) {
+        if (!text) { alert('Enter voiceover text first'); return; }
+        try {
+            var r = await fetch('/api/v1/voice-preview', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: text, voiceId: voiceId || null })
+            });
+            if (r.ok) {
+                var b = await r.blob();
+                if (this._audio) this._audio.pause();
+                this._audio = new Audio(URL.createObjectURL(b));
+                this._audio.play();
+            } else {
+                alert('Preview failed: ' + r.status);
+            }
+        } catch (e) {
+            alert('Preview error: ' + e.message);
+        }
     }
 };
 

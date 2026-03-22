@@ -1,6 +1,7 @@
 @using NavTour.Shared.DTOs.Steps
 @using NavTour.Shared.DTOs.Annotations
 @using NavTour.Shared.DTOs.Frames
+@inject HttpClient Http
 
 <RadzenStack Gap="8px" Style="width:300px;min-height:100%;overflow-y:auto;border-left:1px solid var(--rz-border-color);padding:12px">
     <RadzenText TextStyle="TextStyle.H6">Steps</RadzenText>
@@ -159,7 +160,7 @@
                             Data="voices" TextProperty="Name" ValueProperty="Id"
                             Style="width:100%;font-size:12px;margin-top:4px" Placeholder="Select voice"
                             Change="@((object v) => UpdateVoiceId(step, v?.ToString()))" />
-                        <button onclick="new Audio('/api/v1/steps/@(step.Id)/audio').play().catch(function(e){alert('No audio yet. Save first, then preview.')})"
+                        <button onclick="voiceover.preview('@(step.VoiceoverText?.Replace("'", "\\'") ?? "")', '@(step.VoiceId ?? "21m00Tcm4TlvDq8ikWAM")')"
                             style="background:none;border:1px solid #ddd;border-radius:4px;padding:4px 12px;cursor:pointer;font-size:12px;margin-top:4px">
                             &#9654; Preview
                         </button>
@@ -347,14 +348,29 @@
         OnStepSettingsChanged.InvokeAsync(updated);
     }
 
-    private List<VoiceOption> voices = new()
-    {
-        new("21m00Tcm4TlvDq8ikWAM", "Rachel (Female)"),
-        new("TxGEqnHWrfWFTfGW9XjX", "Josh (Male)"),
-        new("EXAVITQu4vr4xnSDxMaL", "Bella (Female)"),
-        new("ErXwobaYiN019PkySvjV", "Antoni (Male)"),
-    };
+    private List<VoiceOption> voices = new();
     private record VoiceOption(string Id, string Name);
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var result = await Http.GetFromJsonAsync<List<VoiceOption>>("api/v1/voices");
+            if (result != null) voices = result;
+        }
+        catch { /* fallback to empty — voices endpoint may not be available */ }
+
+        if (voices.Count == 0)
+        {
+            voices = new()
+            {
+                new("21m00Tcm4TlvDq8ikWAM", "Rachel"),
+                new("TxGEqnHWrfWFTfGW9XjX", "Josh"),
+                new("EXAVITQu4vr4xnSDxMaL", "Bella"),
+                new("ErXwobaYiN019PkySvjV", "Antoni"),
+            };
+        }
+    }
 
     private void UpdateVoiceId(StepResponse step, string? voiceId)
     {
