@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "NavTour Capture",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Capture your application and build interactive product demos in NavTour, we make interactive demo easy.",
   "permissions": ["activeTab", "storage", "scripting", "tabs", "cookies"],
   "optional_host_permissions": [
