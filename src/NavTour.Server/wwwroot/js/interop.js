@@ -152,10 +152,11 @@ window.voiceover = {
     _muted: false,
     _audio: null,
     play: function(url) {
+        console.log('[NavTour] Voiceover play:', url);
         if (this._muted || !url) return;
         if (this._audio) { this._audio.pause(); this._audio = null; }
         this._audio = new Audio(url);
-        this._audio.play().catch(function(){});
+        this._audio.play().catch(function(e){ console.warn('[NavTour] Voiceover play failed:', e.message); });
     },
     stop: function() {
         if (this._audio) { this._audio.pause(); this._audio = null; }

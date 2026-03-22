@@ -31,7 +31,7 @@ public class StepService : IStepService
                     a.PositionX, a.PositionY, a.Width, a.Height, a.Style,
                     a.TargetSelector, a.ArrowDirection, a.BadgeNumber
                 )).ToList(),
-                s.TriggerType, s.TriggerDurationMs, s.BackdropLevel, s.VoiceoverText))
+                s.TriggerType, s.TriggerDurationMs, s.BackdropLevel, s.VoiceoverText, s.VoiceId))
             .ToListAsync();
     }
 
@@ -43,10 +43,10 @@ public class StepService : IStepService
             .Include(s => s.Annotations)
             .ToListAsync();
 
-        // Build lookup: VoiceoverText -> VoiceoverAudio for reuse
-        var existingAudioByText = existingSteps
+        // Build lookup: VoiceoverText + VoiceId -> VoiceoverAudio for reuse
+        var existingAudioByKey = existingSteps
             .Where(s => s.VoiceoverText != null && s.VoiceoverAudio != null)
-            .GroupBy(s => s.VoiceoverText!)
+            .GroupBy(s => s.VoiceoverText! + "|" + (s.VoiceId ?? ""))
             .ToDictionary(g => g.Key, g => g.First().VoiceoverAudio);
 
         _db.Steps.RemoveRange(existingSteps);
@@ -58,11 +58,12 @@ public class StepService : IStepService
             byte[]? voiceoverAudio = null;
             if (!string.IsNullOrEmpty(stepDto.VoiceoverText))
             {
-                // Reuse existing audio if text hasn't changed, otherwise generate new
-                if (existingAudioByText.TryGetValue(stepDto.VoiceoverText, out var cached))
+                // Reuse existing audio if text+voice hasn't changed, otherwise generate new
+                var cacheKey = stepDto.VoiceoverText + "|" + (stepDto.VoiceId ?? "");
+                if (existingAudioByKey.TryGetValue(cacheKey, out var cached))
                     voiceoverAudio = cached;
                 else
-                    voiceoverAudio = await _elevenLabs.GenerateSpeechAsync(stepDto.VoiceoverText);
+                    voiceoverAudio = await _elevenLabs.GenerateSpeechAsync(stepDto.VoiceoverText, stepDto.VoiceId);
             }
 
             var step = new Step
@@ -79,6 +80,7 @@ public class StepService : IStepService
                 BackdropLevel = stepDto.BackdropLevel,
                 VoiceoverText = stepDto.VoiceoverText,
                 VoiceoverAudio = voiceoverAudio,
+                VoiceId = stepDto.VoiceId,
                 Annotations = stepDto.Annotations.Select(a => new Annotation
                 {
                     Id = a.Id ?? Guid.NewGuid(),

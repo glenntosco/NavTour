@@ -155,6 +155,15 @@
                         <RadzenTextArea Value="@(step.VoiceoverText ?? "")" Placeholder="Text to read aloud during this step..."
                             Style="width:100%;font-size:12px;min-height:60px"
                             Change="@((string v) => UpdateVoiceover(step, v))" />
+                        <RadzenDropDown TValue="string" Value="@(step.VoiceId ?? "21m00Tcm4TlvDq8ikWAM")"
+                            Data="voices" TextProperty="Name" ValueProperty="Id"
+                            Style="width:100%;font-size:12px;margin-top:4px" Placeholder="Select voice"
+                            Change="@((object v) => UpdateVoiceId(step, v?.ToString()))" />
+                        <button onclick="new Audio('/api/v1/steps/' + this.dataset.stepId + '/audio').play().catch(e => console.warn(e))"
+                            data-step-id="@step.Id"
+                            style="background:none;border:1px solid #ddd;border-radius:4px;padding:4px 12px;cursor:pointer;font-size:12px;margin-top:4px">
+                            &#9654; Preview
+                        </button>
                     </div>
                 </div>
             }
@@ -336,6 +345,21 @@
     private void UpdateVoiceover(StepResponse step, string value)
     {
         var updated = step with { VoiceoverText = string.IsNullOrWhiteSpace(value) ? null : value };
+        OnStepSettingsChanged.InvokeAsync(updated);
+    }
+
+    private List<VoiceOption> voices = new()
+    {
+        new("21m00Tcm4TlvDq8ikWAM", "Rachel (Female)"),
+        new("TxGEqnHWrfWFTfGW9XjX", "Josh (Male)"),
+        new("EXAVITQu4vr4xnSDxMaL", "Bella (Female)"),
+        new("ErXwobaYiN019PkySvjV", "Antoni (Male)"),
+    };
+    private record VoiceOption(string Id, string Name);
+
+    private void UpdateVoiceId(StepResponse step, string? voiceId)
+    {
+        var updated = step with { VoiceId = voiceId };
         OnStepSettingsChanged.InvokeAsync(updated);
     }
 }
