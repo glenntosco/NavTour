@@ -45,6 +45,7 @@ public class StepsController : ControllerBase
     }
 
     [HttpGet("api/v1/voices")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetVoices()
     {
         var voices = await _elevenLabs.GetVoicesAsync();
@@ -52,6 +53,7 @@ public class StepsController : ControllerBase
     }
 
     [HttpPost("api/v1/voice-preview")]
+    [AllowAnonymous]
     public async Task<IActionResult> PreviewVoice([FromBody] VoicePreviewRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.Text)) return BadRequest("Text is required");

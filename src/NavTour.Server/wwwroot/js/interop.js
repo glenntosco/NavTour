@@ -175,6 +175,7 @@ window.voiceover = {
             var r = await fetch('/api/v1/voice-preview', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
                 body: JSON.stringify({ text: text, voiceId: voiceId || null })
             });
             if (r.ok) {
