@@ -9,4 +9,5 @@ public record PlayerStepDto(
     TriggerType TriggerType = TriggerType.ButtonClick,
     int? TriggerDurationMs = null,
     string? BackdropLevel = null,
-    string? VoiceoverText = null);
+    string? VoiceoverText = null,
+    string? VoiceoverAudioUrl = null);

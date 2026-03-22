@@ -89,6 +89,7 @@ builder.Services.AddRadzenComponents();
 builder.Services.AddSyncfusionBlazor();
 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1JHaF5cWWdCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdlWXxfeXVRQmBZU0ZzV0BWYEo=");
 builder.Services.AddHttpClient();
+builder.Services.AddHttpClient<ElevenLabsService>();
 
 // CORS for player embeds and extension
 builder.Services.AddCors(options =>

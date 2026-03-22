@@ -9,10 +9,12 @@ namespace NavTour.Server.Services;
 public class StepService : IStepService
 {
     private readonly NavTourDbContext _db;
+    private readonly ElevenLabsService _elevenLabs;
 
-    public StepService(NavTourDbContext db)
+    public StepService(NavTourDbContext db, ElevenLabsService elevenLabs)
     {
         _db = db;
+        _elevenLabs = elevenLabs;
     }
 
     public async Task<List<StepResponse>> GetAllByDemoAsync(Guid demoId)
@@ -35,17 +37,34 @@ public class StepService : IStepService
 
     public async Task<bool> UpdateStepsAsync(Guid demoId, UpdateStepsRequest request)
     {
-        // Remove existing steps for this demo
+        // Remove existing steps for this demo, but cache voiceover audio by text to avoid re-generating
         var existingSteps = await _db.Steps
             .Where(s => s.DemoId == demoId)
             .Include(s => s.Annotations)
             .ToListAsync();
+
+        // Build lookup: VoiceoverText -> VoiceoverAudio for reuse
+        var existingAudioByText = existingSteps
+            .Where(s => s.VoiceoverText != null && s.VoiceoverAudio != null)
+            .GroupBy(s => s.VoiceoverText!)
+            .ToDictionary(g => g.Key, g => g.First().VoiceoverAudio);
 
         _db.Steps.RemoveRange(existingSteps);
 
         // Create new steps from request
         foreach (var stepDto in request.Steps)
         {
+            // Resolve voiceover audio
+            byte[]? voiceoverAudio = null;
+            if (!string.IsNullOrEmpty(stepDto.VoiceoverText))
+            {
+                // Reuse existing audio if text hasn't changed, otherwise generate new
+                if (existingAudioByText.TryGetValue(stepDto.VoiceoverText, out var cached))
+                    voiceoverAudio = cached;
+                else
+                    voiceoverAudio = await _elevenLabs.GenerateSpeechAsync(stepDto.VoiceoverText);
+            }
+
             var step = new Step
             {
                 Id = stepDto.Id ?? Guid.NewGuid(),
@@ -59,6 +78,7 @@ public class StepService : IStepService
                 TriggerDurationMs = stepDto.TriggerDurationMs,
                 BackdropLevel = stepDto.BackdropLevel,
                 VoiceoverText = stepDto.VoiceoverText,
+                VoiceoverAudio = voiceoverAudio,
                 Annotations = stepDto.Annotations.Select(a => new Annotation
                 {
                     Id = a.Id ?? Guid.NewGuid(),

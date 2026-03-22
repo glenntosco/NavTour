@@ -172,8 +172,8 @@ else
         }
 
         // Voiceover for the first step on initial render
-        if (firstRender && manifest != null && currentStep?.VoiceoverText != null)
-            try { await JS.InvokeVoidAsync("voiceover.speak", currentStep.VoiceoverText); } catch { }
+        if (firstRender && manifest != null && currentStep?.VoiceoverAudioUrl != null)
+            try { await JS.InvokeVoidAsync("voiceover.play", currentStep.VoiceoverAudioUrl); } catch { }
 
         // Update spotlight for current step
         if (manifest != null && currentStep != null)
@@ -329,8 +329,8 @@ else
         BufferEvent(EventType.StepViewed, currentStepIndex + 1, null);
         StateHasChanged();
 
-        if (currentStep?.VoiceoverText != null)
-            try { await JS.InvokeVoidAsync("voiceover.speak", currentStep.VoiceoverText); } catch { }
+        if (currentStep?.VoiceoverAudioUrl != null)
+            try { await JS.InvokeVoidAsync("voiceover.play", currentStep.VoiceoverAudioUrl); } catch { }
 
         } finally { _navigating = false; }
     }
@@ -347,8 +347,8 @@ else
             BufferEvent(EventType.StepViewed, currentStepIndex + 1, null);
             StateHasChanged();
 
-            if (currentStep?.VoiceoverText != null)
-                try { await JS.InvokeVoidAsync("voiceover.speak", currentStep.VoiceoverText); } catch { }
+            if (currentStep?.VoiceoverAudioUrl != null)
+                try { await JS.InvokeVoidAsync("voiceover.play", currentStep.VoiceoverAudioUrl); } catch { }
         }
         finally { _navigating = false; }
     }

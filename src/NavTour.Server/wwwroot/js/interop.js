@@ -150,22 +150,19 @@ window.sidebarToggle = {
 
 window.voiceover = {
     _muted: false,
-    _utterance: null,
-    speak: function(text, lang) {
-        if (this._muted || !text) return;
-        window.speechSynthesis.cancel();
-        this._utterance = new SpeechSynthesisUtterance(text);
-        this._utterance.lang = lang || 'en-US';
-        this._utterance.rate = 0.95;
-        this._utterance.pitch = 1;
-        window.speechSynthesis.speak(this._utterance);
+    _audio: null,
+    play: function(url) {
+        if (this._muted || !url) return;
+        if (this._audio) { this._audio.pause(); this._audio = null; }
+        this._audio = new Audio(url);
+        this._audio.play().catch(function(){});
     },
     stop: function() {
-        window.speechSynthesis.cancel();
+        if (this._audio) { this._audio.pause(); this._audio = null; }
     },
     toggleMute: function() {
         this._muted = !this._muted;
-        if (this._muted) window.speechSynthesis.cancel();
+        if (this._muted && this._audio) { this._audio.pause(); }
         return this._muted;
     },
     isMuted: function() {

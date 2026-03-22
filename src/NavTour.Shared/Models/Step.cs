@@ -14,6 +14,7 @@ public class Step : TenantEntity
     public int? TriggerDurationMs { get; set; }
     public string? BackdropLevel { get; set; } // none, light, medium, heavy
     public string? VoiceoverText { get; set; }
+    public byte[]? VoiceoverAudio { get; set; }
 
     public Demo Demo { get; set; } = null!;
     public Frame Frame { get; set; } = null!;
