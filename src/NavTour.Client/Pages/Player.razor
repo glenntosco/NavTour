@@ -69,17 +69,20 @@ else
     </div>
 
     @* Start Demo overlay — provides user interaction to unlock audio *@
-    <div id="start-overlay" onclick="this.style.display='none';if(typeof voiceover!=='undefined'){var u=document.querySelector('[data-first-audio]');if(u&&u.dataset.firstAudio)voiceover.play(u.dataset.firstAudio)}" class="start-overlay">
-        <div class="start-card">
-            <img src="favicon.svg" alt="NavTour" style="height:40px;width:40px;margin-bottom:16px" />
-            <h2 style="margin:0 0 4px;font-size:22px;font-weight:700;color:#1a1a2e">@manifest.DemoName</h2>
-            <p style="margin:0 0 24px;color:#666;font-size:14px">@(manifest.Steps.Count) steps &middot; Interactive product demo</p>
-            <button class="start-btn">
-                <svg viewBox="0 0 24 24" width="20" height="20" style="fill:white"><path d="M8 5v14l11-7z"/></svg>
-                Start Demo
-            </button>
+    @if (GetSettingValue("showWelcomeScreen") != "false")
+    {
+        <div id="start-overlay" onclick="this.style.display='none';if(typeof voiceover!=='undefined'){var u=document.querySelector('[data-first-audio]');if(u&&u.dataset.firstAudio)voiceover.play(u.dataset.firstAudio)}" class="start-overlay">
+            <div class="start-card">
+                <img src="favicon.svg" alt="NavTour" style="height:40px;width:40px;margin-bottom:16px" />
+                <h2 style="margin:0 0 4px;font-size:22px;font-weight:700;color:#1a1a2e">@GetWelcomeTitle()</h2>
+                <p style="margin:0 0 24px;color:#666;font-size:14px">@GetWelcomeSubtitle()</p>
+                <button class="start-btn">
+                    <svg viewBox="0 0 24 24" width="20" height="20" style="fill:white"><path d="M8 5v14l11-7z"/></svg>
+                    @GetWelcomeButtonText()
+                </button>
+            </div>
         </div>
-    </div>
+    }
     <span hidden data-first-audio="@(currentStep?.VoiceoverAudioUrl)"></span>
 
     @* Escape View overlay *@
@@ -495,6 +498,39 @@ else
     private void SkipLead()
     {
         showLeadForm = false;
+    }
+
+    private Dictionary<string, string>? _settingsCache;
+    private Dictionary<string, string> GetSettings()
+    {
+        if (_settingsCache != null) return _settingsCache;
+        if (string.IsNullOrEmpty(manifest?.Settings)) return _settingsCache = new();
+        try { return _settingsCache = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(manifest.Settings) ?? new(); }
+        catch { return _settingsCache = new(); }
+    }
+
+    private string GetSettingValue(string key)
+    {
+        var settings = GetSettings();
+        return settings.TryGetValue(key, out var val) ? val : "";
+    }
+
+    private string GetWelcomeTitle()
+    {
+        var val = GetSettingValue("welcomeTitle");
+        return !string.IsNullOrEmpty(val) ? val : manifest?.DemoName ?? "";
+    }
+
+    private string GetWelcomeSubtitle()
+    {
+        var val = GetSettingValue("welcomeSubtitle");
+        return !string.IsNullOrEmpty(val) ? val : $"{manifest?.Steps.Count ?? 0} steps \u00b7 Interactive product demo";
+    }
+
+    private string GetWelcomeButtonText()
+    {
+        var val = GetSettingValue("welcomeButtonText");
+        return !string.IsNullOrEmpty(val) ? val : "Start Demo";
     }
 
     public void Dispose()

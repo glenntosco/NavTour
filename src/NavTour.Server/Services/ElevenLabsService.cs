@@ -21,7 +21,7 @@ public class ElevenLabsService
     {
         var id = voiceId ?? _voiceId;
         _logger.LogInformation("Generating speech for {Length} chars with voice {VoiceId}", text.Length, id);
-        var body = new { text, model_id = "eleven_monolingual_v1" };
+        var body = new { text, model_id = "eleven_multilingual_v2" };
         var json = JsonSerializer.Serialize(body);
         var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 

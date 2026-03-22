@@ -34,6 +34,36 @@
             </RadzenStack>
         </RadzenCard>
 
+        <RadzenCard>
+            <RadzenStack Gap="12px">
+                <RadzenText TextStyle="TextStyle.H6">Welcome Screen</RadzenText>
+                <RadzenText Style="font-size:13px;color:var(--rz-text-secondary-color)">Customize the overlay shown before the demo starts.</RadzenText>
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="8px">
+                    <RadzenSwitch @bind-Value="showWelcomeScreen" Change="@(_ => StateHasChanged())" />
+                    <RadzenText Style="font-size:13px">Show Welcome Screen</RadzenText>
+                </RadzenStack>
+                @if (showWelcomeScreen)
+                {
+                    <RadzenFormField Text="Welcome Title" Style="width:100%">
+                        <ChildContent>
+                            <RadzenTextBox @bind-Value="welcomeTitle" Placeholder="Leave empty to use demo name" Style="width:100%" />
+                        </ChildContent>
+                    </RadzenFormField>
+                    <RadzenFormField Text="Welcome Subtitle" Style="width:100%">
+                        <ChildContent>
+                            <RadzenTextBox @bind-Value="welcomeSubtitle" Placeholder="Leave empty for default" Style="width:100%" />
+                        </ChildContent>
+                    </RadzenFormField>
+                    <RadzenFormField Text="Button Text" Style="width:100%">
+                        <ChildContent>
+                            <RadzenTextBox @bind-Value="welcomeButtonText" Placeholder="Start Demo" Style="width:100%" />
+                        </ChildContent>
+                    </RadzenFormField>
+                }
+                <RadzenButton Text="Save Welcome Settings" ButtonStyle="ButtonStyle.Secondary" Click="SaveWelcomeSettings" IsBusy="savingWelcome" />
+            </RadzenStack>
+        </RadzenCard>
+
         <VariableEditor DemoId="DemoId" />
 
         <RadzenCard>
@@ -54,8 +84,14 @@
     private string? description;
     private string locale = "en";
     private bool saving;
+    private bool savingWelcome;
     private List<string> locales = ["en", "es"];
 
+    // Welcome screen settings
+    private bool showWelcomeScreen = true;
+    private string? welcomeTitle;
+    private string? welcomeSubtitle;
+    private string? welcomeButtonText;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -68,8 +104,35 @@
             name = demo.Name;
             description = demo.Description;
             locale = demo.Locale;
+            LoadWelcomeSettings(demo.Settings);
         }
         StateHasChanged();
+    }
+
+    private void LoadWelcomeSettings(string? settingsJson)
+    {
+        if (string.IsNullOrEmpty(settingsJson)) return;
+        try
+        {
+            var dict = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(settingsJson);
+            if (dict == null) return;
+            if (dict.TryGetValue("welcomeTitle", out var t)) welcomeTitle = t;
+            if (dict.TryGetValue("welcomeSubtitle", out var s)) welcomeSubtitle = s;
+            if (dict.TryGetValue("welcomeButtonText", out var b)) welcomeButtonText = b;
+            if (dict.TryGetValue("showWelcomeScreen", out var sw)) showWelcomeScreen = sw != "false";
+        }
+        catch { }
+    }
+
+    private Dictionary<string, string> GetCurrentSettings()
+    {
+        Dictionary<string, string> dict = new();
+        if (!string.IsNullOrEmpty(demo?.Settings))
+        {
+            try { dict = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(demo.Settings) ?? new(); }
+            catch { }
+        }
+        return dict;
     }
 
     private async Task Save()
@@ -78,6 +141,21 @@
         await DemoApi.UpdateDemoAsync(DemoId, new UpdateDemoRequest(name, description, locale, null));
         Notification.Notify(NotificationSeverity.Success, "Saved");
         saving = false;
+    }
+
+    private async Task SaveWelcomeSettings()
+    {
+        savingWelcome = true;
+        var dict = GetCurrentSettings();
+        dict["showWelcomeScreen"] = showWelcomeScreen ? "true" : "false";
+        dict["welcomeTitle"] = welcomeTitle ?? "";
+        dict["welcomeSubtitle"] = welcomeSubtitle ?? "";
+        dict["welcomeButtonText"] = welcomeButtonText ?? "";
+        var json = System.Text.Json.JsonSerializer.Serialize(dict);
+        await DemoApi.UpdateDemoAsync(DemoId, new UpdateDemoRequest(null, null, null, json));
+        if (demo != null) demo = demo with { Settings = json };
+        Notification.Notify(NotificationSeverity.Success, "Welcome settings saved");
+        savingWelcome = false;
     }
 
     private async Task ConfirmDelete()
