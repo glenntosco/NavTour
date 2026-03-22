@@ -1,64 +1,56 @@
 @inherits LayoutComponentBase
-@using Syncfusion.Blazor.Navigations
 @inject AuthService Auth
 @inject NavigationManager Nav
 
-<div id="app-wrapper">
-    <SfSidebar @ref="sidebarObj" Width="250px" DockSize="56px" EnableDock="true"
-               @bind-IsOpen="sidebarExpanded" MediaQuery="(min-width: 600px)">
-        <ChildContent>
-            <nav class="sb-menu">
-                <a href="/dashboard" class="sb-item @ActiveClass("/dashboard")">
-                    <svg class="sb-icon" viewBox="0 0 24 24"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
-                    <span class="sb-text">Product Demos</span>
-                </a>
-                <div class="sb-divider">Analyze</div>
-                <a href="/analytics" class="sb-item @ActiveClass("/analytics")">
-                    <svg class="sb-icon" viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg>
-                    <span class="sb-text">Analytics</span>
-                </a>
-                <div class="sb-divider">Leads</div>
-                <a href="/leads" class="sb-item @ActiveClass("/leads")">
-                    <svg class="sb-icon" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-                    <span class="sb-text">Leads</span>
-                </a>
-                <div class="sb-divider">Manage</div>
-                <a href="/team" class="sb-item @ActiveClass("/team")">
-                    <svg class="sb-icon" viewBox="0 0 24 24"><path d="M12 12.75c1.63 0 3.07.39 4.24.9 1.08.48 1.76 1.56 1.76 2.73V18H6v-1.61c0-1.18.68-2.26 1.76-2.73 1.17-.52 2.61-.91 4.24-.91zM4 13c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm1.13 1.1c-.37-.06-.74-.1-1.13-.1-.99 0-1.93.21-2.78.58C.48 14.9 0 15.62 0 16.43V18h4.5v-1.61c0-.83.23-1.61.63-2.29zM20 13c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm4 3.43c0-.81-.48-1.53-1.22-1.85-.85-.37-1.79-.58-2.78-.58-.39 0-.76.04-1.13.1.4.68.63 1.46.63 2.29V18H24v-1.57zM12 6c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3z"/></svg>
-                    <span class="sb-text">Team</span>
-                </a>
-                <a href="/settings" class="sb-item @ActiveClass("/settings")">
-                    <svg class="sb-icon" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
-                    <span class="sb-text">Settings</span>
-                </a>
-            </nav>
-            @if (Auth.IsAuthenticated)
-            {
-                <div class="sb-footer">
-                    <a href="/login" onclick="document.cookie='navtour_auth=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT'" class="sb-item">
-                        <svg class="sb-icon" viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
-                        <span class="sb-text">Logout</span>
-                    </a>
-                    @if (sidebarExpanded)
-                    {
-                        <div class="sb-version">v@(AppVersion)</div>
-                    }
-                </div>
-            }
-        </ChildContent>
-    </SfSidebar>
-
-    <div class="app-main">
-        <div class="app-header">
-            <button class="header-toggle" onclick="sidebarToggle.toggle()">
-                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" fill="currentColor"/></svg>
-            </button>
-            <span class="header-breadcrumb">@GetBreadcrumb()</span>
+<div class="app-shell">
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <a href="/dashboard"><img src="favicon.svg" alt="NavTour" /></a>
         </div>
-        <div class="app-body @(IsEditorPage ? "" : "padded")">
+        <nav class="sidebar-nav">
+            <a href="/dashboard" class="nav-item @ActiveClass("/dashboard")">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
+                <span>Product Demos</span>
+            </a>
+            <div class="nav-group">Analyze</div>
+            <a href="/analytics" class="nav-item @ActiveClass("/analytics")">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg>
+                <span>Analytics</span>
+            </a>
+            <div class="nav-group">Leads</div>
+            <a href="/leads" class="nav-item @ActiveClass("/leads")">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                <span>Leads</span>
+            </a>
+            <div class="nav-group">Manage</div>
+            <a href="/team" class="nav-item @ActiveClass("/team")">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 12.75c1.63 0 3.07.39 4.24.9 1.08.48 1.76 1.56 1.76 2.73V18H6v-1.61c0-1.18.68-2.26 1.76-2.73 1.17-.52 2.61-.91 4.24-.91zM4 13c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm1.13 1.1c-.37-.06-.74-.1-1.13-.1-.99 0-1.93.21-2.78.58C.48 14.9 0 15.62 0 16.43V18h4.5v-1.61c0-.83.23-1.61.63-2.29zM20 13c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm4 3.43c0-.81-.48-1.53-1.22-1.85-.85-.37-1.79-.58-2.78-.58-.39 0-.76.04-1.13.1.4.68.63 1.46.63 2.29V18H24v-1.57zM12 6c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3z"/></svg>
+                <span>Team</span>
+            </a>
+            <a href="/settings" class="nav-item @ActiveClass("/settings")">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+                <span>Settings</span>
+            </a>
+        </nav>
+        @if (Auth.IsAuthenticated)
+        {
+            <div class="sidebar-bottom">
+                <a href="/login" onclick="document.cookie='navtour_auth=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT'" class="nav-item">
+                    <svg class="nav-icon" viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+                    <span>Logout</span>
+                </a>
+                <div class="sidebar-ver">v@(AppVersion)</div>
+            </div>
+        }
+    </aside>
+    <main class="main-area">
+        <header class="top-bar">
+            <span class="breadcrumb">@GetBreadcrumb()</span>
+        </header>
+        <div class="content @(IsEditorPage ? "" : "padded")">
             @Body
         </div>
-    </div>
+    </main>
 </div>
 
 <RadzenDialog />
@@ -67,62 +59,50 @@
 <RadzenContextMenu />
 
 <style>
-    #app-wrapper { display:flex; height:100vh; overflow:hidden; }
+    .app-shell { display:flex; height:100vh; overflow:hidden; }
 
-    .e-sidebar { display:flex !important; flex-direction:column !important; border-right:1px solid #e5e7eb; }
-
-    .sb-menu { padding:8px 0; margin:0; flex:1; overflow-y:auto; }
-
-    .sb-item {
-        display:flex; align-items:center; gap:12px; padding:9px 18px;
-        cursor:pointer; color:#424242; font-size:13px; font-weight:500;
-        border-radius:6px; margin:1px 8px; transition:background 0.12s;
-        white-space:nowrap; overflow:hidden;
-    }
-    .sb-item:hover { background:#f5f5f5; }
-    .sb-item.active { background:#e8eafd; color:#4361ee; font-weight:600; }
-    .sb-item.active .sb-icon { fill:#4361ee; }
-
-    .sb-icon { width:20px; height:20px; flex-shrink:0; fill:#616161; }
-
-    .sb-text { overflow:hidden; text-overflow:ellipsis; }
-
-    .sb-divider {
-        list-style:none; padding:14px 18px 5px; font-size:10px; font-weight:700;
-        color:#9e9e9e; text-transform:uppercase; letter-spacing:0.6px;
-        overflow:hidden; white-space:nowrap;
+    .sidebar {
+        width:220px; flex-shrink:0; background:#fafbfc;
+        border-right:1px solid #e5e7eb; display:flex; flex-direction:column;
     }
 
-    /* Docked mode */
-    .e-dock.e-close .sb-text { display:none; }
-    .e-dock.e-close .sb-divider { display:none; }
-    .e-dock.e-close .sb-item { justify-content:center; padding:10px; margin:1px 4px; gap:0; }
-    .e-dock.e-close .sb-header { padding:12px 8px; }
+    .sidebar-logo { padding:16px; text-align:center; border-bottom:1px solid #e5e7eb; }
+    .sidebar-logo img { height:32px; width:32px; }
 
-    .sb-footer { border-top:1px solid #e5e7eb; padding:6px 0 8px; }
-    .sb-version { text-align:center; font-size:10px; color:#bbb; padding-top:4px; }
+    .sidebar-nav { flex:1; overflow-y:auto; padding:12px 0; }
 
-    /* Main area */
-    .app-main { flex:1; display:flex; flex-direction:column; overflow:hidden; min-width:0; }
+    .nav-item {
+        display:flex; align-items:center; gap:10px; padding:8px 16px;
+        color:#4a4a4a; text-decoration:none; font-size:13px; font-weight:500;
+        border-radius:6px; margin:1px 8px;
+    }
+    .nav-item:hover { background:#eee; }
+    .nav-item.active { background:#e8eafd; color:#4361ee; font-weight:600; }
+    .nav-item.active .nav-icon { fill:#4361ee; }
 
-    .app-header {
-        height:48px; display:flex; align-items:center; padding:0 14px; gap:10px;
+    .nav-icon { width:18px; height:18px; flex-shrink:0; fill:#757575; }
+
+    .nav-group {
+        padding:16px 16px 4px; font-size:10px; font-weight:700;
+        color:#aaa; text-transform:uppercase; letter-spacing:0.5px;
+    }
+
+    .sidebar-bottom { border-top:1px solid #e5e7eb; padding:8px 0; }
+    .sidebar-ver { text-align:center; font-size:10px; color:#ccc; padding:4px 0; }
+
+    .main-area { flex:1; display:flex; flex-direction:column; overflow:hidden; min-width:0; }
+
+    .top-bar {
+        height:48px; display:flex; align-items:center; padding:0 16px;
         border-bottom:1px solid #e5e7eb; background:#fff; flex-shrink:0;
     }
-    .header-toggle {
-        background:none; border:none; cursor:pointer; padding:6px;
-        border-radius:6px; color:#424242; display:flex; align-items:center;
-    }
-    .header-toggle:hover { background:#f5f5f5; }
-    .header-breadcrumb { font-size:13px; color:#757575; font-weight:500; }
+    .breadcrumb { font-size:13px; color:#757575; font-weight:500; }
 
-    .app-body { flex:1; overflow-y:auto; }
-    .app-body.padded { padding:16px; }
+    .content { flex:1; overflow-y:auto; }
+    .content.padded { padding:16px; }
 </style>
 
 @code {
-    private SfSidebar? sidebarObj;
-    private bool sidebarExpanded = true;
     private bool _restored;
 
     private static string AppVersion =>
