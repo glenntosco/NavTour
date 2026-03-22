@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using Microsoft.AspNetCore.Http;
 using Microsoft.JSInterop;
 using NavTour.Shared.DTOs.Auth;
 
@@ -8,14 +9,16 @@ public class AuthService
 {
     private readonly HttpClient _http;
     private readonly IJSRuntime _js;
+    private readonly IHttpContextAccessor _httpContextAccessor;
     private bool _isAuthenticated;
     private Guid? _tenantId;
     private bool _initialized;
 
-    public AuthService(HttpClient http, IJSRuntime js)
+    public AuthService(HttpClient http, IJSRuntime js, IHttpContextAccessor httpContextAccessor)
     {
         _http = http;
         _js = js;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public bool IsAuthenticated => _isAuthenticated;
@@ -25,36 +28,37 @@ public class AuthService
     {
         if (_isAuthenticated) return;
 
-        // Try reading JWT from browser cookie via JS interop
+        // Method 1: Check HttpContext cookie (works during SSR)
+        var httpContext = _httpContextAccessor.HttpContext;
+        if (httpContext?.Request.Cookies.TryGetValue("navtour_auth", out var cookieToken) == true
+            && !string.IsNullOrEmpty(cookieToken))
+        {
+            _http.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", cookieToken);
+            _isAuthenticated = true;
+            return;
+        }
+
+        // Method 2: Check HttpClient already has Bearer (set by Program.cs or previous login)
+        if (_http.DefaultRequestHeaders.Authorization?.Parameter != null)
+        {
+            _isAuthenticated = true;
+            return;
+        }
+
+        // Method 3: Try JS interop (works after circuit connects)
         try
         {
-            var token = await _js.InvokeAsync<string>("authCheck.getToken");
-            if (!string.IsNullOrEmpty(token))
+            var jsToken = await _js.InvokeAsync<string>("authCheck.getToken");
+            if (!string.IsNullOrEmpty(jsToken))
             {
                 _http.DefaultRequestHeaders.Authorization =
-                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-                _isAuthenticated = true;
-                _initialized = true;
-                return;
-            }
-        }
-        catch (InvalidOperationException)
-        {
-            // JS not available (SSR prerender) — check if HttpClient already has Bearer from Program.cs
-            if (_http.DefaultRequestHeaders.Authorization?.Parameter != null)
-            {
-                _isAuthenticated = true;
-                return;
-            }
-
-            // During SSR prerender, assume authenticated to avoid redirect.
-            // The real check happens when the circuit connects.
-            if (!_initialized)
-            {
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jsToken);
                 _isAuthenticated = true;
                 return;
             }
         }
+        catch { /* JS not available during SSR */ }
 
         _isAuthenticated = false;
     }
