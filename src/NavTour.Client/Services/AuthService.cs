@@ -24,37 +24,56 @@ public class AuthService
     /// Check if the auth cookie exists in the browser.
     /// Uses JS interop to read the cookie directly — works after page refresh.
     /// </summary>
+    private bool _jsAvailable;
+
     public async Task TryRestoreAsync()
     {
         if (_isAuthenticated) return;
 
-        try
+        // Try JS interop first (works after circuit connects)
+        if (!_jsAvailable)
         {
-            // Check if the cookie exists in the browser via JS
-            var hasCookie = await _js.InvokeAsync<bool>("authCheck.hasCookie");
-            if (hasCookie)
+            try
             {
-                // Cookie exists — set the Bearer token on HttpClient for API calls
+                // This will throw during SSR prerender
+                var token = await _js.InvokeAsync<string>("authCheck.getToken");
+                _jsAvailable = true;
+                if (!string.IsNullOrEmpty(token))
+                {
+                    _http.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                    _isAuthenticated = true;
+                    return;
+                }
+            }
+            catch (InvalidOperationException)
+            {
+                // SSR prerender — JS not available yet. DO NOT redirect to login.
+                // Set _isAuthenticated true temporarily to prevent redirect.
+                // The real check will happen when the circuit connects.
+                _isAuthenticated = true;
+                return;
+            }
+        }
+        else
+        {
+            // Circuit is connected, JS is available
+            try
+            {
                 var token = await _js.InvokeAsync<string>("authCheck.getToken");
                 if (!string.IsNullOrEmpty(token))
                 {
                     _http.DefaultRequestHeaders.Authorization =
                         new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
                     _isAuthenticated = true;
+                    return;
                 }
-            }
-        }
-        catch (InvalidOperationException)
-        {
-            // JS interop not available during SSR prerender — try HttpClient fallback
-            try
-            {
-                var response = await _http.GetAsync("api/v1/demos");
-                if (response.IsSuccessStatusCode)
-                    _isAuthenticated = true;
             }
             catch { }
         }
+
+        // No cookie found — actually not authenticated
+        _isAuthenticated = false;
     }
 
     public async Task<(bool Success, string? Error)> LoginAsync(string email, string password)
