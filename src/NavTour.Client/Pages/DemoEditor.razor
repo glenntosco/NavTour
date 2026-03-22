@@ -228,21 +228,32 @@ $@"<iframe
   style=""border: 1px solid #e2e8f0; border-radius: 8px;"">
 </iframe>";
 
+    private bool _dataLoaded;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (!firstRender) return;
+        if (_dataLoaded) return;
+
         await Auth.TryRestoreAsync();
         if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
 
-        demo = await DemoApi.GetDemoAsync(DemoId);
-        if (demo == null) { Nav.NavigateTo("/dashboard"); return; }
+        try
+        {
+            demo = await DemoApi.GetDemoAsync(DemoId);
+            if (demo == null) { Nav.NavigateTo("/dashboard"); return; }
 
-        frames = await DemoApi.GetFramesAsync(DemoId);
-        steps = await DemoApi.GetStepsAsync(DemoId);
+            frames = await DemoApi.GetFramesAsync(DemoId);
+            steps = await DemoApi.GetStepsAsync(DemoId);
 
-        if (frames.Count > 0)
-            await SelectFrame(frames[0].Id);
-        StateHasChanged();
+            if (frames.Count > 0)
+                await SelectFrame(frames[0].Id);
+            _dataLoaded = true;
+            StateHasChanged();
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+        {
+            Nav.NavigateTo("/login");
+        }
     }
 
     private async Task SelectFrame(Guid frameId)
