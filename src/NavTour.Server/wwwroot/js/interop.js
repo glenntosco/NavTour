@@ -191,6 +191,22 @@ window.voiceover = {
     }
 };
 
+window.authLogin = {
+    login: async function(email, password) {
+        try {
+            var r = await fetch('/api/v1/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ email: email, password: password })
+            });
+            return r.ok;
+        } catch {
+            return false;
+        }
+    }
+};
+
 window.authCheck = {
     hasCookie: function() {
         return document.cookie.split(';').some(function(c) {

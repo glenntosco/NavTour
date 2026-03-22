@@ -137,15 +137,28 @@
     private string? errorMessage;
     private bool loading;
 
+    [Inject] private IJSRuntime JS { get; set; } = default!;
+
     private async Task HandleLogin()
     {
         loading = true;
         errorMessage = null;
-        var (success, error) = await Auth.LoginAsync(email, password);
-        if (success)
-            Nav.NavigateTo("/dashboard", forceLoad: true);
-        else
-            errorMessage = "Invalid email or password";
+
+        try
+        {
+            // Call login API from the BROWSER (not server-side HttpClient)
+            // so the Set-Cookie header is received by the browser
+            var success = await JS.InvokeAsync<bool>("authLogin.login", email, password);
+            if (success)
+                Nav.NavigateTo("/dashboard", forceLoad: true);
+            else
+                errorMessage = "Invalid email or password";
+        }
+        catch
+        {
+            errorMessage = "Login failed. Please try again.";
+        }
+
         loading = false;
     }
 }
