@@ -24,6 +24,12 @@ public class LeadsController : ControllerBase
         return Ok(await _leadService.GetAllAsync());
     }
 
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        return await _leadService.DeleteAsync(id) ? NoContent() : NotFound();
+    }
+
     [HttpGet("export")]
     public async Task<IActionResult> Export()
     {

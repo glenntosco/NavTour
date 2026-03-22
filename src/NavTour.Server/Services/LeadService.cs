@@ -28,4 +28,14 @@ public class LeadService : ILeadService
             l.CreatedAt
         )).ToList();
     }
+
+    public async Task<bool> DeleteAsync(Guid id)
+    {
+        var lead = await _db.Leads.FindAsync(id);
+        if (lead == null) return false;
+
+        lead.IsDeleted = true;
+        await _db.SaveChangesAsync();
+        return true;
+    }
 }

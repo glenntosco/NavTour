@@ -3,6 +3,8 @@
 @inject HttpClient Http
 @inject AuthService Auth
 @inject NavigationManager Nav
+@inject DialogService DialogService
+@inject NotificationService Notification
 
 <RadzenStack Gap="16px">
     <RadzenRow AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
@@ -24,6 +26,12 @@
                 <RadzenDataGridColumn Property="Company" Title="Company" />
                 <RadzenDataGridColumn Property="DemoName" Title="Demo" />
                 <RadzenDataGridColumn Property="CapturedAt" Title="Captured" FormatString="{0:g}" />
+                <RadzenDataGridColumn TItem="LeadResponse" Title="" Width="50px" Sortable="false" TextAlign="TextAlign.Center">
+                    <Template Context="lead">
+                        <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Text"
+                                      Size="ButtonSize.Small" Click="@(() => ConfirmDelete(lead))" />
+                    </Template>
+                </RadzenDataGridColumn>
             </Columns>
         </RadzenDataGrid>
     }
@@ -41,5 +49,27 @@
         leads = await Http.GetFromJsonAsync<List<LeadResponse>>("api/v1/leads") ?? [];
         loading = false;
         StateHasChanged();
+    }
+
+    private async Task ConfirmDelete(LeadResponse lead)
+    {
+        var confirmed = await DialogService.Confirm(
+            "Delete this lead? This action cannot be undone.",
+            "Delete Lead",
+            new ConfirmOptions { OkButtonText = "Delete", CancelButtonText = "Cancel" });
+
+        if (confirmed == true)
+        {
+            var response = await Http.DeleteAsync($"api/v1/leads/{lead.Id}");
+            if (response.IsSuccessStatusCode)
+            {
+                leads.Remove(lead);
+                Notification.Notify(NotificationSeverity.Success, "Lead deleted");
+            }
+            else
+            {
+                Notification.Notify(NotificationSeverity.Error, "Failed to delete lead");
+            }
+        }
     }
 }
