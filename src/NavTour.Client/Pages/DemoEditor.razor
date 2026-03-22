@@ -22,6 +22,10 @@
             <ChildContent><RadzenButton Text="Save Edits" Icon="save_alt" ButtonStyle="ButtonStyle.Warning" Size="ButtonSize.Small" Click="SaveFrameEdits" Visible="@(frameEditor?.HasUnsavedEdits == true)" /></ChildContent>
         </SfTooltip>
         <SfTooltip CssClass="nt-tooltip" Position="Position.BottomCenter" OpenDelay="300" ShowTipPointer="true">
+            <ContentTemplate><div class="tt-title">AI Generate Tour</div><div class="tt-desc">Automatically generate steps and annotations for all frames using AI</div></ContentTemplate>
+            <ChildContent><RadzenButton Text="AI Generate" Icon="auto_awesome" ButtonStyle="ButtonStyle.Success" Size="ButtonSize.Small" Click="GenerateTour" IsBusy="generating" Disabled="@(frames == null || frames.Count == 0)" /></ChildContent>
+        </SfTooltip>
+        <SfTooltip CssClass="nt-tooltip" Position="Position.BottomCenter" OpenDelay="300" ShowTipPointer="true">
             <ContentTemplate><div class="tt-title">Save All Steps</div><div class="tt-desc">Persist all step configurations, triggers, and annotations</div></ContentTemplate>
             <ChildContent><RadzenButton Text="Save" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" Click="SaveSteps" IsBusy="saving" /></ChildContent>
         </SfTooltip>
@@ -111,6 +115,15 @@
             <AnnotationEditor DemoId="@DemoId" StepId="@selectedStepId" Annotations="@currentAnnotations"
                 OnAnnotationsChanged="RefreshAnnotations" />
         </div>
+
+        @if (generating)
+        {
+            <div style="position:absolute;inset:0;z-index:100;background:rgba(255,255,255,0.9);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px">
+                <RadzenProgressBarCircular ShowValue="false" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.Large" />
+                <span style="font-size:16px;font-weight:600;color:#4361ee">@generatingStatus</span>
+                <span style="font-size:13px;color:#666">This may take 30-60 seconds</span>
+            </div>
+        }
     </div>
 
     <OnboardingTour @bind-Visible="showTour" />
@@ -185,6 +198,8 @@
     private string? currentFrameHtml;
     private List<AnnotationResponse>? currentAnnotations;
     private bool saving;
+    private bool generating;
+    private string generatingStatus = "";
     private string? activeDrawer = "steps";
 
     private void ToggleDrawer(string drawer)
@@ -501,6 +516,55 @@ $@"<iframe
         await DemoApi.UpdateStepsAsync(DemoId, new UpdateStepsRequest(stepDtos));
         steps = await DemoApi.GetStepsAsync(DemoId);
         StateHasChanged();
+    }
+
+    private async Task GenerateTour()
+    {
+        if (frames == null || frames.Count == 0)
+        {
+            Notification.Notify(NotificationSeverity.Warning, "No frames", "Capture pages first before generating a tour.");
+            return;
+        }
+
+        generating = true;
+        generatingStatus = "Analyzing frames...";
+        StateHasChanged();
+
+        try
+        {
+            await Task.Delay(500);
+            generatingStatus = "AI is generating your tour...";
+            StateHasChanged();
+
+            var response = await DemoApi.GenerateTourAsync(DemoId, null);
+            if (response)
+            {
+                generatingStatus = "Loading tour...";
+                StateHasChanged();
+
+                steps = await DemoApi.GetStepsAsync(DemoId);
+                if (steps.Count > 0)
+                {
+                    SelectStep(steps[0].Id);
+                }
+
+                Notification.Notify(NotificationSeverity.Success, "Tour generated!", $"{steps.Count} steps created with AI.");
+            }
+            else
+            {
+                Notification.Notify(NotificationSeverity.Error, "Generation failed", "AI could not generate a tour. Please try again.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Notification.Notify(NotificationSeverity.Error, "Error", ex.Message);
+        }
+        finally
+        {
+            generating = false;
+            generatingStatus = "";
+            StateHasChanged();
+        }
     }
 
     private async Task SaveSteps()

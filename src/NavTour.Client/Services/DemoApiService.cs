@@ -53,6 +53,13 @@ public class DemoApiService
         return response.IsSuccessStatusCode;
     }
 
+    public async Task<bool> GenerateTourAsync(Guid demoId, string? prompt)
+    {
+        var body = prompt != null ? new { prompt } : null;
+        var response = await _http.PostAsJsonAsync($"api/v1/demos/{demoId}/generate-tour", body ?? (object)new { });
+        return response.IsSuccessStatusCode;
+    }
+
     // Frames
     public async Task<List<FrameResponse>> GetFramesAsync(Guid demoId)
         => await _http.GetFromJsonAsync<List<FrameResponse>>($"api/v1/demos/{demoId}/frames") ?? [];
