@@ -88,7 +88,8 @@
             foreach (var annotation in Annotations)
             {
                 <AnnotationOverlay Annotation="annotation" Mode="AnnotationOverlay.AnnotationOverlayMode.Edit"
-                    OnPositionChanged="HandleAnnotationMoved" />
+                    OnPositionChanged="HandleAnnotationMoved"
+                    OnSizeChanged="HandleAnnotationResized" />
             }
         }
     }
@@ -193,6 +194,7 @@
     [Parameter] public EventCallback<bool> ShowFindReplaceChanged { get; set; }
     [Parameter] public EventCallback<string> OnHtmlChanged { get; set; }
     [Parameter] public EventCallback<AnnotationOverlay.AnnotationPositionChange> OnAnnotationMoved { get; set; }
+    [Parameter] public EventCallback<AnnotationOverlay.AnnotationSizeChange> OnAnnotationResized { get; set; }
 
     private ElementReference iframeRef;
     private DotNetObjectReference<FrameEditor>? dotnetRef;
@@ -361,6 +363,11 @@
     private async Task HandleAnnotationMoved(AnnotationOverlay.AnnotationPositionChange change)
     {
         await OnAnnotationMoved.InvokeAsync(change);
+    }
+
+    private async Task HandleAnnotationResized(AnnotationOverlay.AnnotationSizeChange change)
+    {
+        await OnAnnotationResized.InvokeAsync(change);
     }
 
     public void Dispose()
