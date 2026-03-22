@@ -30,7 +30,7 @@ else
             <span style="font-size:14px;font-weight:500">@manifest.DemoName</span>
             <div style="flex:1"></div>
             <span style="font-size:13px;color:#999">@(currentStepIndex + 1) / @manifest.Steps.Count</span>
-            <button onclick="this.textContent = voiceover.toggleMute() ? '🔇' : '🔊'" class="voice-btn" title="Toggle voiceover">🔊</button>
+            <button onclick="var m=voiceover.toggleMute();this.textContent=m?'🔇':'🔊';this.title=m?'Click to enable audio':'Click to mute'" class="voice-btn" title="Click to enable audio">🔇</button>
         </div>
 
         @* Frame content with overlays *@
