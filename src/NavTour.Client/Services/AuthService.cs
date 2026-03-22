@@ -26,16 +26,21 @@ public class AuthService
 
         try
         {
-            // Quick auth check — cookie is sent automatically by the browser
+            // Quick auth check — cookie is forwarded by the HttpClient
             var response = await _http.GetAsync("api/v1/demos");
             if (response.IsSuccessStatusCode)
             {
                 _isAuthenticated = true;
             }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                _isAuthenticated = false;
+            }
+            // Any other status (500, timeout) — don't change auth state
         }
         catch
         {
-            // SSR prerender or network error — not authenticated
+            // Network error during SSR prerender — don't assume logged out
         }
     }
 

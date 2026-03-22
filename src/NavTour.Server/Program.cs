@@ -123,6 +123,7 @@ builder.Services.AddScoped<ITeamService, TeamService>();
 
 // Client Services (needed for SSR pre-rendering of Blazor components)
 // HttpClient that forwards auth cookie for server-side rendering
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped(sp =>
 {
     var httpContext = sp.GetService<IHttpContextAccessor>()?.HttpContext;
@@ -130,14 +131,23 @@ builder.Services.AddScoped(sp =>
         ? $"{httpContext.Request.Scheme}://{httpContext.Request.Host}"
         : "http://localhost:5017";
 
-    var handler = new HttpClientHandler();
+    var handler = new HttpClientHandler { UseCookies = true };
     if (httpContext?.Request.Cookies.TryGetValue("navtour_auth", out var cookie) == true)
     {
         handler.CookieContainer.Add(new Uri(baseAddress), new System.Net.Cookie("navtour_auth", cookie));
     }
-    return new HttpClient(handler) { BaseAddress = new Uri(baseAddress) };
+
+    var client = new HttpClient(handler) { BaseAddress = new Uri(baseAddress) };
+
+    // Also set the Authorization header directly from the cookie JWT
+    if (httpContext?.Request.Cookies.TryGetValue("navtour_auth", out var token) == true)
+    {
+        client.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+    }
+
+    return client;
 });
-builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<DemoApiService>();
 builder.Services.AddScoped<PlayerApiService>();
