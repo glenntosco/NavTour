@@ -58,7 +58,7 @@
     </RadzenStack>
 
     @* Main workspace *@
-    <RadzenStack Orientation="Orientation.Horizontal" Style="flex:1;overflow:hidden">
+    <div style="flex:1;display:flex;overflow:hidden;position:relative">
         <div class="frame-strip">
             <FrameStrip Frames="frames" SelectedFrameId="selectedFrameId"
                 OnFrameSelected="SelectFrame" OnAddFrame="AddFrame"
@@ -76,17 +76,43 @@
                 OnAnnotationResized="HandleAnnotationResized" />
         </div>
 
-        <div class="step-panel">
+        @* Drawer toggle buttons *@
+        <div class="drawer-toggles">
+            <button class="drawer-toggle @(activeDrawer == "steps" ? "active" : "")" @onclick='() => ToggleDrawer("steps")' title="Steps">
+                <svg viewBox="0 0 24 24" width="18" height="18"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z" fill="currentColor"/></svg>
+            </button>
+            <button class="drawer-toggle @(activeDrawer == "annotations" ? "active" : "")" @onclick='() => ToggleDrawer("annotations")' title="Annotations">
+                <svg viewBox="0 0 24 24" width="18" height="18"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18zM18 14H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z" fill="currentColor"/></svg>
+            </button>
+        </div>
+
+        @* Drawer backdrop *@
+        @if (activeDrawer != null)
+        {
+            <div class="drawer-backdrop" @onclick="CloseDrawer"></div>
+        }
+
+        @* Steps drawer *@
+        <div class="editor-drawer @(activeDrawer == "steps" ? "open" : "")">
+            <div class="drawer-header">
+                <strong>Steps</strong>
+                <button class="drawer-close" @onclick="CloseDrawer">&times;</button>
+            </div>
             <StepPanel Steps="steps" Frames="frames" SelectedStepId="selectedStepId"
                 OnStepSelected="SelectStep" OnAddStep="AddStep" OnDeleteStep="DeleteStep"
                 OnReorderStep="ReorderStep" OnStepSettingsChanged="HandleStepSettingsChanged" />
         </div>
 
-        <div class="annotation-editor" style="overflow-y:auto;max-height:100%">
+        @* Annotations drawer *@
+        <div class="editor-drawer @(activeDrawer == "annotations" ? "open" : "")">
+            <div class="drawer-header">
+                <strong>Annotations</strong>
+                <button class="drawer-close" @onclick="CloseDrawer">&times;</button>
+            </div>
             <AnnotationEditor DemoId="@DemoId" StepId="@selectedStepId" Annotations="@currentAnnotations"
                 OnAnnotationsChanged="RefreshAnnotations" />
         </div>
-    </RadzenStack>
+    </div>
 
     <OnboardingTour @bind-Visible="showTour" />
 </RadzenStack>
@@ -160,6 +186,15 @@
     private string? currentFrameHtml;
     private List<AnnotationResponse>? currentAnnotations;
     private bool saving;
+    private string? activeDrawer = "steps";
+
+    private void ToggleDrawer(string drawer)
+    {
+        activeDrawer = activeDrawer == drawer ? null : drawer;
+    }
+
+    private void CloseDrawer() => activeDrawer = null;
+
     private bool showFindReplace;
     private bool showSharePopover;
     private bool showTour;
