@@ -151,12 +151,29 @@ window.sidebarToggle = {
 window.voiceover = {
     _muted: false,
     _audio: null,
+    _pendingUrl: null,
+    _interacted: false,
     play: function(url) {
         console.log('[NavTour] Voiceover play:', url);
         if (this._muted || !url) return;
         if (this._audio) { this._audio.pause(); this._audio = null; }
         this._audio = new Audio(url);
-        this._audio.play().catch(function(e){ console.warn('[NavTour] Voiceover play failed:', e.message); });
+        var self = this;
+        this._audio.play().catch(function(e) {
+            console.warn('[NavTour] Autoplay blocked, will play on first interaction');
+            self._pendingUrl = url;
+            if (!self._interacted) {
+                document.addEventListener('click', function handler() {
+                    self._interacted = true;
+                    if (self._pendingUrl && !self._muted) {
+                        self._audio = new Audio(self._pendingUrl);
+                        self._audio.play().catch(function(){});
+                        self._pendingUrl = null;
+                    }
+                    document.removeEventListener('click', handler);
+                }, { once: true });
+            }
+        });
     },
     stop: function() {
         if (this._audio) { this._audio.pause(); this._audio = null; }
