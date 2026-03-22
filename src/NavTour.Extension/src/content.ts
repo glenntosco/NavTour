@@ -56,8 +56,9 @@ export async function captureDOM(): Promise<CaptureResult> {
     }
   }
 
-  // Step 2: If few stylesheets captured, inline computed styles as fallback
-  const needsComputedFallback = stylesheetsCaptured < document.styleSheets.length / 2;
+  // Step 2: Always inline computed styles as safety net — guarantees CSS even when
+  // stylesheets are CORS-blocked or loaded via JS (SPAs like P4Warehouse)
+  const needsComputedFallback = true;
 
   // Step 3: Clone the DOM
   const clone = document.documentElement.cloneNode(true) as HTMLElement;
