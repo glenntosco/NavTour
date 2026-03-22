@@ -148,6 +148,31 @@ window.sidebarToggle = {
     }
 };
 
+window.voiceover = {
+    _muted: false,
+    _utterance: null,
+    speak: function(text, lang) {
+        if (this._muted || !text) return;
+        window.speechSynthesis.cancel();
+        this._utterance = new SpeechSynthesisUtterance(text);
+        this._utterance.lang = lang || 'en-US';
+        this._utterance.rate = 0.95;
+        this._utterance.pitch = 1;
+        window.speechSynthesis.speak(this._utterance);
+    },
+    stop: function() {
+        window.speechSynthesis.cancel();
+    },
+    toggleMute: function() {
+        this._muted = !this._muted;
+        if (this._muted) window.speechSynthesis.cancel();
+        return this._muted;
+    },
+    isMuted: function() {
+        return this._muted;
+    }
+};
+
 window.authStorage = {
     save: function (token, tenantId) {
         localStorage.setItem("navtour_token", token);

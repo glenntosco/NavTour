@@ -30,6 +30,7 @@ else
             <span style="font-size:14px;font-weight:500">@manifest.DemoName</span>
             <div style="flex:1"></div>
             <span style="font-size:13px;color:#999">@(currentStepIndex + 1) / @manifest.Steps.Count</span>
+            <button onclick="this.textContent = voiceover.toggleMute() ? '🔇' : '🔊'" class="voice-btn" title="Toggle voiceover">🔊</button>
         </div>
 
         @* Frame content with overlays *@
@@ -98,6 +99,12 @@ else
 </div>
 
 <style>
+    .voice-btn {
+        background: none; border: none; cursor: pointer; font-size: 18px;
+        padding: 4px 8px; border-radius: 4px; opacity: 0.6;
+    }
+    .voice-btn:hover { opacity: 1; background: #f0f0f0; }
+
     .timer-progress {
         height: 100%;
         background: linear-gradient(90deg, #4361ee, #818cf8);
@@ -163,6 +170,10 @@ else
         {
             await SetupCurrentStepTrigger();
         }
+
+        // Voiceover for the first step on initial render
+        if (firstRender && manifest != null && currentStep?.VoiceoverText != null)
+            try { await JS.InvokeVoidAsync("voiceover.speak", currentStep.VoiceoverText); } catch { }
 
         // Update spotlight for current step
         if (manifest != null && currentStep != null)
@@ -318,6 +329,9 @@ else
         BufferEvent(EventType.StepViewed, currentStepIndex + 1, null);
         StateHasChanged();
 
+        if (currentStep?.VoiceoverText != null)
+            try { await JS.InvokeVoidAsync("voiceover.speak", currentStep.VoiceoverText); } catch { }
+
         } finally { _navigating = false; }
     }
 
@@ -332,6 +346,9 @@ else
             stepStartTime = DateTime.UtcNow;
             BufferEvent(EventType.StepViewed, currentStepIndex + 1, null);
             StateHasChanged();
+
+            if (currentStep?.VoiceoverText != null)
+                try { await JS.InvokeVoidAsync("voiceover.speak", currentStep.VoiceoverText); } catch { }
         }
         finally { _navigating = false; }
     }
@@ -453,5 +470,6 @@ else
         dotnetRef?.Dispose();
         _ = FlushEvents();
         try { _ = JS.InvokeVoidAsync("playerSpotlight.hide"); } catch { }
+        try { _ = JS.InvokeVoidAsync("voiceover.stop"); } catch { }
     }
 }

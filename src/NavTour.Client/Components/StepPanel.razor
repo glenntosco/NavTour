@@ -148,6 +148,14 @@
                             </ChildContent>
                         </SfTooltip>
                     </div>
+
+                    @* Voiceover *@
+                    <div class="step-field">
+                        <label>Voiceover</label>
+                        <RadzenTextArea Value="@(step.VoiceoverText ?? "")" Placeholder="Text to read aloud during this step..."
+                            Style="width:100%;font-size:12px;min-height:60px"
+                            Change="@((string v) => UpdateVoiceover(step, v))" />
+                    </div>
                 </div>
             }
         </RadzenCard>
@@ -322,6 +330,12 @@
     private void UpdateBackdrop(StepResponse step, string value)
     {
         var updated = step with { BackdropLevel = value == "none" ? null : value };
+        OnStepSettingsChanged.InvokeAsync(updated);
+    }
+
+    private void UpdateVoiceover(StepResponse step, string value)
+    {
+        var updated = step with { VoiceoverText = string.IsNullOrWhiteSpace(value) ? null : value };
         OnStepSettingsChanged.InvokeAsync(updated);
     }
 }

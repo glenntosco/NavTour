@@ -13,6 +13,7 @@ public class Step : TenantEntity
     public TriggerType TriggerType { get; set; } = TriggerType.ButtonClick;
     public int? TriggerDurationMs { get; set; }
     public string? BackdropLevel { get; set; } // none, light, medium, heavy
+    public string? VoiceoverText { get; set; }
 
     public Demo Demo { get; set; } = null!;
     public Frame Frame { get; set; } = null!;

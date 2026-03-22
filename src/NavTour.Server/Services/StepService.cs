@@ -29,7 +29,7 @@ public class StepService : IStepService
                     a.PositionX, a.PositionY, a.Width, a.Height, a.Style,
                     a.TargetSelector, a.ArrowDirection, a.BadgeNumber
                 )).ToList(),
-                s.TriggerType, s.TriggerDurationMs, s.BackdropLevel))
+                s.TriggerType, s.TriggerDurationMs, s.BackdropLevel, s.VoiceoverText))
             .ToListAsync();
     }
 
@@ -58,6 +58,7 @@ public class StepService : IStepService
                 TriggerType = stepDto.TriggerType,
                 TriggerDurationMs = stepDto.TriggerDurationMs,
                 BackdropLevel = stepDto.BackdropLevel,
+                VoiceoverText = stepDto.VoiceoverText,
                 Annotations = stepDto.Annotations.Select(a => new Annotation
                 {
                     Id = a.Id ?? Guid.NewGuid(),

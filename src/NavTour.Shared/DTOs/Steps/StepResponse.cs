@@ -9,4 +9,5 @@ public record StepResponse(
     List<AnnotationResponse> Annotations,
     TriggerType TriggerType = TriggerType.ButtonClick,
     int? TriggerDurationMs = null,
-    string? BackdropLevel = null);
+    string? BackdropLevel = null,
+    string? VoiceoverText = null);

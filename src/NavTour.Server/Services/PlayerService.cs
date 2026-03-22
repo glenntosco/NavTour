@@ -61,7 +61,7 @@ public class PlayerService : IPlayerService
                     a.PositionX, a.PositionY, a.Width, a.Height, a.Style,
                     a.TargetSelector, a.ArrowDirection, a.BadgeNumber
                 )).ToList(),
-                s.TriggerType, s.TriggerDurationMs, s.BackdropLevel))
+                s.TriggerType, s.TriggerDurationMs, s.BackdropLevel, s.VoiceoverText))
             .ToListAsync();
 
         // Resolve personalization variables
@@ -93,7 +93,8 @@ public class PlayerService : IPlayerService
                     var content = a.Content != null ? _personalization.ResolveVariables(a.Content, variables, queryParams) : null;
                     return a with { Title = title, Content = content };
                 }).ToList();
-                steps[i] = s with { Annotations = resolvedAnnotations };
+                var voiceoverText = s.VoiceoverText != null ? _personalization.ResolveVariables(s.VoiceoverText, variables, queryParams) : null;
+                steps[i] = s with { Annotations = resolvedAnnotations, VoiceoverText = voiceoverText };
             }
         }
 
