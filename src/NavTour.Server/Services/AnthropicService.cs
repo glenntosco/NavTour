@@ -59,7 +59,7 @@ Return ONLY the JSON array, no markdown, no explanation.";
 
         var body = new
         {
-            model = "claude-sonnet-4-5-20241022",
+            model = "claude-opus-4-20250514",
             max_tokens = 4096,
             system = systemPrompt,
             messages = new[]
