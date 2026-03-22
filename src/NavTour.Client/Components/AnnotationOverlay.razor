@@ -61,11 +61,11 @@
             break;
 
         case AnnotationType.Beacon:
+            var bcnStyle = ParseStyle();
+            var bcnColor = bcnStyle.GetValueOrDefault("backgroundColor", "#4361ee");
             <div style="position:relative;width:36px;height:36px">
-                <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:28px;height:28px;border-radius:50%;background:#4361ee;color:white;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;z-index:2">
-                    @(Annotation.BadgeNumber ?? 1)
-                </div>
-                <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:36px;height:36px;border-radius:50%;border:2px solid rgba(67,97,238,0.4);animation:beacon-pulse 2s ease-out infinite"></div>
+                <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:16px;height:16px;border-radius:50%;background:@bcnColor;z-index:2"></div>
+                <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:36px;height:36px;border-radius:50%;border:2px solid @(bcnColor)66;animation:beacon-pulse 2s ease-out infinite"></div>
             </div>
             break;
 
