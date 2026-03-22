@@ -159,8 +159,7 @@
                             Data="voices" TextProperty="Name" ValueProperty="Id"
                             Style="width:100%;font-size:12px;margin-top:4px" Placeholder="Select voice"
                             Change="@((object v) => UpdateVoiceId(step, v?.ToString()))" />
-                        <button onclick="new Audio('/api/v1/steps/' + this.dataset.stepId + '/audio').play().catch(e => console.warn(e))"
-                            data-step-id="@step.Id"
+                        <button onclick="new Audio('/api/v1/steps/@(step.Id)/audio').play().catch(function(e){alert('No audio yet. Save first, then preview.')})"
                             style="background:none;border:1px solid #ddd;border-radius:4px;padding:4px 12px;cursor:pointer;font-size:12px;margin-top:4px">
                             &#9654; Preview
                         </button>
