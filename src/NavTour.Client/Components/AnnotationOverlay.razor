@@ -2,7 +2,8 @@
 @inject IJSRuntime JS
 
 <div @ref="selfRef" style="@GetStyle()" class="annotation-overlay @(Mode == AnnotationOverlayMode.Edit ? "editable" : "") @(isDragging ? "dragging" : "") @(isResizing ? "resizing" : "")"
-     @onmousedown="OnMouseDown" @onmousedown:stopPropagation="true">
+     @onmousedown="OnMouseDown" @onmousedown:stopPropagation="true"
+     @ondblclick="OnDoubleClick" @ondblclick:stopPropagation="true">
     @switch (Annotation.Type)
     {
         case AnnotationType.Tooltip:
@@ -149,6 +150,13 @@
     [Parameter] public AnnotationOverlayMode Mode { get; set; } = AnnotationOverlayMode.View;
     [Parameter] public EventCallback<AnnotationPositionChange> OnPositionChanged { get; set; }
     [Parameter] public EventCallback<AnnotationSizeChange> OnSizeChanged { get; set; }
+    [Parameter] public EventCallback<Guid> OnAnnotationDoubleClicked { get; set; }
+
+    private async Task OnDoubleClick()
+    {
+        if (Mode == AnnotationOverlayMode.Edit)
+            await OnAnnotationDoubleClicked.InvokeAsync(Annotation.Id);
+    }
 
     private ElementReference selfRef;
     private bool isDragging;

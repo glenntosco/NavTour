@@ -89,7 +89,8 @@
             {
                 <AnnotationOverlay Annotation="annotation" Mode="AnnotationOverlay.AnnotationOverlayMode.Edit"
                     OnPositionChanged="HandleAnnotationMoved"
-                    OnSizeChanged="HandleAnnotationResized" />
+                    OnSizeChanged="HandleAnnotationResized"
+                    OnAnnotationDoubleClicked="HandleAnnotationDoubleClicked" />
             }
         }
     }
@@ -195,6 +196,7 @@
     [Parameter] public EventCallback<string> OnHtmlChanged { get; set; }
     [Parameter] public EventCallback<AnnotationOverlay.AnnotationPositionChange> OnAnnotationMoved { get; set; }
     [Parameter] public EventCallback<AnnotationOverlay.AnnotationSizeChange> OnAnnotationResized { get; set; }
+    [Parameter] public EventCallback<Guid> OnAnnotationDoubleClicked { get; set; }
 
     private ElementReference iframeRef;
     private DotNetObjectReference<FrameEditor>? dotnetRef;
@@ -368,6 +370,11 @@
     private async Task HandleAnnotationResized(AnnotationOverlay.AnnotationSizeChange change)
     {
         await OnAnnotationResized.InvokeAsync(change);
+    }
+
+    private async Task HandleAnnotationDoubleClicked(Guid annotationId)
+    {
+        await OnAnnotationDoubleClicked.InvokeAsync(annotationId);
     }
 
     public void Dispose()

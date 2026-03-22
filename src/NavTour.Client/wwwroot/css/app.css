@@ -240,14 +240,13 @@ code {
 }
 
 .drawer-toggles {
-    position: absolute; right: 8px; top: 8px; z-index: 30;
-    display: flex; flex-direction: column; gap: 4px;
+    display: flex; gap: 2px;
 }
 .drawer-toggle {
-    background: #fff; border: 1px solid #e5e7eb; border-radius: 6px;
-    padding: 6px; cursor: pointer; color: #757575;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    background: none; border: 1px solid #e2e8f0; border-radius: 6px;
+    padding: 4px 10px; cursor: pointer; color: #64748b;
+    display: flex; align-items: center; gap: 4px;
+    font-size: 12px; font-weight: 500;
 }
 .drawer-toggle:hover { background: #f5f5f5; color: #333; }
 .drawer-toggle.active { background: #e8eafd; color: #4361ee; border-color: #4361ee; }

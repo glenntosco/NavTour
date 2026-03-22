@@ -55,6 +55,16 @@
             <ContentTemplate><div class="tt-title">Onboarding Tour</div><div class="tt-desc">Replay the guided tour of the demo builder</div></ContentTemplate>
             <ChildContent><button @onclick="() => showTour = true" style="background:none;border:1px solid var(--rz-border-color);border-radius:8px;padding:4px 8px;cursor:pointer;font-size:14px;color:var(--rz-text-secondary-color)">&#10068;</button></ChildContent>
         </SfTooltip>
+        <div class="drawer-toggles">
+            <button class="drawer-toggle @(activeDrawer == "steps" ? "active" : "")" @onclick='() => ToggleDrawer("steps")'>
+                <svg viewBox="0 0 24 24" width="14" height="14"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z" fill="currentColor"/></svg>
+                Steps
+            </button>
+            <button class="drawer-toggle @(activeDrawer == "annotations" ? "active" : "")" @onclick='() => ToggleDrawer("annotations")'>
+                <svg viewBox="0 0 24 24" width="14" height="14"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18zM18 14H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z" fill="currentColor"/></svg>
+                Annotations
+            </button>
+        </div>
     </RadzenStack>
 
     @* Main workspace *@
@@ -73,17 +83,8 @@
                 ShowFindReplaceChanged="(v) => showFindReplace = v"
                 OnHtmlChanged="OnFrameHtmlSaved"
                 OnAnnotationMoved="HandleAnnotationMoved"
-                OnAnnotationResized="HandleAnnotationResized" />
-        </div>
-
-        @* Drawer toggle buttons *@
-        <div class="drawer-toggles">
-            <button class="drawer-toggle @(activeDrawer == "steps" ? "active" : "")" @onclick='() => ToggleDrawer("steps")' title="Steps">
-                <svg viewBox="0 0 24 24" width="18" height="18"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z" fill="currentColor"/></svg>
-            </button>
-            <button class="drawer-toggle @(activeDrawer == "annotations" ? "active" : "")" @onclick='() => ToggleDrawer("annotations")' title="Annotations">
-                <svg viewBox="0 0 24 24" width="18" height="18"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18zM18 14H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z" fill="currentColor"/></svg>
-            </button>
+                OnAnnotationResized="HandleAnnotationResized"
+                OnAnnotationDoubleClicked="HandleAnnotationDoubleClicked" />
         </div>
 
         @* Drawer backdrop *@
@@ -194,6 +195,12 @@
     }
 
     private void CloseDrawer() => activeDrawer = null;
+
+    private void HandleAnnotationDoubleClicked(Guid annotationId)
+    {
+        activeDrawer = "annotations";
+        StateHasChanged();
+    }
 
     private bool showFindReplace;
     private bool showSharePopover;
