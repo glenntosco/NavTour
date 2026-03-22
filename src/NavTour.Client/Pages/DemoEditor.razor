@@ -51,10 +51,8 @@
             <ContentTemplate><div class="tt-title">Demo Settings</div><div class="tt-desc">Configure demo name, slug, lead capture, and personalization</div></ContentTemplate>
             <ChildContent><RadzenButton Text="Settings" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Click='() => Nav.NavigateTo($"/demos/{DemoId}/settings")' /></ChildContent>
         </SfTooltip>
-        <SfTooltip CssClass="nt-tooltip" Position="Position.BottomCenter" OpenDelay="300" ShowTipPointer="true">
-            <ContentTemplate><div class="tt-title">Onboarding Tour</div><div class="tt-desc">Replay the guided tour of the demo builder</div></ContentTemplate>
-            <ChildContent><button @onclick="() => showTour = true" style="background:none;border:1px solid var(--rz-border-color);border-radius:8px;padding:4px 8px;cursor:pointer;font-size:14px;color:var(--rz-text-secondary-color)">&#10068;</button></ChildContent>
-        </SfTooltip>
+        <RadzenButton Text="Tour" Icon="help_outline" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined"
+            Size="ButtonSize.Small" Click="() => showTour = true" title="Replay the guided tour of the demo builder" />
         <div class="drawer-toggles">
             <button class="drawer-toggle @(activeDrawer == "steps" ? "active" : "")" @onclick='() => ToggleDrawer("steps")'>
                 <svg viewBox="0 0 24 24" width="14" height="14"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z" fill="currentColor"/></svg>
