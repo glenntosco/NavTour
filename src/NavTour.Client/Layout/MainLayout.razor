@@ -32,16 +32,16 @@
                 <span>Settings</span>
             </a>
         </nav>
-        @if (Auth.IsAuthenticated)
-        {
-            <div class="sidebar-bottom">
+        <div class="sidebar-bottom">
+            @if (Auth.IsAuthenticated)
+            {
                 <a href="/login" onclick="document.cookie='navtour_auth=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT'" class="nav-item">
                     <svg class="nav-icon" viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
                     <span>Logout</span>
                 </a>
-                <div class="sidebar-ver">v@(AppVersion)</div>
-            </div>
-        }
+            }
+            <div class="sidebar-ver">v@(AppVersion)</div>
+        </div>
     </aside>
     <main class="main-area">
         <header class="top-bar">
