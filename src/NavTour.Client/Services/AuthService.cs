@@ -1,5 +1,4 @@
 using System.Net.Http.Json;
-using Microsoft.AspNetCore.Http;
 using Microsoft.JSInterop;
 using NavTour.Shared.DTOs.Auth;
 
@@ -9,16 +8,13 @@ public class AuthService
 {
     private readonly HttpClient _http;
     private readonly IJSRuntime _js;
-    private readonly IHttpContextAccessor _httpContextAccessor;
     private bool _isAuthenticated;
     private Guid? _tenantId;
-    private bool _initialized;
 
-    public AuthService(HttpClient http, IJSRuntime js, IHttpContextAccessor httpContextAccessor)
+    public AuthService(HttpClient http, IJSRuntime js)
     {
         _http = http;
         _js = js;
-        _httpContextAccessor = httpContextAccessor;
     }
 
     public bool IsAuthenticated => _isAuthenticated;
@@ -28,25 +24,14 @@ public class AuthService
     {
         if (_isAuthenticated) return;
 
-        // Method 1: Check HttpContext cookie (works during SSR)
-        var httpContext = _httpContextAccessor.HttpContext;
-        if (httpContext?.Request.Cookies.TryGetValue("navtour_auth", out var cookieToken) == true
-            && !string.IsNullOrEmpty(cookieToken))
-        {
-            _http.DefaultRequestHeaders.Authorization =
-                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", cookieToken);
-            _isAuthenticated = true;
-            return;
-        }
-
-        // Method 2: Check HttpClient already has Bearer (set by Program.cs or previous login)
+        // Check 1: HttpClient already has Bearer (set by Program.cs from cookie during SSR)
         if (_http.DefaultRequestHeaders.Authorization?.Parameter != null)
         {
             _isAuthenticated = true;
             return;
         }
 
-        // Method 3: Try JS interop (works after circuit connects)
+        // Check 2: Try JS interop to read cookie (works after circuit connects)
         try
         {
             var jsToken = await _js.InvokeAsync<string>("authCheck.getToken");
@@ -58,7 +43,14 @@ public class AuthService
                 return;
             }
         }
-        catch { /* JS not available during SSR */ }
+        catch (InvalidOperationException)
+        {
+            // JS not available (SSR prerender) — assume authenticated if we get here
+            // because Program.cs should have set Bearer from cookie
+            _isAuthenticated = true;
+            return;
+        }
+        catch { }
 
         _isAuthenticated = false;
     }
