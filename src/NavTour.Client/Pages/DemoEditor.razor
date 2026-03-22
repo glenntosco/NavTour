@@ -234,26 +234,19 @@ $@"<iframe
     {
         if (_dataLoaded) return;
 
+        // Auth is handled by server middleware — just restore the Bearer token for API calls
         await Auth.TryRestoreAsync();
-        if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
 
-        try
-        {
-            demo = await DemoApi.GetDemoAsync(DemoId);
-            if (demo == null) { Nav.NavigateTo("/dashboard"); return; }
+        demo = await DemoApi.GetDemoAsync(DemoId);
+        if (demo == null) { Nav.NavigateTo("/dashboard"); return; }
 
-            frames = await DemoApi.GetFramesAsync(DemoId);
-            steps = await DemoApi.GetStepsAsync(DemoId);
+        frames = await DemoApi.GetFramesAsync(DemoId);
+        steps = await DemoApi.GetStepsAsync(DemoId);
 
-            if (frames.Count > 0)
-                await SelectFrame(frames[0].Id);
-            _dataLoaded = true;
-            StateHasChanged();
-        }
-        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-        {
-            Nav.NavigateTo("/login");
-        }
+        if (frames.Count > 0)
+            await SelectFrame(frames[0].Id);
+        _dataLoaded = true;
+        StateHasChanged();
     }
 
     private async Task SelectFrame(Guid frameId)

@@ -203,6 +203,22 @@ app.UseAuthentication();
 app.UseMiddleware<ApiKeyMiddleware>();
 app.UseAuthorization();
 
+// Redirect unauthenticated users to login for app pages
+app.Use(async (context, next) =>
+{
+    var path = context.Request.Path.Value?.ToLower() ?? "";
+    var protectedPaths = new[] { "/dashboard", "/analytics", "/leads", "/team", "/settings", "/demos/" };
+    var isProtected = protectedPaths.Any(p => path.StartsWith(p));
+
+    if (isProtected && context.User?.Identity?.IsAuthenticated != true)
+    {
+        context.Response.Redirect("/login");
+        return;
+    }
+
+    await next();
+});
+
 app.MapStaticAssets();
 app.MapControllers();
 app.MapRazorComponents<NavTour.Server.Components.App>()
