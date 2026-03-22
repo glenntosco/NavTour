@@ -66,7 +66,6 @@ public class AuthService
 
         var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
         _isAuthenticated = true;
-        _initialized = true;
         _tenantId = result!.TenantId;
 
         _http.DefaultRequestHeaders.Authorization =
@@ -87,7 +86,6 @@ public class AuthService
 
         var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
         _isAuthenticated = true;
-        _initialized = true;
         _tenantId = result!.TenantId;
 
         _http.DefaultRequestHeaders.Authorization =
