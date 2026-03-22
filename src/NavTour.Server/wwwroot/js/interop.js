@@ -191,6 +191,20 @@ window.voiceover = {
     }
 };
 
+window.authCheck = {
+    hasCookie: function() {
+        return document.cookie.split(';').some(function(c) {
+            return c.trim().startsWith('navtour_auth=');
+        });
+    },
+    getToken: function() {
+        var match = document.cookie.split(';').find(function(c) {
+            return c.trim().startsWith('navtour_auth=');
+        });
+        return match ? match.trim().substring('navtour_auth='.length) : null;
+    }
+};
+
 window.authStorage = {
     save: function (token, tenantId) {
         localStorage.setItem("navtour_token", token);

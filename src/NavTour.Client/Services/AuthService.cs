@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using Microsoft.JSInterop;
 using NavTour.Shared.DTOs.Auth;
 
 namespace NavTour.Client.Services;
@@ -6,19 +7,22 @@ namespace NavTour.Client.Services;
 public class AuthService
 {
     private readonly HttpClient _http;
+    private readonly IJSRuntime _js;
     private bool _isAuthenticated;
     private Guid? _tenantId;
 
-    public AuthService(HttpClient http)
+    public AuthService(HttpClient http, IJSRuntime js)
     {
         _http = http;
+        _js = js;
     }
 
     public bool IsAuthenticated => _isAuthenticated;
     public Guid? TenantId => _tenantId;
 
     /// <summary>
-    /// Check if the auth cookie is valid by making a lightweight API call.
+    /// Check if the auth cookie exists in the browser.
+    /// Uses JS interop to read the cookie directly — works after page refresh.
     /// </summary>
     public async Task TryRestoreAsync()
     {
@@ -26,21 +30,30 @@ public class AuthService
 
         try
         {
-            // Quick auth check — cookie is forwarded by the HttpClient
-            var response = await _http.GetAsync("api/v1/demos");
-            if (response.IsSuccessStatusCode)
+            // Check if the cookie exists in the browser via JS
+            var hasCookie = await _js.InvokeAsync<bool>("authCheck.hasCookie");
+            if (hasCookie)
             {
-                _isAuthenticated = true;
+                // Cookie exists — set the Bearer token on HttpClient for API calls
+                var token = await _js.InvokeAsync<string>("authCheck.getToken");
+                if (!string.IsNullOrEmpty(token))
+                {
+                    _http.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                    _isAuthenticated = true;
+                }
             }
-            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-            {
-                _isAuthenticated = false;
-            }
-            // Any other status (500, timeout) — don't change auth state
         }
-        catch
+        catch (InvalidOperationException)
         {
-            // Network error during SSR prerender — don't assume logged out
+            // JS interop not available during SSR prerender — try HttpClient fallback
+            try
+            {
+                var response = await _http.GetAsync("api/v1/demos");
+                if (response.IsSuccessStatusCode)
+                    _isAuthenticated = true;
+            }
+            catch { }
         }
     }
 
@@ -56,6 +69,11 @@ public class AuthService
         var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
         _isAuthenticated = true;
         _tenantId = result!.TenantId;
+
+        // Set Bearer header for future API calls in this circuit
+        _http.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", result.AccessToken);
+
         return (true, null);
     }
 
@@ -72,6 +90,10 @@ public class AuthService
         var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
         _isAuthenticated = true;
         _tenantId = result!.TenantId;
+
+        _http.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", result.AccessToken);
+
         return (true, null);
     }
 
@@ -79,6 +101,7 @@ public class AuthService
     {
         _isAuthenticated = false;
         _tenantId = null;
+        _http.DefaultRequestHeaders.Authorization = null;
         await _http.PostAsync("api/v1/auth/logout", null);
     }
 }
