@@ -59,10 +59,20 @@ public class ElevenLabsService
             foreach (var v in doc.RootElement.GetProperty("voices").EnumerateArray())
             {
                 var labels = v.TryGetProperty("labels", out var l) ? l : default;
+                var gender = labels.ValueKind == JsonValueKind.Object && labels.TryGetProperty("gender", out var g) ? g.GetString() : null;
+                var accent = labels.ValueKind == JsonValueKind.Object && labels.TryGetProperty("accent", out var a) ? a.GetString() : null;
+                var flag = accent switch
+                {
+                    "american" => "\U0001F1FA\U0001F1F8",
+                    "british" => "\U0001F1EC\U0001F1E7",
+                    "australian" => "\U0001F1E6\U0001F1FA",
+                    _ => "\U0001F30D"
+                };
+                var displayName = $"{flag} {v.GetProperty("name").GetString()!}";
                 voices.Add(new VoiceInfo(
                     v.GetProperty("voice_id").GetString()!,
-                    v.GetProperty("name").GetString()!,
-                    labels.ValueKind == JsonValueKind.Object && labels.TryGetProperty("gender", out var g) ? g.GetString() : null
+                    displayName,
+                    gender
                 ));
             }
 
