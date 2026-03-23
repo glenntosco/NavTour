@@ -105,7 +105,7 @@ public class DemoService : IDemoService
         var events = await _db.SessionEvents.Where(e => sessionIds.Contains(e.SessionId)).ToListAsync();
         _db.SessionEvents.RemoveRange(events);
 
-        var leads = await _db.Leads.Where(l => sessionIds.Contains(l.SessionId)).ToListAsync();
+        var leads = await _db.Leads.Where(l => l.SessionId.HasValue && sessionIds.Contains(l.SessionId.Value)).ToListAsync();
         foreach (var l in leads) l.IsDeleted = true;
 
         var variables = await _db.PersonalizationVariables.Where(v => v.DemoId == id).ToListAsync();

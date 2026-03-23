@@ -110,7 +110,7 @@ public class NavTourDbContext : IdentityDbContext<ApplicationUser, IdentityRole<
         builder.Entity<Lead>(e =>
         {
             e.HasQueryFilter(l => l.TenantId == _tenantProvider.TenantId && !l.IsDeleted);
-            e.HasOne(l => l.Session).WithOne(s => s.Lead).HasForeignKey<Lead>(l => l.SessionId).OnDelete(DeleteBehavior.Cascade);
+            e.HasOne(l => l.Session).WithOne(s => s.Lead).HasForeignKey<Lead>(l => l.SessionId).IsRequired(false).OnDelete(DeleteBehavior.Cascade);
             e.HasOne(l => l.Form).WithMany().HasForeignKey(l => l.FormId).OnDelete(DeleteBehavior.SetNull);
             e.Property(l => l.Email).HasMaxLength(320);
             e.Property(l => l.Name).HasMaxLength(200);

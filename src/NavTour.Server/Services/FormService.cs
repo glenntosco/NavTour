@@ -161,6 +161,41 @@ public class FormService : IFormService
             .ExecuteUpdateAsync(s => s.SetProperty(f => f.SubmissionCount, f => f.SubmissionCount + 1));
     }
 
+    public async Task<Guid?> SubmitStandaloneFormAsync(string slug, FormSubmissionRequest request)
+    {
+        var form = await _db.Forms
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(f => f.Slug == slug && !f.IsDeleted && f.IsStandalone);
+
+        if (form == null) return null;
+
+        // Extract standard fields from submission
+        var values = request.FieldValues;
+        var email = values.GetValueOrDefault("email") ?? values.GetValueOrDefault("Email") ?? "";
+        var name2 = values.GetValueOrDefault("name") ?? values.GetValueOrDefault("full_name")
+            ?? values.GetValueOrDefault("first_name") ?? values.GetValueOrDefault("Full Name")
+            ?? values.GetValueOrDefault("First Name");
+        var company = values.GetValueOrDefault("company") ?? values.GetValueOrDefault("company_name")
+            ?? values.GetValueOrDefault("Company Name");
+
+        var lead = new Lead
+        {
+            TenantId = form.TenantId,
+            SessionId = null,
+            FormId = form.Id,
+            Email = email,
+            Name = name2,
+            Company = company,
+            CustomData = JsonSerializer.Serialize(values, JsonOptions)
+        };
+
+        _db.Leads.Add(lead);
+        form.SubmissionCount++;
+        await _db.SaveChangesAsync();
+
+        return lead.Id;
+    }
+
     private static string GenerateSlug(string name)
     {
         var slug = name.ToLowerInvariant()

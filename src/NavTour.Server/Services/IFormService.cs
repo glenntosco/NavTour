@@ -12,4 +12,5 @@ public interface IFormService
     Task<FormResponse?> GetBySlugPublicAsync(string slug);
     Task IncrementViewCountAsync(Guid id);
     Task IncrementSubmissionCountAsync(Guid id);
+    Task<Guid?> SubmitStandaloneFormAsync(string slug, FormSubmissionRequest request);
 }

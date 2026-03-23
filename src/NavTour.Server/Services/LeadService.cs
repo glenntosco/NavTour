@@ -23,8 +23,8 @@ public class LeadService : ILeadService
 
         return leads.Select(l => new LeadResponse(
             l.Id, l.Email, l.Name, l.Company, l.CustomData,
-            l.Session.DemoId,
-            l.Session.Demo?.Name ?? "",
+            l.Session?.DemoId ?? Guid.Empty,
+            l.Session?.Demo?.Name ?? "(Standalone)",
             l.CreatedAt
         )).ToList();
     }

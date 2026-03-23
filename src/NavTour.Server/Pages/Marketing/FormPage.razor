@@ -18,164 +18,152 @@
 
         @if (notFound)
         {
-            <div class="reveal" style="text-align:center;max-width:480px">
-                <div style="font-size:3rem;margin-bottom:var(--space-4)">&#128269;</div>
-                <h1 style="font-size:var(--text-2xl);margin-bottom:var(--space-3)">Form not found</h1>
-                <p style="color:var(--text-secondary);font-size:var(--text-base);margin-bottom:var(--space-8)">
-                    This form may have been removed or the link is incorrect.
-                </p>
+            <div style="text-align:center;max-width:480px">
+                <div style="font-size:3rem;margin-bottom:1rem">&#128269;</div>
+                <h1 style="font-size:1.5rem;margin-bottom:0.75rem">Form not found</h1>
+                <p style="color:#64748b;margin-bottom:2rem">This form may have been removed or the link is incorrect.</p>
                 <a href="/" class="mkt-btn mkt-btn-primary">Back to home</a>
+            </div>
+        }
+        else if (submitted)
+        {
+            <div style="text-align:center;max-width:480px;padding:3rem 0">
+                <div style="font-size:3rem;margin-bottom:1rem">&#10003;</div>
+                <h1 style="font-size:1.5rem;margin-bottom:0.75rem">Thank you!</h1>
+                <p style="color:#64748b">Your submission has been received.</p>
             </div>
         }
         else if (form is not null)
         {
-            <div class="reveal" style="width:100%;max-width:500px">
-                @* Form card *@
-                <div style="background:#fff;border-radius:var(--radius-lg);box-shadow:0 4px 24px rgba(0,0,0,0.08);padding:var(--space-10);border:1px solid var(--neutral-200)">
-
-                    @* Header *@
-                    <div style="text-align:center;margin-bottom:var(--space-8)">
+            <div style="width:100%;max-width:500px">
+                <div style="background:#fff;border-radius:8px;box-shadow:0 4px 24px rgba(0,0,0,0.08);padding:2.5rem;border:1px solid #e2e8f0">
+                    <div style="text-align:center;margin-bottom:2rem">
                         @if (!string.IsNullOrEmpty(form.Settings?.Title))
                         {
-                            <h1 style="font-size:var(--text-2xl);margin-bottom:var(--space-2)">@form.Settings.Title</h1>
+                            <h1 style="font-size:1.5rem;margin-bottom:0.5rem">@form.Settings.Title</h1>
                         }
                         else
                         {
-                            <h1 style="font-size:var(--text-2xl);margin-bottom:var(--space-2)">@form.Name</h1>
+                            <h1 style="font-size:1.5rem;margin-bottom:0.5rem">@form.Name</h1>
                         }
-
                         @if (!string.IsNullOrEmpty(form.Settings?.Subtitle))
                         {
-                            <p style="color:var(--text-secondary);font-size:var(--text-base)">@form.Settings.Subtitle</p>
-                        }
-                        else if (!string.IsNullOrEmpty(form.Description))
-                        {
-                            <p style="color:var(--text-secondary);font-size:var(--text-base)">@form.Description</p>
+                            <p style="color:#64748b">@form.Settings.Subtitle</p>
                         }
                     </div>
 
-                    @* Rendered form fields (preview only) *@
-                    <div style="display:flex;flex-direction:column;gap:var(--space-5)">
-                        @foreach (var field in form.Fields.OrderBy(f => f.SortOrder))
-                        {
-                            <div>
-                                <label class="mkt-label">
-                                    @field.Label
-                                    @if (field.IsRequired)
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div style="background:#fef2f2;color:#991b1b;padding:0.75rem 1rem;border-radius:6px;font-size:0.875rem;margin-bottom:1rem">@errorMessage</div>
+                    }
+
+                    <EditForm Model="formModel" OnValidSubmit="HandleSubmit" FormName="standalone-form">
+                        <div style="display:flex;flex-direction:column;gap:1.25rem">
+                            @foreach (var field in form.Fields.OrderBy(f => f.SortOrder))
+                            {
+                                <div>
+                                    <label style="display:block;font-size:0.875rem;font-weight:600;color:#0b1929;margin-bottom:0.375rem">
+                                        @field.Label
+                                        @if (field.IsRequired) { <span style="color:#c62828"> *</span> }
+                                    </label>
+                                    @if (!string.IsNullOrEmpty(field.Description))
                                     {
-                                        <span style="color:var(--danger)"> *</span>
+                                        <p style="font-size:0.75rem;color:#94a3b8;margin-bottom:0.375rem">@field.Description</p>
                                     }
-                                </label>
 
-                                @if (!string.IsNullOrEmpty(field.Description))
-                                {
-                                    <p style="font-size:var(--text-xs);color:var(--text-tertiary);margin-bottom:var(--space-2)">@field.Description</p>
-                                }
+                                    @switch (field.FieldType)
+                                    {
+                                        case FormFieldType.Text:
+                                        case FormFieldType.Phone:
+                                        case FormFieldType.Url:
+                                            <input type="@GetInputType(field.FieldType)" name="@field.Key"
+                                                   value="@GetValue(field.Key)" placeholder="@field.Placeholder"
+                                                   @(field.IsRequired ? "required" : "")
+                                                   style="width:100%;padding:0.625rem 0.875rem;border:1px solid #cbd5e1;border-radius:6px;font-size:0.875rem;box-sizing:border-box" />
+                                            break;
 
-                                @switch (field.FieldType)
-                                {
-                                    case FormFieldType.Text:
-                                    case FormFieldType.Phone:
-                                    case FormFieldType.Url:
-                                        <input type="@GetInputType(field.FieldType)"
-                                               placeholder="@field.Placeholder"
-                                               class="mkt-input"
-                                               disabled
-                                               @(field.IsRequired ? "required" : "") />
-                                        break;
+                                        case FormFieldType.Email:
+                                            <input type="email" name="@field.Key"
+                                                   value="@GetValue(field.Key)" placeholder="@(field.Placeholder ?? "email@example.com")"
+                                                   @(field.IsRequired ? "required" : "")
+                                                   style="width:100%;padding:0.625rem 0.875rem;border:1px solid #cbd5e1;border-radius:6px;font-size:0.875rem;box-sizing:border-box" />
+                                            break;
 
-                                    case FormFieldType.Email:
-                                        <input type="email"
-                                               placeholder="@(field.Placeholder ?? "email@example.com")"
-                                               class="mkt-input"
-                                               disabled />
-                                        break;
+                                        case FormFieldType.TextArea:
+                                            <textarea name="@field.Key" rows="3" placeholder="@field.Placeholder"
+                                                      @(field.IsRequired ? "required" : "")
+                                                      style="width:100%;padding:0.625rem 0.875rem;border:1px solid #cbd5e1;border-radius:6px;font-size:0.875rem;resize:vertical;box-sizing:border-box">@GetValue(field.Key)</textarea>
+                                            break;
 
-                                    case FormFieldType.TextArea:
-                                        <textarea rows="3"
-                                                  placeholder="@field.Placeholder"
-                                                  class="mkt-input"
-                                                  style="resize:vertical"
-                                                  disabled></textarea>
-                                        break;
+                                        case FormFieldType.Select:
+                                            <select name="@field.Key" @(field.IsRequired ? "required" : "")
+                                                    style="width:100%;padding:0.625rem 0.875rem;border:1px solid #cbd5e1;border-radius:6px;font-size:0.875rem;box-sizing:border-box">
+                                                <option value="">@(field.Placeholder ?? "Select...")</option>
+                                                @if (field.Options is not null)
+                                                {
+                                                    @foreach (var opt in field.Options)
+                                                    {
+                                                        <option value="@opt" selected="@(GetValue(field.Key) == opt)">@opt</option>
+                                                    }
+                                                }
+                                            </select>
+                                            break;
 
-                                    case FormFieldType.Select:
-                                        <select class="mkt-input" disabled>
-                                            <option value="">@(field.Placeholder ?? "Select an option")</option>
+                                        case FormFieldType.Multiselect:
                                             @if (field.Options is not null)
                                             {
-                                                @foreach (var option in field.Options)
-                                                {
-                                                    <option value="@option">@option</option>
-                                                }
+                                                <div style="display:flex;flex-direction:column;gap:0.5rem">
+                                                    @foreach (var opt in field.Options)
+                                                    {
+                                                        <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.875rem;cursor:pointer">
+                                                            <input type="checkbox" name="@(field.Key + "_" + opt)" value="true" />
+                                                            @opt
+                                                        </label>
+                                                    }
+                                                </div>
                                             }
-                                        </select>
-                                        break;
+                                            break;
 
-                                    case FormFieldType.Multiselect:
-                                        @if (field.Options is not null)
-                                        {
-                                            <div style="display:flex;flex-direction:column;gap:var(--space-2)">
-                                                @foreach (var option in field.Options)
-                                                {
-                                                    <label style="display:flex;align-items:center;gap:var(--space-2);font-size:var(--text-sm);color:var(--text-primary);cursor:default">
-                                                        <input type="checkbox" disabled />
-                                                        @option
-                                                    </label>
-                                                }
-                                            </div>
-                                        }
-                                        break;
+                                        case FormFieldType.Checkbox:
+                                            <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.875rem;cursor:pointer">
+                                                <input type="checkbox" name="@field.Key" value="true" />
+                                                @(field.Placeholder ?? field.Label)
+                                            </label>
+                                            break;
+                                    }
+                                </div>
+                            }
 
-                                    case FormFieldType.Checkbox:
-                                        <label style="display:flex;align-items:center;gap:var(--space-2);font-size:var(--text-sm);color:var(--text-primary);cursor:default">
-                                            <input type="checkbox" disabled />
-                                            @(field.Placeholder ?? field.Label)
-                                        </label>
-                                        break;
-                                }
-                            </div>
-                        }
-
-                        @* Submit button (disabled) *@
-                        <button type="button"
-                                class="mkt-btn mkt-btn-primary"
-                                style="width:100%;margin-top:var(--space-2);opacity:0.6;cursor:not-allowed"
-                                disabled>
-                            @(form.Settings?.SubmitButtonText ?? "Submit")
-                        </button>
-                    </div>
+                            <button type="submit" style="width:100%;padding:0.75rem;background:#4361ee;color:#fff;border:none;border-radius:6px;font-size:0.875rem;font-weight:600;cursor:pointer;margin-top:0.5rem">
+                                @(form.Settings?.SubmitButtonText ?? "Submit")
+                            </button>
+                        </div>
+                    </EditForm>
                 </div>
 
-                @* Standalone notice *@
-                <div style="margin-top:var(--space-6);text-align:center;padding:var(--space-5);background:var(--surface-secondary);border-radius:var(--radius-md);border:1px solid var(--neutral-200)">
-                    <p style="font-size:var(--text-sm);color:var(--text-secondary);line-height:var(--leading-normal)">
-                        <strong>Standalone form submissions coming soon.</strong><br />
-                        Assign this form to a demo to start collecting leads.
-                    </p>
-                </div>
-
-                @* Powered by *@
-                <div style="margin-top:var(--space-6);text-align:center">
-                    <a href="/" style="font-size:var(--text-xs);color:var(--text-tertiary);text-decoration:none">
-                        Powered by <strong style="color:var(--text-secondary)">NavTour</strong>
+                <div style="margin-top:1.5rem;text-align:center">
+                    <a href="/" style="font-size:0.75rem;color:#94a3b8;text-decoration:none">
+                        Powered by <strong style="color:#64748b">NavTour</strong>
                     </a>
                 </div>
             </div>
         }
-
     </div>
 </section>
 
 @code {
-    [Parameter]
-    public string Slug { get; set; } = "";
+    [Parameter] public string Slug { get; set; } = "";
+    [SupplyParameterFromForm] public Dictionary<string, string>? formModel { get; set; }
 
     private FormResponse? form;
     private bool notFound;
+    private bool submitted;
+    private string? errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
+        formModel ??= new();
+
         if (string.IsNullOrWhiteSpace(Slug))
         {
             notFound = true;
@@ -183,7 +171,6 @@
         }
 
         form = await FormService.GetBySlugPublicAsync(Slug);
-
         if (form is null)
         {
             notFound = true;
@@ -192,6 +179,52 @@
 
         await FormService.IncrementViewCountAsync(form.Id);
     }
+
+    private async Task HandleSubmit()
+    {
+        if (form == null) return;
+
+        // Collect form values from the posted form data
+        var values = new Dictionary<string, string>();
+
+        foreach (var field in form.Fields)
+        {
+            if (field.FieldType == FormFieldType.Multiselect && field.Options != null)
+            {
+                var selected = field.Options
+                    .Where(opt => formModel?.GetValueOrDefault(field.Key + "_" + opt) == "true")
+                    .ToList();
+                values[field.Key] = string.Join(", ", selected);
+            }
+            else
+            {
+                var val = formModel?.GetValueOrDefault(field.Key) ?? "";
+                values[field.Key] = val;
+            }
+        }
+
+        // Validate required fields
+        foreach (var field in form.Fields.Where(f => f.IsRequired))
+        {
+            if (string.IsNullOrWhiteSpace(values.GetValueOrDefault(field.Key)))
+            {
+                errorMessage = $"{field.Label} is required.";
+                return;
+            }
+        }
+
+        var result = await FormService.SubmitStandaloneFormAsync(Slug, new FormSubmissionRequest(values));
+        if (result != null)
+        {
+            submitted = true;
+        }
+        else
+        {
+            errorMessage = "Failed to submit. Please try again.";
+        }
+    }
+
+    private string GetValue(string key) => formModel?.GetValueOrDefault(key) ?? "";
 
     private static string GetInputType(FormFieldType fieldType) => fieldType switch
     {

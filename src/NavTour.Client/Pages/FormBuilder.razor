@@ -98,7 +98,20 @@
                         var field = fields[index];
                         var isSelected = selectedIndex == index;
 
-                        <div class="fb-field-row @(isSelected ? "selected" : "")" @onclick="() => SelectField(index)">
+                        <div class="fb-field-row @(isSelected ? "selected" : "") @(dragOverIndex == index ? "drag-over" : "") @(dragIndex == index ? "dragging" : "")"
+                             draggable="true"
+                             @ondragstart="() => OnDragStart(index)"
+                             @ondragenter="() => OnDragEnter(index)"
+                             @ondragover:preventDefault
+                             @ondragend="OnDragEnd"
+                             @onclick="() => SelectField(index)">
+                            <div class="fb-drag-handle" title="Drag to reorder">
+                                <svg width="8" height="14" viewBox="0 0 8 14" fill="currentColor" opacity="0.3">
+                                    <circle cx="2" cy="2" r="1.5"/><circle cx="6" cy="2" r="1.5"/>
+                                    <circle cx="2" cy="7" r="1.5"/><circle cx="6" cy="7" r="1.5"/>
+                                    <circle cx="2" cy="12" r="1.5"/><circle cx="6" cy="12" r="1.5"/>
+                                </svg>
+                            </div>
                             <div class="fb-field-content">
                                 <label class="fb-field-label">
                                     @field.Label
@@ -162,12 +175,6 @@
                                 }
                             </div>
                             <div class="fb-field-actions">
-                                <button class="fb-action-btn" title="Move up" disabled="@(index == 0)" @onclick="() => MoveField(index, -1)" @onclick:stopPropagation="true">
-                                    <span class="material-symbols-outlined">arrow_upward</span>
-                                </button>
-                                <button class="fb-action-btn" title="Move down" disabled="@(index == fields.Count - 1)" @onclick="() => MoveField(index, 1)" @onclick:stopPropagation="true">
-                                    <span class="material-symbols-outlined">arrow_downward</span>
-                                </button>
                                 <button class="fb-action-btn delete" title="Remove field" @onclick="() => RemoveField(index)" @onclick:stopPropagation="true">
                                     <span class="material-symbols-outlined">close</span>
                                 </button>
@@ -404,6 +411,16 @@
     }
 
     /* Field Row */
+    .fb-drag-handle {
+        display: flex;
+        align-items: center;
+        padding: 4px 2px;
+        cursor: grab;
+        color: #cbd5e1;
+        flex-shrink: 0;
+    }
+    .fb-drag-handle:active { cursor: grabbing; }
+
     .fb-field-row {
         display: flex;
         align-items: flex-start;
@@ -412,7 +429,7 @@
         margin: 0 -12px;
         border-radius: 8px;
         cursor: pointer;
-        transition: background 0.15s;
+        transition: background 0.15s, border-color 0.15s;
         border: 2px solid transparent;
     }
 
@@ -423,6 +440,12 @@
     .fb-field-row.selected {
         background: #f0f2ff;
         border-color: #4361ee;
+    }
+    .fb-field-row.dragging {
+        opacity: 0.5;
+    }
+    .fb-field-row.drag-over {
+        border-top: 2px solid #4361ee;
     }
 
     .fb-field-content {
@@ -743,6 +766,36 @@
     private void SelectField(int index)
     {
         selectedIndex = index;
+    }
+
+    // Drag-and-drop state
+    private int? dragIndex;
+    private int? dragOverIndex;
+
+    private void OnDragStart(int index)
+    {
+        dragIndex = index;
+    }
+
+    private void OnDragEnter(int index)
+    {
+        if (dragIndex == null || dragIndex == index) return;
+        dragOverIndex = index;
+
+        var item = fields[dragIndex.Value];
+        fields.RemoveAt(dragIndex.Value);
+        fields.Insert(index, item);
+
+        if (selectedIndex == dragIndex) selectedIndex = index;
+        else if (selectedIndex == index) selectedIndex = dragIndex.Value;
+
+        dragIndex = index;
+    }
+
+    private void OnDragEnd()
+    {
+        dragIndex = null;
+        dragOverIndex = null;
     }
 
     private void MoveField(int index, int direction)
