@@ -44,7 +44,9 @@ var tokenParams = new TokenValidationParameters
     ValidIssuer = builder.Configuration["Jwt:Issuer"] ?? "NavTour",
     ValidAudience = builder.Configuration["Jwt:Audience"] ?? "NavTour",
     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-        builder.Configuration["Jwt:Key"] ?? "NavTourDevelopmentSecretKey2026!@#$%^&*()"))
+        string.IsNullOrEmpty(builder.Configuration["Jwt:Key"])
+            ? "NavTourDevelopmentSecretKey2026!@#$%^&*()"
+            : builder.Configuration["Jwt:Key"]!))
 };
 builder.Services.AddAuthentication(options =>
 {
