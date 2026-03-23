@@ -48,11 +48,14 @@
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="FormListItemResponse" Property="AssignedDemoCount" Title="Demos" Width="80px" TextAlign="TextAlign.Center" />
                 <RadzenDataGridColumn TItem="FormListItemResponse" Property="CreatedAt" Title="Created" Width="140px" FormatString="{0:MMM d, yyyy}" />
-                <RadzenDataGridColumn TItem="FormListItemResponse" Title="" Width="120px" Sortable="false" TextAlign="TextAlign.Center">
+                <RadzenDataGridColumn TItem="FormListItemResponse" Title="" Width="160px" Sortable="false" TextAlign="TextAlign.Center">
                     <Template Context="form">
-                        <RadzenButton Icon="content_copy" ButtonStyle="ButtonStyle.Light" Variant="Variant.Text"
-                                      Size="ButtonSize.Small" title="Copy standalone URL"
+                        <RadzenButton Icon="share" ButtonStyle="ButtonStyle.Light" Variant="Variant.Text"
+                                      Size="ButtonSize.Small" title="Copy share URL"
                                       Click="@(() => CopyUrl(form))" />
+                        <RadzenButton Icon="code" ButtonStyle="ButtonStyle.Light" Variant="Variant.Text"
+                                      Size="ButtonSize.Small" title="Copy embed code"
+                                      Click="@(() => CopyEmbed(form))" />
                         <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Text"
                                       Size="ButtonSize.Small" title="Edit form"
                                       Click="@(() => Nav.NavigateTo($"/forms/{form.Id}/edit"))" />
@@ -80,12 +83,25 @@
         StateHasChanged();
     }
 
+    private string GetFormUrl(FormListItemResponse form)
+    {
+        var uri = new Uri(Nav.BaseUri);
+        var baseUrl = uri.Port is 80 or 443 ? $"{uri.Scheme}://{uri.Host}" : $"{uri.Scheme}://{uri.Host}:{uri.Port}";
+        return $"{baseUrl}/form/{form.Slug}";
+    }
+
     private async Task CopyUrl(FormListItemResponse form)
     {
-        var baseUri = new Uri(Nav.BaseUri);
-        var url = $"{baseUri.Scheme}://{baseUri.Host}{(baseUri.Port != 80 && baseUri.Port != 443 ? $":{baseUri.Port}" : "")}/form/{form.Slug}";
-        await JS.InvokeVoidAsync("navigator.clipboard.writeText", url);
-        Notification.Notify(NotificationSeverity.Success, "URL copied to clipboard");
+        await JS.InvokeVoidAsync("navigator.clipboard.writeText", GetFormUrl(form));
+        Notification.Notify(NotificationSeverity.Success, "Share URL copied");
+    }
+
+    private async Task CopyEmbed(FormListItemResponse form)
+    {
+        var url = GetFormUrl(form);
+        var embed = $"<iframe src=\"{url}\" width=\"100%\" height=\"600\" frameborder=\"0\" style=\"border:none;border-radius:8px\"></iframe>";
+        await JS.InvokeVoidAsync("navigator.clipboard.writeText", embed);
+        Notification.Notify(NotificationSeverity.Success, "Embed code copied");
     }
 
     private async Task ConfirmDelete(FormListItemResponse form)
