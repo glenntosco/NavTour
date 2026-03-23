@@ -1,7 +1,9 @@
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using NavTour.Server.Infrastructure.Data;
 using NavTour.Server.Infrastructure.MultiTenancy;
 using NavTour.Shared.DTOs.Annotations;
+using NavTour.Shared.DTOs.Forms;
 using NavTour.Shared.DTOs.Player;
 using NavTour.Shared.DTOs.Leads;
 using NavTour.Shared.Enums;
@@ -31,6 +33,7 @@ public class PlayerService : IPlayerService
         // Player queries bypass tenant filter — find demo by slug across all tenants
         var demo = await _db.Demos
             .IgnoreQueryFilters()
+            .Include(d => d.Form)
             .Where(d => d.Slug == slug && d.Status == DemoStatus.Published && !d.IsDeleted)
             .FirstOrDefaultAsync();
 
@@ -99,7 +102,20 @@ public class PlayerService : IPlayerService
             }
         }
 
-        return new PlayerManifestResponse(demo.Name, demo.Slug, demo.Settings, frames, steps);
+        // Deserialize form fields and settings if a custom form is assigned
+        List<FormFieldDefinition>? formFields = null;
+        FormSettingsDto? formSettings = null;
+        if (demo.Form != null)
+        {
+            var jsonOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+            try { formFields = JsonSerializer.Deserialize<List<FormFieldDefinition>>(demo.Form.FieldsJson, jsonOptions); } catch { }
+            if (!string.IsNullOrEmpty(demo.Form.SettingsJson))
+            {
+                try { formSettings = JsonSerializer.Deserialize<FormSettingsDto>(demo.Form.SettingsJson, jsonOptions); } catch { }
+            }
+        }
+
+        return new PlayerManifestResponse(demo.Name, demo.Slug, demo.Settings, frames, steps, formFields, formSettings);
     }
 
     public async Task<Guid> RecordLeadAsync(string slug, LeadCaptureRequest request, Guid sessionId)
@@ -154,6 +170,89 @@ public class PlayerService : IPlayerService
                     await _emailService.SendLeadEmailAsync(
                         request.Email,
                         request.Name,
+                        demo.Name,
+                        template);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to send lead notification email for demo {Slug}", slug);
+            }
+        });
+
+        return lead.Id;
+    }
+
+    public async Task<Guid> RecordFormSubmissionAsync(string slug, FormSubmissionRequest request, Guid sessionId)
+    {
+        var demo = await _db.Demos
+            .IgnoreQueryFilters()
+            .Include(d => d.Form)
+            .FirstOrDefaultAsync(d => d.Slug == slug && !d.IsDeleted);
+
+        if (demo == null) throw new InvalidOperationException("Demo not found");
+
+        // Ensure session exists
+        var sessionExists = await _db.DemoSessions
+            .IgnoreQueryFilters()
+            .AnyAsync(s => s.Id == sessionId);
+
+        if (!sessionExists)
+        {
+            _db.DemoSessions.Add(new DemoSession
+            {
+                Id = sessionId,
+                TenantId = demo.TenantId,
+                DemoId = demo.Id,
+                StartedAt = DateTime.UtcNow
+            });
+            await _db.SaveChangesAsync();
+        }
+
+        // Extract denormalized fields from FieldValues
+        var fv = request.FieldValues;
+        var email = fv.TryGetValue("email", out var e) ? e : "";
+        var name = fv.TryGetValue("name", out var n) ? n
+            : fv.TryGetValue("first_name", out var fn) ? fn
+            : fv.TryGetValue("full_name", out var fuln) ? fuln : null;
+        var company = fv.TryGetValue("company", out var c) ? c
+            : fv.TryGetValue("company_name", out var cn) ? cn : null;
+
+        var lead = new Lead
+        {
+            TenantId = demo.TenantId,
+            SessionId = sessionId,
+            FormId = demo.FormId,
+            Email = email,
+            Name = name,
+            Company = company,
+            CustomData = JsonSerializer.Serialize(fv)
+        };
+
+        _db.Leads.Add(lead);
+
+        // Increment form submission count
+        if (demo.Form != null)
+        {
+            demo.Form.SubmissionCount++;
+        }
+
+        await _db.SaveChangesAsync();
+
+        // Fire-and-forget lead notification email
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                var template = await _db.LeadEmailTemplates
+                    .IgnoreQueryFilters()
+                    .FirstOrDefaultAsync(t => t.TenantId == demo.TenantId && !t.IsDeleted);
+
+                if (template is { IsEnabled: true })
+                {
+                    await _emailService.SendLeadEmailAsync(
+                        email,
+                        name,
                         demo.Name,
                         template);
                 }

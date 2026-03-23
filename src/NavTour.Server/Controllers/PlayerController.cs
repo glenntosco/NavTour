@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NavTour.Server.Services;
 using NavTour.Shared.DTOs.Analytics;
+using NavTour.Shared.DTOs.Forms;
 using NavTour.Shared.DTOs.Leads;
 using NavTour.Shared.DTOs.Player;
 
@@ -31,6 +32,13 @@ public class PlayerController : ControllerBase
     public async Task<ActionResult> CaptureLead(string slug, LeadCaptureRequest request, [FromQuery] Guid? sessionId)
     {
         var leadId = await _playerService.RecordLeadAsync(slug, request, sessionId ?? Guid.NewGuid());
+        return Ok(new { leadId });
+    }
+
+    [HttpPost("{slug}/form-submit")]
+    public async Task<ActionResult> SubmitForm(string slug, FormSubmissionRequest request, [FromQuery] Guid? sessionId)
+    {
+        var leadId = await _playerService.RecordFormSubmissionAsync(slug, request, sessionId ?? Guid.NewGuid());
         return Ok(new { leadId });
     }
 }

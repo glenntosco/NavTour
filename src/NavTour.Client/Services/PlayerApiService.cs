@@ -1,6 +1,7 @@
 using System.Net.Http.Json;
 using NavTour.Shared.DTOs.Player;
 using NavTour.Shared.DTOs.Analytics;
+using NavTour.Shared.DTOs.Forms;
 using NavTour.Shared.DTOs.Leads;
 
 namespace NavTour.Client.Services;
@@ -35,5 +36,10 @@ public class PlayerApiService
     public async Task CaptureLead(string slug, LeadCaptureRequest request, Guid? sessionId)
     {
         await _http.PostAsJsonAsync($"api/v1/player/{slug}/leads?sessionId={sessionId}", request);
+    }
+
+    public async Task SubmitFormAsync(string slug, FormSubmissionRequest request, Guid? sessionId)
+    {
+        await _http.PostAsJsonAsync($"api/v1/player/{slug}/form-submit?sessionId={sessionId}", request);
     }
 }

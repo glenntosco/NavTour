@@ -110,6 +110,7 @@ builder.Services.AddScoped<IDemoService, DemoService>();
 builder.Services.AddScoped<IFrameService, FrameService>();
 builder.Services.AddScoped<IStepService, StepService>();
 builder.Services.AddScoped<IAnnotationService, AnnotationService>();
+builder.Services.AddScoped<IFormService, FormService>();
 
 // Analytics Services
 builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
@@ -151,6 +152,7 @@ builder.Services.AddScoped<DemoApiService>();
 builder.Services.AddScoped<PlayerApiService>();
 builder.Services.AddScoped<AnalyticsApiService>();
 builder.Services.AddScoped<TeamApiService>();
+builder.Services.AddScoped<FormApiService>();
 
 var app = builder.Build();
 

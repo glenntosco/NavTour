@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using NavTour.Server.Services;
 using NavTour.Shared.DTOs.Demos;
 using NavTour.Shared.DTOs.Annotations;
+using NavTour.Shared.DTOs.Forms;
 using NavTour.Shared.DTOs.Steps;
 using NavTour.Shared.Enums;
 
@@ -65,6 +66,19 @@ public class DemosController : ControllerBase
     public async Task<IActionResult> Unpublish(Guid id)
     {
         return await _demoService.UnpublishAsync(id) ? Ok() : NotFound();
+    }
+
+    [HttpPut("{id:guid}/form")]
+    public async Task<IActionResult> AssignForm(Guid id, AssignFormRequest request,
+        [FromServices] NavTour.Server.Infrastructure.Data.NavTourDbContext db)
+    {
+        var demo = await db.Demos.FindAsync(id);
+        if (demo == null) return NotFound();
+
+        demo.FormId = request.FormId;
+        await db.SaveChangesAsync();
+
+        return Ok();
     }
 
     [HttpPost("{id:guid}/generate-tour")]

@@ -110,7 +110,15 @@ else
 
     @if (showLeadForm)
     {
-        <LeadCaptureForm OnSubmit="SubmitLead" OnSkip="SkipLead" />
+        @if (manifest?.FormFields is { Count: > 0 })
+        {
+            <DynamicFormRenderer Fields="manifest.FormFields" Settings="manifest.FormSettings"
+                OnSubmit="SubmitDynamicForm" OnSkip="SkipLead" />
+        }
+        else
+        {
+            <LeadCaptureForm OnSubmit="SubmitLead" OnSkip="SkipLead" />
+        }
     }
 }
 </div>
@@ -492,6 +500,14 @@ else
         BufferEvent(EventType.LeadSubmitted, null, null);
         await FlushEvents();
         await PlayerApi.CaptureLead(Slug, request, sessionId);
+        showLeadForm = false;
+    }
+
+    private async Task SubmitDynamicForm(FormSubmissionRequest request)
+    {
+        BufferEvent(EventType.LeadSubmitted, null, null);
+        await FlushEvents();
+        await PlayerApi.SubmitFormAsync(Slug, request, sessionId);
         showLeadForm = false;
     }
 

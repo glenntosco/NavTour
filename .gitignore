@@ -31,3 +31,8 @@ src/NavTour.Extension/dist/
 ## Claude Code
 .firecrawl/
 .superpowers/
+.playwright-mcp/
+.claude/settings.local.json
+navattic-*.png
+cookies.txt
+leads-export.xlsx

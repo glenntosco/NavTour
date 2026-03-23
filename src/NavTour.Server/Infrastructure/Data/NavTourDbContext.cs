@@ -30,6 +30,7 @@ public class NavTourDbContext : IdentityDbContext<ApplicationUser, IdentityRole<
     public DbSet<PersonalizationVariable> PersonalizationVariables => Set<PersonalizationVariable>();
     public DbSet<ContactSubmission> ContactSubmissions => Set<ContactSubmission>();
     public DbSet<LeadEmailTemplate> LeadEmailTemplates => Set<LeadEmailTemplate>();
+    public DbSet<Form> Forms => Set<Form>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -43,6 +44,16 @@ public class NavTourDbContext : IdentityDbContext<ApplicationUser, IdentityRole<
             e.Property(t => t.Slug).HasMaxLength(100);
         });
 
+        // Form
+        builder.Entity<Form>(e =>
+        {
+            e.HasQueryFilter(f => f.TenantId == _tenantProvider.TenantId && !f.IsDeleted);
+            e.HasIndex(f => new { f.TenantId, f.Slug }).IsUnique();
+            e.Property(f => f.Name).HasMaxLength(200);
+            e.Property(f => f.Slug).HasMaxLength(100);
+            e.Property(f => f.Description).HasMaxLength(2000);
+        });
+
         // Demo
         builder.Entity<Demo>(e =>
         {
@@ -52,6 +63,7 @@ public class NavTourDbContext : IdentityDbContext<ApplicationUser, IdentityRole<
             e.Property(d => d.Slug).HasMaxLength(100);
             e.Property(d => d.Description).HasMaxLength(2000);
             e.Property(d => d.Locale).HasMaxLength(10);
+            e.HasOne(d => d.Form).WithMany(f => f.Demos).HasForeignKey(d => d.FormId).OnDelete(DeleteBehavior.SetNull);
         });
 
         // Frame
@@ -99,6 +111,7 @@ public class NavTourDbContext : IdentityDbContext<ApplicationUser, IdentityRole<
         {
             e.HasQueryFilter(l => l.TenantId == _tenantProvider.TenantId && !l.IsDeleted);
             e.HasOne(l => l.Session).WithOne(s => s.Lead).HasForeignKey<Lead>(l => l.SessionId).OnDelete(DeleteBehavior.Cascade);
+            e.HasOne(l => l.Form).WithMany().HasForeignKey(l => l.FormId).OnDelete(DeleteBehavior.SetNull);
             e.Property(l => l.Email).HasMaxLength(320);
             e.Property(l => l.Name).HasMaxLength(200);
             e.Property(l => l.Company).HasMaxLength(200);

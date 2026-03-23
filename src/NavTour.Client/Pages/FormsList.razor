@@ -1,0 +1,109 @@
+@page "/forms"
+@rendermode InteractiveServer
+@inject FormApiService FormApi
+@inject AuthService Auth
+@inject NavigationManager Nav
+@inject NotificationService Notification
+@inject IJSRuntime JS
+
+<RadzenStack Gap="16px">
+    <RadzenRow AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+        <RadzenText TextStyle="TextStyle.H4">Forms</RadzenText>
+        <RadzenButton Text="New Form" Icon="add" ButtonStyle="ButtonStyle.Primary"
+                      Click="@(() => Nav.NavigateTo("/forms/new"))" />
+    </RadzenRow>
+
+    @if (loading)
+    {
+        <RadzenProgressBarCircular ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+    }
+    else if (!forms.Any())
+    {
+        <RadzenCard>
+            <RadzenStack AlignItems="AlignItems.Center" Gap="12px" Style="padding:40px 0">
+                <RadzenIcon Icon="description" Style="font-size:48px;color:#ccc" />
+                <RadzenText TextStyle="TextStyle.H6" Style="color:#888">No forms yet</RadzenText>
+                <RadzenText Style="font-size:13px;color:#aaa">Create a form to capture leads from your product demos.</RadzenText>
+                <RadzenButton Text="Create Your First Form" Icon="add" ButtonStyle="ButtonStyle.Primary"
+                              Click="@(() => Nav.NavigateTo("/forms/new"))" />
+            </RadzenStack>
+        </RadzenCard>
+    }
+    else
+    {
+        <RadzenDataGrid Data="@forms" TItem="FormListItemResponse" AllowSorting="true" AllowPaging="true" PageSize="25">
+            <Columns>
+                <RadzenDataGridColumn TItem="FormListItemResponse" Title="Name" Width="200px">
+                    <Template Context="form">
+                        <a href="/forms/@form.Id/edit" style="color:#4361ee;text-decoration:none;font-weight:500">@form.Name</a>
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn Property="FieldCount" Title="Fields" Width="80px" TextAlign="TextAlign.Center" />
+                <RadzenDataGridColumn Property="SubmissionCount" Title="Submissions" Width="110px" TextAlign="TextAlign.Center" />
+                <RadzenDataGridColumn Property="ViewCount" Title="Views" Width="80px" TextAlign="TextAlign.Center" />
+                <RadzenDataGridColumn TItem="FormListItemResponse" Title="Conversion" Width="100px" TextAlign="TextAlign.Center">
+                    <Template Context="form">
+                        @form.ConversionRate.ToString("0.0")%
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn Property="AssignedDemoCount" Title="Demos" Width="80px" TextAlign="TextAlign.Center" />
+                <RadzenDataGridColumn Property="CreatedAt" Title="Created" Width="140px" FormatString="{0:MMM d, yyyy}" />
+                <RadzenDataGridColumn TItem="FormListItemResponse" Title="" Width="120px" Sortable="false" TextAlign="TextAlign.Center">
+                    <Template Context="form">
+                        <RadzenButton Icon="content_copy" ButtonStyle="ButtonStyle.Light" Variant="Variant.Text"
+                                      Size="ButtonSize.Small" title="Copy standalone URL"
+                                      Click="@(() => CopyUrl(form))" />
+                        <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Text"
+                                      Size="ButtonSize.Small" title="Edit form"
+                                      Click="@(() => Nav.NavigateTo($"/forms/{form.Id}/edit"))" />
+                        <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Text"
+                                      Size="ButtonSize.Small" title="Delete form"
+                                      Click="@(() => ConfirmDelete(form))" />
+                    </Template>
+                </RadzenDataGridColumn>
+            </Columns>
+        </RadzenDataGrid>
+    }
+</RadzenStack>
+
+@code {
+    private List<FormListItemResponse> forms = [];
+    private bool loading = true;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        await Auth.TryRestoreAsync();
+        if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
+        forms = await FormApi.GetFormsAsync();
+        loading = false;
+        StateHasChanged();
+    }
+
+    private async Task CopyUrl(FormListItemResponse form)
+    {
+        var baseUri = new Uri(Nav.BaseUri);
+        var url = $"{baseUri.Scheme}://{baseUri.Host}{(baseUri.Port != 80 && baseUri.Port != 443 ? $":{baseUri.Port}" : "")}/form/{form.Slug}";
+        await JS.InvokeVoidAsync("navigator.clipboard.writeText", url);
+        Notification.Notify(NotificationSeverity.Success, "URL copied to clipboard");
+    }
+
+    private async Task ConfirmDelete(FormListItemResponse form)
+    {
+        var confirmed = await JS.InvokeAsync<bool>("confirm", $"Delete form \"{form.Name}\"? This action cannot be undone.");
+        if (confirmed)
+        {
+            var success = await FormApi.DeleteFormAsync(form.Id);
+            if (success)
+            {
+                forms.Remove(form);
+                Notification.Notify(NotificationSeverity.Success, "Form deleted");
+                StateHasChanged();
+            }
+            else
+            {
+                Notification.Notify(NotificationSeverity.Error, "Failed to delete form");
+            }
+        }
+    }
+}

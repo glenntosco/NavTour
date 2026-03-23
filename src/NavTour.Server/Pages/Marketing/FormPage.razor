@@ -1,0 +1,203 @@
+@page "/form/{Slug}"
+@layout MarketingLayout
+@using NavTour.Server.Services
+@using NavTour.Shared.DTOs.Forms
+@using NavTour.Shared.Enums
+@using Microsoft.AspNetCore.Authorization
+@attribute [AllowAnonymous]
+@inject IFormService FormService
+
+<PageTitle>@(form?.Settings?.Title ?? form?.Name ?? "Form") — NavTour</PageTitle>
+<HeadContent>
+    <meta name="description" content="@(form?.Description ?? "Submit this form powered by NavTour")" />
+    <meta name="robots" content="noindex" />
+</HeadContent>
+
+<section class="mkt-section" style="min-height:70vh;display:flex;align-items:center">
+    <div class="mkt-container" style="display:flex;justify-content:center">
+
+        @if (notFound)
+        {
+            <div class="reveal" style="text-align:center;max-width:480px">
+                <div style="font-size:3rem;margin-bottom:var(--space-4)">&#128269;</div>
+                <h1 style="font-size:var(--text-2xl);margin-bottom:var(--space-3)">Form not found</h1>
+                <p style="color:var(--text-secondary);font-size:var(--text-base);margin-bottom:var(--space-8)">
+                    This form may have been removed or the link is incorrect.
+                </p>
+                <a href="/" class="mkt-btn mkt-btn-primary">Back to home</a>
+            </div>
+        }
+        else if (form is not null)
+        {
+            <div class="reveal" style="width:100%;max-width:500px">
+                @* Form card *@
+                <div style="background:#fff;border-radius:var(--radius-lg);box-shadow:0 4px 24px rgba(0,0,0,0.08);padding:var(--space-10);border:1px solid var(--neutral-200)">
+
+                    @* Header *@
+                    <div style="text-align:center;margin-bottom:var(--space-8)">
+                        @if (!string.IsNullOrEmpty(form.Settings?.Title))
+                        {
+                            <h1 style="font-size:var(--text-2xl);margin-bottom:var(--space-2)">@form.Settings.Title</h1>
+                        }
+                        else
+                        {
+                            <h1 style="font-size:var(--text-2xl);margin-bottom:var(--space-2)">@form.Name</h1>
+                        }
+
+                        @if (!string.IsNullOrEmpty(form.Settings?.Subtitle))
+                        {
+                            <p style="color:var(--text-secondary);font-size:var(--text-base)">@form.Settings.Subtitle</p>
+                        }
+                        else if (!string.IsNullOrEmpty(form.Description))
+                        {
+                            <p style="color:var(--text-secondary);font-size:var(--text-base)">@form.Description</p>
+                        }
+                    </div>
+
+                    @* Rendered form fields (preview only) *@
+                    <div style="display:flex;flex-direction:column;gap:var(--space-5)">
+                        @foreach (var field in form.Fields.OrderBy(f => f.SortOrder))
+                        {
+                            <div>
+                                <label class="mkt-label">
+                                    @field.Label
+                                    @if (field.IsRequired)
+                                    {
+                                        <span style="color:var(--danger)"> *</span>
+                                    }
+                                </label>
+
+                                @if (!string.IsNullOrEmpty(field.Description))
+                                {
+                                    <p style="font-size:var(--text-xs);color:var(--text-tertiary);margin-bottom:var(--space-2)">@field.Description</p>
+                                }
+
+                                @switch (field.FieldType)
+                                {
+                                    case FormFieldType.Text:
+                                    case FormFieldType.Phone:
+                                    case FormFieldType.Url:
+                                        <input type="@GetInputType(field.FieldType)"
+                                               placeholder="@field.Placeholder"
+                                               class="mkt-input"
+                                               disabled
+                                               @(field.IsRequired ? "required" : "") />
+                                        break;
+
+                                    case FormFieldType.Email:
+                                        <input type="email"
+                                               placeholder="@(field.Placeholder ?? "email@example.com")"
+                                               class="mkt-input"
+                                               disabled />
+                                        break;
+
+                                    case FormFieldType.TextArea:
+                                        <textarea rows="3"
+                                                  placeholder="@field.Placeholder"
+                                                  class="mkt-input"
+                                                  style="resize:vertical"
+                                                  disabled></textarea>
+                                        break;
+
+                                    case FormFieldType.Select:
+                                        <select class="mkt-input" disabled>
+                                            <option value="">@(field.Placeholder ?? "Select an option")</option>
+                                            @if (field.Options is not null)
+                                            {
+                                                @foreach (var option in field.Options)
+                                                {
+                                                    <option value="@option">@option</option>
+                                                }
+                                            }
+                                        </select>
+                                        break;
+
+                                    case FormFieldType.Multiselect:
+                                        @if (field.Options is not null)
+                                        {
+                                            <div style="display:flex;flex-direction:column;gap:var(--space-2)">
+                                                @foreach (var option in field.Options)
+                                                {
+                                                    <label style="display:flex;align-items:center;gap:var(--space-2);font-size:var(--text-sm);color:var(--text-primary);cursor:default">
+                                                        <input type="checkbox" disabled />
+                                                        @option
+                                                    </label>
+                                                }
+                                            </div>
+                                        }
+                                        break;
+
+                                    case FormFieldType.Checkbox:
+                                        <label style="display:flex;align-items:center;gap:var(--space-2);font-size:var(--text-sm);color:var(--text-primary);cursor:default">
+                                            <input type="checkbox" disabled />
+                                            @(field.Placeholder ?? field.Label)
+                                        </label>
+                                        break;
+                                }
+                            </div>
+                        }
+
+                        @* Submit button (disabled) *@
+                        <button type="button"
+                                class="mkt-btn mkt-btn-primary"
+                                style="width:100%;margin-top:var(--space-2);opacity:0.6;cursor:not-allowed"
+                                disabled>
+                            @(form.Settings?.SubmitButtonText ?? "Submit")
+                        </button>
+                    </div>
+                </div>
+
+                @* Standalone notice *@
+                <div style="margin-top:var(--space-6);text-align:center;padding:var(--space-5);background:var(--surface-secondary);border-radius:var(--radius-md);border:1px solid var(--neutral-200)">
+                    <p style="font-size:var(--text-sm);color:var(--text-secondary);line-height:var(--leading-normal)">
+                        <strong>Standalone form submissions coming soon.</strong><br />
+                        Assign this form to a demo to start collecting leads.
+                    </p>
+                </div>
+
+                @* Powered by *@
+                <div style="margin-top:var(--space-6);text-align:center">
+                    <a href="/" style="font-size:var(--text-xs);color:var(--text-tertiary);text-decoration:none">
+                        Powered by <strong style="color:var(--text-secondary)">NavTour</strong>
+                    </a>
+                </div>
+            </div>
+        }
+
+    </div>
+</section>
+
+@code {
+    [Parameter]
+    public string Slug { get; set; } = "";
+
+    private FormResponse? form;
+    private bool notFound;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (string.IsNullOrWhiteSpace(Slug))
+        {
+            notFound = true;
+            return;
+        }
+
+        form = await FormService.GetBySlugPublicAsync(Slug);
+
+        if (form is null)
+        {
+            notFound = true;
+            return;
+        }
+
+        await FormService.IncrementViewCountAsync(form.Id);
+    }
+
+    private static string GetInputType(FormFieldType fieldType) => fieldType switch
+    {
+        FormFieldType.Email => "email",
+        FormFieldType.Phone => "tel",
+        FormFieldType.Url => "url",
+        _ => "text"
+    };
+}

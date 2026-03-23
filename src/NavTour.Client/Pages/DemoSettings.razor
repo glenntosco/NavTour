@@ -5,6 +5,7 @@
 @inject NotificationService Notification
 @inject AuthService Auth
 @inject DialogService DialogService
+@inject FormApiService FormApi
 @inject IJSRuntime JS
 
 <RadzenStack Gap="16px" Style="max-width:600px">
@@ -67,6 +68,23 @@
         <VariableEditor DemoId="DemoId" />
 
         <RadzenCard>
+            <RadzenStack Gap="12px">
+                <RadzenText TextStyle="TextStyle.H6">Lead Capture Form</RadzenText>
+                <RadzenText Style="font-size:13px;color:var(--rz-text-secondary-color)">Choose which form to show when a viewer completes the demo.</RadzenText>
+                <RadzenDropDown @bind-Value="selectedFormId" Data="@formOptions" TextProperty="Name" ValueProperty="Id"
+                    Placeholder="Default (Email, Name, Company)" AllowClear="true" Style="width:100%"
+                    Change="@OnFormSelectionChanged" />
+                <RadzenStack Orientation="Orientation.Horizontal" Gap="8px">
+                    <RadzenLink Path="/forms/new" Text="Create New Form" Style="font-size:13px" />
+                    @if (selectedFormId.HasValue)
+                    {
+                        <RadzenLink Path="@($"/forms/{selectedFormId}/edit")" Text="Edit Form" Style="font-size:13px" />
+                    }
+                </RadzenStack>
+            </RadzenStack>
+        </RadzenCard>
+
+        <RadzenCard>
             <RadzenStack Gap="8px">
                 <RadzenText TextStyle="TextStyle.H6" Style="color:var(--rz-danger)">Danger Zone</RadzenText>
                 <RadzenText Style="font-size:13px;color:var(--rz-text-secondary-color)">This will permanently delete the demo, all frames, steps, and annotations. This action cannot be undone.</RadzenText>
@@ -93,6 +111,12 @@
     private string? welcomeSubtitle;
     private string? welcomeButtonText;
 
+    // Lead capture form
+    private Guid? selectedFormId;
+    private List<FormOptionItem> formOptions = [];
+
+    private record FormOptionItem(Guid Id, string Name);
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender) return;
@@ -104,8 +128,11 @@
             name = demo.Name;
             description = demo.Description;
             locale = demo.Locale;
+            selectedFormId = demo.FormId;
             LoadWelcomeSettings(demo.Settings);
         }
+        var forms = await FormApi.GetFormsAsync();
+        formOptions = forms.Select(f => new FormOptionItem(f.Id, f.Name)).ToList();
         StateHasChanged();
     }
 
@@ -156,6 +183,12 @@
         if (demo != null) demo = demo with { Settings = json };
         Notification.Notify(NotificationSeverity.Success, "Welcome settings saved");
         savingWelcome = false;
+    }
+
+    private async Task OnFormSelectionChanged()
+    {
+        await FormApi.AssignFormToDemoAsync(DemoId, new AssignFormRequest(selectedFormId));
+        Notification.Notify(NotificationSeverity.Success, selectedFormId.HasValue ? "Form assigned" : "Form removed");
     }
 
     private async Task ConfirmDelete()

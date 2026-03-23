@@ -32,7 +32,7 @@ public class DemoService : IDemoService
             .Where(d => d.Id == id)
             .Select(d => new DemoResponse(
                 d.Id, d.Name, d.Slug, d.Description, d.Status,
-                d.Locale, d.Settings, d.ViewCount, d.CreatedAt))
+                d.Locale, d.Settings, d.ViewCount, d.CreatedAt, d.FormId))
             .FirstOrDefaultAsync();
     }
 
@@ -63,7 +63,7 @@ public class DemoService : IDemoService
         await _db.SaveChangesAsync();
 
         return new DemoResponse(demo.Id, demo.Name, demo.Slug, demo.Description,
-            demo.Status, demo.Locale, demo.Settings, demo.ViewCount, demo.CreatedAt);
+            demo.Status, demo.Locale, demo.Settings, demo.ViewCount, demo.CreatedAt, demo.FormId);
     }
 
     public async Task<DemoResponse?> UpdateAsync(Guid id, UpdateDemoRequest request)
@@ -79,7 +79,7 @@ public class DemoService : IDemoService
         await _db.SaveChangesAsync();
 
         return new DemoResponse(demo.Id, demo.Name, demo.Slug, demo.Description,
-            demo.Status, demo.Locale, demo.Settings, demo.ViewCount, demo.CreatedAt);
+            demo.Status, demo.Locale, demo.Settings, demo.ViewCount, demo.CreatedAt, demo.FormId);
     }
 
     public async Task<bool> DeleteAsync(Guid id)

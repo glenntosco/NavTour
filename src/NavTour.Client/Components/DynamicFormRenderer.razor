@@ -1,0 +1,393 @@
+@using NavTour.Shared.DTOs.Forms
+@using NavTour.Shared.Enums
+
+<div class="dfr-overlay">
+    <div class="dfr-card">
+        <h2 class="dfr-title">@(Settings?.Title ?? "Want to learn more?")</h2>
+        <p class="dfr-subtitle">@(Settings?.Subtitle ?? "Enter your details to continue.")</p>
+
+        <div class="dfr-fields">
+            @foreach (var field in OrderedFields)
+            {
+                <div class="dfr-field">
+                    @switch (field.FieldType)
+                    {
+                        case FormFieldType.Checkbox:
+                            <label class="dfr-checkbox-label">
+                                <input type="checkbox"
+                                       checked="@IsChecked(field.Key)"
+                                       @onchange="@(e => OnCheckboxChange(field.Key, e))" />
+                                <span>@field.Label @RequiredMarker(field)</span>
+                            </label>
+                            break;
+
+                        case FormFieldType.Multiselect:
+                            <label class="dfr-label">@field.Label @RequiredMarker(field)</label>
+                            @if (field.Options is not null)
+                            {
+                                <div class="dfr-multiselect">
+                                    @foreach (var option in field.Options)
+                                    {
+                                        var opt = option;
+                                        <label class="dfr-checkbox-label">
+                                            <input type="checkbox"
+                                                   checked="@IsMultiselectOptionChecked(field.Key, opt)"
+                                                   @onchange="@(e => OnMultiselectChange(field.Key, opt, e))" />
+                                            <span>@opt</span>
+                                        </label>
+                                    }
+                                </div>
+                            }
+                            break;
+
+                        case FormFieldType.TextArea:
+                            <label class="dfr-label">@field.Label @RequiredMarker(field)</label>
+                            <textarea class="dfr-input dfr-textarea"
+                                      placeholder="@GetPlaceholder(field)"
+                                      value="@GetValue(field.Key)"
+                                      @oninput="@(e => OnTextInput(field.Key, e))"
+                                      rows="3"></textarea>
+                            break;
+
+                        case FormFieldType.Select:
+                            <label class="dfr-label">@field.Label @RequiredMarker(field)</label>
+                            <select class="dfr-input dfr-select"
+                                    value="@GetValue(field.Key)"
+                                    @onchange="@(e => OnTextInput(field.Key, e))">
+                                <option value="">@GetSelectPlaceholder(field)</option>
+                                @if (field.Options is not null)
+                                {
+                                    @foreach (var option in field.Options)
+                                    {
+                                        <option value="@option">@option</option>
+                                    }
+                                }
+                            </select>
+                            break;
+
+                        default:
+                            <label class="dfr-label">@field.Label @RequiredMarker(field)</label>
+                            <input class="dfr-input"
+                                   type="@InputType(field.FieldType)"
+                                   placeholder="@GetPlaceholder(field)"
+                                   value="@GetValue(field.Key)"
+                                   @oninput="@(e => OnTextInput(field.Key, e))" />
+                            break;
+                    }
+
+                    @if (!string.IsNullOrEmpty(field.Description))
+                    {
+                        <span class="dfr-description">@field.Description</span>
+                    }
+
+                    @if (validationErrors.TryGetValue(field.Key, out var error))
+                    {
+                        <span class="dfr-error">@error</span>
+                    }
+                </div>
+            }
+        </div>
+
+        <button class="dfr-btn dfr-btn-primary" @onclick="HandleSubmit">
+            @(Settings?.SubmitButtonText ?? "Continue")
+        </button>
+        <button class="dfr-btn dfr-btn-skip" @onclick="HandleSkip">
+            Skip
+        </button>
+    </div>
+</div>
+
+@code {
+    [Parameter] public List<FormFieldDefinition> Fields { get; set; } = [];
+    [Parameter] public FormSettingsDto? Settings { get; set; }
+    [Parameter] public EventCallback<FormSubmissionRequest> OnSubmit { get; set; }
+    [Parameter] public EventCallback OnSkip { get; set; }
+
+    private Dictionary<string, string> fieldValues = new();
+    private Dictionary<string, string> validationErrors = new();
+
+    private IEnumerable<FormFieldDefinition> OrderedFields =>
+        Fields.OrderBy(f => f.SortOrder);
+
+    private string GetValue(string key) =>
+        fieldValues.TryGetValue(key, out var v) ? v : string.Empty;
+
+    private void SetValue(string key, string value)
+    {
+        fieldValues[key] = value;
+        validationErrors.Remove(key);
+    }
+
+    private static string InputType(FormFieldType type) => type switch
+    {
+        FormFieldType.Email => "email",
+        FormFieldType.Phone => "tel",
+        FormFieldType.Url => "url",
+        _ => "text"
+    };
+
+    private static string GetPlaceholder(FormFieldDefinition field) =>
+        field.Placeholder ?? string.Empty;
+
+    private static string GetSelectPlaceholder(FormFieldDefinition field) =>
+        field.Placeholder ?? "Select...";
+
+    private static MarkupString RequiredMarker(FormFieldDefinition field) =>
+        field.IsRequired
+            ? new MarkupString("<span class=\"dfr-required\">*</span>")
+            : new MarkupString(string.Empty);
+
+    private bool IsChecked(string key) => GetValue(key) == "true";
+
+    private void OnCheckboxChange(string key, ChangeEventArgs e)
+    {
+        var isChecked = (bool)(e.Value ?? false);
+        SetValue(key, isChecked ? "true" : "false");
+    }
+
+    private void OnTextInput(string key, ChangeEventArgs e)
+    {
+        SetValue(key, e.Value?.ToString() ?? string.Empty);
+    }
+
+    private bool IsMultiselectOptionChecked(string key, string option)
+    {
+        var val = GetValue(key);
+        if (string.IsNullOrEmpty(val)) return false;
+        return val.Split(',').Contains(option);
+    }
+
+    private void OnMultiselectChange(string key, string option, ChangeEventArgs e)
+    {
+        var isChecked = (bool)(e.Value ?? false);
+        ToggleMultiselectOption(key, option, isChecked);
+    }
+
+    private void ToggleMultiselectOption(string key, string option, bool isChecked)
+    {
+        var current = GetValue(key);
+        var selected = string.IsNullOrEmpty(current)
+            ? new List<string>()
+            : current.Split(',').ToList();
+
+        if (isChecked && !selected.Contains(option))
+            selected.Add(option);
+        else if (!isChecked)
+            selected.Remove(option);
+
+        fieldValues[key] = string.Join(",", selected);
+        validationErrors.Remove(key);
+    }
+
+    private bool Validate()
+    {
+        validationErrors.Clear();
+        foreach (var field in Fields)
+        {
+            var val = GetValue(field.Key);
+
+            if (field.IsRequired && string.IsNullOrWhiteSpace(val))
+            {
+                validationErrors[field.Key] = $"{field.Label} is required.";
+                continue;
+            }
+
+            if (!string.IsNullOrWhiteSpace(val) && field.FieldType == FormFieldType.Email)
+            {
+                if (!System.Text.RegularExpressions.Regex.IsMatch(val, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+                {
+                    validationErrors[field.Key] = "Please enter a valid email address.";
+                }
+            }
+        }
+        return validationErrors.Count == 0;
+    }
+
+    private async Task HandleSubmit()
+    {
+        if (!Validate()) return;
+
+        var values = new Dictionary<string, string>();
+        foreach (var field in Fields)
+        {
+            var val = GetValue(field.Key);
+            if (field.FieldType == FormFieldType.Checkbox && string.IsNullOrEmpty(val))
+                val = "false";
+            values[field.Key] = val;
+        }
+
+        await OnSubmit.InvokeAsync(new FormSubmissionRequest(values));
+    }
+
+    private async Task HandleSkip()
+    {
+        await OnSkip.InvokeAsync();
+    }
+}
+
+<style>
+    .dfr-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+    }
+
+    .dfr-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 32px;
+        width: 100%;
+        max-width: 420px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+    }
+
+    .dfr-title {
+        margin: 0 0 4px;
+        font-size: 20px;
+        font-weight: 600;
+        color: #111;
+        line-height: 1.3;
+    }
+
+    .dfr-subtitle {
+        margin: 0 0 20px;
+        font-size: 14px;
+        color: #666;
+        line-height: 1.5;
+    }
+
+    .dfr-fields {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        margin-bottom: 20px;
+    }
+
+    .dfr-field {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .dfr-label {
+        font-size: 13px;
+        font-weight: 500;
+        color: #333;
+    }
+
+    .dfr-required {
+        color: #e53e3e;
+        margin-left: 2px;
+    }
+
+    .dfr-input {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 14px;
+        color: #111;
+        background: #fff;
+        transition: border-color 0.15s, box-shadow 0.15s;
+        outline: none;
+        box-sizing: border-box;
+        font-family: inherit;
+    }
+
+    .dfr-input:focus {
+        border-color: #4361ee;
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.12);
+    }
+
+    .dfr-input::placeholder {
+        color: #9ca3af;
+    }
+
+    .dfr-textarea {
+        resize: vertical;
+        min-height: 72px;
+    }
+
+    .dfr-select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        padding-right: 32px;
+        cursor: pointer;
+    }
+
+    .dfr-checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: #333;
+        cursor: pointer;
+    }
+
+    .dfr-checkbox-label input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        accent-color: #4361ee;
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+
+    .dfr-multiselect {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding: 4px 0;
+    }
+
+    .dfr-description {
+        font-size: 12px;
+        color: #888;
+        line-height: 1.4;
+    }
+
+    .dfr-error {
+        font-size: 12px;
+        color: #e53e3e;
+        line-height: 1.4;
+    }
+
+    .dfr-btn {
+        width: 100%;
+        padding: 11px 16px;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.15s, opacity 0.15s;
+        font-family: inherit;
+    }
+
+    .dfr-btn-primary {
+        background: #4361ee;
+        color: #fff;
+        margin-bottom: 8px;
+    }
+
+    .dfr-btn-primary:hover {
+        background: #3a56d4;
+    }
+
+    .dfr-btn-skip {
+        background: transparent;
+        color: #888;
+    }
+
+    .dfr-btn-skip:hover {
+        color: #555;
+    }
+</style>

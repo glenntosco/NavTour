@@ -12,7 +12,9 @@ public class Demo : TenantEntity
     public string Locale { get; set; } = "en";
     public long ViewCount { get; set; }
     public Guid CreatedBy { get; set; }
+    public Guid? FormId { get; set; }
 
+    public Form? Form { get; set; }
     public List<Frame> Frames { get; set; } = [];
     public List<Step> Steps { get; set; } = [];
     public List<DemoSession> Sessions { get; set; } = [];
