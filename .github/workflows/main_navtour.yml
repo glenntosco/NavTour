@@ -23,8 +23,22 @@ jobs:
         with:
           dotnet-version: '10.x'
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build Chrome Extension
+        working-directory: src/NavTour.Extension
+        run: |
+          npm ci
+          npm run build
+
       - name: Build with dotnet
         run: dotnet build --configuration Release
+
+      - name: Run tests
+        run: dotnet test src/NavTour.Tests/NavTour.Tests.csproj --configuration Release --no-build --verbosity normal
 
       - name: dotnet publish
         run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
@@ -47,7 +61,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: .net-app
-      
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -62,4 +76,3 @@ jobs:
           app-name: 'NavTour'
           slot-name: 'Production'
           package: .
-          

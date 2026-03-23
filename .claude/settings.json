@@ -6,5 +6,21 @@
     "premium-website-design": {
       "path": ".claude/premium-website-design"
     }
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "command": "bash -c 'FILE=\"${TOOL_INPUT_FILE_PATH:-${TOOL_INPUT_file_path:-}}\"; if [[ \"$FILE\" == *.env* ]] || [[ \"$FILE\" == *appsettings.Development* ]] || [[ \"$FILE\" == *credentials* ]] || [[ \"$FILE\" == *secret* ]]; then echo \"BLOCKED: Do not edit secrets files — use dotnet user-secrets instead\" >&2; exit 1; fi; exit 0'"
+      },
+      {
+        "matcher": "Edit|Write",
+        "command": "bash -c 'FILE=\"${TOOL_INPUT_FILE_PATH:-${TOOL_INPUT_file_path:-}}\"; if [[ \"$FILE\" == *content.ts ]] && [[ \"$FILE\" == *Extension* ]]; then echo \"WARNING: content.ts captureDOM() is NEVER CALLED. The actual capture function is capturePageDOM() in background.ts. Are you sure you want to edit this file?\" >&2; fi; exit 0'"
+      },
+      {
+        "matcher": "Edit|Write",
+        "command": "bash -c 'FILE=\"${TOOL_INPUT_FILE_PATH:-${TOOL_INPUT_file_path:-}}\"; if [[ \"$FILE\" == *package-lock.json ]] || [[ \"$FILE\" == *yarn.lock ]]; then echo \"BLOCKED: Do not edit lock files directly\" >&2; exit 1; fi; exit 0'"
+      }
+    ]
   }
 }

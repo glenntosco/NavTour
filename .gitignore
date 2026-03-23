@@ -27,3 +27,7 @@ Thumbs.db
 ## Node / Extension
 node_modules/
 src/NavTour.Extension/dist/
+
+## Claude Code
+.firecrawl/
+.superpowers/
