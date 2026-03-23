@@ -193,12 +193,10 @@
 
     private async Task ConfirmDelete()
     {
-        var confirmed = await DialogService.Confirm(
-            "This will permanently delete the demo, all frames, steps, and annotations. This action cannot be undone.",
-            "Delete Demo?",
-            new ConfirmOptions { OkButtonText = "Delete", CancelButtonText = "Cancel" });
+        var confirmed = await JS.InvokeAsync<bool>("confirm",
+            "This will permanently delete the demo, all frames, steps, and annotations. This action cannot be undone.");
 
-        if (confirmed == true)
+        if (confirmed)
         {
             await DemoApi.DeleteDemoAsync(DemoId);
             Notification.Notify(NotificationSeverity.Success, "Demo deleted");
