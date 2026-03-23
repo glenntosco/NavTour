@@ -4,6 +4,42 @@ All notable changes to NavTour are documented in this file.
 
 ---
 
+## [1.3.0] - 2026-03-23
+
+### Added
+- **AI Tour Generator** — Claude Opus analyzes captured HTML frames, generates complete tours with step-by-step annotations, tooltip positions, and voiceover scripts in under 60 seconds. One-click "AI Generate" button in the demo editor.
+- **AI Voiceover (ElevenLabs)** — Replaced browser TTS with ElevenLabs `eleven_multilingual_v2` model. 24+ natural AI voices with country flags, instant preview, and multilingual auto-detection.
+- **Customizable Welcome Screen** — Configurable "Start Demo" overlay with title, subtitle, and button text. Unlocks audio autoplay on first click.
+- **Slide-out Drawer Panels** — Steps and Annotations panels converted to slide-out drawers for more editor canvas space. Double-click annotation opens the correct drawer.
+- **Lead Delete** — Delete button with confirmation dialog on the Leads page.
+- **Step Reordering** — Drag-and-drop step reorder in the demo editor.
+- **Annotation Resize Handles** — Visual resize handles in the frame editor.
+- **Dynamic Voice List** — Fetches voices from ElevenLabs API with country flag indicators and accent info.
+- **Homepage Redesign** — Complete rewrite with 11 sections: AI-first hero, social proof, AI deep dive, voiceover showcase, how-it-works, use cases, platform features grid, comparison table, testimonials, metrics, and bottom CTA. Light & clean enterprise trust visual style.
+
+### Changed
+- **Extension version** bumped to 1.3.0.
+- **Web app version** bumped to 1.3.0.
+- **Claude model** set to `claude-opus-4-20250514` for AI Tour Generator.
+- **Player navigation** — Removed bottom navigation bar, now uses Navattic-style inline tooltip navigation.
+- **Player audio** — Starts muted; user clicks "Start Demo" to enable audio autoplay.
+- **Sidebar** — Simplified to fixed 220px sidebar with plain `<a href>` links and SVG icons. Removed collapsible feature.
+- **Auth flow** — Login uses browser-side `fetch()` with `credentials: 'include'` so cookies are set in the browser (not server). Server middleware redirects unauthenticated users.
+- **CSS Capture** — Computed style inlining moved to the actual `capturePageDOM()` function in `background.ts`. Always inlines computed styles as a safety net.
+- **Beacon annotations** — No longer display numbers; color reads from style property.
+
+### Fixed
+- CSS capture producing unstyled HTML — root cause was editing `content.ts` instead of `background.ts` where `capturePageDOM()` lives.
+- Auth not persisting on page refresh — root cause was server-side HttpClient eating Set-Cookie headers.
+- Voiceover text wiped on save — `MapStepToDto` was missing `VoiceoverText` parameter.
+- Audio endpoint returning 404 — tenant query filter blocked public access; fixed with `IgnoreQueryFilters()`.
+- Lead grid not refreshing after delete — added `StateHasChanged()`.
+- Lead delete dialog not appearing — `RadzenDialog` added directly to page (MainLayout is SSR).
+- Voice dropdown color styling issues.
+- Annotation positioning parity between designer and player for all 7 annotation types.
+
+---
+
 ## [1.2.0] - 2026-03-20
 
 ### Added
