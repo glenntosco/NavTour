@@ -4,7 +4,9 @@
 @using NavTour.Shared.DTOs.Forms
 @using NavTour.Shared.Enums
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Antiforgery
 @attribute [AllowAnonymous]
+@attribute [RequireAntiforgeryToken(required: false)]
 @inject IFormService FormService
 
 <PageTitle>@(form?.Settings?.Title ?? form?.Name ?? "Form") — NavTour</PageTitle>
@@ -57,7 +59,8 @@
                         <div style="background:#fef2f2;color:#991b1b;padding:0.75rem 1rem;border-radius:6px;font-size:0.875rem;margin-bottom:1rem">@errorMessage</div>
                     }
 
-                    <EditForm Model="formModel" OnValidSubmit="HandleSubmit" FormName="standalone-form">
+                    <form method="post" @formname="standalone-form" @onsubmit="HandleSubmit">
+                        <AntiforgeryToken />
                         <div style="display:flex;flex-direction:column;gap:1.25rem">
                             @foreach (var field in form.Fields.OrderBy(f => f.SortOrder))
                             {
@@ -138,7 +141,7 @@
                                 @(form.Settings?.SubmitButtonText ?? "Submit")
                             </button>
                         </div>
-                    </EditForm>
+                    </form>
                 </div>
 
                 <div style="margin-top:1.5rem;text-align:center">
@@ -153,7 +156,8 @@
 
 @code {
     [Parameter] public string Slug { get; set; } = "";
-    [SupplyParameterFromForm] public Dictionary<string, string>? formModel { get; set; }
+
+    [CascadingParameter] public HttpContext? HttpContext { get; set; }
 
     private FormResponse? form;
     private bool notFound;
@@ -162,8 +166,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        formModel ??= new();
-
         if (string.IsNullOrWhiteSpace(Slug))
         {
             notFound = true;
@@ -177,12 +179,18 @@
             return;
         }
 
-        await FormService.IncrementViewCountAsync(form.Id);
+        // Only count view on GET, not POST
+        if (HttpContext?.Request.Method == "GET")
+        {
+            await FormService.IncrementViewCountAsync(form.Id);
+        }
     }
 
     private async Task HandleSubmit()
     {
-        if (form == null) return;
+        if (form == null || HttpContext == null) return;
+
+        var formData = HttpContext.Request.Form;
 
         // Collect form values from the posted form data
         var values = new Dictionary<string, string>();
@@ -192,14 +200,13 @@
             if (field.FieldType == FormFieldType.Multiselect && field.Options != null)
             {
                 var selected = field.Options
-                    .Where(opt => formModel?.GetValueOrDefault(field.Key + "_" + opt) == "true")
+                    .Where(opt => formData.ContainsKey(field.Key + "_" + opt))
                     .ToList();
                 values[field.Key] = string.Join(", ", selected);
             }
             else
             {
-                var val = formModel?.GetValueOrDefault(field.Key) ?? "";
-                values[field.Key] = val;
+                values[field.Key] = formData[field.Key].ToString();
             }
         }
 
@@ -224,7 +231,12 @@
         }
     }
 
-    private string GetValue(string key) => formModel?.GetValueOrDefault(key) ?? "";
+    private string GetValue(string key)
+    {
+        if (HttpContext?.Request.Method != "POST" || !HttpContext.Request.HasFormContentType)
+            return "";
+        return HttpContext.Request.Form[key].ToString();
+    }
 
     private static string GetInputType(FormFieldType fieldType) => fieldType switch
     {
