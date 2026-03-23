@@ -44,7 +44,7 @@
 
     @* Main workspace *@
     <div style="flex:1;display:flex;overflow:hidden;position:relative">
-        <div class="frame-strip">
+        <div style="overflow-y:auto;flex-shrink:0">
             <FrameStrip Frames="frames" SelectedFrameId="selectedFrameId"
                 OnFrameSelected="SelectFrame" OnAddFrame="AddFrame"
                 OnDeleteFrame="DeleteFrame" OnInsertFrame="InsertFrame"

@@ -2,6 +2,7 @@
 @using NavTour.Shared.DTOs.Annotations
 @using NavTour.Shared.DTOs.Frames
 @inject HttpClient Http
+@inject IJSRuntime JS
 
 <RadzenStack Gap="8px" Style="width:300px;min-height:100%;overflow-y:auto;border-left:1px solid var(--rz-border-color);padding:12px">
     <RadzenText TextStyle="TextStyle.H6">Steps</RadzenText>
@@ -151,22 +152,6 @@
     <RadzenButton Text="+ Add Step" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Style="width:100%" Click="OnAddStep" title="Create a new step on the selected frame" />
 </RadzenStack>
 
-@if (confirmDeleteId != null)
-{
-    <div class="sp-confirm-overlay" @onclick="() => confirmDeleteId = null">
-        <div class="sp-confirm-dialog" @onclick:stopPropagation="true">
-            <RadzenText TextStyle="TextStyle.Body2"><strong>Delete this step?</strong></RadzenText>
-            <RadzenText TextStyle="TextStyle.Caption" Style="color:var(--rz-text-secondary-color)">Annotations on this step will also be removed.</RadzenText>
-            <RadzenStack Orientation="Orientation.Horizontal" Gap="6px" Style="margin-top:8px">
-                <RadzenButton Text="Delete" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.ExtraSmall"
-                    Click="() => ExecuteDelete()" />
-                <RadzenButton Text="Cancel" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall"
-                    Click="() => confirmDeleteId = null" />
-            </RadzenStack>
-        </div>
-    </div>
-}
-
 <style>
     .step-actions {
         position: absolute; top: 4px; right: 6px;
@@ -195,25 +180,6 @@
         letter-spacing: 0.5px;
         margin-bottom: 2px;
     }
-    .sp-confirm-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0,0,0,0.3);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 10000;
-    }
-    .sp-confirm-dialog {
-        background: var(--rz-base-background-color);
-        border-radius: 10px;
-        padding: 16px;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-        min-width: 200px;
-    }
 </style>
 
 @code {
@@ -225,8 +191,6 @@
     [Parameter] public EventCallback<Guid> OnDeleteStep { get; set; }
     [Parameter] public EventCallback<(Guid StepId, int Direction)> OnReorderStep { get; set; }
     [Parameter] public EventCallback<StepResponse> OnStepSettingsChanged { get; set; }
-
-    private Guid? confirmDeleteId;
 
     private List<StepResponse> OrderedSteps => Steps.OrderBy(s => s.StepNumber).ToList();
 
@@ -240,17 +204,12 @@
         await OnReorderStep.InvokeAsync((step.Id, 1));
     }
 
-    private void ConfirmDelete(Guid stepId)
+    private async Task ConfirmDelete(Guid stepId)
     {
-        confirmDeleteId = stepId;
-    }
-
-    private async Task ExecuteDelete()
-    {
-        if (confirmDeleteId != null)
+        var confirmed = await JS.InvokeAsync<bool>("confirm", "Delete this step? Annotations will also be removed.");
+        if (confirmed)
         {
-            await OnDeleteStep.InvokeAsync(confirmDeleteId.Value);
-            confirmDeleteId = null;
+            await OnDeleteStep.InvokeAsync(stepId);
         }
     }
 
