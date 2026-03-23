@@ -10,5 +10,7 @@ public record FormFieldDefinition(
     string? Description,
     bool IsRequired,
     int SortOrder,
-    List<string>? Options
+    List<string>? Options,
+    bool RequireWorkEmail = false,
+    List<string>? BlacklistedDomains = null
 );

@@ -198,6 +198,24 @@
                 {
                     validationErrors[field.Key] = "Please enter a valid email address.";
                 }
+                else
+                {
+                    var domain = val.Split('@').LastOrDefault()?.ToLowerInvariant() ?? "";
+
+                    if (field.RequireWorkEmail)
+                    {
+                        var personalDomains = new HashSet<string> { "gmail.com", "yahoo.com", "hotmail.com", "outlook.com", "aol.com", "icloud.com", "mail.com", "protonmail.com", "zoho.com", "yandex.com", "live.com", "msn.com", "me.com" };
+                        if (personalDomains.Contains(domain))
+                        {
+                            validationErrors[field.Key] = "Please use a work email address.";
+                        }
+                    }
+
+                    if (field.BlacklistedDomains is { Count: > 0 } && field.BlacklistedDomains.Any(d => d.Equals(domain, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        validationErrors[field.Key] = "This email domain is not allowed.";
+                    }
+                }
             }
         }
         return validationErrors.Count == 0;

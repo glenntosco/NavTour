@@ -232,6 +232,40 @@
                     <RadzenText Style="font-size:13px">Required</RadzenText>
                 </RadzenStack>
 
+                @if (sf.FieldType == FormFieldType.Email)
+                {
+                    <div style="margin-top:12px;padding-top:12px;border-top:1px solid #eee">
+                        <RadzenText TextStyle="TextStyle.Subtitle2" Style="margin-bottom:8px">Email Validation</RadzenText>
+                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="8px">
+                            <RadzenSwitch Value="@sf.RequireWorkEmail" Change="@((bool v) => { sf.RequireWorkEmail = v; StateHasChanged(); })" />
+                            <div>
+                                <RadzenText Style="font-size:13px;font-weight:600">Require Work Email</RadzenText>
+                                <RadzenText Style="font-size:11px;color:#94a3b8">Block personal emails (gmail, yahoo, hotmail, etc.)</RadzenText>
+                            </div>
+                        </RadzenStack>
+                        <div style="margin-top:10px">
+                            <RadzenText Style="font-size:13px;font-weight:600;margin-bottom:4px">Blacklisted Domains</RadzenText>
+                            <RadzenText Style="font-size:11px;color:#94a3b8;margin-bottom:6px">Block specific email domains (e.g. competitor.com)</RadzenText>
+                            @if (sf.BlacklistedDomains != null)
+                            {
+                                @for (int bi = 0; bi < sf.BlacklistedDomains.Count; bi++)
+                                {
+                                    var blIdx = bi;
+                                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="4px" Style="margin-top:4px">
+                                        <RadzenTextBox Value="@sf.BlacklistedDomains[blIdx]" Style="flex:1;font-size:12px"
+                                                       Placeholder="competitor.com"
+                                                       Change="@(v => { sf.BlacklistedDomains[blIdx] = v; StateHasChanged(); })" />
+                                        <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Text"
+                                                      Size="ButtonSize.ExtraSmall" Click="@(() => { sf.BlacklistedDomains.RemoveAt(blIdx); StateHasChanged(); })" />
+                                    </RadzenStack>
+                                }
+                            }
+                            <RadzenButton Text="Add Domain" Icon="add" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall"
+                                          Style="margin-top:6px" Click="@(() => { sf.BlacklistedDomains ??= new(); sf.BlacklistedDomains.Add(""); StateHasChanged(); })" />
+                        </div>
+                    </div>
+                }
+
                 @if (sf.FieldType == FormFieldType.Select || sf.FieldType == FormFieldType.Multiselect)
                 {
                     <div style="margin-top:12px">
@@ -704,7 +738,9 @@
             Description = f.Description,
             IsRequired = f.IsRequired,
             SortOrder = f.SortOrder,
-            Options = f.Options != null ? new List<string>(f.Options) : null
+            Options = f.Options != null ? new List<string>(f.Options) : null,
+            RequireWorkEmail = f.RequireWorkEmail,
+            BlacklistedDomains = f.BlacklistedDomains != null ? new List<string>(f.BlacklistedDomains) : null
         }).OrderBy(f => f.SortOrder).ToList();
 
         fieldCounter = fields.Count;
@@ -889,7 +925,9 @@
                 f.Description,
                 f.IsRequired,
                 i,
-                f.Options
+                f.Options,
+                f.RequireWorkEmail,
+                f.BlacklistedDomains?.Where(d => !string.IsNullOrWhiteSpace(d)).ToList()
             )).ToList();
 
             var settings = new FormSettingsDto(
@@ -959,5 +997,7 @@
         public bool IsRequired { get; set; }
         public int SortOrder { get; set; }
         public List<string>? Options { get; set; }
+        public bool RequireWorkEmail { get; set; }
+        public List<string>? BlacklistedDomains { get; set; }
     }
 }
