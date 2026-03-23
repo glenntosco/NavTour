@@ -81,8 +81,8 @@
                 <RadzenText TextStyle="TextStyle.H6">Top Sources</RadzenText>
                 <RadzenDataGrid Data="@summary.TopSources" TItem="SourceEntry">
                     <Columns>
-                        <RadzenDataGridColumn Property="Source" Title="Source" />
-                        <RadzenDataGridColumn Property="Count" Title="Views" Width="100px" />
+                        <RadzenDataGridColumn TItem="SourceEntry" Property="Source" Title="Source" />
+                        <RadzenDataGridColumn TItem="SourceEntry" Property="Count" Title="Views" Width="100px" />
                     </Columns>
                 </RadzenDataGrid>
             </RadzenCard>
@@ -104,15 +104,15 @@
             <RadzenText TextStyle="TextStyle.H6">Recent Sessions</RadzenText>
             <RadzenDataGrid Data="@sessions" TItem="SessionListResponse" AllowPaging="true" PageSize="10">
                 <Columns>
-                    <RadzenDataGridColumn Property="StartedAt" Title="Started" FormatString="{0:g}" />
-                    <RadzenDataGridColumn Property="StepsViewed" Title="Steps Viewed" Width="120px" />
-                    <RadzenDataGridColumn Property="Completed" Title="Completed" Width="100px">
+                    <RadzenDataGridColumn TItem="SessionListResponse" Property="StartedAt" Title="Started" FormatString="{0:g}" />
+                    <RadzenDataGridColumn TItem="SessionListResponse" Property="StepsViewed" Title="Steps Viewed" Width="120px" />
+                    <RadzenDataGridColumn TItem="SessionListResponse" Property="Completed" Title="Completed" Width="100px">
                         <Template Context="session">
                             <RadzenBadge Text="@(session.Completed ? "Yes" : "No")"
                                 BadgeStyle="@(session.Completed ? BadgeStyle.Success : BadgeStyle.Light)" />
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn Property="Source" Title="Source" />
+                    <RadzenDataGridColumn TItem="SessionListResponse" Property="Source" Title="Source" />
                 </Columns>
             </RadzenDataGrid>
         </RadzenCard>

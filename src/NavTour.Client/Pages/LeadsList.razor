@@ -24,11 +24,11 @@
     {
         <RadzenDataGrid Data="@leads" TItem="LeadResponse" AllowSorting="true" AllowPaging="true" PageSize="25">
             <Columns>
-                <RadzenDataGridColumn Property="Email" Title="Email" />
-                <RadzenDataGridColumn Property="Name" Title="Name" />
-                <RadzenDataGridColumn Property="Company" Title="Company" />
-                <RadzenDataGridColumn Property="DemoName" Title="Demo" />
-                <RadzenDataGridColumn Property="CapturedAt" Title="Captured" FormatString="{0:g}" />
+                <RadzenDataGridColumn TItem="LeadResponse" Property="Email" Title="Email" />
+                <RadzenDataGridColumn TItem="LeadResponse" Property="Name" Title="Name" />
+                <RadzenDataGridColumn TItem="LeadResponse" Property="Company" Title="Company" />
+                <RadzenDataGridColumn TItem="LeadResponse" Property="DemoName" Title="Demo" />
+                <RadzenDataGridColumn TItem="LeadResponse" Property="CapturedAt" Title="Captured" FormatString="{0:g}" />
                 <RadzenDataGridColumn TItem="LeadResponse" Title="" Width="50px" Sortable="false" TextAlign="TextAlign.Center">
                     <Template Context="lead">
                         <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Text"

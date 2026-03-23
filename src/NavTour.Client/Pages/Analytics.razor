@@ -93,21 +93,21 @@
                     {
                         <RadzenDataGrid Data="@demos" TItem="DemoListItemResponse" AllowSorting="true">
                             <Columns>
-                                <RadzenDataGridColumn Property="Name" Title="Demo">
+                                <RadzenDataGridColumn TItem="DemoListItemResponse" Property="Name" Title="Demo">
                                     <Template Context="d">
                                         <RadzenLink Path="@($"/demos/{d.Id}/analytics")" Style="font-weight:600;color:#0A5FAD">@d.Name</RadzenLink>
                                     </Template>
                                 </RadzenDataGridColumn>
-                                <RadzenDataGridColumn Property="Status" Title="Status" Width="90px">
+                                <RadzenDataGridColumn TItem="DemoListItemResponse" Property="Status" Title="Status" Width="90px">
                                     <Template Context="d">
                                         <RadzenBadge Text="@d.Status.ToString()"
                                             BadgeStyle="@(d.Status == NavTour.Shared.Enums.DemoStatus.Published ? BadgeStyle.Success : BadgeStyle.Light)"
                                             Style="font-size:0.6875rem" />
                                     </Template>
                                 </RadzenDataGridColumn>
-                                <RadzenDataGridColumn Property="ViewCount" Title="Views" Width="80px" TextAlign="TextAlign.Right" />
-                                <RadzenDataGridColumn Property="FrameCount" Title="Frames" Width="80px" TextAlign="TextAlign.Right" />
-                                <RadzenDataGridColumn Property="StepCount" Title="Steps" Width="80px" TextAlign="TextAlign.Right" />
+                                <RadzenDataGridColumn TItem="DemoListItemResponse" Property="ViewCount" Title="Views" Width="80px" TextAlign="TextAlign.Right" />
+                                <RadzenDataGridColumn TItem="DemoListItemResponse" Property="FrameCount" Title="Frames" Width="80px" TextAlign="TextAlign.Right" />
+                                <RadzenDataGridColumn TItem="DemoListItemResponse" Property="StepCount" Title="Steps" Width="80px" TextAlign="TextAlign.Right" />
                             </Columns>
                         </RadzenDataGrid>
                     }
@@ -126,8 +126,8 @@
                     {
                         <RadzenDataGrid Data="@summary.TopSources" TItem="SourceEntry">
                             <Columns>
-                                <RadzenDataGridColumn Property="Source" Title="Source" />
-                                <RadzenDataGridColumn Property="Count" Title="Views" Width="80px" TextAlign="TextAlign.Right" />
+                                <RadzenDataGridColumn TItem="SourceEntry" Property="Source" Title="Source" />
+                                <RadzenDataGridColumn TItem="SourceEntry" Property="Count" Title="Views" Width="80px" TextAlign="TextAlign.Right" />
                             </Columns>
                         </RadzenDataGrid>
                     }
@@ -156,17 +156,17 @@
             <h3 class="analytics-card-title">Recent Sessions</h3>
             <RadzenDataGrid Data="@sessions" TItem="SessionListResponse" AllowPaging="true" PageSize="10" AllowSorting="true">
                 <Columns>
-                    <RadzenDataGridColumn Property="StartedAt" Title="Started" FormatString="{0:g}" Width="160px" />
-                    <RadzenDataGridColumn Property="StepsViewed" Title="Steps Viewed" Width="120px" TextAlign="TextAlign.Center" />
-                    <RadzenDataGridColumn Property="TotalSteps" Title="Total Steps" Width="110px" TextAlign="TextAlign.Center" />
-                    <RadzenDataGridColumn Property="Completed" Title="Status" Width="100px">
+                    <RadzenDataGridColumn TItem="SessionListResponse" Property="StartedAt" Title="Started" FormatString="{0:g}" Width="160px" />
+                    <RadzenDataGridColumn TItem="SessionListResponse" Property="StepsViewed" Title="Steps Viewed" Width="120px" TextAlign="TextAlign.Center" />
+                    <RadzenDataGridColumn TItem="SessionListResponse" Property="TotalSteps" Title="Total Steps" Width="110px" TextAlign="TextAlign.Center" />
+                    <RadzenDataGridColumn TItem="SessionListResponse" Property="Completed" Title="Status" Width="100px">
                         <Template Context="session">
                             <RadzenBadge Text="@(session.Completed ? "Completed" : "Dropped")"
                                 BadgeStyle="@(session.Completed ? BadgeStyle.Success : BadgeStyle.Light)"
                                 Style="font-size:0.6875rem" />
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn Property="Source" Title="Source" />
+                    <RadzenDataGridColumn TItem="SessionListResponse" Property="Source" Title="Source" />
                 </Columns>
             </RadzenDataGrid>
         </div>

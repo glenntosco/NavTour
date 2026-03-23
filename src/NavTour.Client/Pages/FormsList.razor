@@ -38,16 +38,16 @@
                         <a href="/forms/@form.Id/edit" style="color:#4361ee;text-decoration:none;font-weight:500">@form.Name</a>
                     </Template>
                 </RadzenDataGridColumn>
-                <RadzenDataGridColumn Property="FieldCount" Title="Fields" Width="80px" TextAlign="TextAlign.Center" />
-                <RadzenDataGridColumn Property="SubmissionCount" Title="Submissions" Width="110px" TextAlign="TextAlign.Center" />
-                <RadzenDataGridColumn Property="ViewCount" Title="Views" Width="80px" TextAlign="TextAlign.Center" />
+                <RadzenDataGridColumn TItem="FormListItemResponse" Property="FieldCount" Title="Fields" Width="80px" TextAlign="TextAlign.Center" />
+                <RadzenDataGridColumn TItem="FormListItemResponse" Property="SubmissionCount" Title="Submissions" Width="110px" TextAlign="TextAlign.Center" />
+                <RadzenDataGridColumn TItem="FormListItemResponse" Property="ViewCount" Title="Views" Width="80px" TextAlign="TextAlign.Center" />
                 <RadzenDataGridColumn TItem="FormListItemResponse" Title="Conversion" Width="100px" TextAlign="TextAlign.Center">
                     <Template Context="form">
                         @form.ConversionRate.ToString("0.0")%
                     </Template>
                 </RadzenDataGridColumn>
-                <RadzenDataGridColumn Property="AssignedDemoCount" Title="Demos" Width="80px" TextAlign="TextAlign.Center" />
-                <RadzenDataGridColumn Property="CreatedAt" Title="Created" Width="140px" FormatString="{0:MMM d, yyyy}" />
+                <RadzenDataGridColumn TItem="FormListItemResponse" Property="AssignedDemoCount" Title="Demos" Width="80px" TextAlign="TextAlign.Center" />
+                <RadzenDataGridColumn TItem="FormListItemResponse" Property="CreatedAt" Title="Created" Width="140px" FormatString="{0:MMM d, yyyy}" />
                 <RadzenDataGridColumn TItem="FormListItemResponse" Title="" Width="120px" Sortable="false" TextAlign="TextAlign.Center">
                     <Template Context="form">
                         <RadzenButton Icon="content_copy" ButtonStyle="ButtonStyle.Light" Variant="Variant.Text"
