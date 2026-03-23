@@ -15,6 +15,12 @@
     --rz-secondary-lighter: #F4A59B;
     --rz-secondary-dark: #D4412F;
     --rz-secondary-darker: #B83425;
+
+    /* Dropdown selected item colors — light blue bg, dark text */
+    --rz-dropdown-item-selected-background-color: #e8eafd;
+    --rz-dropdown-item-selected-color: #1a1a2e;
+    --rz-dropdown-item-hover-background-color: #f0f2ff;
+    --rz-dropdown-item-hover-color: #1a1a2e;
 }
 
 .valid.modified:not([type=checkbox]) {

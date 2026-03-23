@@ -137,7 +137,7 @@
                             Change="@((string v) => UpdateVoiceover(step, v))" />
                         <RadzenDropDown TValue="string" Value="@(step.VoiceId ?? "21m00Tcm4TlvDq8ikWAM")"
                             Data="voices" TextProperty="Name" ValueProperty="Id"
-                            Style="width:100%;font-size:12px;margin-top:4px;--rz-dropdown-item-selected-background-color:#e8eafd;--rz-dropdown-item-selected-color:#1a1a2e" Placeholder="Select voice"
+                            Style="width:100%;font-size:12px;margin-top:4px" Placeholder="Select voice"
                             Change="@((object v) => UpdateVoiceId(step, v?.ToString()))" />
                         <button onclick="voiceover.preview('@(step.VoiceoverText?.Replace("'", "\\'") ?? "")', '@(step.VoiceId ?? "21m00Tcm4TlvDq8ikWAM")')"
                             style="background:none;border:1px solid #ddd;border-radius:4px;padding:4px 12px;cursor:pointer;font-size:12px;margin-top:4px">
