@@ -11,13 +11,8 @@
     else
     {
         <div class="ae-toolbar">
-            <SfTooltip CssClass="nt-tooltip" Position="Position.LeftCenter" OpenDelay="300" ShowTipPointer="true">
-                <ContentTemplate><div class="tt-title">Annotation Type</div><div class="tt-desc">Choose what kind of annotation to add to this step</div></ContentTemplate>
-                <ChildContent>
-                    <RadzenDropDown TValue="AnnotationType" @bind-Value="newType" Data="annotationTypes"
-                        TextProperty="Text" ValueProperty="Value" Style="width:100%;font-size:12px" />
-                </ChildContent>
-            </SfTooltip>
+            <RadzenDropDown TValue="AnnotationType" @bind-Value="newType" Data="annotationTypes"
+                TextProperty="Text" ValueProperty="Value" Style="width:100%;font-size:12px" title="Choose annotation type" />
             <RadzenButton Text="+ Add" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.ExtraSmall"
                 Click="AddAnnotation" Style="width:100%" />
         </div>
@@ -54,25 +49,17 @@
 
                             @if (ann.Type == AnnotationType.NumberedTooltip || ann.Type == AnnotationType.Beacon)
                             {
-                                <SfTooltip Content="The number shown on numbered tooltips and beacons" CssClass="nt-tooltip" Position="Position.LeftCenter" OpenDelay="300" ShowTipPointer="true">
-                                    <ChildContent>
-                                        <RadzenNumeric TValue="int" @bind-Value="editBadgeNumber" Min="1" Max="99"
-                                            Style="width:100%;font-size:12px" Placeholder="Badge #" />
-                                    </ChildContent>
-                                </SfTooltip>
+                                <RadzenNumeric TValue="int" @bind-Value="editBadgeNumber" Min="1" Max="99"
+                                    Style="width:100%;font-size:12px" Placeholder="Badge #" title="Number shown on tooltips and beacons" />
                             }
 
                             @if (ann.Type != AnnotationType.Beacon)
                             {
                                 <div class="ae-row">
                                     <label style="font-size:11px;color:var(--rz-text-secondary-color)">Arrow</label>
-                                    <SfTooltip Content="Which direction the tooltip arrow points" CssClass="nt-tooltip" Position="Position.LeftCenter" OpenDelay="300" ShowTipPointer="true">
-                                        <ChildContent>
-                                            <RadzenDropDown TValue="string" @bind-Value="editArrowDirection"
-                                                Data='new[] { "", "top", "bottom", "left", "right" }'
-                                                Style="width:100%;font-size:12px" Placeholder="None" />
-                                        </ChildContent>
-                                    </SfTooltip>
+                                    <RadzenDropDown TValue="string" @bind-Value="editArrowDirection"
+                                        Data='new[] { "", "top", "bottom", "left", "right" }'
+                                        Style="width:100%;font-size:12px" Placeholder="None" title="Arrow direction" />
                                 </div>
                             }
 
@@ -91,21 +78,15 @@
 
                             <div class="ae-row">
                                 <label style="font-size:11px;color:var(--rz-text-secondary-color)">Opacity (@(editOpacity)%)</label>
-                                <SfTooltip Content="Transparency level (0% = invisible, 100% = solid)" CssClass="nt-tooltip" Position="Position.LeftCenter" OpenDelay="300" ShowTipPointer="true">
-                                    <ChildContent><RadzenSlider @bind-Value="editOpacity" Min="0" Max="100" Step="1" Style="width:100%" /></ChildContent>
-                                </SfTooltip>
+                                <div title="0% = invisible, 100% = solid"><RadzenSlider @bind-Value="editOpacity" Min="0" Max="100" Step="1" Style="width:100%" /></div>
                             </div>
 
                             <div class="ae-row">
                                 <label style="font-size:11px;color:var(--rz-text-secondary-color)">Position (%)</label>
-                                <SfTooltip Content="Annotation position as percentage of frame. Drag to reposition." CssClass="nt-tooltip" Position="Position.LeftCenter" OpenDelay="300" ShowTipPointer="true">
-                                    <ChildContent>
-                                        <div style="display:flex;gap:4px">
-                                            <RadzenNumeric TValue="double" @bind-Value="editX" Min="0" Max="100" Style="flex:1;font-size:11px" Placeholder="X" />
-                                            <RadzenNumeric TValue="double" @bind-Value="editY" Min="0" Max="100" Style="flex:1;font-size:11px" Placeholder="Y" />
-                                        </div>
-                                    </ChildContent>
-                                </SfTooltip>
+                                <div style="display:flex;gap:4px" title="Position as % of frame. Drag to reposition.">
+                                    <RadzenNumeric TValue="double" @bind-Value="editX" Min="0" Max="100" Style="flex:1;font-size:11px" Placeholder="X" />
+                                    <RadzenNumeric TValue="double" @bind-Value="editY" Min="0" Max="100" Style="flex:1;font-size:11px" Placeholder="Y" />
+                                </div>
                             </div>
 
                             @if (ann.Type != AnnotationType.Beacon)

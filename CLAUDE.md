@@ -77,7 +77,6 @@ Demo → Frames (HTML/CSS snapshots) → Steps (guided interactions) → Annotat
 ### MCP Tools
 
 - **Radzen Blazor MCP** (`mcp__radzen-blazor__search`): Use this to look up Radzen component APIs, properties, and usage patterns before guessing. Query it for correct component configuration (e.g., sidebar toggle, data grid features, form validation).
-- **Syncfusion Blazor MCP** (`syncfusion-blazor`): Use this to look up Syncfusion Blazor component APIs and usage. Currently used for `SfTooltip` components in the app.
 
 ## Conventions
 

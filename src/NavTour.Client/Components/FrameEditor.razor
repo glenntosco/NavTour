@@ -15,28 +15,16 @@
 
                 @if (selectedElement.IsText)
                 {
-                    <SfTooltip Content="Modify this element's text content inline" CssClass="nt-tooltip" Position="Position.TopCenter" OpenDelay="300" ShowTipPointer="true">
-                        <ChildContent><button class="et-btn" @onclick="StartInlineEdit"><RadzenIcon Icon="edit" Style="font-size:14px" /></button></ChildContent>
-                    </SfTooltip>
-                    <SfTooltip Content="Insert a personalization token like {{company}}" CssClass="nt-tooltip" Position="Position.TopCenter" OpenDelay="300" ShowTipPointer="true">
-                        <ChildContent><VariableInsertButton DemoId="DemoId" OnInsert="InsertVariableIntoElement" /></ChildContent>
-                    </SfTooltip>
+                    <button class="et-btn" @onclick="StartInlineEdit" title="Edit text inline"><RadzenIcon Icon="edit" Style="font-size:14px" /></button>
+                    <VariableInsertButton DemoId="DemoId" OnInsert="InsertVariableIntoElement" />
                 }
                 @if (selectedElement.IsImage)
                 {
-                    <SfTooltip Content="Upload a new image to replace this one" CssClass="nt-tooltip" Position="Position.TopCenter" OpenDelay="300" ShowTipPointer="true">
-                        <ChildContent><button class="et-btn" @onclick="() => showImageUpload = true"><RadzenIcon Icon="image" Style="font-size:14px" /></button></ChildContent>
-                    </SfTooltip>
+                    <button class="et-btn" @onclick="() => showImageUpload = true" title="Replace image"><RadzenIcon Icon="image" Style="font-size:14px" /></button>
                 }
-                <SfTooltip Content="Apply a blur effect to hide sensitive content" CssClass="nt-tooltip" Position="Position.TopCenter" OpenDelay="300" ShowTipPointer="true">
-                    <ChildContent><button class="et-btn" @onclick="BlurSelected"><RadzenIcon Icon="blur_on" Style="font-size:14px" /></button></ChildContent>
-                </SfTooltip>
-                <SfTooltip Content="Make this element invisible in the demo" CssClass="nt-tooltip" Position="Position.TopCenter" OpenDelay="300" ShowTipPointer="true">
-                    <ChildContent><button class="et-btn" @onclick="HideSelected"><RadzenIcon Icon="visibility_off" Style="font-size:14px" /></button></ChildContent>
-                </SfTooltip>
-                <SfTooltip Content="Remove this element from the frame" CssClass="nt-tooltip" Position="Position.TopCenter" OpenDelay="300" ShowTipPointer="true">
-                    <ChildContent><button class="et-btn et-btn-danger" @onclick="DeleteSelected"><RadzenIcon Icon="delete" Style="font-size:14px" /></button></ChildContent>
-                </SfTooltip>
+                <button class="et-btn" @onclick="BlurSelected" title="Blur to hide sensitive content"><RadzenIcon Icon="blur_on" Style="font-size:14px" /></button>
+                <button class="et-btn" @onclick="HideSelected" title="Hide element"><RadzenIcon Icon="visibility_off" Style="font-size:14px" /></button>
+                <button class="et-btn et-btn-danger" @onclick="DeleteSelected" title="Remove element"><RadzenIcon Icon="delete" Style="font-size:14px" /></button>
             </div>
         }
 
@@ -62,9 +50,7 @@
                 <RadzenTextBox @bind-Value="findText" Placeholder="Find..." Style="width:180px" />
                 <RadzenTextBox @bind-Value="replaceText" Placeholder="Replace with..." Style="width:180px" />
                 <VariableInsertButton DemoId="DemoId" OnInsert="InsertVariableIntoReplace" />
-                <SfTooltip Content="Replace all occurrences of the search text" CssClass="nt-tooltip" Position="Position.TopCenter" OpenDelay="300" ShowTipPointer="true">
-                    <ChildContent><RadzenButton Text="Replace All" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" Click="DoFindReplace" /></ChildContent>
-                </SfTooltip>
+                <RadzenButton Text="Replace All" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" Click="DoFindReplace" title="Replace all occurrences" />
                 @if (replaceCount >= 0)
                 {
                     <span style="color:var(--rz-text-secondary-color);font-size:12px">@replaceCount replacements</span>

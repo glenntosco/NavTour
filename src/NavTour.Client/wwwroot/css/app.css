@@ -296,40 +296,6 @@ code {
     color: white;
 }
 
-/* ============================================
-   Syncfusion Tooltip Overrides (light style)
-   ============================================ */
-.e-tooltip-wrap.nt-tooltip {
-    background: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-    max-width: 260px;
-}
-.e-tooltip-wrap.nt-tooltip .e-tip-content {
-    color: #1a1a2e;
-    font-size: 12px;
-    padding: 8px 12px;
-    line-height: 1.4;
-}
-.e-tooltip-wrap.nt-tooltip .e-arrow-tip-outer,
-.e-tooltip-wrap.nt-tooltip .e-arrow-tip-inner {
-    color: #ffffff;
-}
-.nt-tooltip .e-arrow-tip-outer.e-tip-bottom { border-top-color: #ffffff; }
-.nt-tooltip .e-arrow-tip-outer.e-tip-top    { border-bottom-color: #ffffff; }
-.nt-tooltip .e-arrow-tip-outer.e-tip-left   { border-right-color: #ffffff; }
-.nt-tooltip .e-arrow-tip-outer.e-tip-right  { border-left-color: #ffffff; }
-.tt-title {
-    font-weight: 600;
-    margin-bottom: 3px;
-    font-size: 12px;
-}
-.tt-desc {
-    color: #cbd5e1;
-    font-size: 11px;
-    line-height: 1.4;
-}
 
 /* ============================================
    Frame ↔ Step linking badge

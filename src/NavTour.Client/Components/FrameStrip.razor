@@ -23,10 +23,7 @@
                  @onclick="() => OnFrameSelected.InvokeAsync(frame.Id)">
 
                 @* Thumbnail preview *@
-                <SfTooltip CssClass="nt-tooltip" Position="Position.RightCenter" OpenDelay="400" ShowTipPointer="true">
-                    <ContentTemplate><div class="tt-title">Frame</div><div class="tt-desc">Click to select and edit. Double-click name to rename.</div></ContentTemplate>
-                    <ChildContent>
-                <div class="fs-thumbnail">
+                <div class="fs-thumbnail" title="Click to select. Double-click name to rename.">
                     @if (frameHtmlCache.TryGetValue(frame.Id, out var html))
                     {
                         <iframe class="fs-thumbnail-iframe" srcdoc="@html" sandbox="" scrolling="no" tabindex="-1"></iframe>
@@ -38,38 +35,24 @@
                         </div>
                     }
                     <div class="fs-actions" @onclick:stopPropagation="true">
-                        <SfTooltip Content="Rename this frame" CssClass="nt-tooltip" Position="Position.TopCenter" OpenDelay="300" ShowTipPointer="true">
-                            <ChildContent>
-                                <button class="fs-action-btn" @onclick="() => StartRename(frame)">
-                                    <RadzenIcon Icon="edit" Style="font-size:13px" />
-                                </button>
-                            </ChildContent>
-                        </SfTooltip>
-                        <SfTooltip Content="Delete this frame and its steps" CssClass="nt-tooltip" Position="Position.TopCenter" OpenDelay="300" ShowTipPointer="true">
-                            <ChildContent>
-                                <button class="fs-action-btn fs-action-danger" @onclick="() => ConfirmDelete(frame.Id)">
-                                    <RadzenIcon Icon="close" Style="font-size:13px" />
-                                </button>
-                            </ChildContent>
-                        </SfTooltip>
+                        <button class="fs-action-btn" @onclick="() => StartRename(frame)" title="Rename frame">
+                            <RadzenIcon Icon="edit" Style="font-size:13px" />
+                        </button>
+                        <button class="fs-action-btn fs-action-danger" @onclick="() => ConfirmDelete(frame.Id)" title="Delete frame">
+                            <RadzenIcon Icon="close" Style="font-size:13px" />
+                        </button>
                     </div>
                 </div>
-                    </ChildContent>
-                </SfTooltip>
 
                 @* Frame label *@
                 <div class="fs-label">
-                    <SfTooltip Content="Drag to reorder" CssClass="nt-tooltip" Position="Position.TopCenter" OpenDelay="400" ShowTipPointer="true">
-                        <ChildContent>
-                    <div class="fs-drag-dots">
+                    <div class="fs-drag-dots" title="Drag to reorder">
                         <svg width="6" height="10" viewBox="0 0 6 10" fill="currentColor" opacity="0.3">
                             <circle cx="1.5" cy="1.5" r="1"/><circle cx="4.5" cy="1.5" r="1"/>
                             <circle cx="1.5" cy="5" r="1"/><circle cx="4.5" cy="5" r="1"/>
                             <circle cx="1.5" cy="8.5" r="1"/><circle cx="4.5" cy="8.5" r="1"/>
                         </svg>
                     </div>
-                        </ChildContent>
-                    </SfTooltip>
                     @if (renamingFrameId == frame.Id)
                     {
                         <input class="fs-rename-input" type="text" @bind="renameValue" @bind:event="oninput"
@@ -86,13 +69,8 @@
         }
     </div>
 
-    <SfTooltip CssClass="nt-tooltip" Position="Position.RightCenter" OpenDelay="300" ShowTipPointer="true">
-        <ContentTemplate><div class="tt-title">Add Frame</div><div class="tt-desc">Upload an HTML snapshot captured by the Chrome extension</div></ContentTemplate>
-        <ChildContent>
-            <RadzenButton Text="+ Add Frame" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
-                Style="width:100%;margin-top:4px" Click="OnAddFrame" />
-        </ChildContent>
-    </SfTooltip>
+    <RadzenButton Text="+ Add Frame" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
+        Style="width:100%;margin-top:4px" Click="OnAddFrame" title="Upload an HTML snapshot from the Chrome extension" />
 </div>
 
 @if (confirmDeleteId != null)

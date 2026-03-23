@@ -13,48 +13,21 @@
         Style="padding:8px 12px;border-bottom:1px solid var(--rz-border-color)">
         <RadzenText TextStyle="TextStyle.H6" class="rz-m-0">@(demo?.Name ?? "Loading...")</RadzenText>
         <div style="flex:1"></div>
-        <SfTooltip CssClass="nt-tooltip" Position="Position.BottomCenter" OpenDelay="300" ShowTipPointer="true">
-            <ContentTemplate><div class="tt-title">Find & Replace</div><div class="tt-desc">Search and replace text across the current frame's HTML</div></ContentTemplate>
-            <ChildContent><RadzenButton Text="Find & Replace" Icon="find_replace" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Click="() => showFindReplace = !showFindReplace" /></ChildContent>
-        </SfTooltip>
-        <SfTooltip CssClass="nt-tooltip" Position="Position.BottomCenter" OpenDelay="300" ShowTipPointer="true">
-            <ContentTemplate><div class="tt-title">Save Frame Edits</div><div class="tt-desc">Save changes made to the current frame's HTML content</div></ContentTemplate>
-            <ChildContent><RadzenButton Text="Save Edits" Icon="save_alt" ButtonStyle="ButtonStyle.Warning" Size="ButtonSize.Small" Click="SaveFrameEdits" Visible="@(frameEditor?.HasUnsavedEdits == true)" /></ChildContent>
-        </SfTooltip>
-        <SfTooltip CssClass="nt-tooltip" Position="Position.BottomCenter" OpenDelay="300" ShowTipPointer="true">
-            <ContentTemplate><div class="tt-title">AI Generate Tour</div><div class="tt-desc">Automatically generate steps and annotations for all frames using AI</div></ContentTemplate>
-            <ChildContent><RadzenButton Text="AI Generate" Icon="auto_awesome" ButtonStyle="ButtonStyle.Success" Size="ButtonSize.Small" Click="GenerateTour" IsBusy="generating" Disabled="@(frames == null || frames.Count == 0)" /></ChildContent>
-        </SfTooltip>
-        <SfTooltip CssClass="nt-tooltip" Position="Position.BottomCenter" OpenDelay="300" ShowTipPointer="true">
-            <ContentTemplate><div class="tt-title">Save All Steps</div><div class="tt-desc">Persist all step configurations, triggers, and annotations</div></ContentTemplate>
-            <ChildContent><RadzenButton Text="Save" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" Click="SaveSteps" IsBusy="saving" /></ChildContent>
-        </SfTooltip>
-        <SfTooltip CssClass="nt-tooltip" Position="Position.BottomCenter" OpenDelay="300" ShowTipPointer="true">
-            <ContentTemplate><div class="tt-title">Preview Demo</div><div class="tt-desc">Opens the demo player in a new tab as viewers will see it</div></ContentTemplate>
-            <ChildContent><RadzenButton Text="Preview" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Click="OpenPreview" class="preview-btn" /></ChildContent>
-        </SfTooltip>
+        <RadzenButton Text="Find & Replace" Icon="find_replace" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Click="() => showFindReplace = !showFindReplace" title="Search and replace text across the current frame" />
+        <RadzenButton Text="Save Edits" Icon="save_alt" ButtonStyle="ButtonStyle.Warning" Size="ButtonSize.Small" Click="SaveFrameEdits" Visible="@(frameEditor?.HasUnsavedEdits == true)" title="Save changes to the current frame's HTML" />
+        <RadzenButton Text="AI Generate" Icon="auto_awesome" ButtonStyle="ButtonStyle.Success" Size="ButtonSize.Small" Click="GenerateTour" IsBusy="generating" Disabled="@(frames == null || frames.Count == 0)" title="AI generates steps, annotations, and voiceover for all frames" />
+        <RadzenButton Text="Save" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" Click="SaveSteps" IsBusy="saving" title="Save all step configurations and annotations" />
+        <RadzenButton Text="Preview" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Click="OpenPreview" class="preview-btn" title="Open demo player in a new tab" />
         @if (demo?.Status == DemoStatus.Published)
         {
-            <SfTooltip CssClass="nt-tooltip" Position="Position.BottomCenter" OpenDelay="300" ShowTipPointer="true">
-                <ContentTemplate><div class="tt-title">Publication Status</div><div class="tt-desc">Currently published. Click to unpublish and make it a draft.</div></ContentTemplate>
-                <ChildContent><button @onclick="UnpublishDemo" style="border-radius:8px;padding:6px 16px;font-weight:600;cursor:pointer;background:#059669;color:white;border:none;font-size:13px;line-height:1.4">Published</button></ChildContent>
-            </SfTooltip>
+            <button @onclick="UnpublishDemo" style="border-radius:8px;padding:6px 16px;font-weight:600;cursor:pointer;background:#059669;color:white;border:none;font-size:13px;line-height:1.4" title="Published — click to unpublish">Published</button>
         }
         else
         {
-            <SfTooltip CssClass="nt-tooltip" Position="Position.BottomCenter" OpenDelay="300" ShowTipPointer="true">
-                <ContentTemplate><div class="tt-title">Publication Status</div><div class="tt-desc">Currently a draft. Click to publish and make it accessible via share link.</div></ContentTemplate>
-                <ChildContent><button @onclick="PublishDemo" style="border-radius:8px;padding:6px 16px;font-weight:600;cursor:pointer;background:#f1f5f9;color:#64748b;border:1px solid #e2e8f0;font-size:13px;line-height:1.4">Draft</button></ChildContent>
-            </SfTooltip>
+            <button @onclick="PublishDemo" style="border-radius:8px;padding:6px 16px;font-weight:600;cursor:pointer;background:#f1f5f9;color:#64748b;border:1px solid #e2e8f0;font-size:13px;line-height:1.4" title="Draft — click to publish">Draft</button>
         }
-        <SfTooltip CssClass="nt-tooltip" Position="Position.BottomCenter" OpenDelay="300" ShowTipPointer="true">
-            <ContentTemplate><div class="tt-title">Share Demo</div><div class="tt-desc">Copy share link, share on WhatsApp, or get embed code</div></ContentTemplate>
-            <ChildContent><RadzenButton Text="Share" Icon="share" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Click="() => showSharePopover = !showSharePopover" Style="position:relative" /></ChildContent>
-        </SfTooltip>
-        <SfTooltip CssClass="nt-tooltip" Position="Position.BottomCenter" OpenDelay="300" ShowTipPointer="true">
-            <ContentTemplate><div class="tt-title">Demo Settings</div><div class="tt-desc">Configure demo name, slug, lead capture, and personalization</div></ContentTemplate>
-            <ChildContent><RadzenButton Text="Settings" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Click='() => Nav.NavigateTo($"/demos/{DemoId}/settings")' /></ChildContent>
-        </SfTooltip>
+        <RadzenButton Text="Share" Icon="share" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Click="() => showSharePopover = !showSharePopover" Style="position:relative" title="Copy share link, WhatsApp, or embed code" />
+        <RadzenButton Text="Settings" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Click='() => Nav.NavigateTo($"/demos/{DemoId}/settings")' title="Demo name, slug, lead capture, personalization" />
         <RadzenButton Text="Tour" Icon="help_outline" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined"
             Size="ButtonSize.Small" Click="() => showTour = true" title="Replay the guided tour of the demo builder" />
         <div class="drawer-toggles">

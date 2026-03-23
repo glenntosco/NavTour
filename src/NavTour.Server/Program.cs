@@ -10,7 +10,6 @@ using NavTour.Server.Services;
 using NavTour.Client.Services;
 using Microsoft.AspNetCore.Localization;
 using Radzen;
-using Syncfusion.Blazor;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,11 +82,9 @@ builder.Services.AddServerSideBlazor().AddCircuitOptions(options =>
     options.DetailedErrors = builder.Environment.IsDevelopment();
 });
 
-// Controllers + Radzen + Syncfusion
+// Controllers + Radzen
 builder.Services.AddControllers();
 builder.Services.AddRadzenComponents();
-builder.Services.AddSyncfusionBlazor();
-Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1JHaF5cWWdCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdlWXxfeXVRQmBZU0ZzV0BWYEo=");
 builder.Services.AddHttpClient();
 builder.Services.AddHttpClient<ElevenLabsService>();
 builder.Services.AddHttpClient<AnthropicService>();

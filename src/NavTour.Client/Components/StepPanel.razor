@@ -22,9 +22,7 @@
             <div class="step-actions" @onclick:stopPropagation="true">
                 <button class="step-reorder" disabled="@isFirst" @onclick="() => MoveUp(step)" title="Move up">&#9650;</button>
                 <button class="step-reorder" disabled="@isLast" @onclick="() => MoveDown(step)" title="Move down">&#9660;</button>
-                <SfTooltip Content="Remove this step and its annotations" CssClass="nt-tooltip" Position="Position.TopCenter" OpenDelay="300" ShowTipPointer="true">
-                    <ChildContent><button class="step-delete-btn" @onclick="() => ConfirmDelete(step.Id)">&times;</button></ChildContent>
-                </SfTooltip>
+                <button class="step-delete-btn" @onclick="() => ConfirmDelete(step.Id)" title="Delete step">&times;</button>
             </div>
             <RadzenStack Gap="4px">
                 <div style="display:flex;align-items:center;gap:6px">
@@ -55,15 +53,10 @@
                     @* Trigger Type *@
                     <div class="step-field">
                         <label>Trigger</label>
-                        <SfTooltip CssClass="nt-tooltip" Position="Position.LeftCenter" OpenDelay="300" ShowTipPointer="true">
-                            <ContentTemplate><div class="tt-title">Step Trigger</div><div class="tt-desc">How the viewer advances past this step</div></ContentTemplate>
-                            <ChildContent>
-                                <RadzenDropDown TValue="TriggerType" Data="@triggerTypes"
-                                    Value="@step.TriggerType" TextProperty="Text" ValueProperty="Value"
-                                    Change="@(EventCallback.Factory.Create<object>(this, v => UpdateTriggerType(step, (TriggerType)v)))"
-                                    Style="width:100%;font-size:12px" />
-                            </ChildContent>
-                        </SfTooltip>
+                        <RadzenDropDown TValue="TriggerType" Data="@triggerTypes"
+                            Value="@step.TriggerType" TextProperty="Text" ValueProperty="Value"
+                            Change="@(EventCallback.Factory.Create<object>(this, v => UpdateTriggerType(step, (TriggerType)v)))"
+                            Style="width:100%;font-size:12px" title="How the viewer advances past this step" />
                     </div>
 
                     @* Element selector (for ElementClick/TextInput) *@
@@ -71,14 +64,9 @@
                     {
                         <div class="step-field">
                             <label>CSS Selector</label>
-                            <SfTooltip CssClass="nt-tooltip" Position="Position.LeftCenter" OpenDelay="300" ShowTipPointer="true">
-                                <ContentTemplate><div class="tt-title">CSS Selector</div><div class="tt-desc">The CSS selector targeting the element the viewer interacts with (e.g., #submit-btn, .nav-link)</div></ContentTemplate>
-                                <ChildContent>
-                                    <RadzenTextBox Value="@(step.ClickTargetSelector ?? "")" Style="width:100%;font-size:12px"
-                                        Placeholder="e.g. #submit-btn, .nav-link"
-                                        Change="@((string v) => UpdateSelector(step, v))" />
-                                </ChildContent>
-                            </SfTooltip>
+                            <RadzenTextBox Value="@(step.ClickTargetSelector ?? "")" Style="width:100%;font-size:12px"
+                                Placeholder="e.g. #submit-btn, .nav-link"
+                                Change="@((string v) => UpdateSelector(step, v))" title="CSS selector for the target element" />
                         </div>
                     }
 
@@ -96,15 +84,10 @@
                     @* Navigation Action *@
                     <div class="step-field">
                         <label>Action</label>
-                        <SfTooltip CssClass="nt-tooltip" Position="Position.LeftCenter" OpenDelay="300" ShowTipPointer="true">
-                            <ContentTemplate><div class="tt-title">Navigation Action</div><div class="tt-desc">What happens after the trigger fires</div></ContentTemplate>
-                            <ChildContent>
-                                <RadzenDropDown TValue="NavigationAction" Data="@navigationActions"
-                                    Value="@step.NavigationAction" TextProperty="Text" ValueProperty="Value"
-                                    Change="@(EventCallback.Factory.Create<object>(this, v => UpdateNavAction(step, (NavigationAction)v)))"
-                                    Style="width:100%;font-size:12px" />
-                            </ChildContent>
-                        </SfTooltip>
+                        <RadzenDropDown TValue="NavigationAction" Data="@navigationActions"
+                            Value="@step.NavigationAction" TextProperty="Text" ValueProperty="Value"
+                            Change="@(EventCallback.Factory.Create<object>(this, v => UpdateNavAction(step, (NavigationAction)v)))"
+                            Style="width:100%;font-size:12px" title="What happens after the trigger fires" />
                     </div>
 
                     @* Navigation Target (for GoToStep, OpenUrl, StartFlow) *@
@@ -139,15 +122,10 @@
                     @* Backdrop Level *@
                     <div class="step-field">
                         <label>Backdrop</label>
-                        <SfTooltip CssClass="nt-tooltip" Position="Position.LeftCenter" OpenDelay="300" ShowTipPointer="true">
-                            <ContentTemplate><div class="tt-title">Backdrop Overlay</div><div class="tt-desc">Dim the background to focus attention on annotations</div></ContentTemplate>
-                            <ChildContent>
-                                <RadzenDropDown TValue="string" Data="@backdropLevels"
-                                    Value="@(step.BackdropLevel ?? "none")" TextProperty="Text" ValueProperty="Value"
-                                    Change="@(EventCallback.Factory.Create<object>(this, v => UpdateBackdrop(step, (string)v)))"
-                                    Style="width:100%;font-size:12px" />
-                            </ChildContent>
-                        </SfTooltip>
+                        <RadzenDropDown TValue="string" Data="@backdropLevels"
+                            Value="@(step.BackdropLevel ?? "none")" TextProperty="Text" ValueProperty="Value"
+                            Change="@(EventCallback.Factory.Create<object>(this, v => UpdateBackdrop(step, (string)v)))"
+                            Style="width:100%;font-size:12px" title="Dim background to focus on annotations" />
                     </div>
 
                     @* Voiceover *@
@@ -170,10 +148,7 @@
         </RadzenCard>
     }
 
-    <SfTooltip CssClass="nt-tooltip" Position="Position.LeftCenter" OpenDelay="300" ShowTipPointer="true">
-        <ContentTemplate><div class="tt-title">Add Step</div><div class="tt-desc">Create a new step on the currently selected frame</div></ContentTemplate>
-        <ChildContent><RadzenButton Text="+ Add Step" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Style="width:100%" Click="OnAddStep" /></ChildContent>
-    </SfTooltip>
+    <RadzenButton Text="+ Add Step" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Style="width:100%" Click="OnAddStep" title="Create a new step on the selected frame" />
 </RadzenStack>
 
 @if (confirmDeleteId != null)
