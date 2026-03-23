@@ -35,7 +35,6 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
 .AddDefaultTokenProviders();
 
 // JWT Authentication — supports both Bearer header and cookie
-var jwtKey = builder.Configuration["Jwt:Key"] ?? "NavTourDevelopmentSecretKey2026!@#$%^&*()";
 var tokenParams = new TokenValidationParameters
 {
     ValidateIssuer = true,
@@ -44,7 +43,8 @@ var tokenParams = new TokenValidationParameters
     ValidateIssuerSigningKey = true,
     ValidIssuer = builder.Configuration["Jwt:Issuer"] ?? "NavTour",
     ValidAudience = builder.Configuration["Jwt:Audience"] ?? "NavTour",
-    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+        builder.Configuration["Jwt:Key"] ?? "NavTourDevelopmentSecretKey2026!@#$%^&*()"))
 };
 builder.Services.AddAuthentication(options =>
 {
