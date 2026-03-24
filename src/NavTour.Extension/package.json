@@ -1,11 +1,11 @@
 {
   "name": "navtour-extension",
-  "version": "0.1.0",
+  "version": "1.5.0",
   "private": true,
   "scripts": {
     "prebuild": "cp manifest.json popup.html popup.css dist/ && cp -r icons dist/",
-    "build": "esbuild src/popup.ts src/background.ts --bundle --outdir=dist --format=iife --target=chrome110",
-    "watch": "esbuild src/popup.ts src/background.ts --bundle --outdir=dist --format=iife --target=chrome110 --watch"
+    "build": "esbuild src/popup.ts src/background.ts src/content-patch.ts --bundle --outdir=dist --format=iife --target=chrome110",
+    "watch": "esbuild src/popup.ts src/background.ts src/content-patch.ts --bundle --outdir=dist --format=iife --target=chrome110 --watch"
   },
   "devDependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
