@@ -25,15 +25,24 @@
 
 @code {
     [Parameter] public string? HtmlContent { get; set; }
+    [Parameter] public Guid? FrameId { get; set; }
     [Parameter] public List<AnnotationResponse>? Annotations { get; set; }
 
     private ElementReference iframeRef;
     private string _previewIframeId = "navtour-preview-" + Guid.NewGuid().ToString("N")[..8];
     private string? _lastHtml;
+    private Guid? _lastFrameId;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (HtmlContent != null && HtmlContent != _lastHtml)
+        // Prefer server URL when FrameId is available (resources load from same origin)
+        if (FrameId.HasValue && FrameId != _lastFrameId)
+        {
+            _lastFrameId = FrameId;
+            _lastHtml = HtmlContent;
+            await JS.InvokeVoidAsync("navtourSetFrameSrc", _previewIframeId, $"/api/v1/player/frames/{FrameId}/html");
+        }
+        else if (HtmlContent != null && HtmlContent != _lastHtml)
         {
             _lastHtml = HtmlContent;
             await JS.InvokeVoidAsync("navtourSetFrameContent", _previewIframeId, HtmlContent);

@@ -1,66 +1,10 @@
 @page "/docs"
 @layout MarketingLayout
-@inject IStringLocalizer<NavTour.Server.SharedResources> L
-@inject IHttpClientFactory HttpClientFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>@L["docs_page_title"]</PageTitle>
-<HeadContent>
-    <meta name="description" content="@L["docs_meta_desc"].Value" />
-</HeadContent>
-
-<section class="mkt-section" style="padding-bottom:var(--space-16)">
-    <div class="mkt-container" style="max-width:680px">
-        <p class="mkt-eyebrow text-center reveal">@L["docs_eyebrow"]</p>
-        <h1 class="text-center reveal" style="margin-top:var(--space-2)">@L["docs_hero_title"]</h1>
-        <p class="text-center reveal" style="margin-top:var(--space-5)">@L["docs_hero_subtitle"]</p>
-    </div>
-</section>
-
-<section class="mkt-section-alt">
-    <div class="mkt-container reveal" style="max-width:560px;text-align:center">
-        <h2>@L["docs_notify_title"]</h2>
-        <p style="margin-top:var(--space-3)">@L["docs_notify_desc"]</p>
-
-        @if (subscribed)
-        {
-            <div class="mkt-alert-success" style="margin-top:var(--space-8)">
-                <p style="font-weight:var(--weight-semibold)">@L["docs_notify_success"]</p>
-            </div>
-        }
-        else
-        {
-            <form method="post" @formname="docs-subscribe" @onsubmit="HandleSubscribe" style="display:inline-flex;gap:var(--space-2);margin-top:var(--space-8);flex-wrap:wrap;justify-content:center">
-                <AntiforgeryToken />
-                <input type="email" name="SubscribeEmail" value="@SubscribeEmail" required placeholder="@L["docs_notify_placeholder"].Value"
-                    class="mkt-input" style="min-width:260px;width:auto" />
-                <button type="submit" class="mkt-btn mkt-btn-primary">@L["docs_notify_btn"]</button>
-            </form>
-        }
-    </div>
-</section>
-
-<CtaSection Title="@L["docs_bottom_cta_title"].Value"
-            Subtitle="@L["docs_bottom_cta_subtitle"].Value"
-            CtaText="@L["docs_bottom_cta_text"].Value"
-            CtaUrl="/contact" />
-
 @code {
-    [SupplyParameterFromForm]
-    public string SubscribeEmail { get; set; } = "";
-
-    private bool subscribed;
-
-    private async Task HandleSubscribe()
+    protected override void OnInitialized()
     {
-        if (string.IsNullOrWhiteSpace(SubscribeEmail)) return;
-        try
-        {
-            using var http = HttpClientFactory.CreateClient();
-            http.BaseAddress = new Uri(NavigationManager.BaseUri);
-            await http.PostAsJsonAsync("api/v1/contact", new { email = SubscribeEmail, type = "Newsletter" });
-        }
-        catch { }
-        subscribed = true;
+        NavigationManager.NavigateTo("https://docs.navtour.cloud", forceLoad: true);
     }
 }

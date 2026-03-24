@@ -26,7 +26,7 @@ public class PlaywrightFixture : IAsyncLifetime
 
         using var http = new HttpClient { BaseAddress = new Uri(TestConstants.BaseUrl) };
         var registerRes = await http.PostAsJsonAsync("api/v1/auth/register",
-            new RegisterRequest(TestEmail, TestConstants.Password, TestConstants.UniqueCompanyName(), TestConstants.FullName));
+            new RegisterRequest(TestEmail, TestConstants.Password, TestConstants.UniqueCompanyName(), TestConstants.FullName, true));
         registerRes.EnsureSuccessStatusCode();
 
         var loginRes = await http.PostAsJsonAsync("api/v1/auth/login",

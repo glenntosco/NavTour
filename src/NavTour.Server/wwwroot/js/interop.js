@@ -20,6 +20,19 @@ window.navtourSetFrameContent = function (iframeId, html) {
     iframe.src = url;
 };
 
+// Set iframe src to a server URL (for player — resources load from same origin)
+window.navtourSetFrameSrc = function (iframeId, url) {
+    var iframe = document.getElementById(iframeId);
+    if (!iframe) return;
+    // Clean up any previous blob URL
+    if (iframe._blobUrl) {
+        URL.revokeObjectURL(iframe._blobUrl);
+        iframe._blobUrl = null;
+    }
+    if (!url) return;
+    iframe.src = url;
+};
+
 window.annotationDrag = {
     getParentSize: function (el) {
         var parent = el ? el.parentElement : null;

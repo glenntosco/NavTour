@@ -17,6 +17,13 @@
     <RadzenTextBox @bind-Value="companyName" Placeholder="Company Name" Style="width:100%" />
     <RadzenTextBox @bind-Value="email" Placeholder="Email" Style="width:100%" />
     <RadzenPassword @bind-Value="password" Placeholder="Password (min 8 chars)" Style="width:100%" />
+    <label style="display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.5;color:#475569">
+        <input type="checkbox" @bind="acceptedTerms" style="margin-top:4px" />
+        <span>
+            I agree to the <a href="/terms-of-use" target="_blank" rel="noopener noreferrer">Terms of Use</a>
+            and <a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
+        </span>
+    </label>
     <RadzenButton Text="Create Account" ButtonStyle="ButtonStyle.Primary" Style="width:100%" Click="HandleRegister" IsBusy="loading" />
 
     <RadzenText>
@@ -31,12 +38,19 @@
     private string password = "";
     private string? errorMessage;
     private bool loading;
+    private bool acceptedTerms;
 
     private async Task HandleRegister()
     {
+        if (!acceptedTerms)
+        {
+            errorMessage = "You must agree to the Terms of Use and Privacy Policy to create an account.";
+            return;
+        }
+
         loading = true;
         errorMessage = null;
-        var (success, error) = await Auth.RegisterAsync(email, password, companyName, fullName);
+        var (success, error) = await Auth.RegisterAsync(email, password, companyName, fullName, acceptedTerms);
         if (success)
             Nav.NavigateTo("/dashboard");
         else

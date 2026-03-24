@@ -1,61 +1,340 @@
 @page "/product"
 @page "/features"
 @layout MarketingLayout
-@inject IStringLocalizer<NavTour.Server.SharedResources> L
 
-<PageTitle>Product — NavTour</PageTitle>
+<PageTitle>Product - NavTour</PageTitle>
 <HeadContent>
-    <meta name="description" content="The complete AI-powered interactive demo platform. Capture, build, personalize, and measure product demos at scale with NavTour." />
+    <meta name="description" content="NavTour captures your product, turns it into guided interactive demos, adds AI voiceover and forms, and measures engagement across sharing and team workflows." />
 </HeadContent>
 
-<HeroSection Eyebrow="@L["product_eyebrow"].Value"
-             Title="@L["product_title"].Value"
-             Subtitle="@L["product_subtitle"].Value" />
+<HeroSection Eyebrow="Product"
+             Title="Interactive demo infrastructure for self-serve growth"
+             Subtitle="Built from the shipped product: browser capture, AI tour generation, voiceover, forms, analytics, sharing, and team workflows in one system."
+             PrimaryCtaText="Start Free"
+             SecondaryCtaText="See AI Features"
+             SecondaryCtaUrl="/product/ai">
+    <div class="mkt-hero-proof">
+        <div class="mkt-hero-proof-item">Chrome capture extension</div>
+        <div class="mkt-hero-proof-item">AI tour generation</div>
+        <div class="mkt-hero-proof-item">Voiceover + multilingual voices</div>
+        <div class="mkt-hero-proof-item">Forms, analytics, and sharing</div>
+    </div>
+    <div class="mkt-hero-mini-metrics">
+        <div class="mkt-hero-mini-metric">
+            <strong>Capture</strong>
+            <span>HTML/CSS snapshots with fidelity fixes shipped across multiple releases.</span>
+        </div>
+        <div class="mkt-hero-mini-metric">
+            <strong>Guide</strong>
+            <span>Interactive steps, navigation cards, welcome screens, and voice-enabled playback.</span>
+        </div>
+        <div class="mkt-hero-mini-metric">
+            <strong>Measure</strong>
+            <span>Lead capture, session analytics, sharing, embeds, and team operations.</span>
+        </div>
+    </div>
+</HeroSection>
 
-@foreach (var (feature, index) in _features.Select((f, i) => (f, i)))
-{
-    <section class="@(index % 2 == 0 ? "mkt-section reveal" : "mkt-section-alt reveal")">
-        <div class="mkt-container">
-            <div class="mkt-step-row" style="@(index % 2 == 1 ? "flex-direction:row-reverse" : "")">
-                <div class="mkt-step-row-content">
-                    <div class="mkt-step-label">@L[feature.LabelKey]</div>
-                    <h2>@L[feature.TitleKey]</h2>
-                    <p>@L[feature.DescKey]</p>
-                </div>
-                <div class="mkt-step-row-visual">
-                    <div class="mkt-placeholder mkt-placeholder-feature">@feature.Placeholder</div>
+<section class="mkt-social-proof">
+    <div class="mkt-container">
+        <div class="mkt-grid mkt-grid-3 reveal-stagger">
+            <div class="mkt-card">
+                <p class="mkt-eyebrow">Capture Layer</p>
+                <h3>Record the real product</h3>
+                <p>Commits show sustained work on HTML and CSS capture fidelity, SPA support, click-to-capture, and extension login flow.</p>
+            </div>
+            <div class="mkt-card">
+                <p class="mkt-eyebrow">Demo Builder</p>
+                <h3>Turn frames into guided flows</h3>
+                <p>NavTour ships annotations, drawers, reorder, welcome screens, navigation cards, publish control, and share tooling.</p>
+            </div>
+            <div class="mkt-card">
+                <p class="mkt-eyebrow">Revenue Workflow</p>
+                <h3>Connect demos to pipeline</h3>
+                <p>Lead forms, analytics pages, intent-style signals, embeds, sharing, and team invites make the product usable across GTM.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mkt-section reveal">
+    <div class="mkt-container">
+        <div class="mkt-step-row">
+            <div class="mkt-step-row-content">
+                <div class="mkt-step-label">01. Capture</div>
+                <h2>Browser capture that preserves the app, not just a screenshot</h2>
+                <p>
+                    The commit history shows repeated investment in CSS fidelity, computed-style fallbacks, stylesheet capture,
+                    SPA navigation support, floating capture tooling, and extension auto-login. This is the product foundation:
+                    interactive HTML/CSS frames that behave like the original app.
+                </p>
+                <ul class="mkt-benefits">
+                    <li>Chrome extension with click-to-capture workflow</li>
+                    <li>HTML and CSS snapshot capture with fidelity fixes</li>
+                    <li>Support for complex dashboards and single-page apps</li>
+                    <li>Fast capture-to-editor handoff</li>
+                </ul>
+            </div>
+            <div class="mkt-step-row-visual">
+                <div class="mkt-stage-card">
+                    <div class="mkt-stage-card-header">
+                        <div>
+                            <div class="mkt-stage-card-label">Extension</div>
+                            <div class="mkt-stage-card-title">Capture session</div>
+                        </div>
+                        <div class="mkt-stage-pill">Live app</div>
+                    </div>
+                    <div class="mkt-browser-bar"><span></span><span></span><span></span></div>
+                    <div class="mkt-ui-block mkt-ui-block-lg"></div>
+                    <div class="mkt-ui-grid">
+                        <div class="mkt-ui-block"></div>
+                        <div class="mkt-ui-block"></div>
+                        <div class="mkt-ui-block"></div>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
-}
+    </div>
+</section>
+
+<section class="mkt-section-alt reveal">
+    <div class="mkt-container">
+        <div class="mkt-step-row">
+            <div class="mkt-step-row-content">
+                <div class="mkt-step-label">02. Build</div>
+                <h2>Editor workflow for real guided demos</h2>
+                <p>
+                    Shipped work includes annotation resize handles, step reordering, frame rename and reorder, slide-out
+                    drawers for steps and annotations, publish and unpublish controls, and cleaner player navigation cards.
+                    The product is no longer a raw capture viewer; it is a full builder.
+                </p>
+                <ul class="mkt-benefits">
+                    <li>Annotations, hotspots, step triggers, and guided flow editing</li>
+                    <li>Drawer-based editing for steps and annotations</li>
+                    <li>Welcome screen controls before playback starts</li>
+                    <li>Navigation cards with back, next, step count, and finish states</li>
+                </ul>
+            </div>
+            <div class="mkt-step-row-visual">
+                <div class="mkt-stage-card">
+                    <div class="mkt-stage-card-header">
+                        <div>
+                            <div class="mkt-stage-card-label">Editor</div>
+                            <div class="mkt-stage-card-title">Step and annotation workflow</div>
+                        </div>
+                        <div class="mkt-stage-pill">No-code</div>
+                    </div>
+                    <div class="mkt-stack-flow">
+                        <div class="mkt-stack-node">
+                            <div class="mkt-stack-node-step">01</div>
+                            <div>
+                                <h3>Capture frames</h3>
+                                <p>Bring product states into the editor.</p>
+                            </div>
+                        </div>
+                        <div class="mkt-stack-flow-line"></div>
+                        <div class="mkt-stack-node">
+                            <div class="mkt-stack-node-step">02</div>
+                            <div>
+                                <h3>Add guidance</h3>
+                                <p>Place copy, beacons, cards, and actions.</p>
+                            </div>
+                        </div>
+                        <div class="mkt-stack-flow-line"></div>
+                        <div class="mkt-stack-node">
+                            <div class="mkt-stack-node-step">03</div>
+                            <div>
+                                <h3>Publish safely</h3>
+                                <p>Keep drafts private until the demo is ready.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mkt-section reveal">
+    <div class="mkt-container">
+        <div class="mkt-step-row">
+            <div class="mkt-step-row-content">
+                <div class="mkt-step-label">03. AI + Voice</div>
+                <h2>AI tour generation and voice-enabled playback</h2>
+                <p>
+                    Commits added AI Tour Generator support, multilingual voice options, dynamic voice lists, instant preview,
+                    text-to-voice overlays, and autoplay-safe playback behavior. The result is a demo that can explain itself,
+                    not just wait for a rep to narrate it.
+                </p>
+                <ul class="mkt-benefits">
+                    <li>AI-generated tour structure from captured product context</li>
+                    <li>ElevenLabs-backed voice playback and previews</li>
+                    <li>Multilingual voice choices and localized experience support</li>
+                    <li>Start-demo overlay flow tuned for browser audio restrictions</li>
+                </ul>
+            </div>
+            <div class="mkt-step-row-visual">
+                <div class="mkt-stage-card">
+                    <div class="mkt-stage-card-header">
+                        <div>
+                            <div class="mkt-stage-card-label">Voiceover</div>
+                            <div class="mkt-stage-card-title">AI-guided playback</div>
+                        </div>
+                        <div class="mkt-stage-pill">Preview</div>
+                    </div>
+                    <div class="mkt-voice-list">
+                        <div class="mkt-voice-row"><span>English - Product Tour</span><span>Ready</span></div>
+                        <div class="mkt-voice-row"><span>Spanish - LATAM</span><span>Ready</span></div>
+                        <div class="mkt-voice-row"><span>Executive Summary</span><span>Draft</span></div>
+                    </div>
+                    <div class="mkt-waveform">
+                        <span></span><span></span><span></span><span></span>
+                        <span></span><span></span><span></span><span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mkt-section-alt reveal">
+    <div class="mkt-container">
+        <div class="mkt-step-row">
+            <div class="mkt-step-row-content">
+                <div class="mkt-step-label">04. Forms + Sharing</div>
+                <h2>Lead capture, standalone forms, embeds, and share links</h2>
+                <p>
+                    The product history includes a form builder, field editing, drag-and-drop reorder, standalone form submission,
+                    demo sharing, WhatsApp actions, embed code generation, and full share URLs. That makes NavTour usable for both
+                    self-serve website demos and rep-sent follow-up experiences.
+                </p>
+                <ul class="mkt-benefits">
+                    <li>Custom lead capture forms attached to demos</li>
+                    <li>Standalone forms for campaigns and handoff flows</li>
+                    <li>Copy-link, WhatsApp, and responsive embed code sharing</li>
+                    <li>Publish controls to manage what is publicly visible</li>
+                </ul>
+            </div>
+            <div class="mkt-step-row-visual">
+                <div class="mkt-stage-card">
+                    <div class="mkt-stage-card-header">
+                        <div>
+                            <div class="mkt-stage-card-label">Conversion</div>
+                            <div class="mkt-stage-card-title">Demo to lead workflow</div>
+                        </div>
+                        <div class="mkt-stage-pill">Embedded</div>
+                    </div>
+                    <div class="mkt-result-grid">
+                        <div><strong>Form</strong><span>Capture qualified interest inside the experience</span></div>
+                        <div><strong>Share</strong><span>Send direct links or embed on landing pages</span></div>
+                        <div><strong>Lead</strong><span>Store viewer submissions and follow-up context</span></div>
+                        <div><strong>Publish</strong><span>Keep control over draft and live states</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mkt-section reveal">
+    <div class="mkt-container">
+        <div class="mkt-step-row">
+            <div class="mkt-step-row-content">
+                <div class="mkt-step-label">05. Measure</div>
+                <h2>Analytics that show how people actually engage</h2>
+                <p>
+                    Commits added global analytics, demo analytics, recent sessions, funnel views, top sources, lead counts,
+                    and player interaction improvements. This gives teams an operational feedback loop instead of shipping demos
+                    and guessing.
+                </p>
+                <ul class="mkt-benefits">
+                    <li>Per-demo and global analytics pages</li>
+                    <li>Completion, time spent, and step-level engagement patterns</li>
+                    <li>Lead capture visibility tied to demo activity</li>
+                    <li>Foundation for downstream CRM and workflow integration</li>
+                </ul>
+            </div>
+            <div class="mkt-step-row-visual">
+                <div class="mkt-stage-card">
+                    <div class="mkt-stage-card-header">
+                        <div>
+                            <div class="mkt-stage-card-label">Analytics</div>
+                            <div class="mkt-stage-card-title">Engagement snapshot</div>
+                        </div>
+                        <div class="mkt-stage-pill">Live</div>
+                    </div>
+                    <div class="mkt-progress-stack">
+                        <div class="mkt-progress-row"><span>Completion rate</span><div><i style="width:72%"></i></div></div>
+                        <div class="mkt-progress-row"><span>Step 4 engagement</span><div><i style="width:88%"></i></div></div>
+                        <div class="mkt-progress-row"><span>Lead capture conversion</span><div><i style="width:46%"></i></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mkt-section-alt reveal">
+    <div class="mkt-container">
+        <div class="mkt-step-row">
+            <div class="mkt-step-row-content">
+                <div class="mkt-step-label">06. Team Operations</div>
+                <h2>Team invites, settings, and a shared demo workspace</h2>
+                <p>
+                    Recent commits added team member management with Azure email invites, workspace settings, stronger auth flow,
+                    and multi-page operational UI. The product is not just a solo creator tool anymore; it supports a team-based
+                    demo operation.
+                </p>
+                <ul class="mkt-benefits">
+                    <li>Team member management and invite flow</li>
+                    <li>Shared workspace and library-style operation</li>
+                    <li>Authenticated product surfaces for creation, settings, and analytics</li>
+                    <li>Designed to support marketing, sales, presales, and customer success use cases</li>
+                </ul>
+            </div>
+            <div class="mkt-step-row-visual">
+                <div class="mkt-stage-card">
+                    <div class="mkt-stage-card-header">
+                        <div>
+                            <div class="mkt-stage-card-label">Workspace</div>
+                            <div class="mkt-stage-card-title">Operational setup</div>
+                        </div>
+                        <div class="mkt-stage-pill">Team</div>
+                    </div>
+                    <div class="mkt-stack-flow">
+                        <div class="mkt-stack-node">
+                            <div class="mkt-stack-node-step">A</div>
+                            <div>
+                                <h3>Invite teammates</h3>
+                                <p>Bring sales, marketing, or presales into one workspace.</p>
+                            </div>
+                        </div>
+                        <div class="mkt-stack-flow-line"></div>
+                        <div class="mkt-stack-node">
+                            <div class="mkt-stack-node-step">B</div>
+                            <div>
+                                <h3>Reuse assets</h3>
+                                <p>Publish and share from a central demo operation.</p>
+                            </div>
+                        </div>
+                        <div class="mkt-stack-flow-line"></div>
+                        <div class="mkt-stack-node">
+                            <div class="mkt-stack-node-step">C</div>
+                            <div>
+                                <h3>Review performance</h3>
+                                <p>Use analytics and forms to improve the next iteration.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <CtaSection Dark="true"
-            Title="@L["product_cta_title"].Value"
-            Subtitle="@L["product_cta_subtitle"].Value"
-            CtaText="@L["product_cta_text"].Value"
-            SecondaryCtaText="@L["product_cta_secondary"].Value"
+            Title="Start with the shipped product, not a placeholder story"
+            Subtitle="Create a free account and build on the same capture, editing, voice, form, and analytics features already in the app."
+            CtaText="Start Free"
+            SecondaryCtaText="Contact Sales"
             SecondaryCtaUrl="/contact" />
-
-@code {
-    private record FeatureItem(string LabelKey, string TitleKey, string DescKey, string Placeholder);
-
-    private readonly List<FeatureItem> _features = new()
-    {
-        new("product_feat1_label", "product_feat1_title", "product_feat1_desc", "AI Copilot Demo Generation"),
-        new("product_feat2_label", "product_feat2_title", "product_feat2_desc", "Natural Language Editing"),
-        new("product_feat3_label", "product_feat3_title", "product_feat3_desc", "Bulk Personalization Interface"),
-        new("product_feat4_label", "product_feat4_title", "product_feat4_desc", "Intent Scoring Dashboard"),
-        new("product_feat5_label", "product_feat5_title", "product_feat5_desc", "Chrome Extension Recording"),
-        new("product_feat6_label", "product_feat6_title", "product_feat6_desc", "Drag-and-Drop Editor"),
-        new("product_feat7_label", "product_feat7_title", "product_feat7_desc", "Multi-Channel Embed"),
-        new("product_feat8_label", "product_feat8_title", "product_feat8_desc", "Demo Score Card"),
-        new("product_feat9_label", "product_feat9_title", "product_feat9_desc", "Branching Flow Builder"),
-        new("product_feat10_label", "product_feat10_title", "product_feat10_desc", "Team Dashboard"),
-        new("product_feat11_label", "product_feat11_title", "product_feat11_desc", "Integration Marketplace"),
-        new("product_feat12_label", "product_feat12_title", "product_feat12_desc", "Language Selection"),
-        new("product_feat13_label", "product_feat13_title", "product_feat13_desc", "Publish / Unpublish Toggle"),
-        new("product_feat14_label", "product_feat14_title", "product_feat14_desc", "White Navigation Card with Back / Next"),
-        new("product_feat15_label", "product_feat15_title", "product_feat15_desc", "Share Popover with WhatsApp & Embed"),
-    };
-}

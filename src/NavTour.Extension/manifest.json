@@ -1,45 +1,81 @@
 {
   "manifest_version": 3,
   "name": "NavTour Capture",
-  "version": "1.6.0",
-  "description": "Capture your application and build interactive product demos in NavTour, we make interactive demo easy.",
+  "description": "Capture your application and build interactive product demos",
+  "version": "1.6.1",
   "minimum_chrome_version": "110",
-  "permissions": ["activeTab", "storage", "scripting", "tabs", "cookies", "declarativeNetRequest", "declarativeNetRequestWithHostAccess"],
-  "optional_host_permissions": [
-    "https://navtour.cloud/*",
-    "<all_urls>"
-  ],
-  "action": {
-    "default_popup": "popup.html",
-    "default_icon": {
-      "16": "icons/icon16.png",
-      "48": "icons/icon48.png",
-      "128": "icons/icon128.png"
-    }
-  },
+  "incognito": "split",
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "worker.js"
+  },
+  "action": {
+    "default_icon": {
+      "16": "static/icons/icon-16.png",
+      "48": "static/icons/icon-48.png",
+      "128": "static/icons/icon-128.png"
+    },
+    "default_title": "NavTour Capture"
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content-patch.js"],
-      "run_at": "document_start",
-      "world": "MAIN",
+      "js": ["content-script-isolated.js"],
+      "run_at": "document_idle",
       "all_frames": true,
-      "match_about_blank": true
+      "world": "ISOLATED",
+      "match_about_blank": true,
+      "match_origin_as_fallback": true
     },
     {
       "matches": ["<all_urls>"],
-      "js": ["capture.js"],
+      "js": ["content-script-main.js"],
       "run_at": "document_idle",
-      "world": "ISOLATED",
-      "all_frames": true
+      "all_frames": true,
+      "world": "MAIN",
+      "match_about_blank": true,
+      "match_origin_as_fallback": true
     }
   ],
+  "content_security_policy": {
+    "extension_pages": "img-src 'self' data: https://*.navtour.cloud; default-src 'self' data: https://*.navtour.cloud; connect-src * data: blob:; object-src 'self'; script-src 'self'; worker-src 'self'; style-src-elem *;"
+  },
   "icons": {
-    "16": "icons/icon16.png",
-    "48": "icons/icon48.png",
-    "128": "icons/icon128.png"
-  }
+    "16": "static/icons/icon-16.png",
+    "48": "static/icons/icon-48.png",
+    "128": "static/icons/icon-128.png"
+  },
+  "permissions": [
+    "tabs",
+    "storage",
+    "scripting",
+    "webRequest",
+    "webNavigation",
+    "declarativeNetRequest",
+    "declarativeNetRequestWithHostAccess",
+    "declarativeNetRequestFeedback",
+    "tabCapture",
+    "windows",
+    "offscreen"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "externally_connectable": {
+    "matches": [
+      "*://*.navtour.cloud/*",
+      "http://localhost:5017/*",
+      "http://localhost:3000/*",
+      "http://127.0.0.1:5017/*"
+    ]
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "navtourjs/navtour.css",
+        "static/index.html"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "env": "production"
 }

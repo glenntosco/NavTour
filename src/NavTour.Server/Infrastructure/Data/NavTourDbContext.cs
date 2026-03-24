@@ -31,6 +31,7 @@ public class NavTourDbContext : IdentityDbContext<ApplicationUser, IdentityRole<
     public DbSet<ContactSubmission> ContactSubmissions => Set<ContactSubmission>();
     public DbSet<LeadEmailTemplate> LeadEmailTemplates => Set<LeadEmailTemplate>();
     public DbSet<Form> Forms => Set<Form>();
+    public DbSet<CapturedResource> CapturedResources => Set<CapturedResource>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -139,6 +140,14 @@ public class NavTourDbContext : IdentityDbContext<ApplicationUser, IdentityRole<
             e.Property(t => t.CtaUrl).HasMaxLength(500);
             e.Property(t => t.AccentColor).HasMaxLength(7);
             e.HasIndex(t => t.TenantId).IsUnique();
+        });
+
+        // CapturedResource — content-addressed, shared across tenants (no query filter)
+        builder.Entity<CapturedResource>(e =>
+        {
+            e.HasKey(r => r.Hash);
+            e.Property(r => r.Hash).HasMaxLength(64);
+            e.Property(r => r.ContentType).HasMaxLength(200);
         });
 
         // ApiKey

@@ -419,29 +419,63 @@
   <data name="security_meta_desc" xml:space="preserve"><value>Seguridad en NavTour: cumplimiento SOC 2, cifrado AES-256, preparado para GDPR, SLA de 99.9% de disponibilidad, alojado en Azure.</value></data>
   <data name="security_eyebrow" xml:space="preserve"><value>Seguridad</value></data>
   <data name="security_title" xml:space="preserve"><value>Seguridad de nivel enterprise en la que puedes confiar</value></data>
-  <data name="security_subtitle" xml:space="preserve"><value>NavTour está construido sobre las mejores prácticas de seguridad de la industria. Tus datos están protegidos en cada capa.</value></data>
-  <data name="security_badge_soc2" xml:space="preserve"><value>Cumplimiento SOC 2</value></data>
-  <data name="security_badge_uptime" xml:space="preserve"><value>SLA 99.9% Disponibilidad</value></data>
-  <data name="security_badge_encryption" xml:space="preserve"><value>Cifrado AES-256</value></data>
-  <data name="security_badge_gdpr" xml:space="preserve"><value>Preparado para GDPR</value></data>
+  <data name="security_subtitle" xml:space="preserve"><value>NavTour est&#xE1; alojado en Microsoft Azure y se apoya en controles de infraestructura respaldados por Azure. Describimos nuestra postura de seguridad en t&#xE9;rminos de esa base de hosting y de las salvaguardas aplicadas en el producto.</value></data>
+  <data name="security_badge_soc2" xml:space="preserve"><value>Hosting respaldado por Azure</value></data>
+  <data name="security_badge_uptime" xml:space="preserve"><value>Monitoreo de infraestructura</value></data>
+  <data name="security_badge_encryption" xml:space="preserve"><value>Transporte y almacenamiento cifrados</value></data>
+  <data name="security_badge_gdpr" xml:space="preserve"><value>Manejo cuidadoso de privacidad</value></data>
   <data name="security_badge_azure" xml:space="preserve"><value>Alojado en Azure</value></data>
+  <data name="security_principles_eyebrow" xml:space="preserve"><value>Modelo de Seguridad</value></data>
+  <data name="security_principles_title" xml:space="preserve"><value>Los controles sobre los que dise&#xF1;amos</value></data>
+  <data name="security_principles_subtitle" xml:space="preserve"><value>Estructuramos la plataforma alrededor de aislamiento, cifrado, disciplina operativa y responsabilidad clara.</value></data>
+  <data name="security_principle1_title" xml:space="preserve"><value>Aislamiento por tenant</value></data>
+  <data name="security_principle1_desc" xml:space="preserve"><value>El contenido de demos, los datos de viewers y la actividad de cuentas se limitan a tu espacio de trabajo y est&#xE1;n protegidos por controles de aplicaci&#xF3;n y datos.</value></data>
+  <data name="security_principle2_title" xml:space="preserve"><value>Cifrado por defecto</value></data>
+  <data name="security_principle2_desc" xml:space="preserve"><value>El tr&#xE1;fico se cifra en tr&#xE1;nsito y los datos almacenados se cifran en reposo en los servicios principales que respaldan NavTour.</value></data>
+  <data name="security_principle3_title" xml:space="preserve"><value>Monitoreo y auditor&#xED;a</value></data>
+  <data name="security_principle3_desc" xml:space="preserve"><value>La visibilidad operativa, los rastros de auditor&#xED;a y las verificaciones de despliegue ayudan a detectar problemas temprano y responder con contexto.</value></data>
+  <data name="security_principle4_title" xml:space="preserve"><value>Procesos repetibles</value></data>
+  <data name="security_principle4_desc" xml:space="preserve"><value>La seguridad se maneja con controles documentados, verificaciones autom&#xE1;ticas y revisiones recurrentes, no con esfuerzo manual aislado.</value></data>
   <data name="security_data_title" xml:space="preserve"><value>Seguridad de Datos</value></data>
-  <data name="security_data_p1" xml:space="preserve"><value>Tus datos están cifrados en reposo (AES-256) y en tránsito (TLS 1.3). Implementamos controles de acceso estrictos, rotación regular de claves y registro de auditoría completo. El contenido de demos está aislado por tenant con seguridad a nivel de fila.</value></data>
-  <data name="security_data_p2" xml:space="preserve"><value>Cada consulta a la base de datos está limitada a tu tenant. No existe mecanismo para acceder a los datos de otra organización, ni por error. Las claves de cifrado se gestionan con Azure Key Vault con políticas de rotación automática.</value></data>
+  <data name="security_data_p1" xml:space="preserve"><value>NavTour usa servicios alojados en Azure para datos principales de la aplicaci&#xF3;n, almacenamiento e infraestructura operativa. La protecci&#xF3;n de datos se aborda mediante transporte cifrado, servicios de almacenamiento protegidos, control de acceso y comportamiento de aplicaci&#xF3;n sensible al tenant.</value></data>
+  <data name="security_data_p2" xml:space="preserve"><value>El manejo de datos del cliente depende tanto de las protecciones de infraestructura de Azure como de los controles de aplicaci&#xF3;n de NavTour. Cuando aplica, el acceso se limita al contexto correcto del espacio de trabajo y el acceso operativo se mantiene restringido.</value></data>
   <data name="security_infra_title" xml:space="preserve"><value>Infraestructura</value></data>
-  <data name="security_infra_p1" xml:space="preserve"><value>NavTour se ejecuta en Microsoft Azure con redundancia multirregión. Copias de seguridad automáticas, recuperación ante desastres y SLA de 99.9% de disponibilidad. La infraestructura se gestiona como código con escaneo de seguridad automatizado en cada despliegue.</value></data>
-  <data name="security_infra_p2" xml:space="preserve"><value>Usamos Azure App Service, Azure SQL y Azure Blob Storage con replicación geo-redundante. Cada despliegue pasa por escaneos SAST automatizados y de vulnerabilidades de dependencias antes de llegar a producción.</value></data>
+  <data name="security_infra_p1" xml:space="preserve"><value>NavTour se ejecuta en Microsoft Azure y depende de servicios de Azure para hosting, almacenamiento, red y resiliencia operativa. Azure proporciona la base de seguridad de infraestructura subyacente de la plataforma.</value></data>
+  <data name="security_infra_p2" xml:space="preserve"><value>Nuestro posicionamiento p&#xFA;blico de seguridad se basa en esa fundaci&#xF3;n de Azure y no en afirmaciones p&#xFA;blicas de certificaciones independientes. Si tu equipo tiene preguntas espec&#xED;ficas de arquitectura o despliegue, podemos revisarlas directamente.</value></data>
   <data name="security_compliance_title" xml:space="preserve"><value>Cumplimiento</value></data>
-  <data name="security_compliance_p1" xml:space="preserve"><value>NavTour cumple con SOC 2 Type II. Nos sometemos a auditorías anuales de terceros que cubren seguridad, disponibilidad y confidencialidad. También cumplimos con GDPR, CCPA y mantenemos un Acuerdo de Procesamiento de Datos (DPA) vigente.</value></data>
-  <data name="security_compliance_p2" xml:space="preserve"><value>Nuestro informe SOC 2 está disponible bajo NDA para clientes enterprise que evalúan NavTour. Contacta a nuestro equipo para solicitar una copia junto con nuestro cuestionario de seguridad completado.</value></data>
+  <data name="security_compliance_p1" xml:space="preserve"><value>Las conversaciones sobre seguridad y privacidad deben evaluarse en el contexto de infraestructura alojada en Azure y de los controles de producto que NavTour aplica encima. Si tu equipo tiene requisitos de cumplimiento, podemos revisarlos directamente.</value></data>
+  <data name="security_compliance_p2" xml:space="preserve"><value>No presentamos esta p&#xE1;gina como una afirmaci&#xF3;n de certificaci&#xF3;n independiente salvo que se indique expl&#xED;citamente en otro lugar. Contacta a nuestro equipo para respuestas actuales sobre revisi&#xF3;n de seguridad, manejo de privacidad y consideraciones de despliegue.</value></data>
   <data name="security_privacy_title" xml:space="preserve"><value>Privacidad</value></data>
   <data name="security_privacy_p1" xml:space="preserve"><value>Solo recopilamos lo necesario. Los datos de visualización de demos se anonimizan por defecto. Tú controlas las políticas de retención. Nunca vendemos datos de clientes. Derechos completos de sujeto de datos GDPR: acceso, eliminación, portabilidad.</value></data>
   <data name="security_privacy_p2" xml:space="preserve"><value>NavTour no usa datos de clientes para entrenamiento de modelos ni ningún propósito más allá de la prestación del servicio. Cuando eliminas tu cuenta, todos los datos asociados se purgan permanentemente en 30 días.</value></data>
+  <data name="security_checklist_eyebrow" xml:space="preserve"><value>Checklist Operativo</value></data>
+  <data name="security_checklist_title" xml:space="preserve"><value>Lo que los equipos enterprise suelen preguntar primero</value></data>
+  <data name="security_checklist_subtitle" xml:space="preserve"><value>Esta p&#xE1;gina debe facilitar entender c&#xF3;mo NavTour maneja acceso, almacenamiento, disponibilidad y respuesta a incidentes.</value></data>
+  <data name="security_check1" xml:space="preserve"><value>Cifrado en tr&#xE1;nsito y en reposo</value></data>
+  <data name="security_check2" xml:space="preserve"><value>Separaci&#xF3;n de datos por espacio de trabajo</value></data>
+  <data name="security_check3" xml:space="preserve"><value>Backups y procedimientos de recuperaci&#xF3;n ante desastres</value></data>
+  <data name="security_check4" xml:space="preserve"><value>Auditabilidad y verificaciones de seguridad en despliegues</value></data>
+  <data name="security_check5" xml:space="preserve"><value>Soporte para revisiones de cumplimiento y cuestionarios</value></data>
+  <data name="security_ops_label" xml:space="preserve"><value>Preparaci&#xF3;n Operativa</value></data>
+  <data name="security_ops_title" xml:space="preserve"><value>C&#xF3;mo se mueve el trabajo de seguridad por la plataforma</value></data>
+  <data name="security_ops_pill" xml:space="preserve"><value>Continuo</value></data>
+  <data name="security_ops_step1_title" xml:space="preserve"><value>Prevenir</value></data>
+  <data name="security_ops_step1_desc" xml:space="preserve"><value>Control de acceso, cifrado, hosting seguro y verificaciones automatizadas reducen la exposici&#xF3;n antes de que los problemas lleguen a producci&#xF3;n.</value></data>
+  <data name="security_ops_step2_title" xml:space="preserve"><value>Detectar</value></data>
+  <data name="security_ops_step2_desc" xml:space="preserve"><value>Logs, monitoreo y procesos de revisi&#xF3;n facilitan identificar r&#xE1;pidamente actividad sospechosa o regresiones.</value></data>
+  <data name="security_ops_step3_title" xml:space="preserve"><value>Responder</value></data>
+  <data name="security_ops_step3_desc" xml:space="preserve"><value>Cuando se reportan o descubren problemas, se priorizan, investigan, corrigen y comunican mediante una ruta de respuesta definida.</value></data>
   <data name="security_disclosure_title" xml:space="preserve"><value>Divulgación Responsable</value></data>
   <data name="security_disclosure_p1" xml:space="preserve"><value>Mantenemos un programa de divulgación responsable para investigadores de seguridad. Si descubres una vulnerabilidad, envía un correo a security@navtour.com. Respondemos en 24 horas y nunca emprendemos acciones legales contra reportantes de buena fe.</value></data>
   <data name="security_disclosure_p2" xml:space="preserve"><value>Valoramos a la comunidad de investigación en seguridad y estamos comprometidos a trabajar con investigadores para verificar, reproducir y responder a reportes legítimos. Los problemas críticos se priorizan de inmediato.</value></data>
+  <data name="security_contact_eyebrow" xml:space="preserve"><value>Contacto de Seguridad</value></data>
+  <data name="security_contact_title" xml:space="preserve"><value>¿Necesitas artefactos o una revisi&#xF3;n?</value></data>
+  <data name="security_contact_desc" xml:space="preserve"><value>Usa el flujo de contacto para cuestionarios de seguridad, revisiones de procurement, conversaciones de cumplimiento o solicitudes relacionadas con documentaci&#xF3;n de confianza.</value></data>
+  <data name="security_contact_badge1" xml:space="preserve"><value>Cuestionarios</value></data>
+  <data name="security_contact_badge2" xml:space="preserve"><value>Revisi&#xF3;n de cumplimiento</value></data>
+  <data name="security_contact_badge3" xml:space="preserve"><value>Due diligence enterprise</value></data>
   <data name="security_cta_title" xml:space="preserve"><value>¿Preguntas sobre seguridad?</value></data>
-  <data name="security_cta_subtitle" xml:space="preserve"><value>Nuestro equipo está encantado de hablar sobre prácticas de seguridad, compartir nuestro informe SOC 2 o revisar tus requisitos de cumplimiento.</value></data>
+  <data name="security_cta_subtitle" xml:space="preserve"><value>Nuestro equipo puede hablar sobre hosting en Azure, salvaguardas a nivel de aplicaci&#xF3;n y cualquier pregunta de seguridad o privacidad relacionada con tu evaluaci&#xF3;n.</value></data>
   <data name="security_cta_button" xml:space="preserve"><value>Contactar al Equipo de Seguridad</value></data>
 
   <!-- Pricing Page -->
@@ -734,6 +768,30 @@
   <data name="integ_hero_subtitle" xml:space="preserve"><value>Env&#xED;a datos de demos a tu CRM, activa flujos de trabajo e inserta demos donde est&#xE9;n tus compradores.</value></data>
   <data name="integ_cta_primary" xml:space="preserve"><value>Empieza Gratis</value></data>
   <data name="integ_cta_secondary" xml:space="preserve"><value>Habla con Nosotros</value></data>
+  <data name="integ_stat1_title" xml:space="preserve"><value>Datos listos para CRM</value></data>
+  <data name="integ_stat1_desc" xml:space="preserve"><value>Env&#xED;a capturas de leads, finalizaci&#xF3;n de demos y se&#xF1;ales de intenci&#xF3;n a los sistemas que ya usa tu equipo de ingresos.</value></data>
+  <data name="integ_stat2_title" xml:space="preserve"><value>Configuraci&#xF3;n r&#xE1;pida</value></data>
+  <data name="integ_stat2_desc" xml:space="preserve"><value>Conecta flujos comunes r&#xE1;pido con embeds, webhooks, integraciones nativas o la API REST.</value></data>
+  <data name="integ_stat3_title" xml:space="preserve"><value>Eventos accionables</value></data>
+  <data name="integ_stat3_desc" xml:space="preserve"><value>Rastrea los momentos que importan: visto, completado, compartido, clicado y enviado.</value></data>
+  <data name="integ_flow_eyebrow" xml:space="preserve"><value>C&#xF3;mo Funciona</value></data>
+  <data name="integ_flow_title" xml:space="preserve"><value>De la interacci&#xF3;n con la demo al seguimiento automatizado</value></data>
+  <data name="integ_flow_subtitle" xml:space="preserve"><value>NavTour se integra entre tu experiencia de demo y los sistemas que tu equipo ya usa para calificar, notificar, enrutar y reportar.</value></data>
+  <data name="integ_flow_step1_title" xml:space="preserve"><value>Captura comportamiento en la demo</value></data>
+  <data name="integ_flow_step1_desc" xml:space="preserve"><value>Registra vistas, finalizaci&#xF3;n, clics en CTA, env&#xED;o de formularios y engagement por paso en cada sesi&#xF3;n.</value></data>
+  <data name="integ_flow_step2_title" xml:space="preserve"><value>Punt&#xFA;a y enriquece</value></data>
+  <data name="integ_flow_step2_desc" xml:space="preserve"><value>Convierte actividad cruda en se&#xF1;ales &#xFA;tiles sobre las que tus equipos de ventas y marketing puedan actuar.</value></data>
+  <data name="integ_flow_step3_title" xml:space="preserve"><value>Env&#xED;a a tu stack</value></data>
+  <data name="integ_flow_step3_desc" xml:space="preserve"><value>Env&#xED;a eventos a CRMs, herramientas de automatizaci&#xF3;n, anal&#xED;tica, sistemas internos y canales de mensajer&#xED;a.</value></data>
+  <data name="integ_flow_step4_title" xml:space="preserve"><value>Activa el siguiente paso</value></data>
+  <data name="integ_flow_step4_desc" xml:space="preserve"><value>Crea tareas, lanza campa&#xF1;as, alerta al equipo o personaliza el siguiente paso autom&#xE1;ticamente.</value></data>
+  <data name="integ_flow_visual_label" xml:space="preserve"><value>Canal de Eventos</value></data>
+  <data name="integ_flow_visual_title" xml:space="preserve"><value>Una demo, muchas acciones posteriores</value></data>
+  <data name="integ_flow_visual_pill" xml:space="preserve"><value>Tiempo real</value></data>
+  <data name="integ_flow_visual_box1" xml:space="preserve"><value>formulario enviado</value></data>
+  <data name="integ_flow_visual_box2" xml:space="preserve"><value>negocio actualizado</value></data>
+  <data name="integ_flow_visual_box3" xml:space="preserve"><value>alerta en Slack</value></data>
+  <data name="integ_flow_visual_box4" xml:space="preserve"><value>sync personalizado</value></data>
   <data name="integ_cat1_label" xml:space="preserve"><value>CRM</value></data>
   <data name="integ_cat1_title" xml:space="preserve"><value>Gesti&#xF3;n de Relaciones con Clientes</value></data>
   <data name="integ_hubspot_name" xml:space="preserve"><value>HubSpot</value></data>
@@ -770,6 +828,19 @@
   <data name="integ_api_title" xml:space="preserve"><value>Construye lo que sea con la API</value></data>
   <data name="integ_api_desc" xml:space="preserve"><value>API REST completa con documentaci&#xF3;n integral. Crea demos, gestiona contenido, activa eventos y extrae anal&#xED;tica program&#xE1;ticamente. Todo lo que puedes hacer en la interfaz, puedes hacerlo v&#xED;a API.</value></data>
   <data name="integ_api_link" xml:space="preserve"><value>Ver Documentaci&#xF3;n de API</value></data>
+  <data name="integ_api_visual_label" xml:space="preserve"><value>Experiencia para Desarrolladores</value></data>
+  <data name="integ_api_visual_title" xml:space="preserve"><value>Env&#xED;a eventos. Obt&#xE9;n anal&#xED;tica. Automatiza el resto.</value></data>
+  <data name="integ_api_badge1" xml:space="preserve"><value>Endpoints REST</value></data>
+  <data name="integ_api_badge2" xml:space="preserve"><value>Entrega por webhook</value></data>
+  <data name="integ_api_badge3" xml:space="preserve"><value>Demos embebibles</value></data>
+  <data name="integ_workflows_eyebrow" xml:space="preserve"><value>Flujos Populares</value></data>
+  <data name="integ_workflows_title" xml:space="preserve"><value>Lo que los equipos suelen conectar primero</value></data>
+  <data name="integ_workflow1_title" xml:space="preserve"><value>Enviar viewers calificados al CRM</value></data>
+  <data name="integ_workflow1_desc" xml:space="preserve"><value>Cuando un prospecto termina una demo o env&#xED;a un formulario, crea o actualiza el registro en tu CRM y asigna el siguiente responsable autom&#xE1;ticamente.</value></data>
+  <data name="integ_workflow2_title" xml:space="preserve"><value>Activar nurturing seg&#xFA;n engagement real</value></data>
+  <data name="integ_workflow2_desc" xml:space="preserve"><value>Usa umbrales de finalizaci&#xF3;n y comportamiento por paso para iniciar la secuencia correcta en lugar de enviar lo mismo a todos los leads.</value></data>
+  <data name="integ_workflow3_title" xml:space="preserve"><value>Reportar influencia de demos en anal&#xED;tica</value></data>
+  <data name="integ_workflow3_desc" xml:space="preserve"><value>Reenv&#xED;a eventos a herramientas de anal&#xED;tica para que marketing y revenue puedan medir demo-a-pipeline y demo-a-conversi&#xF3;n.</value></data>
   <data name="integ_bottom_cta_title" xml:space="preserve"><value>&#xBF;No ves tu integraci&#xF3;n?</value></data>
   <data name="integ_bottom_cta_subtitle" xml:space="preserve"><value>Nuestra API REST y webhooks te permiten conectar NavTour a cualquier cosa. O solicita una integraci&#xF3;n — la construimos r&#xE1;pido.</value></data>
   <data name="integ_bottom_cta_text" xml:space="preserve"><value>Cont&#xE1;ctanos</value></data>
