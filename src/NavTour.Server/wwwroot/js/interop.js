@@ -3,6 +3,23 @@ window.clickElement = function (id) {
     if (el) el.click();
 };
 
+// Render captured HTML in iframe via blob URL (not srcdoc)
+// Blob URL iframes can load external stylesheets; srcdoc cannot.
+window.navtourSetFrameContent = function (iframeId, html) {
+    var iframe = document.getElementById(iframeId);
+    if (!iframe) return;
+    // Clean up previous blob URL
+    if (iframe._blobUrl) {
+        URL.revokeObjectURL(iframe._blobUrl);
+        iframe._blobUrl = null;
+    }
+    if (!html) return;
+    var blob = new Blob([html], { type: "text/html" });
+    var url = URL.createObjectURL(blob);
+    iframe._blobUrl = url;
+    iframe.src = url;
+};
+
 window.annotationDrag = {
     getParentSize: function (el) {
         var parent = el ? el.parentElement : null;

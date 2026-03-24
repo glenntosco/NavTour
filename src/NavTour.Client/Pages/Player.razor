@@ -37,8 +37,7 @@ else
         <div @ref="frameContainer" class="player-frame-container" style="flex:1;position:relative;overflow:hidden">
             @if (currentFrame != null)
             {
-                <iframe @ref="iframeRef" sandbox="allow-same-origin" style="width:100%;height:100%;border:none"
-                    srcdoc="@currentFrame.HtmlContent"></iframe>
+                <iframe @ref="iframeRef" id="@_playerIframeId" sandbox="allow-same-origin" style="width:100%;height:100%;border:none"></iframe>
             }
 
             @* Spotlight overlay is managed by JS (playerSpotlight) *@
@@ -178,6 +177,8 @@ else
     private ElementReference iframeRef;
     private ElementReference frameContainer;
     private DotNetObjectReference<Player>? dotnetRef;
+    private string _playerIframeId = "navtour-player-" + Guid.NewGuid().ToString("N")[..8];
+    private Guid? _lastRenderedFrameId;
 
     private PlayerStepDto? currentStep => manifest?.Steps.ElementAtOrDefault(currentStepIndex);
     private PlayerFrameDto? currentFrame => currentStep != null
@@ -209,7 +210,15 @@ else
             await JS.InvokeVoidAsync("playerInterop.focusElement", playerContainer);
         }
 
-        // Set up trigger for current step after render — wait for iframe to load first
+        // Load frame HTML via blob URL when frame changes
+        if (currentFrame != null && currentFrame.Id != _lastRenderedFrameId)
+        {
+            _lastRenderedFrameId = currentFrame.Id;
+            await JS.InvokeVoidAsync("navtourSetFrameContent", _playerIframeId, currentFrame.HtmlContent);
+            await Task.Delay(300); // Wait for stylesheets to load
+        }
+
+        // Set up trigger for current step after render
         if (manifest != null && currentStep != null && dotnetRef != null)
         {
             await SetupCurrentStepTrigger();

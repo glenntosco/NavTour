@@ -3,9 +3,8 @@
 <div style="flex:1;position:relative;overflow:hidden;background:var(--rz-base-200)">
     @if (HtmlContent != null)
     {
-        <iframe @ref="iframeRef" sandbox="allow-same-origin allow-scripts"
-            style="width:100%;height:100%;border:none"
-            srcdoc="@HtmlContent"></iframe>
+        <iframe @ref="iframeRef" id="@_frameEditorIframeId" sandbox="allow-same-origin"
+            style="width:100%;height:100%;border:none"></iframe>
 
         @* Element toolbar — appears when an element is selected *@
         @if (selectedElement != null)
@@ -194,6 +193,8 @@
     private string replaceText = "";
     private int replaceCount = -1;
     private bool editorReady;
+    private string _frameEditorIframeId = "navtour-frame-editor-" + Guid.NewGuid().ToString("N")[..8];
+    private string? _lastLoadedHtml;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -202,11 +203,18 @@
             dotnetRef = DotNetObjectReference.Create(this);
         }
 
+        // Load HTML via blob URL (supports external stylesheet loading)
+        if (HtmlContent != null && HtmlContent != _lastLoadedHtml)
+        {
+            _lastLoadedHtml = HtmlContent;
+            await JS.InvokeVoidAsync("navtourSetFrameContent", _frameEditorIframeId, HtmlContent);
+            // Wait for iframe to load external stylesheets
+            await Task.Delay(500);
+        }
+
         // Re-init editor when iframe content changes
         if (HtmlContent != null && dotnetRef != null)
         {
-            // Small delay to let iframe load srcdoc
-            await Task.Delay(300);
             try
             {
                 await JS.InvokeVoidAsync("frameEditorBridge.init", dotnetRef, iframeRef);
