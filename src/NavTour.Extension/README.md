@@ -2,7 +2,7 @@
 
 Chrome Manifest V3 extension for capturing product screenshots as interactive HTML/CSS demo frames.
 
-**Version:** 1.2.0
+**Version:** 1.4.0
 **Chrome Web Store:** [NavTour Capture](https://chrome.google.com/webstore/detail/navtour-capture)
 
 ## Setup

@@ -28,6 +28,13 @@
       "world": "MAIN",
       "all_frames": true,
       "match_about_blank": true
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["capture.js"],
+      "run_at": "document_idle",
+      "world": "ISOLATED",
+      "all_frames": true
     }
   ],
   "icons": {
