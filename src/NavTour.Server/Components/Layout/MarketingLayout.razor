@@ -1,4 +1,5 @@
 @inherits LayoutComponentBase
+@inject NavigationManager Nav
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -16,6 +17,34 @@
     </main>
     <MarketingFooter />
 </div>
+
+@* SEO: Structured Data *@
+<script type="application/ld+json">
+{
+    "@@context": "https://schema.org",
+    "@@type": "Organization",
+    "name": "NavTour",
+    "url": "https://navtour.cloud",
+    "logo": "https://navtour.cloud/images/NavTourNoTag.webp",
+    "description": "AI-powered interactive product demo platform. Upload screenshots, generate guided tours in 60 seconds with AI voiceover and lead capture."
+}
+</script>
+<script type="application/ld+json">
+{
+    "@@context": "https://schema.org",
+    "@@type": "SoftwareApplication",
+    "name": "NavTour",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web",
+    "description": "AI-powered interactive product demo platform with Chrome extension capture, AI tour generation, ElevenLabs voiceover, and lead capture forms.",
+    "offers": {
+        "@@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "description": "Free tier available"
+    }
+}
+</script>
 
 <script>
     // Scroll reveal observer
@@ -96,3 +125,11 @@
         }
     })();
 </script>
+
+@code {
+    private string GetCanonicalUrl()
+    {
+        var path = new Uri(Nav.Uri).AbsolutePath.TrimEnd('/');
+        return "https://navtour.cloud" + (string.IsNullOrEmpty(path) ? "" : path);
+    }
+}

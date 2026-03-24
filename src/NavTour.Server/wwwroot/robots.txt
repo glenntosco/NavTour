@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /demos/
+Disallow: /forms
+Disallow: /leads
+Disallow: /analytics
+Disallow: /team
+Disallow: /settings
+Disallow: /api/
+
+Sitemap: https://navtour.cloud/sitemap.xml

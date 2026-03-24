@@ -1,127 +1,163 @@
 @page "/"
 @layout MarketingLayout
 
-<PageTitle>NavTour — Upload Screenshots. AI Builds Your Tour.</PageTitle>
+<PageTitle>NavTour - Upload Screenshots. AI Builds Your Tour.</PageTitle>
 <HeadContent>
     <meta name="description" content="Upload screenshots and AI generates a complete interactive product tour in 60 seconds. AI-powered voiceover, smart annotations, and lead capture built in." />
-    <meta property="og:title" content="NavTour — Upload Screenshots. AI Builds Your Tour." />
+    <meta property="og:title" content="NavTour - Upload Screenshots. AI Builds Your Tour." />
     <meta property="og:description" content="The AI demo platform that turns screenshots into interactive product tours in under 60 seconds." />
+    <meta property="og:url" content="https://navtour.cloud/" />
+    <meta property="og:image" content="https://navtour.cloud/images/product-form-builder.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="NavTour" />
+    <link rel="canonical" href="https://navtour.cloud/" />
+    <link rel="alternate" hreflang="en" href="https://navtour.cloud/" />
+    <link rel="alternate" hreflang="es" href="https://navtour.cloud/?culture=es&amp;ui-culture=es" />
+    <link rel="alternate" hreflang="x-default" href="https://navtour.cloud/" />
 </HeadContent>
 
-@* ═══════════════════════════════════════════════════════════════
-   1. HERO
-   ═══════════════════════════════════════════════════════════════ *@
 <HeroSection
-    Eyebrow="Introducing AI Tour Generator"
+    Eyebrow="Self-Serve Interactive Demos"
     Title="Upload Screenshots. AI Builds Your Tour."
-    Subtitle="NavTour uses Claude AI to analyze your product screens, generate guided annotations, and write natural voiceover scripts — all in under 60 seconds."
-    PrimaryCtaText="Start Building Free →"
+    Subtitle="Capture your product, generate a polished interactive tour in under 60 seconds, and publish without waiting on a sales call. Built for teams that want to try, launch, and iterate on their own."
+    PrimaryCtaText="Start Free ->"
     PrimaryCtaUrl="/register"
-    SecondaryCtaText="See It In Action"
-    SecondaryCtaUrl="/contact"
-    ImageUrl="/images/product-form-builder.png" />
+    SecondaryCtaText="Explore Product"
+    SecondaryCtaUrl="/product"
+    ImageUrl="/images/product-form-builder.png">
+    <div class="mkt-hero-proof">
+        <div class="mkt-hero-proof-item">No credit card required</div>
+        <div class="mkt-hero-proof-item">Publish your first tour today</div>
+        <div class="mkt-hero-proof-item">Built-in lead capture and analytics</div>
+    </div>
+    <div class="mkt-hero-mini-metrics">
+        <div class="mkt-hero-mini-metric">
+            <strong>60s</strong>
+            <span>AI-generated first draft</span>
+        </div>
+        <div class="mkt-hero-mini-metric">
+            <strong>24+</strong>
+            <span>voices ready to preview</span>
+        </div>
+        <div class="mkt-hero-mini-metric">
+            <strong>HTML/CSS</strong>
+            <span>captured with visual fidelity</span>
+        </div>
+    </div>
+</HeroSection>
 
-@* ═══════════════════════════════════════════════════════════════
-   2. SOCIAL PROOF
-   ═══════════════════════════════════════════════════════════════ *@
 <section class="mkt-social-proof">
-    <div class="mkt-container text-center">
-        <div style="display:flex;align-items:center;justify-content:center;gap:var(--space-8);margin-bottom:var(--space-8)">
-            <div style="display:flex;align-items:center;gap:var(--space-2);font-size:var(--text-sm);color:var(--text-secondary)">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--nt-accent)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                <strong>4.9/5</strong> on G2
+    <div class="mkt-container">
+        <div class="mkt-self-serve-strip reveal">
+            <div class="mkt-self-serve-strip-copy">
+                <div class="mkt-eyebrow">Built for self-serve evaluation</div>
+                <h2>Try the product before you talk to anyone.</h2>
+                <p>NavTour is positioned for teams that want immediate access: sign up, capture screens, generate a tour, and decide later whether you need a full demo or a paid plan.</p>
             </div>
-            <div style="width:1px;height:20px;background:var(--neutral-300)"></div>
-            <div style="font-size:var(--text-sm);color:var(--text-secondary)">
-                Trusted by <strong>500+</strong> product-led teams
+            <div class="mkt-self-serve-strip-grid">
+                <div class="mkt-self-serve-tile">
+                    <strong>Start free</strong>
+                    <span>Create an account and build without a credit card.</span>
+                </div>
+                <div class="mkt-self-serve-tile">
+                    <strong>Ship fast</strong>
+                    <span>Publish a usable walkthrough the same day you sign up.</span>
+                </div>
+                <div class="mkt-self-serve-tile">
+                    <strong>Prove value</strong>
+                    <span>See leads, completion, and share behavior from the first demo.</span>
+                </div>
             </div>
         </div>
-        <LogoGrid Companies='new() { "Apex Financial", "Meridian Health", "CloudScale", "TerraLogic", "Pinnacle SaaS", "Vantage CRM", "Horizon Ops", "NovaBridge" }' Columns="8" />
     </div>
 </section>
 
-@* ═══════════════════════════════════════════════════════════════
-   3. AI DEEP DIVE — Tour Generator
-   ═══════════════════════════════════════════════════════════════ *@
 <section class="mkt-section">
     <div class="mkt-container">
         <div class="mkt-section-heading reveal">
-            <div class="mkt-eyebrow" style="color:var(--nt-accent);font-size:var(--text-sm);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:var(--space-3)">Powered by Claude AI</div>
+            <div class="mkt-eyebrow" style="color:var(--nt-accent)">Powered by Claude AI</div>
             <h2>One Click. Complete Tour.</h2>
             <p style="max-width:600px;margin:var(--space-4) auto 0;color:var(--text-secondary);font-size:var(--text-lg)">
-                Click "AI Generate" in the editor and Claude Opus analyzes every frame of your demo — identifying UI elements, generating step-by-step annotations, and writing voiceover scripts.
+                Click "AI Generate" in the editor and Claude analyzes every frame of your demo, identifying UI elements, generating step-by-step annotations, and writing voiceover scripts.
             </p>
         </div>
 
         <div class="mkt-grid mkt-grid-3 reveal-stagger" style="margin-top:var(--space-12)">
-            <div class="mkt-feature-card">
+            <div class="mkt-feature-card mkt-card">
                 <div class="mkt-feature-icon">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--nt-accent)" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
                 </div>
                 <h3>Screenshot Analysis</h3>
-                <p>AI reads your HTML frames and understands the UI layout, navigation patterns, and key elements — no manual tagging needed.</p>
+                <p>AI reads your HTML frames and understands the UI layout, navigation patterns, and key elements without manual tagging.</p>
             </div>
-            <div class="mkt-feature-card">
+            <div class="mkt-feature-card mkt-card">
                 <div class="mkt-feature-icon">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--nt-accent)" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                 </div>
                 <h3>Smart Annotations</h3>
-                <p>Generates titled tooltips with contextual descriptions, positioned precisely where they matter most on each screen.</p>
+                <p>Generate titled tooltips with contextual descriptions and sensible positioning for every screen in the flow.</p>
             </div>
-            <div class="mkt-feature-card">
+            <div class="mkt-feature-card mkt-card">
                 <div class="mkt-feature-icon">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--nt-accent)" stroke-width="2" stroke-linecap="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
                 </div>
                 <h3>Voiceover Scripts</h3>
-                <p>Natural, conversational voiceover text for every step — ready for AI voice generation with 24+ ElevenLabs voices.</p>
+                <p>Natural, conversational voiceover text for every step, ready for AI voice generation with 24+ ElevenLabs voices.</p>
             </div>
         </div>
     </div>
 </section>
 
-@* ═══════════════════════════════════════════════════════════════
-   4. AI VOICEOVER
-   ═══════════════════════════════════════════════════════════════ *@
 <section class="mkt-section-alt">
     <div class="mkt-container">
         <div class="mkt-step-row reveal">
             <div class="mkt-step-row-content">
-                <div class="mkt-eyebrow" style="color:var(--nt-accent);font-size:var(--text-sm);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:var(--space-3)">AI Voiceover</div>
-                <h3>Your Demos Speak — In Any Language</h3>
-                <p>Choose from 24+ natural AI voices powered by ElevenLabs. English, Spanish, and more — the multilingual model auto-detects your text language and speaks with the right accent.</p>
+                <div class="mkt-eyebrow" style="color:var(--nt-accent)">AI Voiceover</div>
+                <h3>Your Demos Speak - In Any Language</h3>
+                <p>Choose from 24+ natural AI voices powered by ElevenLabs. English, Spanish, and more. The multilingual model auto-detects your text language and speaks with the right accent.</p>
                 <ul style="list-style:none;padding:0;margin:var(--space-6) 0 0;display:flex;flex-direction:column;gap:var(--space-3)">
                     <li style="display:flex;align-items:center;gap:var(--space-3);color:var(--text-secondary);font-size:var(--text-sm)">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--nt-accent)" stroke="none"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                        24+ natural AI voices (male, female, neutral)
+                        24+ natural AI voices
                     </li>
                     <li style="display:flex;align-items:center;gap:var(--space-3);color:var(--text-secondary);font-size:var(--text-sm)">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--nt-accent)" stroke="none"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                        Multilingual — English, Spanish, and auto-detected languages
+                        Multilingual output with auto-detected language
                     </li>
                     <li style="display:flex;align-items:center;gap:var(--space-3);color:var(--text-secondary);font-size:var(--text-sm)">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--nt-accent)" stroke="none"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                        Instant preview — hear voices before publishing
+                        Instant preview before publishing
                     </li>
                     <li style="display:flex;align-items:center;gap:var(--space-3);color:var(--text-secondary);font-size:var(--text-sm)">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--nt-accent)" stroke="none"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                        Generated once, cached forever — no per-play costs
+                        Generated once and reused on every play
                     </li>
                 </ul>
             </div>
             <div class="mkt-step-row-visual">
-                <div class="mkt-placeholder mkt-placeholder-feature" style="background:var(--surface-secondary);border:1px solid var(--neutral-200);border-radius:8px;padding:var(--space-8);text-align:center">
-                    <div style="font-size:40px;margin-bottom:var(--space-4)">🔊</div>
-                    <div style="font-size:var(--text-lg);font-weight:600;color:var(--text-primary)">AI Voice Demo</div>
-                    <div style="font-size:var(--text-sm);color:var(--text-secondary);margin-top:var(--space-2)">@((MarkupString)"&#x1F1FA;&#x1F1F8; Rachel &middot; &#x1F1EC;&#x1F1E7; George &middot; &#x1F1E6;&#x1F1FA; Charlie")</div>
+                <div class="mkt-stage-card">
+                    <div class="mkt-stage-card-header">
+                        <div>
+                            <div class="mkt-stage-card-label">Voice Preview</div>
+                            <div class="mkt-stage-card-title">Multilingual narration</div>
+                        </div>
+                        <div class="mkt-stage-pill">Ready to publish</div>
+                    </div>
+                    <div class="mkt-voice-list">
+                        <div class="mkt-voice-row"><span>Rachel</span><span>English</span></div>
+                        <div class="mkt-voice-row"><span>George</span><span>British</span></div>
+                        <div class="mkt-voice-row"><span>Charlie</span><span>Spanish</span></div>
+                    </div>
+                    <div class="mkt-waveform" aria-hidden="true">
+                        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-@* ═══════════════════════════════════════════════════════════════
-   5. HOW IT WORKS — 3 Steps
-   ═══════════════════════════════════════════════════════════════ *@
 <section class="mkt-section">
     <div class="mkt-container">
         <div class="mkt-section-heading reveal">
@@ -132,10 +168,27 @@
                 <div class="mkt-step-row-content">
                     <div class="mkt-step-label">Step 1</div>
                     <h3>Capture Your Product</h3>
-                    <p>Install the NavTour Chrome extension and browse your product. Click to capture each screen — the extension snapshots the full HTML and CSS, preserving every detail.</p>
+                    <p>Install the NavTour Chrome extension and browse your product. Click to capture each screen. The extension snapshots the full HTML and CSS, preserving every detail.</p>
                 </div>
                 <div class="mkt-step-row-visual">
-                    <div class="mkt-placeholder mkt-placeholder-feature">Chrome Extension Capture</div>
+                    <div class="mkt-stage-card">
+                        <div class="mkt-stage-card-header">
+                            <div>
+                                <div class="mkt-stage-card-label">Browser Capture</div>
+                                <div class="mkt-stage-card-title">Live extension session</div>
+                            </div>
+                            <div class="mkt-stage-pill">Recording</div>
+                        </div>
+                        <div class="mkt-browser-bar">
+                            <span></span><span></span><span></span>
+                        </div>
+                        <div class="mkt-ui-block mkt-ui-block-lg"></div>
+                        <div class="mkt-ui-grid">
+                            <div class="mkt-ui-block"></div>
+                            <div class="mkt-ui-block"></div>
+                            <div class="mkt-ui-block"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="mkt-step-row">
@@ -145,26 +198,50 @@
                     <p>Click "AI Generate" and Claude analyzes every frame. In under 60 seconds, you have a complete interactive tour with step-by-step annotations and voiceover scripts.</p>
                 </div>
                 <div class="mkt-step-row-visual">
-                    <div class="mkt-placeholder mkt-placeholder-feature">AI Copilot Generating Tour</div>
+                    <div class="mkt-stage-card">
+                        <div class="mkt-stage-card-header">
+                            <div>
+                                <div class="mkt-stage-card-label">AI Generate</div>
+                                <div class="mkt-stage-card-title">Tour draft in progress</div>
+                            </div>
+                            <div class="mkt-stage-pill">~60s</div>
+                        </div>
+                        <div class="mkt-progress-stack">
+                            <div class="mkt-progress-row"><span>Analyzing frames</span><div><i style="width:92%"></i></div></div>
+                            <div class="mkt-progress-row"><span>Placing annotations</span><div><i style="width:78%"></i></div></div>
+                            <div class="mkt-progress-row"><span>Writing voiceover</span><div><i style="width:64%"></i></div></div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="mkt-step-row">
                 <div class="mkt-step-row-content">
                     <div class="mkt-step-label">Step 3</div>
-                    <h3>Share & Capture Leads</h3>
+                    <h3>Share and Capture Leads</h3>
                     <p>Publish your demo with one click. Share via link, embed on your website, or send via email. Built-in analytics track engagement and the lead capture form converts viewers into pipeline.</p>
                 </div>
                 <div class="mkt-step-row-visual">
-                    <div class="mkt-placeholder mkt-placeholder-feature">Analytics + Lead Capture</div>
+                    <div class="mkt-stage-card">
+                        <div class="mkt-stage-card-header">
+                            <div>
+                                <div class="mkt-stage-card-label">Share Results</div>
+                                <div class="mkt-stage-card-title">Leads and engagement</div>
+                            </div>
+                            <div class="mkt-stage-pill">Live</div>
+                        </div>
+                        <div class="mkt-result-grid">
+                            <div><strong>128</strong><span>views</span></div>
+                            <div><strong>47%</strong><span>completion</span></div>
+                            <div><strong>19</strong><span>leads</span></div>
+                            <div><strong>8</strong><span>shares</span></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-@* ═══════════════════════════════════════════════════════════════
-   6. USE CASES
-   ═══════════════════════════════════════════════════════════════ *@
 <section class="mkt-section-alt">
     <div class="mkt-container">
         <div class="mkt-section-heading reveal">
@@ -175,15 +252,12 @@
             <BuyerJourneyCard Icon="discovery" Title="Sales Discovery" Description="Send personalized demos before meetings so prospects arrive educated and ready to buy." />
             <BuyerJourneyCard Icon="email" Title="Email Campaigns" Description="Include demo links in outbound sequences to increase reply rates and shorten sales cycles." />
             <BuyerJourneyCard Icon="champion" Title="Champion Enablement" Description="Arm internal champions with shareable demos they can forward to decision makers." />
-            <BuyerJourneyCard Icon="tradeshow" Title="Events & Tradeshows" Description="Run demos on booth displays or share QR codes that link to self-guided product tours." />
+            <BuyerJourneyCard Icon="tradeshow" Title="Events and Tradeshows" Description="Run demos on booth displays or share QR codes that link to self-guided product tours." />
             <BuyerJourneyCard Icon="onboarding" Title="Customer Onboarding" Description="Guide new users through your product with interactive walkthroughs that reduce time-to-value." />
         </div>
     </div>
 </section>
 
-@* ═══════════════════════════════════════════════════════════════
-   7. PLATFORM FEATURES GRID
-   ═══════════════════════════════════════════════════════════════ *@
 <section class="mkt-section">
     <div class="mkt-container">
         <div class="mkt-section-heading reveal">
@@ -191,9 +265,9 @@
         </div>
         <div class="mkt-grid mkt-grid-3 reveal-stagger" style="margin-top:var(--space-8)">
             <FeatureCard Icon="auto_awesome" Title="AI Tour Generator" Description="Claude AI analyzes your screens and generates complete tours with annotations and voiceover in 60 seconds." />
-            <FeatureCard Icon="mic" Title="AI Voiceover" Description="24+ natural ElevenLabs voices. Multilingual. Preview instantly. Audio cached — no per-play costs." />
+            <FeatureCard Icon="mic" Title="AI Voiceover" Description="24+ natural ElevenLabs voices. Multilingual. Preview instantly. Audio cached with no per-play costs." />
             <FeatureCard Icon="web" Title="Chrome Capture" Description="Snapshot any web app with pixel-perfect HTML/CSS preservation. Computed styles ensure SPA support." />
-            <FeatureCard Icon="edit" Title="Visual Editor" Description="Drag annotations, resize elements, find & replace text, and customize every detail of your tour." />
+            <FeatureCard Icon="edit" Title="Visual Editor" Description="Drag annotations, resize elements, find and replace text, and customize every detail of your tour." />
             <FeatureCard Icon="analytics" Title="Engagement Analytics" Description="Track views, step completion, time-on-step, and conversion events for every demo session." />
             <FeatureCard Icon="person_add" Title="Lead Capture" Description="Built-in lead form at the end of every demo. Export to Excel or connect to your CRM." />
             <FeatureCard Icon="tune" Title="Personalization" Description="Use {{company}} tokens to dynamically swap text for each prospect. One demo, infinite personalization." />
@@ -203,106 +277,65 @@
     </div>
 </section>
 
-@* ═══════════════════════════════════════════════════════════════
-   8. COMPARISON TABLE
-   ═══════════════════════════════════════════════════════════════ *@
 <section class="mkt-section-alt">
     <div class="mkt-container">
         <div class="mkt-section-heading reveal">
-            <h2>How NavTour Compares</h2>
+            <div class="mkt-eyebrow">Self-Serve Path</div>
+            <h2>Start free now. Add sales help only when you need it.</h2>
+            <p>Everything on the homepage should help a visitor say yes to trying the product themselves. These are the decision points we should reinforce.</p>
         </div>
-        <div class="reveal" style="overflow-x:auto;margin-top:var(--space-8)">
-            <table style="width:100%;border-collapse:collapse;font-size:var(--text-sm)">
-                <thead>
-                    <tr style="border-bottom:2px solid var(--neutral-200)">
-                        <th style="text-align:left;padding:var(--space-4);color:var(--text-secondary);font-weight:600">Feature</th>
-                        <th style="text-align:center;padding:var(--space-4);color:var(--nt-accent);font-weight:700">NavTour</th>
-                        <th style="text-align:center;padding:var(--space-4);color:var(--text-secondary);font-weight:600">Navattic</th>
-                        <th style="text-align:center;padding:var(--space-4);color:var(--text-secondary);font-weight:600">Storylane</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr style="border-bottom:1px solid var(--neutral-100)">
-                        <td style="padding:var(--space-3) var(--space-4)">AI Tour Generator</td>
-                        <td style="text-align:center;padding:var(--space-3);color:var(--nt-accent)">✓ Full tour + voiceover</td>
-                        <td style="text-align:center;padding:var(--space-3);color:var(--text-tertiary)">Copy only</td>
-                        <td style="text-align:center;padding:var(--space-3);color:var(--text-tertiary)">—</td>
-                    </tr>
-                    <tr style="border-bottom:1px solid var(--neutral-100);background:var(--surface-secondary)">
-                        <td style="padding:var(--space-3) var(--space-4)">AI Voiceover</td>
-                        <td style="text-align:center;padding:var(--space-3);color:var(--nt-accent)">✓ 24+ voices</td>
-                        <td style="text-align:center;padding:var(--space-3);color:var(--text-tertiary)">✓ Limited</td>
-                        <td style="text-align:center;padding:var(--space-3);color:var(--text-tertiary)">—</td>
-                    </tr>
-                    <tr style="border-bottom:1px solid var(--neutral-100)">
-                        <td style="padding:var(--space-3) var(--space-4)">Time to First Tour</td>
-                        <td style="text-align:center;padding:var(--space-3);color:var(--nt-accent);font-weight:600">&lt; 60 seconds</td>
-                        <td style="text-align:center;padding:var(--space-3);color:var(--text-tertiary)">15–30 min</td>
-                        <td style="text-align:center;padding:var(--space-3);color:var(--text-tertiary)">20–45 min</td>
-                    </tr>
-                    <tr style="border-bottom:1px solid var(--neutral-100);background:var(--surface-secondary)">
-                        <td style="padding:var(--space-3) var(--space-4)">Multilingual</td>
-                        <td style="text-align:center;padding:var(--space-3);color:var(--nt-accent)">✓ Auto-detect</td>
-                        <td style="text-align:center;padding:var(--space-3);color:var(--text-tertiary)">Manual</td>
-                        <td style="text-align:center;padding:var(--space-3);color:var(--text-tertiary)">Manual</td>
-                    </tr>
-                    <tr style="border-bottom:1px solid var(--neutral-100)">
-                        <td style="padding:var(--space-3) var(--space-4)">Lead Capture</td>
-                        <td style="text-align:center;padding:var(--space-3);color:var(--nt-accent)">✓ Built-in</td>
-                        <td style="text-align:center;padding:var(--space-3);color:var(--nt-accent)">✓</td>
-                        <td style="text-align:center;padding:var(--space-3);color:var(--nt-accent)">✓</td>
-                    </tr>
-                    <tr style="border-bottom:1px solid var(--neutral-100);background:var(--surface-secondary)">
-                        <td style="padding:var(--space-3) var(--space-4)">Free Tier</td>
-                        <td style="text-align:center;padding:var(--space-3);color:var(--nt-accent);font-weight:600">✓ Generous</td>
-                        <td style="text-align:center;padding:var(--space-3);color:var(--text-tertiary)">Limited trial</td>
-                        <td style="text-align:center;padding:var(--space-3);color:var(--text-tertiary)">Limited trial</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="mkt-grid mkt-grid-3 reveal-stagger">
+            <div class="mkt-card mkt-decision-card">
+                <div class="mkt-decision-step">01</div>
+                <h3>Fast path to value</h3>
+                <p>Put the strongest self-serve CTA above the fold and keep it primary across the page. Product exploration should be the fallback, not sales contact.</p>
+            </div>
+            <div class="mkt-card mkt-decision-card">
+                <div class="mkt-decision-step">02</div>
+                <h3>Show the workflow, not just claim it</h3>
+                <p>The public site should visually demonstrate capture, AI generation, and publish results. That reduces skepticism and pushes users into signup faster.</p>
+            </div>
+            <div class="mkt-card mkt-decision-card">
+                <div class="mkt-decision-step">03</div>
+                <h3>Delay the sales ask</h3>
+                <p>Keep "Book a demo" available, but secondary. The primary audience here wants to try the product before talking to a person.</p>
+            </div>
         </div>
     </div>
 </section>
 
-@* ═══════════════════════════════════════════════════════════════
-   9. TESTIMONIALS
-   ═══════════════════════════════════════════════════════════════ *@
 <section class="mkt-section">
-    <div class="mkt-container reveal">
-        <TestimonialCard Featured="true"
-            Quote="NavTour's AI generator saved us weeks of work. We uploaded our screenshots and had a polished interactive demo ready to share in minutes — not days."
-            Name="Sarah Chen"
-            Title="VP of Product Marketing"
-            Company="CloudScale"
-            Metric="10x"
-            MetricLabel="faster demo creation" />
+    <div class="mkt-container">
+        <div class="mkt-testimonial-featured reveal">
+            <blockquote>"The public site should feel like the product itself: fast to understand, visually confident, and easy to try without friction."</blockquote>
+            <div class="mkt-testimonial-attribution" style="justify-content:center">
+                <div>
+                    <div class="mkt-testimonial-name">Homepage direction</div>
+                    <div class="mkt-testimonial-role">Self-serve first, sales second</div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
-@* ═══════════════════════════════════════════════════════════════
-   10. METRICS
-   ═══════════════════════════════════════════════════════════════ *@
 <section class="mkt-section-alt" style="background:var(--nt-primary-light)">
     <div class="mkt-container">
         <div class="mkt-section-heading reveal">
             <h2>Results That Speak for Themselves</h2>
         </div>
         <div class="mkt-grid mkt-grid-4 reveal-stagger">
-            <MetricCard Value="60s" Label="Average time to first tour" />
-            <MetricCard Value="3x" Label="More pipeline from demos" />
-            <MetricCard Value="85%" Label="Demo completion rate" />
-            <MetricCard Value="5x" Label="Faster than manual building" />
+            <MetricCard Value="60s" Label="AI-generated first tour draft" />
+            <MetricCard Value="24+" Label="Voices available to preview" />
+            <MetricCard Value="HTML/CSS" Label="Capture with visual fidelity" />
+            <MetricCard Value="Free" Label="Signup path with no credit card" />
         </div>
     </div>
 </section>
 
-@* ═══════════════════════════════════════════════════════════════
-   11. BOTTOM CTA
-   ═══════════════════════════════════════════════════════════════ *@
 <CtaSection Dark="true"
-    Title="Ready to Build Your First AI-Powered Demo?"
-    Subtitle="Upload screenshots. AI does the rest. Free to start — no credit card required."
-    CtaText="Start Building Free →"
+    Title="Ready to Build Your First Interactive Demo?"
+    Subtitle="Start free, generate your first tour, and decide later if you need anything beyond self-serve."
+    CtaText="Create Free Account ->"
     CtaUrl="/register"
-    SecondaryCtaText="Book a Demo"
-    SecondaryCtaUrl="/contact" />
+    SecondaryCtaText="See Pricing"
+    SecondaryCtaUrl="/pricing" />
