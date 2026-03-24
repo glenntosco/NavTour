@@ -2,7 +2,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/marketing.css" />
 
 <div class="mkt">
@@ -48,6 +48,51 @@
             window.addEventListener('scroll', function () {
                 header.classList.toggle('scrolled', window.scrollY > 8);
             }, { passive: true });
+        }
+    })();
+
+    // Lightbox — click-to-zoom for images
+    (function () {
+        function init() {
+            document.querySelectorAll('.mkt-hero-image img, .mkt-lightbox').forEach(function (img) {
+                if (img.dataset.lightbox) return;
+                img.dataset.lightbox = '1';
+                img.style.cursor = 'zoom-in';
+                img.addEventListener('click', function () {
+                    var overlay = document.createElement('div');
+                    overlay.className = 'mkt-lightbox-overlay';
+
+                    var zoomedImg = document.createElement('img');
+                    zoomedImg.src = img.src;
+                    zoomedImg.alt = img.alt || '';
+
+                    var closeBtn = document.createElement('button');
+                    closeBtn.className = 'mkt-lightbox-close';
+                    closeBtn.textContent = '\u00D7';
+
+                    overlay.appendChild(zoomedImg);
+                    overlay.appendChild(closeBtn);
+                    document.body.appendChild(overlay);
+
+                    requestAnimationFrame(function () { overlay.classList.add('active'); });
+
+                    function close() {
+                        overlay.classList.remove('active');
+                        setTimeout(function () { overlay.remove(); }, 200);
+                    }
+                    overlay.addEventListener('click', function (e) {
+                        if (e.target === overlay || e.target === closeBtn) close();
+                    });
+                    document.addEventListener('keydown', function esc(e) {
+                        if (e.key === 'Escape') { close(); document.removeEventListener('keydown', esc); }
+                    });
+                });
+            });
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
         }
     })();
 </script>
