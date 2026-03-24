@@ -419,29 +419,63 @@
   <data name="security_meta_desc" xml:space="preserve"><value>NavTour security: SOC 2 compliant, AES-256 encryption, GDPR ready, 99.9% uptime SLA, Azure hosted.</value></data>
   <data name="security_eyebrow" xml:space="preserve"><value>Security</value></data>
   <data name="security_title" xml:space="preserve"><value>Enterprise-grade security you can trust</value></data>
-  <data name="security_subtitle" xml:space="preserve"><value>NavTour is built on industry-leading security practices. Your data is protected at every layer.</value></data>
-  <data name="security_badge_soc2" xml:space="preserve"><value>SOC 2 Compliant</value></data>
-  <data name="security_badge_uptime" xml:space="preserve"><value>99.9% Uptime SLA</value></data>
-  <data name="security_badge_encryption" xml:space="preserve"><value>AES-256 Encryption</value></data>
-  <data name="security_badge_gdpr" xml:space="preserve"><value>GDPR Ready</value></data>
+  <data name="security_subtitle" xml:space="preserve"><value>NavTour is hosted on Microsoft Azure and built on Azure-backed infrastructure controls. We describe our security posture in terms of our hosting foundation and the safeguards applied in the product.</value></data>
+  <data name="security_badge_soc2" xml:space="preserve"><value>Azure-backed hosting</value></data>
+  <data name="security_badge_uptime" xml:space="preserve"><value>Infrastructure monitoring</value></data>
+  <data name="security_badge_encryption" xml:space="preserve"><value>Encrypted transport and storage</value></data>
+  <data name="security_badge_gdpr" xml:space="preserve"><value>Privacy-conscious handling</value></data>
   <data name="security_badge_azure" xml:space="preserve"><value>Azure Hosted</value></data>
+  <data name="security_principles_eyebrow" xml:space="preserve"><value>Security Model</value></data>
+  <data name="security_principles_title" xml:space="preserve"><value>The controls we design around</value></data>
+  <data name="security_principles_subtitle" xml:space="preserve"><value>We structure the platform around isolation, encryption, operational discipline, and clear accountability.</value></data>
+  <data name="security_principle1_title" xml:space="preserve"><value>Tenant isolation</value></data>
+  <data name="security_principle1_desc" xml:space="preserve"><value>Demo content, viewer data, and account activity are scoped to your workspace and protected by application and data-layer controls.</value></data>
+  <data name="security_principle2_title" xml:space="preserve"><value>Encryption by default</value></data>
+  <data name="security_principle2_desc" xml:space="preserve"><value>Traffic is encrypted in transit and stored data is encrypted at rest across the core services that back NavTour.</value></data>
+  <data name="security_principle3_title" xml:space="preserve"><value>Monitoring and auditability</value></data>
+  <data name="security_principle3_desc" xml:space="preserve"><value>Operational visibility, audit trails, and deployment checks help us detect issues early and respond with context.</value></data>
+  <data name="security_principle4_title" xml:space="preserve"><value>Repeatable processes</value></data>
+  <data name="security_principle4_desc" xml:space="preserve"><value>Security is handled through documented controls, automated checks, and recurring review rather than one-off manual effort.</value></data>
   <data name="security_data_title" xml:space="preserve"><value>Data Security</value></data>
-  <data name="security_data_p1" xml:space="preserve"><value>Your data is encrypted at rest (AES-256) and in transit (TLS 1.3). We implement strict access controls, regular key rotation, and comprehensive audit logging. Demo content is isolated per tenant with row-level security.</value></data>
-  <data name="security_data_p2" xml:space="preserve"><value>Every database query is scoped to your tenant. There is no mechanism to access another organization's data, even in error. Encryption keys are managed via Azure Key Vault with automated rotation policies.</value></data>
+  <data name="security_data_p1" xml:space="preserve"><value>NavTour uses Azure-hosted services for core application data, storage, and operational infrastructure. Data protection is approached through encrypted transport, protected storage services, access control, and tenant-aware application behavior.</value></data>
+  <data name="security_data_p2" xml:space="preserve"><value>Customer data handling depends on both Azure infrastructure protections and NavTour application controls. Where relevant, access is scoped to the appropriate workspace context and operational access is kept limited.</value></data>
   <data name="security_infra_title" xml:space="preserve"><value>Infrastructure</value></data>
-  <data name="security_infra_p1" xml:space="preserve"><value>NavTour runs on Microsoft Azure with multi-region redundancy. Automated backups, disaster recovery, and 99.9% uptime SLA. Infrastructure is managed via code with automated security scanning on every deployment.</value></data>
-  <data name="security_infra_p2" xml:space="preserve"><value>We use Azure App Service, Azure SQL, and Azure Blob Storage with geo-redundant replication. Every deployment passes through automated SAST and dependency vulnerability scans before reaching production.</value></data>
+  <data name="security_infra_p1" xml:space="preserve"><value>NavTour runs on Microsoft Azure and relies on Azure services for hosting, storage, networking, and operational resilience. Azure provides the underlying infrastructure security foundation for the platform.</value></data>
+  <data name="security_infra_p2" xml:space="preserve"><value>Our public security positioning is based on that Azure foundation rather than independent public certification claims. For specific architecture or deployment questions, customers can contact us directly.</value></data>
   <data name="security_compliance_title" xml:space="preserve"><value>Compliance</value></data>
-  <data name="security_compliance_p1" xml:space="preserve"><value>NavTour is SOC 2 Type II compliant. We undergo annual third-party audits covering security, availability, and confidentiality. We also comply with GDPR, CCPA, and maintain a current Data Processing Agreement (DPA).</value></data>
-  <data name="security_compliance_p2" xml:space="preserve"><value>Our SOC 2 report is available under NDA for enterprise customers evaluating NavTour. Contact our team to request a copy along with our completed security questionnaire.</value></data>
+  <data name="security_compliance_p1" xml:space="preserve"><value>Security and privacy conversations should be evaluated in the context of Azure-hosted infrastructure and the product controls NavTour applies on top. If your team has compliance requirements, we can review them directly.</value></data>
+  <data name="security_compliance_p2" xml:space="preserve"><value>We do not present this page as a claim of independent certification unless explicitly stated elsewhere. Contact our team for current answers on security review, privacy handling, and deployment considerations.</value></data>
   <data name="security_privacy_title" xml:space="preserve"><value>Privacy</value></data>
   <data name="security_privacy_p1" xml:space="preserve"><value>We collect only what's necessary. Demo viewer data is anonymized by default. You control data retention policies. We never sell customer data. Full GDPR data subject rights supported: access, deletion, portability.</value></data>
   <data name="security_privacy_p2" xml:space="preserve"><value>NavTour does not use customer data for model training or any purpose beyond delivering the service. When you delete your account, all associated data is permanently purged within 30 days.</value></data>
+  <data name="security_checklist_eyebrow" xml:space="preserve"><value>Operational Checklist</value></data>
+  <data name="security_checklist_title" xml:space="preserve"><value>What enterprise teams usually ask first</value></data>
+  <data name="security_checklist_subtitle" xml:space="preserve"><value>This page should make it easy to understand how NavTour handles access, storage, availability, and issue response.</value></data>
+  <data name="security_check1" xml:space="preserve"><value>Encryption in transit and at rest</value></data>
+  <data name="security_check2" xml:space="preserve"><value>Workspace-level data separation</value></data>
+  <data name="security_check3" xml:space="preserve"><value>Backups and disaster recovery procedures</value></data>
+  <data name="security_check4" xml:space="preserve"><value>Auditability and deployment security checks</value></data>
+  <data name="security_check5" xml:space="preserve"><value>Support for compliance review and questionnaires</value></data>
+  <data name="security_ops_label" xml:space="preserve"><value>Operational Readiness</value></data>
+  <data name="security_ops_title" xml:space="preserve"><value>How security work moves through the platform</value></data>
+  <data name="security_ops_pill" xml:space="preserve"><value>Ongoing</value></data>
+  <data name="security_ops_step1_title" xml:space="preserve"><value>Prevent</value></data>
+  <data name="security_ops_step1_desc" xml:space="preserve"><value>Access control, encryption, secure hosting, and automated checks reduce exposure before issues reach production.</value></data>
+  <data name="security_ops_step2_title" xml:space="preserve"><value>Detect</value></data>
+  <data name="security_ops_step2_desc" xml:space="preserve"><value>Logging, monitoring, and review processes make suspicious behavior or regressions easier to identify quickly.</value></data>
+  <data name="security_ops_step3_title" xml:space="preserve"><value>Respond</value></data>
+  <data name="security_ops_step3_desc" xml:space="preserve"><value>When issues are reported or discovered, they are triaged, investigated, fixed, and communicated through a defined response path.</value></data>
   <data name="security_disclosure_title" xml:space="preserve"><value>Responsible Disclosure</value></data>
   <data name="security_disclosure_p1" xml:space="preserve"><value>We maintain a responsible disclosure program for security researchers. If you discover a vulnerability, please email security@navtour.com. We respond within 24 hours and never pursue legal action against good-faith reporters.</value></data>
   <data name="security_disclosure_p2" xml:space="preserve"><value>We appreciate the security research community and are committed to working with researchers to verify, reproduce, and respond to legitimate reports. Critical issues are triaged immediately.</value></data>
+  <data name="security_contact_eyebrow" xml:space="preserve"><value>Security Contact</value></data>
+  <data name="security_contact_title" xml:space="preserve"><value>Need artifacts or a review?</value></data>
+  <data name="security_contact_desc" xml:space="preserve"><value>Use the contact flow for security questionnaires, procurement reviews, compliance conversations, or requests related to trust documentation.</value></data>
+  <data name="security_contact_badge1" xml:space="preserve"><value>Questionnaires</value></data>
+  <data name="security_contact_badge2" xml:space="preserve"><value>Compliance review</value></data>
+  <data name="security_contact_badge3" xml:space="preserve"><value>Enterprise due diligence</value></data>
   <data name="security_cta_title" xml:space="preserve"><value>Questions about security?</value></data>
-  <data name="security_cta_subtitle" xml:space="preserve"><value>Our team is happy to discuss security practices, share our SOC 2 report, or review your compliance requirements.</value></data>
+  <data name="security_cta_subtitle" xml:space="preserve"><value>Our team can discuss Azure hosting, application-level safeguards, and any security or privacy questions related to your evaluation.</value></data>
   <data name="security_cta_button" xml:space="preserve"><value>Contact Security Team</value></data>
 
   <!-- Pricing Page -->
@@ -734,6 +768,30 @@
   <data name="integ_hero_subtitle" xml:space="preserve"><value>Push demo data to your CRM, trigger workflows, and embed demos wherever your buyers are.</value></data>
   <data name="integ_cta_primary" xml:space="preserve"><value>Start Free</value></data>
   <data name="integ_cta_secondary" xml:space="preserve"><value>Talk to Us</value></data>
+  <data name="integ_stat1_title" xml:space="preserve"><value>CRM-ready data</value></data>
+  <data name="integ_stat1_desc" xml:space="preserve"><value>Push lead capture, demo completion, and intent signals into the systems your revenue team already runs on.</value></data>
+  <data name="integ_stat2_title" xml:space="preserve"><value>Fast setup</value></data>
+  <data name="integ_stat2_desc" xml:space="preserve"><value>Connect common workflows quickly with embeds, webhooks, native integrations, or the REST API.</value></data>
+  <data name="integ_stat3_title" xml:space="preserve"><value>Actionable events</value></data>
+  <data name="integ_stat3_desc" xml:space="preserve"><value>Track the moments that matter: viewed, completed, shared, clicked, and submitted.</value></data>
+  <data name="integ_flow_eyebrow" xml:space="preserve"><value>How It Works</value></data>
+  <data name="integ_flow_title" xml:space="preserve"><value>From demo engagement to automated follow-up</value></data>
+  <data name="integ_flow_subtitle" xml:space="preserve"><value>NavTour fits between your product demo experience and the systems your teams already use to qualify, notify, route, and report.</value></data>
+  <data name="integ_flow_step1_title" xml:space="preserve"><value>Capture demo behavior</value></data>
+  <data name="integ_flow_step1_desc" xml:space="preserve"><value>Record views, completion, CTA clicks, lead submissions, and step-level engagement for every session.</value></data>
+  <data name="integ_flow_step2_title" xml:space="preserve"><value>Score and enrich</value></data>
+  <data name="integ_flow_step2_desc" xml:space="preserve"><value>Turn raw activity into useful signals your sales and marketing teams can actually act on.</value></data>
+  <data name="integ_flow_step3_title" xml:space="preserve"><value>Route to your stack</value></data>
+  <data name="integ_flow_step3_desc" xml:space="preserve"><value>Send events into CRMs, automation tools, analytics platforms, internal systems, and messaging channels.</value></data>
+  <data name="integ_flow_step4_title" xml:space="preserve"><value>Trigger follow-up</value></data>
+  <data name="integ_flow_step4_desc" xml:space="preserve"><value>Create tasks, launch campaigns, alert the team, or personalize the next step automatically.</value></data>
+  <data name="integ_flow_visual_label" xml:space="preserve"><value>Event Pipeline</value></data>
+  <data name="integ_flow_visual_title" xml:space="preserve"><value>One demo, many downstream actions</value></data>
+  <data name="integ_flow_visual_pill" xml:space="preserve"><value>Real-time</value></data>
+  <data name="integ_flow_visual_box1" xml:space="preserve"><value>form submitted</value></data>
+  <data name="integ_flow_visual_box2" xml:space="preserve"><value>deal updated</value></data>
+  <data name="integ_flow_visual_box3" xml:space="preserve"><value>Slack notification</value></data>
+  <data name="integ_flow_visual_box4" xml:space="preserve"><value>custom sync</value></data>
   <data name="integ_cat1_label" xml:space="preserve"><value>CRM</value></data>
   <data name="integ_cat1_title" xml:space="preserve"><value>Customer Relationship Management</value></data>
   <data name="integ_hubspot_name" xml:space="preserve"><value>HubSpot</value></data>
@@ -770,6 +828,19 @@
   <data name="integ_api_title" xml:space="preserve"><value>Build anything with the API</value></data>
   <data name="integ_api_desc" xml:space="preserve"><value>Full REST API with comprehensive documentation. Create demos, manage content, trigger events, and pull analytics programmatically. Everything you can do in the UI, you can do via API.</value></data>
   <data name="integ_api_link" xml:space="preserve"><value>View API Documentation</value></data>
+  <data name="integ_api_visual_label" xml:space="preserve"><value>Developer Experience</value></data>
+  <data name="integ_api_visual_title" xml:space="preserve"><value>Send events. Pull analytics. Automate the rest.</value></data>
+  <data name="integ_api_badge1" xml:space="preserve"><value>REST endpoints</value></data>
+  <data name="integ_api_badge2" xml:space="preserve"><value>Webhook delivery</value></data>
+  <data name="integ_api_badge3" xml:space="preserve"><value>Embeddable demos</value></data>
+  <data name="integ_workflows_eyebrow" xml:space="preserve"><value>Popular Workflows</value></data>
+  <data name="integ_workflows_title" xml:space="preserve"><value>What teams usually connect first</value></data>
+  <data name="integ_workflow1_title" xml:space="preserve"><value>Route qualified viewers into CRM follow-up</value></data>
+  <data name="integ_workflow1_desc" xml:space="preserve"><value>When a prospect finishes a demo or submits a form, create or update the record in your CRM and assign the next owner automatically.</value></data>
+  <data name="integ_workflow2_title" xml:space="preserve"><value>Trigger nurture based on real engagement</value></data>
+  <data name="integ_workflow2_desc" xml:space="preserve"><value>Use completion thresholds and step-level behavior to start the right email sequence instead of blasting every lead the same way.</value></data>
+  <data name="integ_workflow3_title" xml:space="preserve"><value>Report demo influence in your analytics stack</value></data>
+  <data name="integ_workflow3_desc" xml:space="preserve"><value>Forward events into analytics tools so marketing and revenue teams can track demo-to-pipeline and demo-to-conversion performance.</value></data>
   <data name="integ_bottom_cta_title" xml:space="preserve"><value>Don't see your integration?</value></data>
   <data name="integ_bottom_cta_subtitle" xml:space="preserve"><value>Our REST API and webhooks let you connect NavTour to anything. Or request an integration — we ship fast.</value></data>
   <data name="integ_bottom_cta_text" xml:space="preserve"><value>Contact Us</value></data>

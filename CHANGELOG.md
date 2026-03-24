@@ -4,7 +4,7 @@ All notable changes to NavTour are documented in this file.
 
 ---
 
-## [1.3.0] - 2026-03-23
+## [1.4.0] - 2026-03-24
 
 ### Added
 - **AI Tour Generator** — Claude Opus analyzes captured HTML frames, generates complete tours with step-by-step annotations, tooltip positions, and voiceover scripts in under 60 seconds. One-click "AI Generate" button in the demo editor.
@@ -18,8 +18,8 @@ All notable changes to NavTour are documented in this file.
 - **Homepage Redesign** — Complete rewrite with 11 sections: AI-first hero, social proof, AI deep dive, voiceover showcase, how-it-works, use cases, platform features grid, comparison table, testimonials, metrics, and bottom CTA. Light & clean enterprise trust visual style.
 
 ### Changed
-- **Extension version** bumped to 1.3.0.
-- **Web app version** bumped to 1.3.0.
+- **Extension version** bumped to 1.4.0.
+- **Web app version** bumped to 1.4.0.
 - **Claude model** set to `claude-opus-4-20250514` for AI Tour Generator.
 - **Player navigation** — Removed bottom navigation bar, now uses Navattic-style inline tooltip navigation.
 - **Player audio** — Starts muted; user clicks "Start Demo" to enable audio autoplay.

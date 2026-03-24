@@ -74,10 +74,10 @@ public class AuthService
         return (true, null);
     }
 
-    public async Task<(bool Success, string? Error)> RegisterAsync(string email, string password, string companyName, string fullName)
+    public async Task<(bool Success, string? Error)> RegisterAsync(string email, string password, string companyName, string fullName, bool acceptedTerms)
     {
         var response = await _http.PostAsJsonAsync("api/v1/auth/register",
-            new RegisterRequest(email, password, companyName, fullName));
+            new RegisterRequest(email, password, companyName, fullName, acceptedTerms));
         if (!response.IsSuccessStatusCode)
         {
             var error = await response.Content.ReadAsStringAsync();

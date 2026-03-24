@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+  <head>
+    <title>NavTour Capture</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body class="popup-body">
+    <div id="root">
+      <!-- Login Screen -->
+      <div id="screen-login" class="screen">
+        <div class="header">
+          <img src="icons/icon-48.png" alt="NavTour" class="logo" />
+          <h1>NavTour Capture</h1>
+        </div>
+        <form id="login-form">
+          <div class="field">
+            <label for="server-url">Server</label>
+            <input type="url" id="server-url" value="https://navtour.cloud" />
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" required autocomplete="email" />
+          </div>
+          <div class="field">
+            <label for="password">Password</label>
+            <input type="password" id="password" required autocomplete="current-password" />
+          </div>
+          <div id="login-error" class="error" hidden></div>
+          <button type="submit" class="btn btn-primary" id="login-btn">Sign In</button>
+        </form>
+      </div>
+
+      <!-- Demo Select Screen -->
+      <div id="screen-demos" class="screen" hidden>
+        <div class="header">
+          <h2>Select Demo</h2>
+          <button id="logout-btn" class="btn btn-link">Logout</button>
+        </div>
+        <div class="field">
+          <label for="demo-select">Demo</label>
+          <select id="demo-select">
+            <option value="">Loading demos...</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="new-demo-name">Or create new</label>
+          <input type="text" id="new-demo-name" placeholder="New demo name..." />
+        </div>
+        <div class="field">
+          <label>Capture Mode</label>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="capture-mode" value="auto" checked />
+              <span>Auto (on navigation)</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="capture-mode" value="click" />
+              <span>Click to capture</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="capture-mode" value="manual" />
+              <span>Manual only</span>
+            </label>
+          </div>
+        </div>
+        <div id="demo-error" class="error" hidden></div>
+        <button id="start-capture-btn" class="btn btn-primary">Start Capturing</button>
+      </div>
+
+      <!-- Capture Active Screen -->
+      <div id="screen-capture" class="screen" hidden>
+        <div class="header">
+          <h2 id="capture-demo-name">Demo</h2>
+        </div>
+        <div class="capture-status">
+          <div class="frame-count">
+            <span class="count-number" id="frame-count">0</span>
+            <span class="count-label">frames captured</span>
+          </div>
+          <div class="capture-indicator">
+            <span class="dot"></span>
+            <span>Capturing</span>
+          </div>
+        </div>
+        <div class="capture-actions">
+          <button id="manual-capture-btn" class="btn btn-secondary">Capture Now</button>
+          <button id="finish-btn" class="btn btn-primary">Finish</button>
+        </div>
+      </div>
+    </div>
+    <script src="../popup.js"></script>
+  </body>
+</html>

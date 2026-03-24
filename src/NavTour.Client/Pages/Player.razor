@@ -37,7 +37,10 @@ else
         <div @ref="frameContainer" class="player-frame-container" style="flex:1;position:relative;overflow:hidden">
             @if (currentFrame != null)
             {
-                <iframe @ref="iframeRef" id="@_playerIframeId" sandbox="allow-same-origin" style="width:100%;height:100%;border:none"></iframe>
+                <iframe @ref="iframeRef" id="@_playerIframeId"
+                    src="/api/v1/player/frames/@currentFrame.Id/html"
+                    sandbox="allow-same-origin"
+                    style="width:100%;height:100%;border:none"></iframe>
             }
 
             @* Spotlight overlay is managed by JS (playerSpotlight) *@
@@ -210,12 +213,13 @@ else
             await JS.InvokeVoidAsync("playerInterop.focusElement", playerContainer);
         }
 
-        // Load frame HTML via blob URL when frame changes
+        // Load frame HTML via server URL when frame changes
         if (currentFrame != null && currentFrame.Id != _lastRenderedFrameId)
         {
             _lastRenderedFrameId = currentFrame.Id;
-            await JS.InvokeVoidAsync("navtourSetFrameContent", _playerIframeId, currentFrame.HtmlContent);
-            await Task.Delay(300); // Wait for stylesheets to load
+            // Set iframe src to server-rendered HTML (resources load from /api/v1/resources/{hash})
+            await JS.InvokeVoidAsync("navtourSetFrameSrc", _playerIframeId, $"/api/v1/player/frames/{currentFrame.Id}/html");
+            await Task.Delay(300); // Wait for stylesheets/resources to load
         }
 
         // Set up trigger for current step after render

@@ -1,324 +1,340 @@
-import { NavTourApi } from "./api";
-import type { StoredSession, DemoListItem, CaptureMode } from "./types";
+/**
+ * Popup Controller — manages the three-screen popup UI
+ * Mirrors Navattic's popup architecture (login → demo select → capture active)
+ */
 
-const SERVER_URL = "https://navtour.cloud";
+// ── Elements ────────────────────────────────────────────────────────
 
-// DOM elements
-const screenLogin = document.getElementById("screen-login")!;
-const screenSelect = document.getElementById("screen-select")!;
-const screenCapture = document.getElementById("screen-capture")!;
+const $ = (id: string) => document.getElementById(id)!;
 
-const loginEmail = document.getElementById("login-email") as HTMLInputElement;
-const loginPassword = document.getElementById("login-password") as HTMLInputElement;
-const btnLogin = document.getElementById("btn-login") as HTMLButtonElement;
-const loginError = document.getElementById("login-error")!;
-const btnRetry = document.getElementById("btn-retry") as HTMLButtonElement;
+const screenLogin = $('screen-login');
+const screenDemos = $('screen-demos');
+const screenCapture = $('screen-capture');
 
-const demoSelect = document.getElementById("demo-select") as HTMLSelectElement;
-const newDemoNameInput = document.getElementById("new-demo-name") as HTMLInputElement;
-const btnStart = document.getElementById("btn-start") as HTMLButtonElement;
-const btnLogout = document.getElementById("btn-logout") as HTMLButtonElement;
-const selectError = document.getElementById("select-error")!;
+const loginForm = $('login-form') as HTMLFormElement;
+const emailInput = $('email') as HTMLInputElement;
+const passwordInput = $('password') as HTMLInputElement;
+const serverUrlInput = $('server-url') as HTMLInputElement;
+const loginError = $('login-error');
+const loginBtn = $('login-btn') as HTMLButtonElement;
 
-const captureDemoName = document.getElementById("capture-demo-name")!;
-const captureFrameCount = document.getElementById("capture-frame-count")!;
-const btnFinish = document.getElementById("btn-finish") as HTMLButtonElement;
-const btnBack = document.getElementById("btn-back") as HTMLButtonElement;
-const btnLogoutCapture = document.getElementById("btn-logout-capture") as HTMLButtonElement;
-const captureStatus = document.getElementById("capture-status")!;
+const demoSelect = $('demo-select') as HTMLSelectElement;
+const newDemoName = $('new-demo-name') as HTMLInputElement;
+const demoError = $('demo-error');
+const startCaptureBtn = $('start-capture-btn') as HTMLButtonElement;
+const logoutBtn = $('logout-btn');
 
-let api = new NavTourApi(SERVER_URL);
-let session: StoredSession | null = null;
-let demos: DemoListItem[] = [];
+const captureDemoName = $('capture-demo-name');
+const frameCount = $('frame-count');
+const manualCaptureBtn = $('manual-capture-btn') as HTMLButtonElement;
+const finishBtn = $('finish-btn') as HTMLButtonElement;
 
-function showScreen(screen: HTMLElement) {
+// ── State ───────────────────────────────────────────────────────────
+
+interface StoredSession {
+  serverUrl: string;
+  accessToken: string;
+  demoId?: string;
+  demoName?: string;
+  frameCount?: number;
+  tabId?: number;
+}
+
+let currentSession: StoredSession | null = null;
+
+// ── Screen navigation ───────────────────────────────────────────────
+
+function showScreen(screen: HTMLElement): void {
   screenLogin.hidden = true;
-  screenSelect.hidden = true;
+  screenDemos.hidden = true;
   screenCapture.hidden = true;
   screen.hidden = false;
 }
 
-function showStatus(el: HTMLElement, message: string, type: "success" | "error" | "loading") {
-  el.textContent = message;
-  el.className = `status ${type}`;
+function showError(el: HTMLElement, msg: string): void {
+  el.textContent = msg;
   el.hidden = false;
 }
 
-function clearSelectOptions(select: HTMLSelectElement) {
+function clearError(el: HTMLElement): void {
+  el.hidden = true;
+}
+
+// ── Helpers ─────────────────────────────────────────────────────────
+
+function clearSelectOptions(select: HTMLSelectElement): void {
   while (select.options.length > 0) {
     select.remove(0);
   }
 }
 
-// Silent cookie auto-login — bonus path, not primary
-async function tryAutoLogin(): Promise<boolean> {
-  try {
-    // Cookie auto-login only works if host permission was previously granted
-    const hasAccess = await chrome.permissions.contains({ origins: ["https://navtour.cloud/*"] });
-    if (!hasAccess) return false;
-
-    const candidateUrls = [SERVER_URL];
-
-    // Add active tab origin
-    try {
-      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-      if (tab?.url) {
-        const origin = new URL(tab.url).origin;
-        if (!candidateUrls.includes(origin)) candidateUrls.push(origin);
-      }
-    } catch { /* ignore */ }
-
-    for (const url of candidateUrls) {
-      try {
-        const cookie = await chrome.cookies.get({ url, name: "navtour_auth" });
-        if (!cookie?.value) continue;
-
-        const testApi = new NavTourApi(url);
-        testApi.setToken(cookie.value);
-        await testApi.getDemos(); // verify token works
-
-        api = testApi;
-        session = {
-          serverUrl: url,
-          accessToken: cookie.value,
-          demoId: "",
-          demoName: "",
-          frameCount: 0,
-        };
-        await chrome.storage.local.set({ session });
-        return true;
-      } catch { /* try next */ }
+function addSelectOption(select: HTMLSelectElement, value: string, text: string, data?: Record<string, string>): void {
+  const opt = document.createElement('option');
+  opt.value = value;
+  opt.textContent = text;
+  if (data) {
+    for (const [k, v] of Object.entries(data)) {
+      opt.dataset[k] = v;
     }
-  } catch { /* silent */ }
-  return false;
-}
-
-async function loadDemos() {
-  demos = await api.getDemos();
-  clearSelectOptions(demoSelect);
-
-  const defaultOpt = document.createElement("option");
-  defaultOpt.value = "";
-  defaultOpt.textContent = "— Choose a demo —";
-  demoSelect.appendChild(defaultOpt);
-
-  for (const demo of demos) {
-    const opt = document.createElement("option");
-    opt.value = demo.id;
-    opt.textContent = `${demo.name} (${demo.frameCount} frames)`;
-    demoSelect.appendChild(opt);
   }
+  select.appendChild(opt);
 }
 
-async function init() {
-  // 1. Check stored session
-  const stored = await chrome.storage.local.get(["session"]);
+// ── Chrome storage ──────────────────────────────────────────────────
 
-  if (stored.session) {
-    session = stored.session as StoredSession;
-    api = new NavTourApi(session.serverUrl);
-    api.setToken(session.accessToken);
+async function loadSession(): Promise<StoredSession | null> {
+  const data = await chrome.storage.local.get('navtour_session');
+  return data.navtour_session || null;
+}
 
-    // Check if background is actively capturing
-    chrome.runtime.sendMessage({ type: "GET_STATE" }, (state) => {
-      if (state?.capturing) {
-        captureDemoName.textContent = state.demoName;
-        captureFrameCount.textContent = String(state.frameCount);
-        showStatus(captureStatus, "Toolbar is active on page — capture from there", "success");
-        showScreen(screenCapture);
-      } else {
-        loadDemos()
-          .then(() => showScreen(screenSelect))
-          .catch(async () => {
-            // Token expired — clear stored session and try fresh cookie
-            chrome.storage.local.remove(["session"]);
-            session = null;
-            const autoOk = await tryAutoLogin();
-            if (autoOk) {
-              await loadDemos();
-              showScreen(screenSelect);
-            } else {
-              showScreen(screenLogin);
-            }
-          });
-      }
+async function saveSession(session: StoredSession): Promise<void> {
+  await chrome.storage.local.set({ navtour_session: session });
+}
+
+async function clearSessionStorage(): Promise<void> {
+  await chrome.storage.local.remove('navtour_session');
+}
+
+// ── Login ───────────────────────────────────────────────────────────
+
+loginForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  clearError(loginError);
+  loginBtn.disabled = true;
+  loginBtn.textContent = 'Signing in...';
+
+  try {
+    const response = await chrome.runtime.sendMessage({
+      kind: 'navtour:popup:login',
+      email: emailInput.value,
+      password: passwordInput.value,
+      serverUrl: serverUrlInput.value,
     });
-    return;
-  }
 
-  // 2. Silently try cookie auto-login
-  const autoOk = await tryAutoLogin();
-  if (autoOk) {
-    await loadDemos();
-    showScreen(screenSelect);
-    return;
-  }
+    if (!response?.success) {
+      throw new Error(response?.error || 'Login failed');
+    }
 
-  // 3. Show login form
-  showScreen(screenLogin);
-}
-
-// Login form submit
-btnLogin.addEventListener("click", async () => {
-  loginError.hidden = true;
-  const email = loginEmail.value.trim();
-  const password = loginPassword.value;
-
-  if (!email || !password) {
-    loginError.textContent = "Enter your email and password";
-    loginError.hidden = false;
-    return;
-  }
-
-  btnLogin.disabled = true;
-  btnLogin.textContent = "Signing in...";
-
-  try {
-    api = new NavTourApi(SERVER_URL);
-    const result = await api.login(email, password);
-
-    api.setToken(result.accessToken);
-    session = {
-      serverUrl: SERVER_URL,
-      accessToken: result.accessToken,
-      demoId: "",
-      demoName: "",
-      frameCount: 0,
+    currentSession = {
+      serverUrl: serverUrlInput.value,
+      accessToken: response.accessToken,
     };
-    await chrome.storage.local.set({ session });
-
+    await saveSession(currentSession);
     await loadDemos();
-    showScreen(screenSelect);
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : "Login failed";
-    loginError.textContent = msg;
-    loginError.hidden = false;
+    showScreen(screenDemos);
+  } catch (err: any) {
+    showError(loginError, err.message || 'Login failed');
   } finally {
-    btnLogin.disabled = false;
-    btnLogin.textContent = "Sign In";
+    loginBtn.disabled = false;
+    loginBtn.textContent = 'Sign In';
   }
 });
 
-// Allow Enter key to submit login
-loginPassword.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") btnLogin.click();
-});
-loginEmail.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") loginPassword.focus();
-});
+// ── Demo list ───────────────────────────────────────────────────────
 
-// Retry auto-login (secondary link)
-btnRetry.addEventListener("click", async () => {
-  btnRetry.disabled = true;
-  btnRetry.textContent = "Checking...";
+async function loadDemos(): Promise<void> {
+  if (!currentSession) return;
+
+  clearSelectOptions(demoSelect);
+  addSelectOption(demoSelect, '', 'Loading...');
 
   try {
-    // Request cookie access (user gesture allows the prompt)
-    await chrome.permissions.request({ origins: ["https://navtour.cloud/*"] });
-    const ok = await tryAutoLogin();
-    if (ok) {
-      await loadDemos();
-      showScreen(screenSelect);
-    } else {
-      loginError.textContent = "No active browser session found. Sign in with your credentials.";
-      loginError.hidden = false;
+    const response = await chrome.runtime.sendMessage({
+      kind: 'navtour:popup:get-demos',
+      token: currentSession.accessToken,
+    });
+
+    if (!response?.success) {
+      throw new Error(response?.error || 'Failed to load demos');
     }
-  } catch {
-    loginError.textContent = "Auto-login failed. Sign in with your credentials.";
-    loginError.hidden = false;
+
+    const demos = response.demos || [];
+    clearSelectOptions(demoSelect);
+    addSelectOption(demoSelect, '', '-- Select a demo --');
+    for (const demo of demos) {
+      addSelectOption(
+        demoSelect,
+        demo.id,
+        `${demo.name} (${demo.frameCount || 0} frames)`,
+        { name: demo.name, frameCount: String(demo.frameCount || 0) }
+      );
+    }
+  } catch (err: any) {
+    showError(demoError, err.message);
+  }
+}
+
+// ── Start capture ───────────────────────────────────────────────────
+
+startCaptureBtn.addEventListener('click', async () => {
+  clearError(demoError);
+
+  const selectedDemo = demoSelect.selectedOptions[0];
+  const newName = newDemoName.value.trim();
+
+  if (!selectedDemo?.value && !newName) {
+    showError(demoError, 'Select a demo or enter a name for a new one');
+    return;
+  }
+
+  startCaptureBtn.disabled = true;
+  startCaptureBtn.textContent = 'Starting...';
+
+  try {
+    let demoId = selectedDemo?.value;
+    let demoName = selectedDemo?.dataset?.name || newName;
+    let existingFrameCount = parseInt(selectedDemo?.dataset?.frameCount || '0', 10);
+
+    // Create new demo if needed
+    if (!demoId && newName) {
+      const createResponse = await fetch(
+        `${currentSession!.serverUrl}/api/v1/demos`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${currentSession!.accessToken}`,
+          },
+          body: JSON.stringify({ name: newName }),
+        }
+      );
+      if (!createResponse.ok) throw new Error('Failed to create demo');
+      const created = await createResponse.json();
+      demoId = created.id;
+      demoName = newName;
+      existingFrameCount = 0;
+    }
+
+    const captureMode = (
+      document.querySelector('input[name="capture-mode"]:checked') as HTMLInputElement
+    )?.value || 'auto';
+
+    const response = await chrome.runtime.sendMessage({
+      kind: 'navtour:popup:start-capture',
+      token: currentSession!.accessToken,
+      demoId,
+      demoName,
+      frameCount: existingFrameCount,
+      settings: {
+        clickToCapture: captureMode === 'click',
+        generateSandbox: false,
+      },
+    });
+
+    if (!response?.success) {
+      throw new Error(response?.error || 'Failed to start capture');
+    }
+
+    currentSession!.demoId = demoId;
+    currentSession!.demoName = demoName;
+    currentSession!.frameCount = existingFrameCount;
+    currentSession!.tabId = response.tabId;
+    await saveSession(currentSession!);
+
+    captureDemoName.textContent = demoName!;
+    frameCount.textContent = String(existingFrameCount);
+    showScreen(screenCapture);
+
+    // Close popup
+    window.close();
+  } catch (err: any) {
+    showError(demoError, err.message);
   } finally {
-    btnRetry.disabled = false;
-    btnRetry.textContent = "Try auto-login from browser session";
+    startCaptureBtn.disabled = false;
+    startCaptureBtn.textContent = 'Start Capturing';
   }
 });
 
-// Logout (from both screens)
-async function doLogout() {
-  chrome.runtime.sendMessage({ type: "STOP_CAPTURE" });
-  await chrome.storage.local.remove(["session"]);
-  session = null;
-  showScreen(screenLogin);
-}
-btnLogout.addEventListener("click", doLogout);
-btnLogoutCapture.addEventListener("click", doLogout);
+// ── Manual capture ──────────────────────────────────────────────────
 
-// Start capturing
-btnStart.addEventListener("click", async () => {
-  selectError.hidden = true;
+manualCaptureBtn.addEventListener('click', async () => {
+  if (!currentSession?.tabId) return;
 
-  let demoId = demoSelect.value;
-  let demoName = "";
+  manualCaptureBtn.disabled = true;
+  manualCaptureBtn.textContent = 'Capturing...';
 
-  if (!demoId && newDemoNameInput.value.trim()) {
-    try {
-      if (session?.accessToken) api.setToken(session.accessToken);
-      const created = await api.createDemo({ name: newDemoNameInput.value.trim() });
-      demoId = created.id;
-      demoName = created.name;
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : "Failed to create demo";
-      showStatus(selectError, msg, "error");
-      return;
+  try {
+    const response = await chrome.runtime.sendMessage({
+      kind: 'navtour:popup:manual-capture',
+      tabId: currentSession.tabId,
+    });
+
+    if (response?.success) {
+      currentSession.frameCount = (currentSession.frameCount || 0) + 1;
+      frameCount.textContent = String(currentSession.frameCount);
+      await saveSession(currentSession);
     }
-  } else if (demoId) {
-    const selected = demos.find((d) => d.id === demoId);
-    demoName = selected?.name ?? "Demo";
-  } else {
-    showStatus(selectError, "Select a demo or enter a name for a new one", "error");
-    return;
+  } finally {
+    manualCaptureBtn.disabled = false;
+    manualCaptureBtn.textContent = 'Capture Now';
   }
+});
 
-  // Request host access for capturing pages and reading NavTour cookies
-  const granted = await chrome.permissions.request({ origins: ["<all_urls>", "https://navtour.cloud/*"] });
-  if (!granted) {
-    showStatus(selectError, "Permission needed to capture pages. Please allow when prompted.", "error");
-    return;
-  }
+// ── Finish capture ──────────────────────────────────────────────────
 
-  session = { ...session!, demoId, demoName, frameCount: 0 };
-  await chrome.storage.local.set({ session });
+finishBtn.addEventListener('click', async () => {
+  if (!currentSession?.tabId) return;
 
-  const modeRadio = document.querySelector('input[name="capture-mode"]:checked') as HTMLInputElement;
-  const captureMode = (modeRadio?.value || "auto") as CaptureMode;
-
-  await chrome.storage.local.set({
-    captureState: { active: true, demoId, demoName, serverUrl: session!.serverUrl, frameCount: 0, capturedUrls: [], captureMode },
+  await chrome.runtime.sendMessage({
+    kind: 'navtour:popup:stop-capture',
+    tabId: currentSession.tabId,
   });
 
-  chrome.runtime.sendMessage({ type: "START_CAPTURE", demoId, demoName, captureMode });
+  currentSession.demoId = undefined;
+  currentSession.demoName = undefined;
+  currentSession.frameCount = undefined;
+  currentSession.tabId = undefined;
+  await saveSession(currentSession);
 
-  captureDemoName.textContent = demoName;
-  captureFrameCount.textContent = "0";
-  showStatus(captureStatus, "Recording — navigate your app, pages are captured automatically", "success");
-  showScreen(screenCapture);
-
-  setTimeout(() => window.close(), 1000);
+  await loadDemos();
+  showScreen(screenDemos);
 });
 
-// Finish — stop capture, open builder
-btnFinish.addEventListener("click", async () => {
-  if (session?.demoId) {
-    chrome.runtime.sendMessage({ type: "STOP_CAPTURE" });
-    const builderUrl = `${session.serverUrl}/demos/${session.demoId}/edit`;
-    await chrome.tabs.create({ url: builderUrl });
+// ── Logout ──────────────────────────────────────────────────────────
 
-    session = { ...session, demoId: "", demoName: "", frameCount: 0 };
-    await chrome.storage.local.set({ session });
-    window.close();
+logoutBtn.addEventListener('click', async () => {
+  await clearSessionStorage();
+  currentSession = null;
+  showScreen(screenLogin);
+});
+
+// ── Initialize ──────────────────────────────────────────────────────
+
+async function init(): Promise<void> {
+  currentSession = await loadSession();
+
+  if (!currentSession?.accessToken) {
+    showScreen(screenLogin);
+    return;
+  }
+
+  // Check if there's an active capture session
+  const state = await chrome.runtime.sendMessage({
+    kind: 'navtour:popup:get-state',
+  });
+
+  if (state?.sessions?.length > 0 && currentSession.tabId) {
+    const active = state.sessions.find((s: any) => s.tabId === currentSession!.tabId);
+    if (active) {
+      captureDemoName.textContent = active.demoName;
+      frameCount.textContent = String(active.frameCount);
+      showScreen(screenCapture);
+      return;
+    }
+  }
+
+  // Show demo selection
+  await loadDemos();
+  showScreen(screenDemos);
+}
+
+// Listen for capture updates from background
+chrome.runtime.onMessage.addListener((msg) => {
+  if (msg?.kind === 'navtour:capture-complete' && currentSession) {
+    currentSession.frameCount = msg.frameCount;
+    frameCount.textContent = String(msg.frameCount);
+    saveSession(currentSession);
   }
 });
 
-// Back to demo list
-btnBack.addEventListener("click", async () => {
-  chrome.runtime.sendMessage({ type: "STOP_CAPTURE" });
-  session = { ...session!, demoId: "", demoName: "", frameCount: 0 };
-  await chrome.storage.local.set({ session });
-  await loadDemos();
-  showScreen(screenSelect);
-});
-
-// Initialize
-init().catch((err) => {
-  console.error("[NavTour] Popup init failed:", err);
-  showScreen(screenLogin);
-});
+init();

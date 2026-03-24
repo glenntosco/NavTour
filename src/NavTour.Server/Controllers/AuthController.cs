@@ -33,6 +33,9 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<ActionResult<LoginResponse>> Register(RegisterRequest request)
     {
+        if (!request.AcceptedTerms)
+            return BadRequest("You must accept the Terms of Use to create an account.");
+
         var tenant = new Tenant
         {
             Name = request.CompanyName,

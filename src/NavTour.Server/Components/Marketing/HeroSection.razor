@@ -17,6 +17,12 @@
                     <a href="@SecondaryCtaUrl" class="mkt-btn mkt-btn-secondary mkt-btn-lg">@SecondaryCtaText</a>
                 }
             </div>
+            @if (ChildContent is not null)
+            {
+                <div class="mkt-hero-extra">
+                    @ChildContent
+                </div>
+            }
         </div>
         @if (!string.IsNullOrEmpty(ImageUrl))
         {
@@ -41,4 +47,5 @@
     [Parameter] public string SecondaryCtaText { get; set; } = "Book a Demo";
     [Parameter] public string SecondaryCtaUrl { get; set; } = "/contact";
     [Parameter] public string? ImageUrl { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
 }

@@ -1,0 +1,242 @@
+/* NavTour Capture Popup — matches Navattic's extension UI structure */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --nt-primary: #4361ee;
+  --nt-primary-hover: #3651d4;
+  --nt-bg: #ffffff;
+  --nt-bg-secondary: #f8f9fb;
+  --nt-text: #1a1d26;
+  --nt-text-secondary: #6b7280;
+  --nt-border: #e5e7eb;
+  --nt-error: #ef4444;
+  --nt-success: #22c55e;
+  --nt-radius: 8px;
+  --nt-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body.popup-body {
+  width: 360px;
+  min-height: 200px;
+  font-family: var(--nt-font);
+  font-size: 14px;
+  color: var(--nt-text);
+  background: var(--nt-bg);
+  overflow: hidden;
+}
+
+.screen {
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.header h2 {
+  font-size: 16px;
+  font-weight: 600;
+  flex: 1;
+}
+
+.logo {
+  width: 32px;
+  height: 32px;
+}
+
+.field {
+  margin-bottom: 14px;
+}
+
+.field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--nt-text-secondary);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--nt-border);
+  border-radius: var(--nt-radius);
+  font-size: 14px;
+  font-family: var(--nt-font);
+  color: var(--nt-text);
+  background: var(--nt-bg);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.field input:focus,
+.field select:focus {
+  border-color: var(--nt-primary);
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: var(--nt-radius);
+  font-size: 14px;
+  font-weight: 500;
+  font-family: var(--nt-font);
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+  text-decoration: none;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  width: 100%;
+  background: var(--nt-primary);
+  color: #fff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--nt-primary-hover);
+}
+
+.btn-secondary {
+  background: var(--nt-bg-secondary);
+  color: var(--nt-text);
+  border: 1px solid var(--nt-border);
+  flex: 1;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #f0f1f3;
+}
+
+.btn-link {
+  background: none;
+  color: var(--nt-text-secondary);
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.btn-link:hover {
+  color: var(--nt-text);
+}
+
+.error {
+  color: var(--nt-error);
+  font-size: 12px;
+  margin-bottom: 12px;
+  padding: 8px;
+  background: #fef2f2;
+  border-radius: var(--nt-radius);
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--nt-border);
+  border-radius: var(--nt-radius);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-size: 13px;
+}
+
+.radio-option:hover {
+  border-color: var(--nt-primary);
+  background: rgba(67, 97, 238, 0.04);
+}
+
+.radio-option input[type="radio"] {
+  width: auto;
+  accent-color: var(--nt-primary);
+}
+
+/* Capture Active Screen */
+
+.capture-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background: var(--nt-bg-secondary);
+  border-radius: var(--nt-radius);
+  margin-bottom: 16px;
+}
+
+.frame-count {
+  display: flex;
+  flex-direction: column;
+}
+
+.count-number {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--nt-primary);
+  line-height: 1;
+}
+
+.count-label {
+  font-size: 12px;
+  color: var(--nt-text-secondary);
+  margin-top: 2px;
+}
+
+.capture-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--nt-success);
+  font-weight: 500;
+}
+
+.capture-indicator .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--nt-success);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.capture-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.capture-actions .btn {
+  flex: 1;
+}
