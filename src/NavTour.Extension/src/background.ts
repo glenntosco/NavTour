@@ -761,154 +761,117 @@ function updateToolbarStatus(frameCount: number, status: string) {
 // --- Capture + Upload in page context (avoids Chrome message size limits) ---
 
 async function captureAndUpload(uploadUrl: string, token: string): Promise<boolean> {
+  // Navattic approach: KEEP original stylesheet links, add <base href>,
+  // remove scripts, capture form values, convert canvas. Don't inline CSS.
+  // The browser loads stylesheets from the original server when rendering.
   try {
     const baseUri = document.baseURI;
 
-    function absUrl(url: string, base: string): string {
-      if (!url || url.startsWith("data:") || url.startsWith("blob:") || url.startsWith("javascript:") || url.startsWith("#")) return url;
-      if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("//")) return url;
-      try { return new URL(url, base).href; } catch { return url; }
-    }
-
-    function absUrlsInCss(css: string, base: string): string {
-      return css.replace(/url\(\s*["']?(?!data:|blob:|https?:|\/\/)(.*?)["']?\s*\)/g, (_m: string, u: string) => {
-        try { return 'url("' + new URL(u.trim(), base).href + '")'; } catch { return _m; }
-      });
-    }
-
-    // Canvas to image
-    document.querySelectorAll("canvas").forEach((canvas) => {
+    // Canvas to image (before clone)
+    document.querySelectorAll("canvas").forEach((c) => {
       try {
-        const c = canvas as HTMLCanvasElement;
-        if (c.width === 0 || c.height === 0) return;
-        const dataUrl = c.toDataURL("image/png");
+        const canvas = c as HTMLCanvasElement;
+        if (canvas.width === 0 || canvas.height === 0) return;
+        const dataUrl = canvas.toDataURL("image/png");
         if (dataUrl === "data:,") return;
         const img = document.createElement("img");
         img.src = dataUrl;
-        img.width = c.width;
-        img.height = c.height;
-        const style = c.getAttribute("style");
-        if (style) img.setAttribute("style", style);
-        img.className = c.className;
-        c.parentNode?.replaceChild(img, c);
+        img.width = canvas.width;
+        img.height = canvas.height;
+        if (canvas.getAttribute("style")) img.setAttribute("style", canvas.getAttribute("style")!);
+        if (canvas.className) img.className = canvas.className;
+        canvas.parentNode?.replaceChild(img, canvas);
       } catch {}
     });
 
-    // Collect CSS — only matching rules + @-rules
-    const collectedCss: string[] = [];
-    for (const sheet of Array.from(document.styleSheets)) {
-      try {
-        const rules = Array.from(sheet.cssRules);
-        const base = sheet.href || baseUri;
-        const kept: string[] = [];
-        for (const rule of rules) {
-          if (rule.cssText.startsWith("@") || !(rule instanceof CSSStyleRule)) {
-            kept.push(rule.cssText);
-            continue;
-          }
-          try {
-            if (document.querySelector(rule.selectorText)) kept.push(rule.cssText);
-          } catch {
-            kept.push(rule.cssText);
-          }
-        }
-        let css = kept.join("\n");
-        css = absUrlsInCss(css, base);
-        if (css.length > 0) collectedCss.push(css);
-      } catch {}
-    }
-
-    // Clone DOM
+    // Clone the full document
     const clone = document.documentElement.cloneNode(true) as HTMLElement;
+
+    // Remove NavTour toolbar
     clone.querySelector("#navtour-capture-bar")?.remove();
+
+    // Remove all scripts (but KEEP stylesheets!)
     clone.querySelectorAll("script, noscript").forEach(el => el.remove());
 
-    const evtAttrs = ["onclick","ondblclick","onmousedown","onmouseup","onmouseover","onmouseout",
+    // Remove event handlers
+    const evts = ["onclick","ondblclick","onmousedown","onmouseup","onmouseover","onmouseout",
       "onmousemove","onkeydown","onkeyup","onkeypress","onfocus","onblur","onchange","oninput",
       "onsubmit","onload","onerror","onresize","onscroll","ontouchstart","ontouchend",
       "ontouchmove","ondragstart","ondragend","ondragover","ondrop","oncontextmenu"];
-    clone.querySelectorAll("*").forEach(el => evtAttrs.forEach(a => el.removeAttribute(a)));
-    clone.querySelectorAll('link[rel="stylesheet"], link[rel="preload"][as="style"]').forEach(el => el.remove());
-    clone.querySelectorAll('link[rel="dns-prefetch"], link[rel="prefetch"], link[rel="prerender"], link[rel="preconnect"], link[rel="modulepreload"]').forEach(el => el.remove());
+    clone.querySelectorAll("*").forEach(el => evts.forEach(a => el.removeAttribute(a)));
 
-    // Inline computed styles
-    const CRIT = [
-      "display","position","float","clear","box-sizing",
-      "width","height","min-width","min-height","max-width","max-height",
-      "margin","margin-top","margin-right","margin-bottom","margin-left",
-      "padding","padding-top","padding-right","padding-bottom","padding-left",
-      "border","border-top","border-right","border-bottom","border-left",
-      "border-radius","border-collapse","border-spacing",
-      "background","background-color","background-image","background-size","background-position","background-repeat",
-      "color","font-family","font-size","font-weight","font-style","line-height","letter-spacing",
-      "text-align","text-decoration","text-transform","text-overflow","white-space","word-break","overflow",
-      "overflow-x","overflow-y","vertical-align","list-style","list-style-type",
-      "flex","flex-direction","flex-wrap","flex-grow","flex-shrink","flex-basis",
-      "align-items","align-self","justify-content","gap",
-      "grid-template-columns","grid-template-rows","grid-column","grid-row",
-      "opacity","visibility","z-index","cursor","pointer-events",
-      "transform","box-shadow","outline","table-layout","top","right","bottom","left",
-    ];
-
-    const origEls = document.querySelectorAll("body *");
-    const cloneEls = clone.querySelectorAll("body *");
-    const isLarge = origEls.length > 3000;
-    const props = isLarge ? CRIT.slice(0, 25) : CRIT;
-
-    origEls.forEach((origEl, i) => {
-      if (i >= cloneEls.length) return;
-      const rect = origEl.getBoundingClientRect();
-      if (rect.width === 0 && rect.height === 0) return;
-      const computed = window.getComputedStyle(origEl);
-      const styles: string[] = [];
-      for (const prop of props) {
-        const val = computed.getPropertyValue(prop);
-        if (!val || val === "" || val === "none" || val === "normal" || val === "auto" ||
-            val === "0px" || val === "0" || val === "rgba(0, 0, 0, 0)" ||
-            val === "static" || val === "content-box" || val === "visible" ||
-            val === "baseline" || val === "stretch" || val === "row" || val === "nowrap") continue;
-        styles.push(prop + ":" + val);
-      }
-      if (styles.length > 0) {
-        const existing = (cloneEls[i] as HTMLElement).getAttribute("style") || "";
-        (cloneEls[i] as HTMLElement).setAttribute("style", existing + (existing ? ";" : "") + styles.join(";"));
+    // Absolutize stylesheet link hrefs (so they load from original server in iframe)
+    clone.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
+      const href = link.getAttribute("href");
+      if (href && !href.startsWith("http") && !href.startsWith("//") && !href.startsWith("data:")) {
+        try { link.setAttribute("href", new URL(href, baseUri).href); } catch {}
       }
     });
 
-    // Absolutize URLs
+    // Absolutize image src
     clone.querySelectorAll("img[src]").forEach(img => {
       const src = img.getAttribute("src");
-      if (src) img.setAttribute("src", absUrl(src, baseUri));
-    });
-    clone.querySelectorAll("[style]").forEach(el => {
-      const s = el.getAttribute("style");
-      if (s?.includes("url(")) el.setAttribute("style", absUrlsInCss(s, baseUri));
+      if (src && !src.startsWith("data:") && !src.startsWith("http") && !src.startsWith("//") && !src.startsWith("blob:")) {
+        try { img.setAttribute("src", new URL(src, baseUri).href); } catch {}
+      }
     });
 
-    // Assemble
-    clone.querySelectorAll("head > style:not([data-navtour-captured])").forEach(el => el.remove());
-    const head = clone.querySelector("head") || clone;
-    if (collectedCss.length > 0) {
-      const styleEl = document.createElement("style");
-      styleEl.setAttribute("data-navtour-captured", "true");
-      styleEl.textContent = collectedCss.join("\n");
-      head.appendChild(styleEl);
-    }
-    if (!clone.querySelector("base")) {
+    // Absolutize background-image URLs in inline styles
+    clone.querySelectorAll("[style]").forEach(el => {
+      const s = el.getAttribute("style");
+      if (s?.includes("url(")) {
+        el.setAttribute("style", s.replace(/url\(\s*["']?(?!data:|blob:|https?:|\/\/)(.*?)["']?\s*\)/g, (_m: string, u: string) => {
+          try { return 'url("' + new URL(u.trim(), baseUri).href + '")'; } catch { return _m; }
+        }));
+      }
+    });
+
+    // Capture form values
+    const origInputs = document.querySelectorAll("input, textarea, select");
+    const cloneInputs = clone.querySelectorAll("input, textarea, select");
+    origInputs.forEach((orig, i) => {
+      if (i >= cloneInputs.length) return;
+      const cl = cloneInputs[i] as HTMLElement;
+      if (orig instanceof HTMLInputElement) {
+        if (orig.type === "checkbox" || orig.type === "radio") {
+          if (orig.checked) cl.setAttribute("checked", "checked");
+          else cl.removeAttribute("checked");
+        } else if (orig.type !== "password" && orig.type !== "hidden") {
+          cl.setAttribute("value", orig.value);
+        }
+      } else if (orig instanceof HTMLTextAreaElement) {
+        (cl as HTMLTextAreaElement).textContent = orig.value;
+      } else if (orig instanceof HTMLSelectElement) {
+        const cs = cl as HTMLSelectElement;
+        for (let o = 0; o < orig.options.length && o < cs.options.length; o++) {
+          if (orig.options[o].selected) cs.options[o].setAttribute("selected", "selected");
+          else cs.options[o].removeAttribute("selected");
+        }
+      }
+    });
+
+    // Add <base href> so all relative URLs resolve to original server
+    const head = clone.querySelector("head");
+    if (head) {
+      // Remove any existing base tag
+      head.querySelector("base")?.remove();
       const base = document.createElement("base");
       base.href = baseUri;
       head.prepend(base);
-    }
-    if (!clone.querySelector("meta[charset]")) {
-      const meta = document.createElement("meta");
-      meta.setAttribute("charset", "utf-8");
-      head.prepend(meta);
+
+      // Ensure charset
+      if (!head.querySelector("meta[charset]")) {
+        const meta = document.createElement("meta");
+        meta.setAttribute("charset", "utf-8");
+        head.prepend(meta);
+      }
     }
 
+    // Build final HTML
     const html = "<!DOCTYPE html>" + clone.outerHTML;
     const title = document.title;
 
-    // Upload directly from page context — HTML never passes through messaging
+    // Upload directly from page context
     const safeName = (title || "page").replace(/[^a-zA-Z0-9-_]/g, "_").substring(0, 50);
     const blob = new Blob([html], { type: "text/html" });
     const form = new FormData();
