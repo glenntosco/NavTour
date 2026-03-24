@@ -139,8 +139,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         return;
       }
 
-      // Auto-capture this page
-      captureTab(tabId, state);
+      // Auto-capture this page — wait for SPA content to render
+      setTimeout(() => captureTab(tabId, state), 2000);
     });
   }
 });
@@ -224,6 +224,25 @@ async function captureTab(tabId: number, state: CaptureState) {
 
     // Enable CORS bypass for this tab
     await enableCorsForTab(tabId);
+
+    // Wait for DOM to stabilize (SPAs render content after onCompleted)
+    await chrome.scripting.executeScript({
+      target: { tabId },
+      func: () => new Promise<void>(resolve => {
+        if (document.readyState !== "complete") {
+          window.addEventListener("load", () => setTimeout(resolve, 500), { once: true });
+        } else {
+          // Wait for mutations to settle
+          let timer: ReturnType<typeof setTimeout>;
+          const observer = new MutationObserver(() => {
+            clearTimeout(timer);
+            timer = setTimeout(() => { observer.disconnect(); resolve(); }, 500);
+          });
+          observer.observe(document.body, { childList: true, subtree: true });
+          timer = setTimeout(() => { observer.disconnect(); resolve(); }, 2000);
+        }
+      })
+    }).catch(() => {});
 
     // Try content script first (supports async), fall back to executeScript
     let result: { html: string; title: string; url: string } | null = null;
