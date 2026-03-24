@@ -498,7 +498,18 @@ class Gradient {
 
 // Blazor interop wrapper
 window.initStripeGradient = function () {
-    if (window._stripeGradient) return;
+    // Dispose any existing gradient (handles re-navigation to login/register)
+    if (window._stripeGradient) {
+        try {
+            window._stripeGradient.pause();
+            window._stripeGradient.disconnect();
+        } catch (e) { }
+        window._stripeGradient = null;
+    }
+
+    var canvas = document.getElementById("gradient-canvas");
+    if (!canvas) return;
+
     try {
         var gradient = new Gradient();
         gradient.initGradient("#gradient-canvas");
