@@ -225,88 +225,52 @@ async function captureTab(tabId: number, state: CaptureState) {
     // Enable CORS bypass for this tab
     await enableCorsForTab(tabId);
 
-    // Wait for DOM to stabilize (SPAs render content after onCompleted)
-    await chrome.scripting.executeScript({
-      target: { tabId },
-      func: () => new Promise<void>(resolve => {
-        if (document.readyState !== "complete") {
-          window.addEventListener("load", () => setTimeout(resolve, 500), { once: true });
-        } else {
-          // Wait for mutations to settle
-          let timer: ReturnType<typeof setTimeout>;
-          const observer = new MutationObserver(() => {
-            clearTimeout(timer);
-            timer = setTimeout(() => { observer.disconnect(); resolve(); }, 500);
-          });
-          observer.observe(document.body, { childList: true, subtree: true });
-          timer = setTimeout(() => { observer.disconnect(); resolve(); }, 2000);
-        }
-      })
-    }).catch(() => {});
-
-    // Try content script first (supports async), fall back to executeScript
-    let result: { html: string; title: string; url: string } | null = null;
-
-    // Attempt 1: Content script via message (works if script is injected)
-    result = await new Promise<typeof result>((resolve) => {
-      const timeout = setTimeout(() => resolve(null), 8000);
-      chrome.tabs.sendMessage(tabId, { type: "navtour:capture" }, (response) => {
-        clearTimeout(timeout);
-        if (chrome.runtime.lastError || !response?.html) {
-          resolve(null);
-        } else {
-          resolve(response);
-        }
-      });
-    });
-
-    // Attempt 2: Inject capture script directly (fallback for pages without content script)
-    if (!result) {
-      try {
-        const injected = await chrome.scripting.executeScript({
-          target: { tabId },
-          func: capturePageDOMSync,
-        });
-        result = injected[0]?.result || null;
-      } catch (e) {
-        console.warn("[NavTour] executeScript fallback failed:", e);
-      }
-    }
-
-    // Disable CORS bypass
-    await disableCorsForTab(tabId);
-
-    if (!result?.html) {
-      chrome.scripting
-        .executeScript({
-          target: { tabId },
-          func: updateToolbarStatus,
-          args: [state.frameCount, "Capture failed"],
-        })
-        .catch(() => {});
+    // Get upload credentials
+    const stored = await chrome.storage.local.get(["session", "captureState"]);
+    const session = stored.session;
+    if (!session?.accessToken || !state.demoId) {
+      await disableCorsForTab(tabId);
       return;
     }
 
-    // Upload
-    const uploadResult = await handleUpload(result.html, result.title, result.url);
+    const uploadUrl = `${session.serverUrl}/api/v1/demos/${state.demoId}/frames`;
+    const token = session.accessToken;
 
-    if (uploadResult.ok) {
+    // Capture AND upload directly inside the page context
+    // This avoids the Chrome message size limit (~64MB but practically fails at ~4MB)
+    const results = await chrome.scripting.executeScript({
+      target: { tabId },
+      func: captureAndUpload,
+      args: [uploadUrl, token],
+    });
+
+    await disableCorsForTab(tabId);
+
+    const uploadOk = results[0]?.result;
+
+    if (uploadOk) {
+      state.frameCount++;
+      const pageUrl = await chrome.scripting.executeScript({
+        target: { tabId },
+        func: () => document.location.href,
+      });
+      const url = pageUrl[0]?.result || "";
+      if (url && !state.capturedUrls.includes(url)) {
+        state.capturedUrls.push(url);
+      }
+      await setState(state);
       const newState = await getState();
-      chrome.scripting
-        .executeScript({
-          target: { tabId },
-          func: updateToolbarStatus,
-          args: [newState.frameCount, "Captured!"],
-        })
-        .catch(() => {});
+      chrome.scripting.executeScript({
+        target: { tabId },
+        func: updateToolbarStatus,
+        args: [newState.frameCount, "Captured!"],
+      }).catch(() => {});
     } else {
-      chrome.scripting
-        .executeScript({
-          target: { tabId },
-          func: updateToolbarStatus,
-          args: [state.frameCount, uploadResult.error || "Upload failed"],
-        })
-        .catch(() => {});
+      chrome.scripting.executeScript({
+        target: { tabId },
+        func: updateToolbarStatus,
+        args: [state.frameCount, "Capture failed"],
+      }).catch(() => {});
     }
   } catch (e: any) {
     console.error("[NavTour] Auto-capture error:", e);
@@ -794,7 +758,176 @@ function updateToolbarStatus(frameCount: number, status: string) {
   }
 }
 
-// --- Synchronous DOM capture fallback (for when content script isn't injected) ---
+// --- Capture + Upload in page context (avoids Chrome message size limits) ---
+
+async function captureAndUpload(uploadUrl: string, token: string): Promise<boolean> {
+  try {
+    const baseUri = document.baseURI;
+
+    function absUrl(url: string, base: string): string {
+      if (!url || url.startsWith("data:") || url.startsWith("blob:") || url.startsWith("javascript:") || url.startsWith("#")) return url;
+      if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("//")) return url;
+      try { return new URL(url, base).href; } catch { return url; }
+    }
+
+    function absUrlsInCss(css: string, base: string): string {
+      return css.replace(/url\(\s*["']?(?!data:|blob:|https?:|\/\/)(.*?)["']?\s*\)/g, (_m: string, u: string) => {
+        try { return 'url("' + new URL(u.trim(), base).href + '")'; } catch { return _m; }
+      });
+    }
+
+    // Canvas to image
+    document.querySelectorAll("canvas").forEach((canvas) => {
+      try {
+        const c = canvas as HTMLCanvasElement;
+        if (c.width === 0 || c.height === 0) return;
+        const dataUrl = c.toDataURL("image/png");
+        if (dataUrl === "data:,") return;
+        const img = document.createElement("img");
+        img.src = dataUrl;
+        img.width = c.width;
+        img.height = c.height;
+        const style = c.getAttribute("style");
+        if (style) img.setAttribute("style", style);
+        img.className = c.className;
+        c.parentNode?.replaceChild(img, c);
+      } catch {}
+    });
+
+    // Collect CSS — only matching rules + @-rules
+    const collectedCss: string[] = [];
+    for (const sheet of Array.from(document.styleSheets)) {
+      try {
+        const rules = Array.from(sheet.cssRules);
+        const base = sheet.href || baseUri;
+        const kept: string[] = [];
+        for (const rule of rules) {
+          if (rule.cssText.startsWith("@") || !(rule instanceof CSSStyleRule)) {
+            kept.push(rule.cssText);
+            continue;
+          }
+          try {
+            if (document.querySelector(rule.selectorText)) kept.push(rule.cssText);
+          } catch {
+            kept.push(rule.cssText);
+          }
+        }
+        let css = kept.join("\n");
+        css = absUrlsInCss(css, base);
+        if (css.length > 0) collectedCss.push(css);
+      } catch {}
+    }
+
+    // Clone DOM
+    const clone = document.documentElement.cloneNode(true) as HTMLElement;
+    clone.querySelector("#navtour-capture-bar")?.remove();
+    clone.querySelectorAll("script, noscript").forEach(el => el.remove());
+
+    const evtAttrs = ["onclick","ondblclick","onmousedown","onmouseup","onmouseover","onmouseout",
+      "onmousemove","onkeydown","onkeyup","onkeypress","onfocus","onblur","onchange","oninput",
+      "onsubmit","onload","onerror","onresize","onscroll","ontouchstart","ontouchend",
+      "ontouchmove","ondragstart","ondragend","ondragover","ondrop","oncontextmenu"];
+    clone.querySelectorAll("*").forEach(el => evtAttrs.forEach(a => el.removeAttribute(a)));
+    clone.querySelectorAll('link[rel="stylesheet"], link[rel="preload"][as="style"]').forEach(el => el.remove());
+    clone.querySelectorAll('link[rel="dns-prefetch"], link[rel="prefetch"], link[rel="prerender"], link[rel="preconnect"], link[rel="modulepreload"]').forEach(el => el.remove());
+
+    // Inline computed styles
+    const CRIT = [
+      "display","position","float","clear","box-sizing",
+      "width","height","min-width","min-height","max-width","max-height",
+      "margin","margin-top","margin-right","margin-bottom","margin-left",
+      "padding","padding-top","padding-right","padding-bottom","padding-left",
+      "border","border-top","border-right","border-bottom","border-left",
+      "border-radius","border-collapse","border-spacing",
+      "background","background-color","background-image","background-size","background-position","background-repeat",
+      "color","font-family","font-size","font-weight","font-style","line-height","letter-spacing",
+      "text-align","text-decoration","text-transform","text-overflow","white-space","word-break","overflow",
+      "overflow-x","overflow-y","vertical-align","list-style","list-style-type",
+      "flex","flex-direction","flex-wrap","flex-grow","flex-shrink","flex-basis",
+      "align-items","align-self","justify-content","gap",
+      "grid-template-columns","grid-template-rows","grid-column","grid-row",
+      "opacity","visibility","z-index","cursor","pointer-events",
+      "transform","box-shadow","outline","table-layout","top","right","bottom","left",
+    ];
+
+    const origEls = document.querySelectorAll("body *");
+    const cloneEls = clone.querySelectorAll("body *");
+    const isLarge = origEls.length > 3000;
+    const props = isLarge ? CRIT.slice(0, 25) : CRIT;
+
+    origEls.forEach((origEl, i) => {
+      if (i >= cloneEls.length) return;
+      const rect = origEl.getBoundingClientRect();
+      if (rect.width === 0 && rect.height === 0) return;
+      const computed = window.getComputedStyle(origEl);
+      const styles: string[] = [];
+      for (const prop of props) {
+        const val = computed.getPropertyValue(prop);
+        if (!val || val === "" || val === "none" || val === "normal" || val === "auto" ||
+            val === "0px" || val === "0" || val === "rgba(0, 0, 0, 0)" ||
+            val === "static" || val === "content-box" || val === "visible" ||
+            val === "baseline" || val === "stretch" || val === "row" || val === "nowrap") continue;
+        styles.push(prop + ":" + val);
+      }
+      if (styles.length > 0) {
+        const existing = (cloneEls[i] as HTMLElement).getAttribute("style") || "";
+        (cloneEls[i] as HTMLElement).setAttribute("style", existing + (existing ? ";" : "") + styles.join(";"));
+      }
+    });
+
+    // Absolutize URLs
+    clone.querySelectorAll("img[src]").forEach(img => {
+      const src = img.getAttribute("src");
+      if (src) img.setAttribute("src", absUrl(src, baseUri));
+    });
+    clone.querySelectorAll("[style]").forEach(el => {
+      const s = el.getAttribute("style");
+      if (s?.includes("url(")) el.setAttribute("style", absUrlsInCss(s, baseUri));
+    });
+
+    // Assemble
+    clone.querySelectorAll("head > style:not([data-navtour-captured])").forEach(el => el.remove());
+    const head = clone.querySelector("head") || clone;
+    if (collectedCss.length > 0) {
+      const styleEl = document.createElement("style");
+      styleEl.setAttribute("data-navtour-captured", "true");
+      styleEl.textContent = collectedCss.join("\n");
+      head.appendChild(styleEl);
+    }
+    if (!clone.querySelector("base")) {
+      const base = document.createElement("base");
+      base.href = baseUri;
+      head.prepend(base);
+    }
+    if (!clone.querySelector("meta[charset]")) {
+      const meta = document.createElement("meta");
+      meta.setAttribute("charset", "utf-8");
+      head.prepend(meta);
+    }
+
+    const html = "<!DOCTYPE html>" + clone.outerHTML;
+    const title = document.title;
+
+    // Upload directly from page context — HTML never passes through messaging
+    const safeName = (title || "page").replace(/[^a-zA-Z0-9-_]/g, "_").substring(0, 50);
+    const blob = new Blob([html], { type: "text/html" });
+    const form = new FormData();
+    form.append("file", blob, safeName + ".html");
+
+    const res = await fetch(uploadUrl, {
+      method: "POST",
+      headers: { "Authorization": "Bearer " + token },
+      body: form,
+    });
+
+    return res.ok;
+  } catch (e) {
+    console.error("[NavTour] captureAndUpload failed:", e);
+    return false;
+  }
+}
+
+// --- Synchronous DOM capture fallback (legacy, kept for reference) ---
 // Used via chrome.scripting.executeScript when chrome.tabs.sendMessage fails.
 
 function capturePageDOMSync(): { html: string; title: string; url: string } | null {
