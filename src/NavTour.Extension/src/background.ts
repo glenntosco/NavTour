@@ -735,19 +735,40 @@ function capturePageDOM(): { html: string; title: string; url: string } {
     "transform","box-shadow","outline","table-layout",
   ];
 
-  // Collect all CSS from stylesheets
+  // Collect CSS from stylesheets — only rules that match elements on the page
   const inlinedCss: string[] = [];
   for (const sheet of Array.from(document.styleSheets)) {
     try {
-      const rules = Array.from(sheet.cssRules);
-      let css = rules.map((r) => r.cssText).join("\n");
+      const kept: string[] = [];
+      for (const rule of Array.from(sheet.cssRules)) {
+        const text = rule.cssText;
+        // Always keep @font-face, @keyframes, @media, @import, @supports
+        if (text.startsWith("@")) {
+          kept.push(text);
+          continue;
+        }
+        // For style rules, check if selector matches any element
+        if (rule instanceof CSSStyleRule) {
+          try {
+            if (document.querySelector(rule.selectorText)) {
+              kept.push(text);
+            }
+          } catch {
+            // Invalid selector — keep it to be safe
+            kept.push(text);
+          }
+        } else {
+          kept.push(text);
+        }
+      }
+      let css = kept.join("\n");
       if (sheet.href) {
         css = css.replace(/url\(["']?(?!data:)([^"')]+)["']?\)/g, (_m, u) => {
           if (u.startsWith("http") || u.startsWith("data:")) return _m;
           try { return `url("${new URL(u, sheet.href!).href}")`; } catch { return _m; }
         });
       }
-      inlinedCss.push(css);
+      if (css.length > 0) inlinedCss.push(css);
     } catch {
       // Cross-origin stylesheet — skip
     }
