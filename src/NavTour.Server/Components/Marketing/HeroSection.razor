@@ -18,7 +18,17 @@
                 }
             </div>
         </div>
-        <div class="mkt-placeholder mkt-placeholder-hero">Product Preview</div>
+        @if (!string.IsNullOrEmpty(ImageUrl))
+        {
+            <div class="mkt-hero-image">
+                <img src="@ImageUrl" alt="NavTour Product Preview" loading="eager"
+                     style="width:100%;border-radius:8px;box-shadow:0 20px 48px rgba(11,25,41,0.10),0 8px 16px rgba(11,25,41,0.04)" />
+            </div>
+        }
+        else
+        {
+            <div class="mkt-placeholder mkt-placeholder-hero">Product Preview</div>
+        }
     </div>
 </section>
 
@@ -30,4 +40,5 @@
     [Parameter] public string PrimaryCtaUrl { get; set; } = "/register";
     [Parameter] public string SecondaryCtaText { get; set; } = "Book a Demo";
     [Parameter] public string SecondaryCtaUrl { get; set; } = "/contact";
+    [Parameter] public string? ImageUrl { get; set; }
 }
