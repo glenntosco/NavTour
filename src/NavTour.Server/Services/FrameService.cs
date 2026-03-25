@@ -32,7 +32,7 @@ public class FrameService : IFrameService
             .FirstOrDefaultAsync();
     }
 
-    public async Task<FrameResponse> UploadAsync(Guid demoId, IFormFile file)
+    public async Task<FrameResponse> UploadAsync(Guid demoId, IFormFile file, string? name = null)
     {
         using var reader = new StreamReader(file.OpenReadStream());
         var htmlContent = await reader.ReadToEndAsync();
@@ -52,6 +52,7 @@ public class FrameService : IFrameService
         var frame = new Frame
         {
             DemoId = demoId,
+            Name = name,
             SequenceOrder = maxOrder + 1,
             HtmlContent = htmlContent,
             CssContent = cssContent

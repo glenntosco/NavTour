@@ -30,9 +30,9 @@ public class FramesController : ControllerBase
     }
 
     [HttpPost("api/v1/demos/{demoId:guid}/frames")]
-    public async Task<ActionResult<FrameResponse>> Upload(Guid demoId, IFormFile file)
+    public async Task<ActionResult<FrameResponse>> Upload(Guid demoId, IFormFile file, [FromForm] string? name = null)
     {
-        var frame = await _frameService.UploadAsync(demoId, file);
+        var frame = await _frameService.UploadAsync(demoId, file, name);
         return CreatedAtAction(nameof(GetById), new { id = frame.Id }, frame);
     }
 

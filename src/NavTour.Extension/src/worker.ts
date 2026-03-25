@@ -194,6 +194,7 @@ async function uploadFrame(
   const blob = new Blob([html], { type: 'text/html' });
   const formData = new FormData();
   formData.append('file', blob, fileName);
+  formData.append('name', title || fileName);
 
   const response = await fetch(`${getApiUrl()}/demos/${demoId}/frames`, {
     method: 'POST',
