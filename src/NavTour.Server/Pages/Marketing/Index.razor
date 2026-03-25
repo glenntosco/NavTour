@@ -1,11 +1,11 @@
 @page "/"
 @layout MarketingLayout
 
-<PageTitle>NavTour - Upload Screenshots. AI Builds Your Tour.</PageTitle>
+<PageTitle>NavTour — Interactive Product Demos That Sell</PageTitle>
 <HeadContent>
-    <meta name="description" content="Upload screenshots and AI generates a complete interactive product tour in 60 seconds. AI-powered voiceover, smart annotations, and lead capture built in." />
-    <meta property="og:title" content="NavTour - Upload Screenshots. AI Builds Your Tour." />
-    <meta property="og:description" content="The AI demo platform that turns screenshots into interactive product tours in under 60 seconds." />
+    <meta name="description" content="Create no-code interactive walkthroughs of your software. Embed on your website, share in sales emails, or use in ad campaigns — and watch engagement soar." />
+    <meta property="og:title" content="NavTour — Let your product sell itself." />
+    <meta property="og:description" content="Create no-code interactive walkthroughs of your software. Embed, share, and convert." />
     <meta property="og:url" content="https://navtour.cloud/" />
     <meta property="og:image" content="https://navtour.cloud/images/product-form-builder.png" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -17,140 +17,76 @@
     <link rel="alternate" hreflang="x-default" href="https://navtour.cloud/" />
 </HeadContent>
 
+@* ── 1. Hero ── *@
 <HeroSection
-    Eyebrow="Self-Serve Interactive Demos"
-    Title="Upload Screenshots. AI Builds Your Tour."
-    Subtitle="Capture your product, generate a polished interactive tour in under 60 seconds, and publish without waiting on a sales call. Built for teams that want to try, launch, and iterate on their own."
-    PrimaryCtaText="Start Free ->"
+    Eyebrow="Interactive Product Demos"
+    Title="Let your product sell itself."
+    Subtitle="Create no-code interactive walkthroughs of your software. Embed them on your website, share in sales emails, or use in ad campaigns — and watch engagement soar."
+    PrimaryCtaText="Start Free Trial"
     PrimaryCtaUrl="/register"
-    SecondaryCtaText="Explore Product"
-    SecondaryCtaUrl="/product"
-    ImageUrl="/images/product-form-builder.png">
-    <div class="mkt-hero-proof">
-        <div class="mkt-hero-proof-item">No credit card required</div>
-        <div class="mkt-hero-proof-item">Publish your first tour today</div>
-        <div class="mkt-hero-proof-item">Built-in lead capture and analytics</div>
-    </div>
-    <div class="mkt-hero-mini-metrics">
-        <div class="mkt-hero-mini-metric">
-            <strong>60s</strong>
-            <span>AI-generated first draft</span>
-        </div>
-        <div class="mkt-hero-mini-metric">
-            <strong>24+</strong>
-            <span>voices ready to preview</span>
-        </div>
-        <div class="mkt-hero-mini-metric">
-            <strong>HTML/CSS</strong>
-            <span>captured with visual fidelity</span>
-        </div>
-    </div>
-</HeroSection>
+    SecondaryCtaText="Book a Demo"
+    SecondaryCtaUrl="/contact"
+    ImageUrl="/images/product-form-builder.png" />
 
-<section class="mkt-social-proof">
+@* ── 2. Logo Bar ── *@
+<section class="mkt-logos">
     <div class="mkt-container">
-        <div class="mkt-self-serve-strip reveal">
-            <div class="mkt-self-serve-strip-copy">
-                <div class="mkt-eyebrow">Built for self-serve evaluation</div>
-                <h2>Try the product before you talk to anyone.</h2>
-                <p>NavTour is positioned for teams that want immediate access: sign up, capture screens, generate a tour, and decide later whether you need a full demo or a paid plan.</p>
-            </div>
-            <div class="mkt-self-serve-strip-grid">
-                <div class="mkt-self-serve-tile">
-                    <strong>Start free</strong>
-                    <span>Create an account and build without a credit card.</span>
-                </div>
-                <div class="mkt-self-serve-tile">
-                    <strong>Ship fast</strong>
-                    <span>Publish a usable walkthrough the same day you sign up.</span>
-                </div>
-                <div class="mkt-self-serve-tile">
-                    <strong>Prove value</strong>
-                    <span>See leads, completion, and share behavior from the first demo.</span>
-                </div>
-            </div>
+        <p class="mkt-logos-label reveal">Trusted by innovative teams</p>
+        <div class="mkt-logos-row reveal">
+            <div class="mkt-logo-slot">Acme Corp</div>
+            <div class="mkt-logo-slot">Beacon AI</div>
+            <div class="mkt-logo-slot">CloudStack</div>
+            <div class="mkt-logo-slot">DataPulse</div>
+            <div class="mkt-logo-slot">Elevate</div>
+            <div class="mkt-logo-slot">FinOps.io</div>
         </div>
     </div>
 </section>
 
+@* ── 3. Product Tabs ── *@
 <section class="mkt-section">
     <div class="mkt-container">
         <div class="mkt-section-heading reveal">
-            <div class="mkt-eyebrow" style="color:var(--nt-accent)">Powered by Claude AI</div>
-            <h2>One Click. Complete Tour.</h2>
-            <p style="max-width:600px;margin:var(--space-4) auto 0;color:var(--text-secondary);font-size:var(--text-lg)">
-                Click "AI Generate" in the editor and Claude analyzes every frame of your demo, identifying UI elements, generating step-by-step annotations, and writing voiceover scripts.
-            </p>
+            <h2>One platform, three superpowers.</h2>
         </div>
 
-        <div class="mkt-grid mkt-grid-3 reveal-stagger" style="margin-top:var(--space-12)">
-            <div class="mkt-feature-card mkt-card">
-                <div class="mkt-feature-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--nt-accent)" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-                </div>
-                <h3>Screenshot Analysis</h3>
-                <p>AI reads your HTML frames and understands the UI layout, navigation patterns, and key elements without manual tagging.</p>
-            </div>
-            <div class="mkt-feature-card mkt-card">
-                <div class="mkt-feature-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--nt-accent)" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                </div>
-                <h3>Smart Annotations</h3>
-                <p>Generate titled tooltips with contextual descriptions and sensible positioning for every screen in the flow.</p>
-            </div>
-            <div class="mkt-feature-card mkt-card">
-                <div class="mkt-feature-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--nt-accent)" stroke-width="2" stroke-linecap="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
-                </div>
-                <h3>Voiceover Scripts</h3>
-                <p>Natural, conversational voiceover text for every step, ready for AI voice generation with 24+ ElevenLabs voices.</p>
-            </div>
-        </div>
-    </div>
-</section>
+        <div class="mkt-tabs reveal" role="tablist">
+            <input type="radio" name="product-tab" id="tab-demos" class="mkt-tab-radio" checked />
+            <input type="radio" name="product-tab" id="tab-hub" class="mkt-tab-radio" />
+            <input type="radio" name="product-tab" id="tab-analytics" class="mkt-tab-radio" />
 
-<section class="mkt-section-alt">
-    <div class="mkt-container">
-        <div class="mkt-step-row reveal">
-            <div class="mkt-step-row-content">
-                <div class="mkt-eyebrow" style="color:var(--nt-accent)">AI Voiceover</div>
-                <h3>Your Demos Speak - In Any Language</h3>
-                <p>Choose from 24+ natural AI voices powered by ElevenLabs. English, Spanish, and more. The multilingual model auto-detects your text language and speaks with the right accent.</p>
-                <ul style="list-style:none;padding:0;margin:var(--space-6) 0 0;display:flex;flex-direction:column;gap:var(--space-3)">
-                    <li style="display:flex;align-items:center;gap:var(--space-3);color:var(--text-secondary);font-size:var(--text-sm)">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--nt-accent)" stroke="none"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                        24+ natural AI voices
-                    </li>
-                    <li style="display:flex;align-items:center;gap:var(--space-3);color:var(--text-secondary);font-size:var(--text-sm)">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--nt-accent)" stroke="none"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                        Multilingual output with auto-detected language
-                    </li>
-                    <li style="display:flex;align-items:center;gap:var(--space-3);color:var(--text-secondary);font-size:var(--text-sm)">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--nt-accent)" stroke="none"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                        Instant preview before publishing
-                    </li>
-                    <li style="display:flex;align-items:center;gap:var(--space-3);color:var(--text-secondary);font-size:var(--text-sm)">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--nt-accent)" stroke="none"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                        Generated once and reused on every play
-                    </li>
-                </ul>
+            <div class="mkt-tab-labels">
+                <label for="tab-demos" class="mkt-tab-label" role="tab">Interactive Demos</label>
+                <label for="tab-hub" class="mkt-tab-label" role="tab">Demo Hub</label>
+                <label for="tab-analytics" class="mkt-tab-label" role="tab">Analytics Dashboard</label>
             </div>
-            <div class="mkt-step-row-visual">
-                <div class="mkt-stage-card">
-                    <div class="mkt-stage-card-header">
-                        <div>
-                            <div class="mkt-stage-card-label">Voice Preview</div>
-                            <div class="mkt-stage-card-title">Multilingual narration</div>
-                        </div>
-                        <div class="mkt-stage-pill">Ready to publish</div>
+
+            <div class="mkt-tab-panels">
+                <div class="mkt-tab-panel mkt-tab-panel-1">
+                    <div class="mkt-tab-panel-body">
+                        <h3>Build walkthroughs your buyers actually finish.</h3>
+                        <p>Build step-by-step product walkthroughs from screenshots or live captures. Add hotspots, tooltips, guided flows, and branching logic. No coding required.</p>
                     </div>
-                    <div class="mkt-voice-list">
-                        <div class="mkt-voice-row"><span>Rachel</span><span>English</span></div>
-                        <div class="mkt-voice-row"><span>George</span><span>British</span></div>
-                        <div class="mkt-voice-row"><span>Charlie</span><span>Spanish</span></div>
+                    <div class="mkt-tab-panel-visual">
+                        <div class="mkt-tab-screen">Interactive Demos Preview</div>
                     </div>
-                    <div class="mkt-waveform" aria-hidden="true">
-                        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <div class="mkt-tab-panel mkt-tab-panel-2">
+                    <div class="mkt-tab-panel-body">
+                        <h3>Let prospects self-serve the right demo.</h3>
+                        <p>A centralized library where prospects self-serve demos by persona, use case, or product line. Reduces sales friction and lets buyers explore on their own terms.</p>
+                    </div>
+                    <div class="mkt-tab-panel-visual">
+                        <div class="mkt-tab-screen">Demo Hub Preview</div>
+                    </div>
+                </div>
+                <div class="mkt-tab-panel mkt-tab-panel-3">
+                    <div class="mkt-tab-panel-body">
+                        <h3>Know exactly what resonates.</h3>
+                        <p>Track who viewed your demos, how far they got, where they dropped off, and which features generated the most interest. Feed intent data directly into your CRM.</p>
+                    </div>
+                    <div class="mkt-tab-panel-visual">
+                        <div class="mkt-tab-screen">Analytics Dashboard Preview</div>
                     </div>
                 </div>
             </div>
@@ -158,184 +94,335 @@
     </div>
 </section>
 
-<section class="mkt-section">
-    <div class="mkt-container">
-        <div class="mkt-section-heading reveal">
-            <h2>Three Steps to a Live Demo</h2>
-        </div>
-        <div class="reveal-stagger" style="display:flex;flex-direction:column;gap:var(--space-16)">
-            <div class="mkt-step-row">
-                <div class="mkt-step-row-content">
-                    <div class="mkt-step-label">Step 1</div>
-                    <h3>Capture Your Product</h3>
-                    <p>Install the NavTour Chrome extension and browse your product. Click to capture each screen. The extension snapshots the full HTML and CSS, preserving every detail.</p>
-                </div>
-                <div class="mkt-step-row-visual">
-                    <div class="mkt-stage-card">
-                        <div class="mkt-stage-card-header">
-                            <div>
-                                <div class="mkt-stage-card-label">Browser Capture</div>
-                                <div class="mkt-stage-card-title">Live extension session</div>
-                            </div>
-                            <div class="mkt-stage-pill">Recording</div>
-                        </div>
-                        <div class="mkt-browser-bar">
-                            <span></span><span></span><span></span>
-                        </div>
-                        <div class="mkt-ui-block mkt-ui-block-lg"></div>
-                        <div class="mkt-ui-grid">
-                            <div class="mkt-ui-block"></div>
-                            <div class="mkt-ui-block"></div>
-                            <div class="mkt-ui-block"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="mkt-step-row">
-                <div class="mkt-step-row-content">
-                    <div class="mkt-step-label">Step 2</div>
-                    <h3>AI Generates Your Tour</h3>
-                    <p>Click "AI Generate" and Claude analyzes every frame. In under 60 seconds, you have a complete interactive tour with step-by-step annotations and voiceover scripts.</p>
-                </div>
-                <div class="mkt-step-row-visual">
-                    <div class="mkt-stage-card">
-                        <div class="mkt-stage-card-header">
-                            <div>
-                                <div class="mkt-stage-card-label">AI Generate</div>
-                                <div class="mkt-stage-card-title">Tour draft in progress</div>
-                            </div>
-                            <div class="mkt-stage-pill">~60s</div>
-                        </div>
-                        <div class="mkt-progress-stack">
-                            <div class="mkt-progress-row"><span>Analyzing frames</span><div><i style="width:92%"></i></div></div>
-                            <div class="mkt-progress-row"><span>Placing annotations</span><div><i style="width:78%"></i></div></div>
-                            <div class="mkt-progress-row"><span>Writing voiceover</span><div><i style="width:64%"></i></div></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="mkt-step-row">
-                <div class="mkt-step-row-content">
-                    <div class="mkt-step-label">Step 3</div>
-                    <h3>Share and Capture Leads</h3>
-                    <p>Publish your demo with one click. Share via link, embed on your website, or send via email. Built-in analytics track engagement and the lead capture form converts viewers into pipeline.</p>
-                </div>
-                <div class="mkt-step-row-visual">
-                    <div class="mkt-stage-card">
-                        <div class="mkt-stage-card-header">
-                            <div>
-                                <div class="mkt-stage-card-label">Share Results</div>
-                                <div class="mkt-stage-card-title">Leads and engagement</div>
-                            </div>
-                            <div class="mkt-stage-pill">Live</div>
-                        </div>
-                        <div class="mkt-result-grid">
-                            <div><strong>128</strong><span>views</span></div>
-                            <div><strong>47%</strong><span>completion</span></div>
-                            <div><strong>19</strong><span>leads</span></div>
-                            <div><strong>8</strong><span>shares</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
+@* ── 4. Buyer Journey ── *@
 <section class="mkt-section-alt">
     <div class="mkt-container">
         <div class="mkt-section-heading reveal">
-            <h2>Built for Every Team in the Buyer Journey</h2>
+            <div class="mkt-eyebrow" style="color:var(--nt-accent)">Use Cases</div>
+            <h2>Demos for every stage of the buyer journey.</h2>
         </div>
-        <div class="mkt-grid mkt-grid-3 reveal-stagger">
-            <BuyerJourneyCard Icon="website" Title="Website Visitors" Description="Embed interactive demos on your website so prospects can explore your product before booking a call." />
-            <BuyerJourneyCard Icon="discovery" Title="Sales Discovery" Description="Send personalized demos before meetings so prospects arrive educated and ready to buy." />
-            <BuyerJourneyCard Icon="email" Title="Email Campaigns" Description="Include demo links in outbound sequences to increase reply rates and shorten sales cycles." />
-            <BuyerJourneyCard Icon="champion" Title="Champion Enablement" Description="Arm internal champions with shareable demos they can forward to decision makers." />
-            <BuyerJourneyCard Icon="tradeshow" Title="Events and Tradeshows" Description="Run demos on booth displays or share QR codes that link to self-guided product tours." />
-            <BuyerJourneyCard Icon="onboarding" Title="Customer Onboarding" Description="Guide new users through your product with interactive walkthroughs that reduce time-to-value." />
+        <div class="mkt-grid mkt-journey-grid reveal-stagger">
+            <div class="mkt-card mkt-journey-card">
+                <h3>Paid Ads</h3>
+                <p>Replace static landing pages with interactive demos that convert ad clicks into qualified pipeline.</p>
+            </div>
+            <div class="mkt-card mkt-journey-card">
+                <h3>Website Embeds</h3>
+                <p>Let visitors explore your product on your homepage before they ever talk to sales.</p>
+            </div>
+            <div class="mkt-card mkt-journey-card">
+                <h3>Pre-Call Discovery</h3>
+                <p>Send personalized demos before meetings so prospects arrive educated and ready to buy.</p>
+            </div>
+            <div class="mkt-card mkt-journey-card">
+                <h3>Post-Call Follow-Up</h3>
+                <p>Reinforce your pitch with a shareable walkthrough champions can forward to decision makers.</p>
+            </div>
+            <div class="mkt-card mkt-journey-card">
+                <h3>Onboarding</h3>
+                <p>Guide new users through your product with interactive walkthroughs that reduce time-to-value.</p>
+            </div>
+            <div class="mkt-card mkt-journey-card">
+                <h3>Upsell Campaigns</h3>
+                <p>Show existing customers the features they haven't discovered yet to drive expansion revenue.</p>
+            </div>
         </div>
     </div>
 </section>
 
+@* ── 5. Metrics ── *@
 <section class="mkt-section">
     <div class="mkt-container">
         <div class="mkt-section-heading reveal">
-            <h2>Everything You Need to Demo Your Product</h2>
+            <h2>The numbers speak for themselves.</h2>
         </div>
-        <div class="mkt-grid mkt-grid-3 reveal-stagger" style="margin-top:var(--space-8)">
-            <FeatureCard Icon="auto_awesome" Title="AI Tour Generator" Description="Claude AI analyzes your screens and generates complete tours with annotations and voiceover in 60 seconds." />
-            <FeatureCard Icon="mic" Title="AI Voiceover" Description="24+ natural ElevenLabs voices. Multilingual. Preview instantly. Audio cached with no per-play costs." />
-            <FeatureCard Icon="web" Title="Chrome Capture" Description="Snapshot any web app with pixel-perfect HTML/CSS preservation. Computed styles ensure SPA support." />
-            <FeatureCard Icon="edit" Title="Visual Editor" Description="Drag annotations, resize elements, find and replace text, and customize every detail of your tour." />
-            <FeatureCard Icon="analytics" Title="Engagement Analytics" Description="Track views, step completion, time-on-step, and conversion events for every demo session." />
-            <FeatureCard Icon="person_add" Title="Lead Capture" Description="Built-in lead form at the end of every demo. Export to Excel or connect to your CRM." />
-            <FeatureCard Icon="tune" Title="Personalization" Description="Use {{company}} tokens to dynamically swap text for each prospect. One demo, infinite personalization." />
-            <FeatureCard Icon="translate" Title="Multilingual" Description="Build demos in English and Spanish. Voiceover auto-detects language. Reach global audiences." />
-            <FeatureCard Icon="share" Title="Share Anywhere" Description="Share via link, embed on your website, or copy the embed code. WhatsApp and email sharing built in." />
+        <div class="mkt-metrics-row reveal-stagger">
+            <div class="mkt-metric">
+                <div class="mkt-metric-value">3x</div>
+                <div class="mkt-metric-label">higher engagement vs. static screenshots</div>
+            </div>
+            <div class="mkt-metric">
+                <div class="mkt-metric-value">47%</div>
+                <div class="mkt-metric-label">faster deal velocity</div>
+            </div>
+            <div class="mkt-metric">
+                <div class="mkt-metric-value">2x</div>
+                <div class="mkt-metric-label">more qualified pipeline</div>
+            </div>
+            <div class="mkt-metric">
+                <div class="mkt-metric-value">60%</div>
+                <div class="mkt-metric-label">reduction in first-call no-shows</div>
+            </div>
         </div>
     </div>
 </section>
 
+@* ── 6. Testimonial ── *@
 <section class="mkt-section-alt">
-    <div class="mkt-container">
-        <div class="mkt-section-heading reveal">
-            <div class="mkt-eyebrow">Self-Serve Path</div>
-            <h2>Start free now. Add sales help only when you need it.</h2>
-            <p>Everything on the homepage should help a visitor say yes to trying the product themselves. These are the decision points we should reinforce.</p>
-        </div>
-        <div class="mkt-grid mkt-grid-3 reveal-stagger">
-            <div class="mkt-card mkt-decision-card">
-                <div class="mkt-decision-step">01</div>
-                <h3>Fast path to value</h3>
-                <p>Put the strongest self-serve CTA above the fold and keep it primary across the page. Product exploration should be the fallback, not sales contact.</p>
-            </div>
-            <div class="mkt-card mkt-decision-card">
-                <div class="mkt-decision-step">02</div>
-                <h3>Show the workflow, not just claim it</h3>
-                <p>The public site should visually demonstrate capture, AI generation, and publish results. That reduces skepticism and pushes users into signup faster.</p>
-            </div>
-            <div class="mkt-card mkt-decision-card">
-                <div class="mkt-decision-step">03</div>
-                <h3>Delay the sales ask</h3>
-                <p>Keep "Book a demo" available, but secondary. The primary audience here wants to try the product before talking to a person.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="mkt-section">
     <div class="mkt-container">
         <div class="mkt-testimonial-featured reveal">
-            <blockquote>"The public site should feel like the product itself: fast to understand, visually confident, and easy to try without friction."</blockquote>
+            <blockquote>"NavTour transformed how we share product demos with prospects. Our sales cycle shortened by 40% and engagement went through the roof."</blockquote>
             <div class="mkt-testimonial-attribution" style="justify-content:center">
                 <div>
-                    <div class="mkt-testimonial-name">Homepage direction</div>
-                    <div class="mkt-testimonial-role">Self-serve first, sales second</div>
+                    <div class="mkt-testimonial-name">VP of Sales</div>
+                    <div class="mkt-testimonial-role">Enterprise SaaS Company</div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<section class="mkt-section-alt" style="background:var(--nt-primary-light)">
+@* ── 7. Trust Badges ── *@
+<section class="mkt-trust">
     <div class="mkt-container">
-        <div class="mkt-section-heading reveal">
-            <h2>Results That Speak for Themselves</h2>
-        </div>
-        <div class="mkt-grid mkt-grid-4 reveal-stagger">
-            <MetricCard Value="60s" Label="AI-generated first tour draft" />
-            <MetricCard Value="24+" Label="Voices available to preview" />
-            <MetricCard Value="HTML/CSS" Label="Capture with visual fidelity" />
-            <MetricCard Value="Free" Label="Signup path with no credit card" />
+        <div class="mkt-trust-row reveal">
+            <div class="mkt-trust-badge">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--nt-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span>SOC 2</span>
+            </div>
+            <div class="mkt-trust-badge">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--nt-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                <span>Azure Hosted</span>
+            </div>
+            <div class="mkt-trust-badge">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--nt-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                <span>99.9% Uptime</span>
+            </div>
+            <div class="mkt-trust-badge">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--nt-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                <span>GDPR Compliant</span>
+            </div>
         </div>
     </div>
 </section>
 
+@* ── 8. Final CTA ── *@
 <CtaSection Dark="true"
-    Title="Ready to Build Your First Interactive Demo?"
-    Subtitle="Start free, generate your first tour, and decide later if you need anything beyond self-serve."
-    CtaText="Create Free Account ->"
-    CtaUrl="/register"
-    SecondaryCtaText="See Pricing"
-    SecondaryCtaUrl="/pricing" />
+    Title="Turn demos into deals."
+    Subtitle="Join hundreds of teams using NavTour to accelerate their sales pipeline."
+    CtaText="Start Free Trial"
+    CtaUrl="/register" />
+
+@* ── Scoped Styles ── *@
+<style>
+    /* ── Logo Bar ── */
+    .mkt-logos {
+        padding: var(--space-16) var(--space-6);
+        border-bottom: 1px solid var(--neutral-200);
+    }
+    .mkt-logos-label {
+        text-align: center;
+        font-size: var(--text-sm);
+        font-weight: var(--weight-medium);
+        color: var(--text-tertiary);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        margin-bottom: var(--space-8);
+    }
+    .mkt-logos-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-10);
+        flex-wrap: wrap;
+    }
+    .mkt-logo-slot {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 140px;
+        height: 48px;
+        border: 1px dashed var(--neutral-300);
+        border-radius: var(--radius);
+        color: var(--text-tertiary);
+        font-size: var(--text-sm);
+        font-weight: var(--weight-medium);
+    }
+
+    /* ── Product Tabs ── */
+    .mkt-tab-radio {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+    .mkt-tabs {
+        margin-top: var(--space-12);
+    }
+    .mkt-tab-labels {
+        display: flex;
+        justify-content: center;
+        gap: var(--space-2);
+        border-bottom: 1px solid var(--neutral-200);
+        margin-bottom: var(--space-12);
+    }
+    .mkt-tab-label {
+        padding: var(--space-4) var(--space-6);
+        font-size: var(--text-base);
+        font-weight: var(--weight-medium);
+        color: var(--text-tertiary);
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -1px;
+        transition: color 200ms ease, border-color 200ms ease;
+    }
+    .mkt-tab-label:hover {
+        color: var(--text-primary);
+    }
+
+    /* Tab selection — pure CSS */
+    .mkt-tab-panel { display: none; }
+    #tab-demos:checked ~ .mkt-tab-labels label[for="tab-demos"],
+    #tab-hub:checked ~ .mkt-tab-labels label[for="tab-hub"],
+    #tab-analytics:checked ~ .mkt-tab-labels label[for="tab-analytics"] {
+        color: var(--nt-primary);
+        border-bottom-color: var(--nt-primary);
+    }
+    #tab-demos:checked ~ .mkt-tab-panels .mkt-tab-panel-1,
+    #tab-hub:checked ~ .mkt-tab-panels .mkt-tab-panel-2,
+    #tab-analytics:checked ~ .mkt-tab-panels .mkt-tab-panel-3 {
+        display: grid;
+    }
+
+    .mkt-tab-panel {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-12);
+        align-items: center;
+    }
+    .mkt-tab-panel-body h3 {
+        margin-bottom: var(--space-4);
+    }
+    .mkt-tab-panel-body p {
+        max-width: 480px;
+        font-size: var(--text-lg);
+        color: var(--text-secondary);
+        line-height: var(--leading-normal);
+    }
+    .mkt-tab-screen {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        aspect-ratio: 16 / 10;
+        background: var(--neutral-100);
+        border: 1px solid var(--neutral-200);
+        border-radius: var(--radius-lg);
+        color: var(--text-tertiary);
+        font-size: var(--text-sm);
+        font-weight: var(--weight-medium);
+    }
+
+    /* ── Buyer Journey Grid ── */
+    .mkt-journey-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .mkt-journey-card {
+        padding: var(--space-8);
+    }
+    .mkt-journey-card h3 {
+        margin-bottom: var(--space-3);
+    }
+    .mkt-journey-card p {
+        font-size: var(--text-base);
+        color: var(--text-secondary);
+        line-height: var(--leading-normal);
+    }
+
+    /* ── Metrics ── */
+    .mkt-metrics-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--space-8);
+        margin-top: var(--space-12);
+    }
+    .mkt-metric {
+        text-align: center;
+        padding: var(--space-10) var(--space-6);
+        background: var(--surface-primary);
+        border: 1px solid var(--neutral-200);
+        border-radius: var(--radius-lg);
+    }
+    .mkt-metric-value {
+        font-family: var(--font-display);
+        font-size: var(--text-5xl);
+        font-weight: var(--weight-bold);
+        color: var(--nt-primary);
+        letter-spacing: -0.03em;
+        line-height: 1;
+        margin-bottom: var(--space-3);
+    }
+    .mkt-metric-label {
+        font-size: var(--text-sm);
+        color: var(--text-secondary);
+        line-height: var(--leading-normal);
+        max-width: 200px;
+        margin: 0 auto;
+    }
+
+    /* ── Trust Badges ── */
+    .mkt-trust {
+        padding: var(--space-16) var(--space-6);
+        border-top: 1px solid var(--neutral-200);
+        border-bottom: 1px solid var(--neutral-200);
+    }
+    .mkt-trust-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-12);
+        flex-wrap: wrap;
+    }
+    .mkt-trust-badge {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        font-size: var(--text-sm);
+        font-weight: var(--weight-medium);
+        color: var(--text-secondary);
+    }
+
+    /* ── Responsive ── */
+    @@media (max-width: 1024px) {
+        .mkt-journey-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .mkt-metrics-row {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .mkt-tab-panel {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 640px) {
+        .mkt-journey-grid {
+            grid-template-columns: 1fr;
+        }
+        .mkt-metrics-row {
+            grid-template-columns: 1fr 1fr;
+        }
+        .mkt-tab-labels {
+            flex-direction: column;
+            align-items: stretch;
+            border-bottom: none;
+            gap: 0;
+        }
+        .mkt-tab-label {
+            border-bottom: 1px solid var(--neutral-200);
+            text-align: center;
+            padding: var(--space-3) var(--space-4);
+        }
+        .mkt-logos-row {
+            gap: var(--space-6);
+        }
+        .mkt-logo-slot {
+            width: 120px;
+            height: 40px;
+        }
+        .mkt-trust-row {
+            gap: var(--space-6);
+        }
+        .mkt-metric-value {
+            font-size: var(--text-4xl);
+        }
+    }
+</style>

@@ -2,25 +2,25 @@
 
 /* ========== Design Tokens ========== */
 :root {
-    /* Brand — NavTour Navy/Coral */
-    --nt-primary: #1E3A5F;
-    --nt-primary-dark: #152D4A;
-    --nt-primary-deeper: #0F2035;
-    --nt-primary-light: #E8EFF7;
-    --nt-primary-subtle: #F0F4F9;
-    --nt-accent: #E8523F;
-    --nt-accent-dark: #D4412F;
-    --nt-accent-light: #FDE8E5;
+    /* Brand — NavTour Indigo/Emerald */
+    --nt-primary: #4F46E5;
+    --nt-primary-dark: #4338CA;
+    --nt-primary-deeper: #3730A3;
+    --nt-primary-light: #EEF2FF;
+    --nt-primary-subtle: #F5F3FF;
+    --nt-accent: #10B981;
+    --nt-accent-dark: #059669;
+    --nt-accent-light: #ECFDF5;
 
     --nt-success: #059669;
     --nt-warning: #D97706;
     --nt-error: #DC2626;
 
-    /* Neutrals — blue-hued, never pure gray */
-    --neutral-950: #0B1929;
-    --neutral-800: #1E3A5F;
-    --neutral-700: #2D4A6F;
-    --neutral-600: #475B73;
+    /* Neutrals — cool slate-toned, never pure gray */
+    --neutral-950: #0F172A;
+    --neutral-800: #1E293B;
+    --neutral-700: #334155;
+    --neutral-600: #475569;
     --neutral-500: #64748B;
     --neutral-400: #94A3B8;
     --neutral-300: #CBD5E1;
@@ -45,7 +45,7 @@
     --text-link-hover: var(--nt-primary-dark);
 
     /* Typography */
-    --font-display: 'Manrope', 'Inter', system-ui, -apple-system, sans-serif;
+    --font-display: 'Inter', system-ui, -apple-system, sans-serif;
     --font-body: 'Inter', system-ui, -apple-system, sans-serif;
     --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
     --text-xs: 0.75rem;
@@ -88,7 +88,7 @@
     --shadow-md: 0 4px 6px rgba(11, 25, 41, 0.06), 0 2px 4px rgba(11, 25, 41, 0.04);
     --shadow-lg: 0 10px 24px rgba(11, 25, 41, 0.08), 0 4px 8px rgba(11, 25, 41, 0.04);
     --shadow-xl: 0 20px 48px rgba(11, 25, 41, 0.10), 0 8px 16px rgba(11, 25, 41, 0.04);
-    --shadow-glow: 0 0 0 1px rgba(30, 58, 95, 0.08), 0 4px 16px rgba(30, 58, 95, 0.12);
+    --shadow-glow: 0 0 0 1px rgba(79, 70, 229, 0.08), 0 4px 16px rgba(79, 70, 229, 0.12);
 
     /* Radius */
     --radius-sm: 4px;
