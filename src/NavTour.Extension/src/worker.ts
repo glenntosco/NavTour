@@ -712,21 +712,37 @@ async function handlePopupStartCapture(msg: any): Promise<any> {
   return { success: true, tabId: tab.id, ...session };
 }
 
-/** Wait for content scripts to be ready (manifest auto-injects them) */
+/** Ensure content scripts are ready, inject once if not present */
 async function ensureContentScripts(tabId: number): Promise<void> {
-  // Content scripts are auto-injected by manifest at document_idle.
-  // We just need to wait until they're responding — do NOT re-inject
-  // via executeScript as that creates duplicate listeners.
-  for (let attempt = 0; attempt < 5; attempt++) {
+  // First check if manifest-injected scripts are already responding
+  for (let attempt = 0; attempt < 3; attempt++) {
     try {
       const response = await chrome.tabs.sendMessage(tabId, { kind: 'navtour:get-page-info' });
-      if (response?.title) return; // Script is ready
+      if (response?.title) return; // Already ready
     } catch {
-      // Not ready yet — wait and retry
+      // Not ready yet
     }
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise(resolve => setTimeout(resolve, 300));
   }
-  console.warn('[NavTour Worker] Content scripts not responding after 2.5s for tab:', tabId);
+
+  // Scripts not responding after 900ms — inject once as fallback
+  console.log('[NavTour Worker] Injecting content scripts for tab:', tabId);
+  try {
+    await chrome.scripting.executeScript({
+      target: { tabId, allFrames: false },
+      files: ['content-script-main.js'],
+      world: 'MAIN' as any,
+    });
+  } catch {}
+  try {
+    await chrome.scripting.executeScript({
+      target: { tabId, allFrames: false },
+      files: ['content-script-isolated.js'],
+    });
+  } catch {}
+
+  // Wait for injected scripts to initialize
+  await new Promise(resolve => setTimeout(resolve, 500));
 }
 
 // ── Resource fetching ───────────────────────────────────────────────
@@ -784,20 +800,29 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
 
   const session = activeSessions.get(tabId)!;
 
-  // On page load complete, re-inject toolbar and optionally auto-capture
+  // On page load complete, wait for manifest-injected scripts then inject toolbar
   if (changeInfo.status === 'complete') {
-    // Re-inject content scripts and toolbar after navigation
     setTimeout(async () => {
       if (!activeSessions.has(tabId)) return;
-      await ensureContentScripts(tabId);
-      injectToolbarInTab(tabId, session);
+
+      // Wait for manifest-injected content scripts (don't re-inject)
+      for (let i = 0; i < 5; i++) {
+        try {
+          const r = await chrome.tabs.sendMessage(tabId, { kind: 'navtour:get-page-info' });
+          if (r?.title) break;
+        } catch {}
+        await new Promise(resolve => setTimeout(resolve, 400));
+      }
+
+      // Inject toolbar (content script removes old one first)
+      if (activeSessions.has(tabId)) {
+        injectToolbarInTab(tabId, session);
+      }
 
       // Auto-capture if not in click-to-capture mode
       if (session.settings.clickToCapture === false) {
         setTimeout(() => {
-          if (activeSessions.has(tabId)) {
-            captureTab(tabId);
-          }
+          if (activeSessions.has(tabId)) captureTab(tabId);
         }, 1000);
       }
     }, 500);
