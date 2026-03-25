@@ -37,13 +37,13 @@
         </nav>
 
         <div class="mkt-header-actions">
+            <a href="/login" class="mkt-btn mkt-btn-secondary">@L["nav_sign_in"]</a>
+            <a href="/register" class="mkt-btn mkt-btn-primary">@L["nav_start_free"]</a>
             <div class="mkt-lang-toggle">
                 <a href="?culture=en&ui-culture=en" class="@(culture == "en" ? "active" : "")">EN</a>
                 <span>|</span>
                 <a href="?culture=es&ui-culture=es" class="@(culture == "es" ? "active" : "")">ES</a>
             </div>
-            <a href="/login" class="mkt-btn mkt-btn-secondary">@L["nav_sign_in"]</a>
-            <a href="/register" class="mkt-btn mkt-btn-primary">@L["nav_start_free"]</a>
         </div>
 
         <button class="mkt-hamburger" id="mkt-hamburger" aria-label="Toggle menu" aria-expanded="false" onclick="var n=document.getElementById('mkt-nav');n.classList.toggle('open');this.setAttribute('aria-expanded',n.classList.contains('open'))">
