@@ -17,12 +17,25 @@ import { getApiUrl, getAppUrl, FeatureFlags } from './lib/constants';
 
 // ── Types ───────────────────────────────────────────────────────────
 
+interface FrameCapture {
+  index: number;
+  title: string;
+  url: string;
+  thumbnailDataUrl: string;
+  status: 'complete' | 'error';
+  timestamp: number;
+  frameId?: string;
+  stepType?: 'modal' | 'tooltip' | 'invisible';
+  stepText?: string;
+}
+
 interface CaptureSession {
   tabId: number;
   token: string;
   demoId: string;
   demoName: string;
   frameCount: number;
+  frames: FrameCapture[];
   settings: CaptureSettings;
   cxtFeatureFlags?: string[];
   workspaceSlug?: string;
@@ -268,11 +281,39 @@ async function captureTab(tabId: number): Promise<void> {
 
     session.frameCount++;
 
-    // Notify the tab about successful capture
+    // Take screenshot thumbnail for panel
+    let thumbnailDataUrl = '';
+    try {
+      const tab = await chrome.tabs.get(tabId);
+      thumbnailDataUrl = await new Promise<string>((resolve) => {
+        chrome.tabs.captureVisibleTab(
+          tab.windowId,
+          { format: 'png' },
+          (dataUrl) => resolve(dataUrl || '')
+        );
+      });
+    } catch (e) {
+      console.warn('[NavTour Worker] Thumbnail capture failed:', e);
+    }
+
+    // Store frame metadata
+    const frameThumbnail: FrameCapture = {
+      index: session.frameCount,
+      title: captureResult.title,
+      url: captureResult.url,
+      thumbnailDataUrl,
+      status: 'complete',
+      timestamp: Date.now(),
+      frameId: frameResult.id,
+    };
+    session.frames.push(frameThumbnail);
+
+    // Notify the tab about successful capture (include thumbnail for panel)
     notifyTab(tabId, {
       kind: 'navtour:capture-complete',
       frameCount: session.frameCount,
       frameId: frameResult.id,
+      frameThumbnail,
     });
 
     // Update badge
@@ -329,6 +370,7 @@ async function startSession(tabId: number, data: any): Promise<CaptureSession> {
     demoId: data.demoId,
     demoName: data.demoName || 'Untitled',
     frameCount: data.frameCount || 0,
+    frames: [],
     settings: data.settings || {},
     cxtFeatureFlags: data.cxtFeatureFlags,
     workspaceSlug: data.workspaceSlug,
@@ -571,6 +613,53 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         .then((result) => sendResponse(result))
         .catch((e) => sendResponse({ success: false, error: (e as Error).message }));
       return true;
+    }
+
+    // ── Panel message handlers ──────────────────────────────
+
+    case 'navtour:panel-request-frames': {
+      const sess = findSessionByTabId(sender.tab?.id);
+      sendResponse({ success: true, frames: sess?.frames || [] });
+      break;
+    }
+
+    case 'navtour:panel-delete-frame': {
+      const sess = findSessionByTabId(sender.tab?.id);
+      if (sess && message.frameIndex !== undefined) {
+        const idx = sess.frames.findIndex((f) => f.index === message.frameIndex);
+        if (idx >= 0) {
+          const removed = sess.frames.splice(idx, 1)[0];
+          sess.frameCount = Math.max(0, sess.frameCount - 1);
+          // Delete from API if we have a frameId
+          if (removed.frameId) {
+            fetch(`${getApiUrl()}/frames/${removed.frameId}`, {
+              method: 'DELETE',
+              headers: { Authorization: `Bearer ${sess.token}` },
+            }).catch(() => {});
+          }
+          sendResponse({ success: true, frameCount: sess.frameCount });
+          updateBadge(sess.tabId, sess.frameCount);
+          return;
+        }
+      }
+      sendResponse({ success: false });
+      break;
+    }
+
+    case 'navtour:panel-save-step': {
+      const sess = findSessionByTabId(sender.tab?.id);
+      if (sess && message.frameIndex !== undefined) {
+        const frame = sess.frames.find((f) => f.index === message.frameIndex);
+        if (frame) {
+          frame.stepType = message.stepType;
+          frame.stepText = message.stepText;
+          frame.title = message.title || frame.title;
+          sendResponse({ success: true });
+          return;
+        }
+      }
+      sendResponse({ success: false });
+      break;
     }
   }
 });

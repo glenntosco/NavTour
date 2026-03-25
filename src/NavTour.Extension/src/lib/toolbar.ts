@@ -1,11 +1,18 @@
 /**
  * Capture Toolbar — floating bottom-center pill matching Navattic's design.
  * - Helper text bubble above: "Click through your app to record"
- * - Main bar: logo+badge, separator, icon buttons (pause, stop, settings, no-click, undo), Finish
+ * - Main bar: logo+badge, separator, icon buttons (pause, stop, settings, no-click, undo, expand), Finish
  * - 3-2-1 countdown overlay before capture starts
+ * - Right-side captures panel with list/edit views
  */
 
 const TOOLBAR_ID = '__navtour_capture_toolbar__';
+const PANEL_ID = '__navtour_captures_panel__';
+
+// ── Module-level panel state ────────────────────────
+let panelEl: HTMLElement | null = null;
+let panelVisible = false;
+let panelFrames: FrameCapture[] = [];
 
 const TOOLBAR_CSS = `
 #${TOOLBAR_ID} {
@@ -147,6 +154,177 @@ const TOOLBAR_CSS = `
 }
 #__navtour_countdown__ .nt-cd-pill svg { color: #4361ee; }
 #__navtour_countdown__ .nt-cd-skip { font-size: 13px; color: rgba(255,255,255,.7); margin-top: 4px; }
+
+/* ── Captures Panel ─────────────────────────────────── */
+#${PANEL_ID} {
+  position: fixed;
+  top: 0;
+  right: -290px;
+  width: 290px;
+  height: 100vh;
+  background: #fff;
+  z-index: 2147483646;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -4px 0 24px rgba(0,0,0,.1);
+  border-left: 1px solid #e5e7eb;
+  transition: right 0.25s ease;
+}
+#${PANEL_ID} * { box-sizing: border-box; margin: 0; padding: 0; }
+#${PANEL_ID}.nt-panel-open { right: 0; }
+
+/* Panel header */
+#${PANEL_ID} .nt-panel-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 16px; border-bottom: 1px solid #e5e7eb;
+  flex-shrink: 0;
+}
+#${PANEL_ID} .nt-panel-title {
+  font-size: 14px; font-weight: 600; color: #111827;
+}
+#${PANEL_ID} .nt-panel-count {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 20px; height: 20px; padding: 0 6px;
+  background: #4361ee; color: #fff; border-radius: 100px;
+  font-size: 11px; font-weight: 700;
+}
+#${PANEL_ID} .nt-panel-close {
+  margin-left: auto;
+  display: flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border: none; border-radius: 6px;
+  background: transparent; color: #6b7280; cursor: pointer; padding: 0;
+}
+#${PANEL_ID} .nt-panel-close:hover { background: #f3f4f6; color: #111827; }
+
+/* Panel list (scrollable) */
+#${PANEL_ID} .nt-panel-list {
+  flex: 1; overflow-y: auto; padding: 12px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+
+/* Thumbnail card */
+#${PANEL_ID} .nt-panel-card {
+  position: relative;
+  border: 1px solid #e5e7eb; border-radius: 8px;
+  overflow: hidden; cursor: pointer;
+  transition: border-color 0.12s, box-shadow 0.12s;
+}
+#${PANEL_ID} .nt-panel-card:hover {
+  border-color: #4361ee; box-shadow: 0 0 0 1px #4361ee;
+}
+#${PANEL_ID} .nt-panel-card-img {
+  width: 100%; height: 140px; object-fit: cover; display: block;
+  background: #f9fafb;
+}
+#${PANEL_ID} .nt-panel-card-info {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px;
+}
+#${PANEL_ID} .nt-panel-card-number {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 22px; height: 22px; padding: 0 6px;
+  background: #f3f4f6; color: #374151; border-radius: 100px;
+  font-size: 11px; font-weight: 600;
+}
+#${PANEL_ID} .nt-panel-card-title {
+  font-size: 12px; color: #374151; font-weight: 500;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  flex: 1;
+}
+
+/* Panel footer */
+#${PANEL_ID} .nt-panel-footer {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 12px 16px; border-top: 1px solid #e5e7eb;
+  flex-shrink: 0;
+}
+#${PANEL_ID} .nt-panel-btn-continue {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 8px;
+  background: #f9fafb; color: #374151; font-size: 13px; font-weight: 500;
+  font-family: inherit; cursor: pointer; transition: all .12s;
+}
+#${PANEL_ID} .nt-panel-btn-continue:hover { background: #f3f4f6; border-color: #9ca3af; }
+#${PANEL_ID} .nt-panel-btn-complete {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; padding: 8px 12px; border: none; border-radius: 8px;
+  background: #16a34a; color: #fff; font-size: 13px; font-weight: 500;
+  font-family: inherit; cursor: pointer; transition: all .12s;
+}
+#${PANEL_ID} .nt-panel-btn-complete:hover { background: #15803d; }
+
+/* ── Panel Edit View ──────────────────────────────── */
+#${PANEL_ID} .nt-panel-edit {
+  flex: 1; overflow-y: auto; padding: 16px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+#${PANEL_ID} .nt-panel-breadcrumb {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; color: #6b7280; cursor: pointer;
+}
+#${PANEL_ID} .nt-panel-breadcrumb:hover { color: #4361ee; }
+#${PANEL_ID} .nt-panel-breadcrumb svg { flex-shrink: 0; }
+
+#${PANEL_ID} .nt-panel-edit-title-input {
+  width: 100%; padding: 8px 10px; border: 1px solid #d1d5db; border-radius: 6px;
+  font-size: 13px; font-family: inherit; color: #111827;
+  outline: none; transition: border-color 0.12s;
+}
+#${PANEL_ID} .nt-panel-edit-title-input:focus { border-color: #4361ee; box-shadow: 0 0 0 2px rgba(67,97,238,.15); }
+
+#${PANEL_ID} .nt-panel-edit-thumb {
+  width: 100%; border-radius: 8px; border: 1px solid #e5e7eb;
+  object-fit: cover; display: block; background: #f9fafb;
+}
+
+#${PANEL_ID} .nt-panel-edit-label {
+  font-size: 12px; font-weight: 600; color: #374151;
+  margin-bottom: 6px;
+}
+
+/* Step type radio group */
+#${PANEL_ID} .nt-panel-radio-group {
+  display: flex; gap: 6px;
+}
+#${PANEL_ID} .nt-panel-radio {
+  display: flex; align-items: center; gap: 4px;
+  padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 6px;
+  background: #fff; color: #374151; font-size: 12px; font-weight: 500;
+  font-family: inherit; cursor: pointer; transition: all .12s;
+}
+#${PANEL_ID} .nt-panel-radio:hover { border-color: #9ca3af; }
+#${PANEL_ID} .nt-panel-radio.nt-radio-active {
+  border-color: #4361ee; background: #eff6ff; color: #4361ee;
+}
+
+#${PANEL_ID} .nt-panel-edit-textarea {
+  width: 100%; min-height: 80px; padding: 8px 10px;
+  border: 1px solid #d1d5db; border-radius: 6px;
+  font-size: 13px; font-family: inherit; color: #111827;
+  resize: vertical; outline: none; transition: border-color 0.12s;
+}
+#${PANEL_ID} .nt-panel-edit-textarea:focus { border-color: #4361ee; box-shadow: 0 0 0 2px rgba(67,97,238,.15); }
+
+/* Edit view footer buttons */
+#${PANEL_ID} .nt-panel-edit-footer {
+  display: flex; gap: 8px; margin-top: auto;
+}
+#${PANEL_ID} .nt-panel-btn-delete {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  padding: 8px 12px; border: 1px solid #fca5a5; border-radius: 8px;
+  background: #fff; color: #dc2626; font-size: 13px; font-weight: 500;
+  font-family: inherit; cursor: pointer; transition: all .12s;
+}
+#${PANEL_ID} .nt-panel-btn-delete:hover { background: #fef2f2; border-color: #f87171; }
+#${PANEL_ID} .nt-panel-btn-save {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  padding: 8px 12px; border: none; border-radius: 8px;
+  background: #4361ee; color: #fff; font-size: 13px; font-weight: 500;
+  font-family: inherit; cursor: pointer; transition: all .12s;
+}
+#${PANEL_ID} .nt-panel-btn-save:hover { background: #3b55d4; }
 `;
 
 // ── SVG helpers ─────────────────────────────────────
@@ -201,6 +379,14 @@ function iconUndo(): SVGElement {
     svgEl('path', { d: 'M3.51 15a9 9 0 1 0 2.13-9.36L1 10' }),
   ]);
 }
+function iconExpand(): SVGElement {
+  return createSvg([
+    svgEl('polyline', { points: '15 3 21 3 21 9' }),
+    svgEl('polyline', { points: '9 21 3 21 3 15' }),
+    svgEl('line', { x1: '21', y1: '3', x2: '14', y2: '10' }),
+    svgEl('line', { x1: '3', y1: '21', x2: '10', y2: '14' }),
+  ]);
+}
 function iconInfo(size = 14): SVGElement {
   return createSvg([
     svgEl('circle', { cx: '12', cy: '12', r: '10' }),
@@ -230,6 +416,12 @@ function iconResize(): SVGElement {
     svgEl('line', { x1: '21', y1: '3', x2: '14', y2: '10' }),
     svgEl('line', { x1: '3', y1: '21', x2: '10', y2: '14' }),
   ], 12);
+}
+
+function iconChevronLeft(size = 14): SVGElement {
+  return createSvg([
+    svgEl('polyline', { points: '15 18 9 12 15 6' }),
+  ], size);
 }
 
 const RECOMMENDED_WIDTH = 1440;
@@ -368,6 +560,7 @@ export function showCountdown(onComplete: () => void): void {
 export interface ToolbarCallbacks {
   onCapture: () => void;
   onFinish: () => void;
+  onExpandToggle: () => void;
 }
 
 function createIconBtn(icon: SVGElement, title: string): HTMLButtonElement {
@@ -439,12 +632,14 @@ export function injectToolbar(demoName: string, frameCount: number, callbacks: T
   const settingsBtn = createIconBtn(iconSettings(), 'Settings');
   const noClickBtn = createIconBtn(iconNoClick(), 'Disable clicks');
   const undoBtn = createIconBtn(iconUndo(), 'Undo last capture');
+  const expandBtn = createIconBtn(iconExpand(), 'Toggle captures panel');
 
   icons.appendChild(pauseBtn);
   icons.appendChild(stopBtn);
   icons.appendChild(settingsBtn);
   icons.appendChild(noClickBtn);
   icons.appendChild(undoBtn);
+  icons.appendChild(expandBtn);
   bar.appendChild(icons);
 
   // Finish button
@@ -468,6 +663,8 @@ export function injectToolbar(demoName: string, frameCount: number, callbacks: T
     if (cur > 0) countBadge.textContent = String(cur - 1);
   });
 
+  expandBtn.addEventListener('click', (e) => { e.stopPropagation(); callbacks.onExpandToggle(); });
+
   finishBtn.addEventListener('click', (e) => { e.stopPropagation(); e.preventDefault(); callbacks.onFinish(); });
 
   // Capture button (stop icon triggers manual capture)
@@ -482,4 +679,277 @@ export function updateToolbarCount(count: number): void {
 export function removeToolbar(): void {
   document.getElementById(TOOLBAR_ID)?.remove();
   document.getElementById(`${TOOLBAR_ID}_style`)?.remove();
+}
+
+// ── Captures Panel ──────────────────────────────────
+
+export interface FrameCapture {
+  index: number;
+  title: string;
+  url: string;
+  thumbnailDataUrl: string;
+  status: string;
+  timestamp: number;
+  frameId?: string;
+  stepType?: string;
+  stepText?: string;
+}
+
+export interface PanelCallbacks {
+  onContinue: () => void;
+  onComplete: () => void;
+  onDeleteFrame: (index: number) => void;
+  onSaveStep: (index: number, stepType: string, stepText: string, title: string) => void;
+}
+
+export function createCapturesPanel(callbacks: PanelCallbacks): void {
+  removeCapturesPanel();
+  panelFrames = [];
+
+  const panel = document.createElement('div');
+  panel.id = PANEL_ID;
+
+  // Header
+  const header = document.createElement('div');
+  header.className = 'nt-panel-header';
+
+  const title = document.createElement('span');
+  title.className = 'nt-panel-title';
+  title.textContent = 'Captures';
+  header.appendChild(title);
+
+  const countBadge = document.createElement('span');
+  countBadge.className = 'nt-panel-count';
+  countBadge.setAttribute('data-nt-panel-count', '');
+  countBadge.textContent = '0';
+  header.appendChild(countBadge);
+
+  const closeBtn = document.createElement('button');
+  closeBtn.className = 'nt-panel-close';
+  closeBtn.appendChild(iconX(16));
+  closeBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    togglePanel(false);
+  });
+  header.appendChild(closeBtn);
+
+  panel.appendChild(header);
+
+  // Scrollable list
+  const list = document.createElement('div');
+  list.className = 'nt-panel-list';
+  list.setAttribute('data-nt-panel-list', '');
+  panel.appendChild(list);
+
+  // Footer
+  const footer = document.createElement('div');
+  footer.className = 'nt-panel-footer';
+
+  const continueBtn = document.createElement('button');
+  continueBtn.className = 'nt-panel-btn-continue';
+  continueBtn.textContent = 'Continue capturing';
+  continueBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    callbacks.onContinue();
+  });
+  footer.appendChild(continueBtn);
+
+  const completeBtn = document.createElement('button');
+  completeBtn.className = 'nt-panel-btn-complete';
+  completeBtn.textContent = 'Complete session';
+  completeBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    callbacks.onComplete();
+  });
+  footer.appendChild(completeBtn);
+
+  panel.appendChild(footer);
+
+  document.body.appendChild(panel);
+  panelEl = panel;
+}
+
+export function addFrameToPanel(frame: FrameCapture): void {
+  panelFrames.push(frame);
+
+  const list = panelEl?.querySelector('[data-nt-panel-list]');
+  if (!list) return;
+
+  const card = document.createElement('div');
+  card.className = 'nt-panel-card';
+  card.setAttribute('data-nt-panel-frame-index', String(frame.index));
+
+  const img = document.createElement('img');
+  img.className = 'nt-panel-card-img';
+  img.src = frame.thumbnailDataUrl;
+  img.alt = frame.title;
+  card.appendChild(img);
+
+  const info = document.createElement('div');
+  info.className = 'nt-panel-card-info';
+
+  const numberBadge = document.createElement('span');
+  numberBadge.className = 'nt-panel-card-number';
+  numberBadge.textContent = String(frame.index + 1);
+  info.appendChild(numberBadge);
+
+  const titleSpan = document.createElement('span');
+  titleSpan.className = 'nt-panel-card-title';
+  titleSpan.textContent = frame.title;
+  info.appendChild(titleSpan);
+
+  card.appendChild(info);
+  list.appendChild(card);
+
+  // Update count badge
+  const countEl = panelEl?.querySelector('[data-nt-panel-count]');
+  if (countEl) countEl.textContent = String(panelFrames.length);
+}
+
+export function showPanelEditView(frame: FrameCapture, callbacks: PanelCallbacks): void {
+  if (!panelEl) return;
+
+  // Hide list and footer
+  const list = panelEl.querySelector('[data-nt-panel-list]') as HTMLElement | null;
+  const footer = panelEl.querySelector('.nt-panel-footer') as HTMLElement | null;
+  if (list) list.style.display = 'none';
+  if (footer) footer.style.display = 'none';
+
+  // Remove any existing edit view
+  panelEl.querySelector('.nt-panel-edit')?.remove();
+
+  const edit = document.createElement('div');
+  edit.className = 'nt-panel-edit';
+
+  // Breadcrumb: back to list
+  const breadcrumb = document.createElement('div');
+  breadcrumb.className = 'nt-panel-breadcrumb';
+  breadcrumb.appendChild(iconChevronLeft(12));
+  const breadcrumbText = document.createElement('span');
+  breadcrumbText.textContent = 'All captures';
+  breadcrumb.appendChild(breadcrumbText);
+  breadcrumb.addEventListener('click', (e) => {
+    e.stopPropagation();
+    showPanelListView();
+  });
+  edit.appendChild(breadcrumb);
+
+  // Editable title input
+  const titleLabel = document.createElement('div');
+  titleLabel.className = 'nt-panel-edit-label';
+  titleLabel.textContent = 'Title';
+  edit.appendChild(titleLabel);
+
+  const titleInput = document.createElement('input');
+  titleInput.className = 'nt-panel-edit-title-input';
+  titleInput.type = 'text';
+  titleInput.value = frame.title;
+  titleInput.placeholder = 'Frame title';
+  edit.appendChild(titleInput);
+
+  // Large thumbnail
+  const thumb = document.createElement('img');
+  thumb.className = 'nt-panel-edit-thumb';
+  thumb.src = frame.thumbnailDataUrl;
+  thumb.alt = frame.title;
+  edit.appendChild(thumb);
+
+  // Step type picker
+  const typeLabel = document.createElement('div');
+  typeLabel.className = 'nt-panel-edit-label';
+  typeLabel.textContent = 'Step type';
+  edit.appendChild(typeLabel);
+
+  const radioGroup = document.createElement('div');
+  radioGroup.className = 'nt-panel-radio-group';
+
+  let selectedType = frame.stepType || 'Modal';
+  const types = ['Modal', 'Tooltip', 'Invisible'];
+
+  const radioButtons: HTMLButtonElement[] = [];
+  types.forEach((t) => {
+    const radio = document.createElement('button');
+    radio.className = 'nt-panel-radio';
+    if (t === selectedType) radio.classList.add('nt-radio-active');
+    radio.textContent = t;
+    radio.addEventListener('click', (e) => {
+      e.stopPropagation();
+      selectedType = t;
+      radioButtons.forEach(rb => rb.classList.remove('nt-radio-active'));
+      radio.classList.add('nt-radio-active');
+    });
+    radioButtons.push(radio);
+    radioGroup.appendChild(radio);
+  });
+  edit.appendChild(radioGroup);
+
+  // Step text textarea
+  const textLabel = document.createElement('div');
+  textLabel.className = 'nt-panel-edit-label';
+  textLabel.textContent = 'Step text';
+  edit.appendChild(textLabel);
+
+  const textarea = document.createElement('textarea');
+  textarea.className = 'nt-panel-edit-textarea';
+  textarea.value = frame.stepText || '';
+  textarea.placeholder = 'Describe this step...';
+  edit.appendChild(textarea);
+
+  // Footer buttons
+  const editFooter = document.createElement('div');
+  editFooter.className = 'nt-panel-edit-footer';
+
+  const deleteBtn = document.createElement('button');
+  deleteBtn.className = 'nt-panel-btn-delete';
+  deleteBtn.textContent = 'Delete capture';
+  deleteBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    callbacks.onDeleteFrame(frame.index);
+  });
+  editFooter.appendChild(deleteBtn);
+
+  const saveBtn = document.createElement('button');
+  saveBtn.className = 'nt-panel-btn-save';
+  saveBtn.textContent = 'Save and review';
+  saveBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    callbacks.onSaveStep(frame.index, selectedType, textarea.value, titleInput.value);
+  });
+  editFooter.appendChild(saveBtn);
+
+  edit.appendChild(editFooter);
+  panelEl.appendChild(edit);
+}
+
+export function showPanelListView(): void {
+  if (!panelEl) return;
+
+  // Remove edit view
+  panelEl.querySelector('.nt-panel-edit')?.remove();
+
+  // Show list and footer
+  const list = panelEl.querySelector('[data-nt-panel-list]') as HTMLElement | null;
+  const footer = panelEl.querySelector('.nt-panel-footer') as HTMLElement | null;
+  if (list) list.style.display = '';
+  if (footer) footer.style.display = '';
+}
+
+export function togglePanel(show?: boolean): void {
+  if (!panelEl) return;
+  const shouldShow = show !== undefined ? show : !panelVisible;
+  panelVisible = shouldShow;
+  if (shouldShow) {
+    panelEl.classList.add('nt-panel-open');
+  } else {
+    panelEl.classList.remove('nt-panel-open');
+  }
+}
+
+export function removeCapturesPanel(): void {
+  if (panelEl) {
+    panelEl.remove();
+    panelEl = null;
+  }
+  panelVisible = false;
+  panelFrames = [];
 }

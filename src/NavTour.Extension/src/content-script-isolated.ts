@@ -19,7 +19,11 @@ import {
 } from './lib/constants';
 import { session } from './lib/storage';
 import { createPrefixedLogger, red } from './lib/logger';
-import { injectToolbar, updateToolbarCount, removeToolbar } from './lib/toolbar';
+import {
+  injectToolbar, updateToolbarCount, removeToolbar,
+  createCapturesPanel, addFrameToPanel, togglePanel, removeCapturesPanel,
+} from './lib/toolbar';
+import type { PanelCallbacks } from './lib/toolbar';
 
 const logger = createPrefixedLogger({ pre: red('capture:') });
 
@@ -300,12 +304,44 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 
     case 'navtour:inject-toolbar': {
-      // Inject the floating capture pill at the bottom of the page
+      // Panel callbacks
+      const panelCbs: PanelCallbacks = {
+        onContinue: () => togglePanel(false),
+        onComplete: () => {
+          chrome.runtime.sendMessage({
+            kind: 'navtour:popup:stop-capture',
+            tabId: message.tabId,
+            demoId: message.demoId,
+          }, (response) => {
+            removeToolbar();
+            removeCapturesPanel();
+            if (response?.editorUrl) window.open(response.editorUrl, '_blank');
+          });
+        },
+        onDeleteFrame: (index: number) => {
+          chrome.runtime.sendMessage({
+            kind: 'navtour:panel-delete-frame',
+            frameIndex: index,
+          });
+        },
+        onSaveStep: (index: number, stepType: string, stepText: string, title: string) => {
+          chrome.runtime.sendMessage({
+            kind: 'navtour:panel-save-step',
+            frameIndex: index,
+            stepType,
+            stepText,
+            title,
+          });
+        },
+      };
+
+      // Create panel first
+      createCapturesPanel(panelCbs);
+
+      // Inject toolbar with expand toggle
       injectToolbar(message.demoName, message.frameCount, {
         onCapture: () => {
-          chrome.runtime.sendMessage({
-            kind: 'navtour:save-web-capture',
-          });
+          chrome.runtime.sendMessage({ kind: 'navtour:save-web-capture' });
         },
         onFinish: () => {
           chrome.runtime.sendMessage({
@@ -314,11 +350,23 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             demoId: message.demoId,
           }, (response) => {
             removeToolbar();
-            // Open NavTour editor in a new tab
-            if (response?.editorUrl) {
-              window.open(response.editorUrl, '_blank');
-            }
+            removeCapturesPanel();
+            if (response?.editorUrl) window.open(response.editorUrl, '_blank');
           });
+        },
+        onExpandToggle: () => {
+          // Request frames from worker on first open
+          chrome.runtime.sendMessage(
+            { kind: 'navtour:panel-request-frames' },
+            (response) => {
+              if (response?.frames) {
+                for (const frame of response.frames) {
+                  addFrameToPanel(frame);
+                }
+              }
+              togglePanel();
+            }
+          );
         },
       });
       sendResponse({ success: true });
@@ -338,15 +386,19 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 
     case 'navtour:capture-complete': {
-      // Update toolbar count when a capture completes
       if (message.frameCount !== undefined) {
         updateToolbarCount(message.frameCount);
+      }
+      // Add thumbnail to panel if available
+      if (message.frameThumbnail) {
+        addFrameToPanel(message.frameThumbnail);
       }
       break;
     }
 
     case 'navtour:capture-session-finish': {
       removeToolbar();
+      removeCapturesPanel();
       break;
     }
   }

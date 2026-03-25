@@ -46,6 +46,10 @@ export type MessageKind =
   | 'navtour:workspaceSlug-response'
   | 'navtour:log'
   | 'navtour:ack'
+  // Panel
+  | 'navtour:panel-request-frames'
+  | 'navtour:panel-delete-frame'
+  | 'navtour:panel-save-step'
   // Content script → main world
   | 'navtour:snapshot:get-globals'
   | 'navtour:snapshot:event';
