@@ -390,7 +390,9 @@
         {
             var id = confirmDeleteId.Value;
             confirmDeleteId = null;
+            StateHasChanged();
             await OnDeleteFrame.InvokeAsync(id);
+            StateHasChanged();
         }
     }
 
