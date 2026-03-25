@@ -75,7 +75,7 @@
 
 @if (confirmDeleteId != null)
 {
-    <div class="fs-confirm-overlay" @onclick="() => confirmDeleteId = null">
+    <div class="fs-confirm-overlay" @onclick="() => confirmDeleteId = null" @onkeydown="HandleDeleteKeydown" tabindex="-1" @ref="deleteOverlayRef">
         <div class="fs-confirm-dialog" @onclick:stopPropagation="true">
             <RadzenText TextStyle="TextStyle.Body2"><strong>Delete this frame?</strong></RadzenText>
             <RadzenText TextStyle="TextStyle.Caption" Style="color:var(--rz-text-secondary-color)">This cannot be undone.</RadzenText>
@@ -311,6 +311,7 @@
     [Parameter] public EventCallback<(Guid FrameId, string Name)> OnRenameFrame { get; set; }
 
     private Guid? confirmDeleteId;
+    private ElementReference deleteOverlayRef;
     private Guid? renamingFrameId;
     private string renameValue = "";
 
@@ -370,9 +371,17 @@
         dragOverIndex = null;
     }
 
-    private void ConfirmDelete(Guid frameId)
+    private async Task ConfirmDelete(Guid frameId)
     {
         confirmDeleteId = frameId;
+        await Task.Yield();
+        await deleteOverlayRef.FocusAsync();
+    }
+
+    private async Task HandleDeleteKeydown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter") await ExecuteDelete();
+        else if (e.Key == "Escape") confirmDeleteId = null;
     }
 
     private async Task ExecuteDelete()
