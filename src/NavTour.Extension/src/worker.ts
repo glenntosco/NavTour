@@ -455,6 +455,18 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       break;
     }
 
+    case 'navtour:resize-window': {
+      const windowId = sender.tab?.windowId;
+      if (windowId) {
+        chrome.windows.update(windowId, {
+          width: message.width,
+          height: message.height,
+        });
+      }
+      sendResponse({ success: true });
+      break;
+    }
+
     case 'navtour:screenshot': {
       const tabId = sender.tab?.id;
       if (tabId) {

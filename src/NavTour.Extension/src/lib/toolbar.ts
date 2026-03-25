@@ -100,6 +100,32 @@ const TOOLBAR_CSS = `
 }
 #${TOOLBAR_ID} .nt-finish:hover { background: #f9fafb; border-color: #9ca3af; }
 
+/* Screen size warning */
+#${TOOLBAR_ID} .nt-size-warn {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 16px; margin-bottom: 8px;
+  background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.08);
+  font-size: 12px; color: #92400e; white-space: nowrap;
+}
+#${TOOLBAR_ID} .nt-size-warn-icon { color: #f59e0b; display: flex; flex-shrink: 0; }
+#${TOOLBAR_ID} .nt-size-warn strong { color: #78350f; }
+#${TOOLBAR_ID} .nt-size-warn .nt-size-current { color: #b45309; font-weight: 600; }
+#${TOOLBAR_ID} .nt-size-warn .nt-size-rec { color: #065f46; font-weight: 600; }
+#${TOOLBAR_ID} .nt-resize-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border: 1px solid #fde68a; border-radius: 6px;
+  background: #fff; color: #92400e; font-size: 11px; font-weight: 500;
+  font-family: inherit; cursor: pointer; transition: all .12s; margin-left: 4px;
+}
+#${TOOLBAR_ID} .nt-resize-btn:hover { background: #fef3c7; border-color: #f59e0b; }
+#${TOOLBAR_ID} .nt-size-close {
+  display: flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; border: none; border-radius: 50%;
+  background: transparent; color: #b45309; cursor: pointer; padding: 0; margin-left: 2px;
+}
+#${TOOLBAR_ID} .nt-size-close:hover { background: #fde68a; }
+
 /* Countdown overlay */
 #__navtour_countdown__ {
   position: fixed; inset: 0; z-index: 2147483646;
@@ -187,6 +213,104 @@ function iconX(size = 14): SVGElement {
     svgEl('line', { x1: '18', y1: '6', x2: '6', y2: '18' }),
     svgEl('line', { x1: '6', y1: '6', x2: '18', y2: '18' }),
   ], size);
+}
+
+function iconWarning(size = 14): SVGElement {
+  return createSvg([
+    svgEl('path', { d: 'M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z' }),
+    svgEl('line', { x1: '12', y1: '9', x2: '12', y2: '13' }),
+    svgEl('line', { x1: '12', y1: '17', x2: '12.01', y2: '17' }),
+  ], size);
+}
+
+function iconResize(): SVGElement {
+  return createSvg([
+    svgEl('polyline', { points: '15 3 21 3 21 9' }),
+    svgEl('polyline', { points: '9 21 3 21 3 15' }),
+    svgEl('line', { x1: '21', y1: '3', x2: '14', y2: '10' }),
+    svgEl('line', { x1: '3', y1: '21', x2: '10', y2: '14' }),
+  ], 12);
+}
+
+const RECOMMENDED_WIDTH = 1440;
+const RECOMMENDED_HEIGHT = 900;
+
+function checkScreenSize(): { tooLarge: boolean; tooSmall: boolean; current: string; recommended: string } | null {
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  const recommended = `${RECOMMENDED_WIDTH}x${RECOMMENDED_HEIGHT}`;
+  const current = `${w}x${h}`;
+
+  if (w > RECOMMENDED_WIDTH + 100 || h > RECOMMENDED_HEIGHT + 100) {
+    return { tooLarge: true, tooSmall: false, current, recommended };
+  }
+  if (w < RECOMMENDED_WIDTH - 200 || h < RECOMMENDED_HEIGHT - 200) {
+    return { tooLarge: false, tooSmall: true, current, recommended };
+  }
+  return null;
+}
+
+function createSizeWarning(container: HTMLElement): void {
+  const info = checkScreenSize();
+  if (!info) return;
+
+  const warn = document.createElement('div');
+  warn.className = 'nt-size-warn';
+
+  const warnIcon = document.createElement('span');
+  warnIcon.className = 'nt-size-warn-icon';
+  warnIcon.appendChild(iconWarning());
+  warn.appendChild(warnIcon);
+
+  const text = document.createElement('span');
+  const label = info.tooLarge ? 'Screen size larger than recommended' : 'Screen size smaller than recommended';
+  text.appendChild(document.createTextNode(label + '  '));
+
+  const currentSpan = document.createElement('span');
+  currentSpan.className = 'nt-size-current';
+  currentSpan.textContent = `Current: ${info.current}`;
+  text.appendChild(currentSpan);
+
+  text.appendChild(document.createTextNode('  '));
+
+  const recSpan = document.createElement('span');
+  recSpan.className = 'nt-size-rec';
+  recSpan.textContent = `Recommended: ${info.recommended}`;
+  text.appendChild(recSpan);
+
+  warn.appendChild(text);
+
+  // Resize button
+  const resizeBtn = document.createElement('button');
+  resizeBtn.className = 'nt-resize-btn';
+  resizeBtn.appendChild(iconResize());
+  resizeBtn.appendChild(document.createTextNode('Resize'));
+  warn.appendChild(resizeBtn);
+
+  // Close button
+  const closeBtn = document.createElement('button');
+  closeBtn.className = 'nt-size-close';
+  closeBtn.appendChild(iconX(12));
+  warn.appendChild(closeBtn);
+
+  // Insert before bar (first child)
+  container.insertBefore(warn, container.firstChild);
+
+  resizeBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    // Request window resize via chrome extension API
+    chrome.runtime?.sendMessage?.({
+      kind: 'navtour:resize-window',
+      width: RECOMMENDED_WIDTH,
+      height: RECOMMENDED_HEIGHT,
+    });
+    warn.remove();
+  });
+
+  closeBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    warn.remove();
+  });
 }
 
 // ── Countdown ───────────────────────────────────────
@@ -331,6 +455,9 @@ export function injectToolbar(demoName: string, frameCount: number, callbacks: T
 
   container.appendChild(bar);
   document.body.appendChild(container);
+
+  // Screen size warning (shows above helper if screen is wrong size)
+  createSizeWarning(container);
 
   // Events
   pauseBtn.addEventListener('click', (e) => { e.stopPropagation(); pauseBtn.classList.toggle('nt-active'); });
