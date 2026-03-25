@@ -18,228 +18,757 @@
     <link rel="alternate" hreflang="x-default" href="https://navtour.cloud/" />
 </HeadContent>
 
-@* ── 1. Hero — Centered CTA Block ── *@
-<RadzenRow Class="rz-mx-auto" Style="max-width: 1200px">
-    <RadzenColumn Size="12" Class="rz-p-6 rz-p-sm-12">
-        <RadzenStack AlignItems="AlignItems.Center" Gap="0" Class="rz-my-12">
-            <RadzenText Text="Interactive Product Demos" TextStyle="TextStyle.Overline" TextAlign="TextAlign.Center" Class="rz-color-info" Style="font-size: 1rem" />
-            <RadzenText Text="Let your product sell itself." TextStyle="TextStyle.DisplayH1" TextAlign="TextAlign.Center" Style="max-width: 800px" />
-            <RadzenText TextStyle="TextStyle.H5" TextAlign="TextAlign.Center" TagName="TagName.P" Style="max-width: 700px; line-height: 1.6" Class="rz-text-secondary-color">
-                Create no-code interactive walkthroughs of your software. Embed them on your website, share in sales emails, or use in ad campaigns.
-            </RadzenText>
-            <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap" Class="rz-mt-8">
-                <RadzenLink Text="Start Free Trial" Path="/register" Class="rz-button rz-button-lg rz-variant-flat rz-dark rz-shade-default" Style="--rz-link-hover-text-decoration: none" />
-                <RadzenLink Text="Book a Demo" Path="/contact" Class="rz-button rz-button-lg rz-variant-outlined rz-base rz-shade-default" Style="--rz-link-hover-text-decoration: none" />
+@* ── 1. Hero — Centered, editorial, confident ── *@
+<section class="home-hero">
+    <div class="home-container">
+        <RadzenStack AlignItems="AlignItems.Center" Gap="0">
+            <span class="home-overline">Interactive Product Demos</span>
+            <h1 class="home-headline">Accelerate the buyer<br />journey with demos</h1>
+            <p class="home-subtitle">
+                From first touch on the website, to pre-call discovery and post-call follow up,
+                speed up every step of the buyer journey with NavTour's demo automation platform.
+            </p>
+            <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap" Class="rz-mt-10">
+                <a href="/product" class="home-btn home-btn-dark">Explore product <span class="home-arrow-down">&#8595;</span></a>
+                <a href="/contact" class="home-btn home-btn-outlined">Book a Demo</a>
             </RadzenStack>
+
+            @* Product selector pills *@
+            <div class="home-product-pills">
+                <button class="home-pill @(_activeProduct == 0 ? "active" : "")" @onclick="() => _activeProduct = 0">
+                    <span class="home-dot home-dot-blue"></span> Interactive Demos
+                </button>
+                <button class="home-pill @(_activeProduct == 1 ? "active" : "")" @onclick="() => _activeProduct = 1">
+                    <span class="home-dot home-dot-teal"></span> Demo Hub
+                </button>
+                <button class="home-pill @(_activeProduct == 2 ? "active" : "")" @onclick="() => _activeProduct = 2">
+                    <span class="home-dot home-dot-orange"></span> Analytics
+                </button>
+            </div>
+
+            @* Hero screenshot *@
+            <div class="home-hero-screenshot">
+                <RadzenImage Path="/images/product-form-builder.png"
+                             Style="width: 100%; border-radius: 12px;"
+                             AlternateText="NavTour product screenshot" />
+            </div>
         </RadzenStack>
-        <RadzenImage Path="/images/product-form-builder.png" Style="width: 100%; max-width: 960px; margin: 0 auto; display: block; border-radius: 12px; box-shadow: 0 20px 48px rgba(0,0,0,0.08)" AlternateText="NavTour Product" />
-    </RadzenColumn>
-</RadzenRow>
+    </div>
+</section>
 
-@* ── 2. Logo Bar ── *@
-<div style="padding: 3rem 0; background: var(--rz-base-100, #f5f5f5); border-bottom: 1px solid var(--rz-base-200, #e0e0e0)">
-    <RadzenStack AlignItems="AlignItems.Center" Gap="1.5rem" Class="rz-mx-auto" Style="max-width: 1200px">
-        <RadzenText Text="TRUSTED BY INNOVATIVE TEAMS" TextStyle="TextStyle.Overline" TextAlign="TextAlign.Center" Class="rz-text-secondary-color" />
-        <RadzenStack Orientation="Orientation.Horizontal" Gap="2.5rem" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap">
-            <RadzenText Text="Acme Corp" TextStyle="TextStyle.Body2" Class="rz-text-secondary-color" Style="font-weight: 600" />
-            <RadzenText Text="Beacon AI" TextStyle="TextStyle.Body2" Class="rz-text-secondary-color" Style="font-weight: 600" />
-            <RadzenText Text="CloudStack" TextStyle="TextStyle.Body2" Class="rz-text-secondary-color" Style="font-weight: 600" />
-            <RadzenText Text="DataPulse" TextStyle="TextStyle.Body2" Class="rz-text-secondary-color" Style="font-weight: 600" />
-            <RadzenText Text="Elevate" TextStyle="TextStyle.Body2" Class="rz-text-secondary-color" Style="font-weight: 600" />
-            <RadzenText Text="FinOps.io" TextStyle="TextStyle.Body2" Class="rz-text-secondary-color" Style="font-weight: 600" />
+@* ── 2. Trusted By (light gray bg) ── *@
+<section class="home-section home-section-gray">
+    <div class="home-container">
+        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap" Gap="1rem" Class="rz-mb-8">
+            <span class="home-section-label">Trusted by innovative teams</span>
+            <a href="/customers" class="home-link">Meet our customers <span>&rarr;</span></a>
         </RadzenStack>
-    </RadzenStack>
-</div>
+        <div class="home-logos">
+            <span class="home-logo-placeholder">Acme Corp</span>
+            <span class="home-logo-placeholder">Beacon AI</span>
+            <span class="home-logo-placeholder">CloudStack</span>
+            <span class="home-logo-placeholder">DataPulse</span>
+            <span class="home-logo-placeholder">Elevate</span>
+            <span class="home-logo-placeholder">FinOps.io</span>
+        </div>
+    </div>
+</section>
 
-@* ── 3. Product Features — RadzenTabs ── *@
-<div class="home-section">
-    <RadzenStack AlignItems="AlignItems.Center" Gap="0" Class="rz-mb-8" Style="max-width: 1200px; margin: 0 auto">
-        <RadzenText Text="One platform, three superpowers." TextStyle="TextStyle.H2" TextAlign="TextAlign.Center" />
-    </RadzenStack>
-    <RadzenTabs TabPosition="TabPosition.Top" Style="max-width: 1200px; margin: 0 auto">
-        <Tabs>
-            <RadzenTabsItem Text="Interactive Demos">
-                <RadzenRow Gap="2rem" Class="rz-mt-6 rz-align-items-center">
-                    <RadzenColumn Size="12" SizeMD="6" Class="rz-p-6">
-                        <RadzenText Text="Build walkthroughs your buyers actually finish." TextStyle="TextStyle.H4" Class="rz-mb-4" />
-                        <RadzenText TextStyle="TextStyle.Body1" TagName="TagName.P" Class="rz-text-secondary-color" Style="max-width: 480px; line-height: 1.7">
-                            Build step-by-step product walkthroughs from screenshots or live captures. Add hotspots, tooltips, guided flows, and branching logic. No coding required.
-                        </RadzenText>
-                    </RadzenColumn>
-                    <RadzenColumn Size="12" SizeMD="6">
-                        <div style="width: 100%; aspect-ratio: 16/10; background: var(--rz-base-100, #f5f5f5); border: 1px solid var(--rz-base-200, #e0e0e0); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--rz-text-secondary-color)">
-                            <RadzenText Text="Interactive Demos Preview" TextStyle="TextStyle.Body2" Class="rz-text-secondary-color" />
+@* ── 3. Product Features — 3 vertical cards (white bg) ── *@
+<section class="home-section">
+    <div class="home-container">
+        @* Card 1: Interactive Demos *@
+        <div class="home-feature-card">
+            <RadzenRow Gap="2rem" Class="rz-align-items-center">
+                <RadzenColumn Size="12" SizeMD="5">
+                    <div class="home-feature-label"><span class="home-dot home-dot-blue"></span> Interactive Demos</div>
+                    <h2 class="home-feature-headline">Build interactive demos faster with AI Copilot</h2>
+                    <p class="home-feature-desc">
+                        Capture your product with our Chrome extension, then let AI generate guided tours
+                        with tooltips, hotspots, and branching logic. No coding required.
+                    </p>
+                    <a href="/product" class="home-link">Explore Interactive Demos <span>&rarr;</span></a>
+                </RadzenColumn>
+                <RadzenColumn Size="12" SizeMD="7">
+                    <div class="home-feature-image-placeholder">
+                        <span>Interactive Demos Preview</span>
+                    </div>
+                </RadzenColumn>
+            </RadzenRow>
+        </div>
+
+        @* Card 2: Demo Hub *@
+        <div class="home-feature-card">
+            <RadzenRow Gap="2rem" Class="rz-align-items-center">
+                <RadzenColumn Size="12" SizeMD="5">
+                    <div class="home-feature-label"><span class="home-dot home-dot-teal"></span> Demo Hub</div>
+                    <h2 class="home-feature-headline">Demo automation for live demos and pre &amp; post-call discovery</h2>
+                    <p class="home-feature-desc">
+                        A centralized library where prospects self-serve demos by persona, use case, or product line.
+                        Reduces sales friction and lets buyers explore on their own terms.
+                    </p>
+                    <a href="/product" class="home-link">Explore Demo Hub <span>&rarr;</span></a>
+                </RadzenColumn>
+                <RadzenColumn Size="12" SizeMD="7">
+                    <div class="home-feature-image-placeholder">
+                        <span>Demo Hub Preview</span>
+                    </div>
+                </RadzenColumn>
+            </RadzenRow>
+        </div>
+
+        @* Card 3: Analytics *@
+        <div class="home-feature-card">
+            <RadzenRow Gap="2rem" Class="rz-align-items-center">
+                <RadzenColumn Size="12" SizeMD="5">
+                    <div class="home-feature-label"><span class="home-dot home-dot-orange"></span> Analytics</div>
+                    <h2 class="home-feature-headline">Track engagement and feed intent data to your CRM</h2>
+                    <p class="home-feature-desc">
+                        Know who viewed your demos, how far they got, where they dropped off,
+                        and which features generated the most interest. Feed data directly into your CRM.
+                    </p>
+                    <a href="/product" class="home-link">Explore Analytics <span>&rarr;</span></a>
+                </RadzenColumn>
+                <RadzenColumn Size="12" SizeMD="7">
+                    <div class="home-feature-image-placeholder">
+                        <span>Analytics Preview</span>
+                    </div>
+                </RadzenColumn>
+            </RadzenRow>
+        </div>
+    </div>
+</section>
+
+@* ── 4. Buyer Journey (light gray bg) ── *@
+<section class="home-section home-section-gray">
+    <div class="home-container">
+        <h2 class="home-section-headline">Use demos at any point in the buyer journey.</h2>
+        <RadzenRow Gap="3rem" Class="rz-mt-10">
+            <RadzenColumn Size="12" SizeMD="5">
+                <div class="home-journey-image-placeholder">
+                    <span>Buyer Journey Visual</span>
+                </div>
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="7">
+                <div class="home-journey-list">
+                    <div class="home-journey-item">
+                        <div class="home-journey-item-header">
+                            <span class="home-dot home-dot-blue"></span>
+                            <span class="home-journey-label">Retargeting campaigns</span>
                         </div>
-                    </RadzenColumn>
-                </RadzenRow>
-            </RadzenTabsItem>
-            <RadzenTabsItem Text="Demo Hub">
-                <RadzenRow Gap="2rem" Class="rz-mt-6 rz-align-items-center">
-                    <RadzenColumn Size="12" SizeMD="6" Class="rz-p-6">
-                        <RadzenText Text="Let prospects self-serve the right demo." TextStyle="TextStyle.H4" Class="rz-mb-4" />
-                        <RadzenText TextStyle="TextStyle.Body1" TagName="TagName.P" Class="rz-text-secondary-color" Style="max-width: 480px; line-height: 1.7">
-                            A centralized library where prospects self-serve demos by persona, use case, or product line. Reduces sales friction and lets buyers explore on their own terms.
-                        </RadzenText>
-                    </RadzenColumn>
-                    <RadzenColumn Size="12" SizeMD="6">
-                        <div style="width: 100%; aspect-ratio: 16/10; background: var(--rz-base-100, #f5f5f5); border: 1px solid var(--rz-base-200, #e0e0e0); border-radius: 12px; display: flex; align-items: center; justify-content: center">
-                            <RadzenText Text="Demo Hub Preview" TextStyle="TextStyle.Body2" Class="rz-text-secondary-color" />
+                        <h3 class="home-journey-title">LinkedIn, Google, Reddit Ads</h3>
+                        <p class="home-journey-desc">Replace static landing pages with interactive demos that convert ad clicks into qualified pipeline.</p>
+                    </div>
+                    <div class="home-journey-item">
+                        <div class="home-journey-item-header">
+                            <span class="home-dot home-dot-teal"></span>
+                            <span class="home-journey-label">Website embed</span>
                         </div>
-                    </RadzenColumn>
-                </RadzenRow>
-            </RadzenTabsItem>
-            <RadzenTabsItem Text="Analytics Dashboard">
-                <RadzenRow Gap="2rem" Class="rz-mt-6 rz-align-items-center">
-                    <RadzenColumn Size="12" SizeMD="6" Class="rz-p-6">
-                        <RadzenText Text="Know exactly what resonates." TextStyle="TextStyle.H4" Class="rz-mb-4" />
-                        <RadzenText TextStyle="TextStyle.Body1" TagName="TagName.P" Class="rz-text-secondary-color" Style="max-width: 480px; line-height: 1.7">
-                            Track who viewed your demos, how far they got, where they dropped off, and which features generated the most interest. Feed intent data directly into your CRM.
-                        </RadzenText>
-                    </RadzenColumn>
-                    <RadzenColumn Size="12" SizeMD="6">
-                        <div style="width: 100%; aspect-ratio: 16/10; background: var(--rz-base-100, #f5f5f5); border: 1px solid var(--rz-base-200, #e0e0e0); border-radius: 12px; display: flex; align-items: center; justify-content: center">
-                            <RadzenText Text="Analytics Dashboard Preview" TextStyle="TextStyle.Body2" Class="rz-text-secondary-color" />
+                        <h3 class="home-journey-title">Persona or use-case website embeds</h3>
+                        <p class="home-journey-desc">Let visitors explore your product on your homepage before they ever talk to sales.</p>
+                    </div>
+                    <div class="home-journey-item">
+                        <div class="home-journey-item-header">
+                            <span class="home-dot home-dot-orange"></span>
+                            <span class="home-journey-label">Pre-call discovery</span>
                         </div>
-                    </RadzenColumn>
-                </RadzenRow>
-            </RadzenTabsItem>
-        </Tabs>
-    </RadzenTabs>
-</div>
+                        <h3 class="home-journey-title">Pre-live demo asset</h3>
+                        <p class="home-journey-desc">Send personalized demos before meetings so prospects arrive educated and ready to buy.</p>
+                    </div>
+                    <div class="home-journey-item">
+                        <div class="home-journey-item-header">
+                            <span class="home-dot home-dot-blue"></span>
+                            <span class="home-journey-label">Champion enablement</span>
+                        </div>
+                        <h3 class="home-journey-title">Post-call follow-up</h3>
+                        <p class="home-journey-desc">Reinforce your pitch with a shareable walkthrough champions can forward to decision makers.</p>
+                    </div>
+                    <div class="home-journey-item">
+                        <div class="home-journey-item-header">
+                            <span class="home-dot home-dot-teal"></span>
+                            <span class="home-journey-label">Upsell campaigns</span>
+                        </div>
+                        <h3 class="home-journey-title">Feature launches</h3>
+                        <p class="home-journey-desc">Show existing customers the features they haven't discovered yet to drive expansion revenue.</p>
+                    </div>
+                    <div class="home-journey-item">
+                        <div class="home-journey-item-header">
+                            <span class="home-dot home-dot-orange"></span>
+                            <span class="home-journey-label">Booth enablement</span>
+                        </div>
+                        <h3 class="home-journey-title">Conference demos</h3>
+                        <p class="home-journey-desc">Run polished, self-guided demos at trade shows without needing a live environment.</p>
+                    </div>
+                </div>
+            </RadzenColumn>
+        </RadzenRow>
+    </div>
+</section>
 
-@* ── 4. Buyer Journey — 6 Cards ── *@
-<div class="home-section" style="background: var(--rz-base-100, #f5f5f5)">
-    <RadzenStack AlignItems="AlignItems.Center" Gap="0" Class="rz-mb-10" Style="max-width: 1200px; margin: 0 auto">
-        <RadzenText Text="Demos for every stage of the buyer journey." TextStyle="TextStyle.H2" TextAlign="TextAlign.Center" />
-    </RadzenStack>
-    <RadzenRow Gap="1.5rem" Class="rz-mx-auto" Style="max-width: 1200px">
-        <RadzenColumn Size="12" SizeMD="4">
-            <RadzenCard Variant="Variant.Outlined" Class="rz-p-6" Style="height: 100%">
-                <RadzenText Text="Paid Ads" TextStyle="TextStyle.H5" Class="rz-mb-2" />
-                <RadzenText TextStyle="TextStyle.Body2" TagName="TagName.P" Class="rz-text-secondary-color" Style="line-height: 1.6">
-                    Replace static landing pages with interactive demos that convert ad clicks into qualified pipeline.
-                </RadzenText>
-            </RadzenCard>
-        </RadzenColumn>
-        <RadzenColumn Size="12" SizeMD="4">
-            <RadzenCard Variant="Variant.Outlined" Class="rz-p-6" Style="height: 100%">
-                <RadzenText Text="Website Embeds" TextStyle="TextStyle.H5" Class="rz-mb-2" />
-                <RadzenText TextStyle="TextStyle.Body2" TagName="TagName.P" Class="rz-text-secondary-color" Style="line-height: 1.6">
-                    Let visitors explore your product on your homepage before they ever talk to sales.
-                </RadzenText>
-            </RadzenCard>
-        </RadzenColumn>
-        <RadzenColumn Size="12" SizeMD="4">
-            <RadzenCard Variant="Variant.Outlined" Class="rz-p-6" Style="height: 100%">
-                <RadzenText Text="Pre-Call Discovery" TextStyle="TextStyle.H5" Class="rz-mb-2" />
-                <RadzenText TextStyle="TextStyle.Body2" TagName="TagName.P" Class="rz-text-secondary-color" Style="line-height: 1.6">
-                    Send personalized demos before meetings so prospects arrive educated and ready to buy.
-                </RadzenText>
-            </RadzenCard>
-        </RadzenColumn>
-        <RadzenColumn Size="12" SizeMD="4">
-            <RadzenCard Variant="Variant.Outlined" Class="rz-p-6" Style="height: 100%">
-                <RadzenText Text="Post-Call Follow-Up" TextStyle="TextStyle.H5" Class="rz-mb-2" />
-                <RadzenText TextStyle="TextStyle.Body2" TagName="TagName.P" Class="rz-text-secondary-color" Style="line-height: 1.6">
-                    Reinforce your pitch with a shareable walkthrough champions can forward to decision makers.
-                </RadzenText>
-            </RadzenCard>
-        </RadzenColumn>
-        <RadzenColumn Size="12" SizeMD="4">
-            <RadzenCard Variant="Variant.Outlined" Class="rz-p-6" Style="height: 100%">
-                <RadzenText Text="Onboarding" TextStyle="TextStyle.H5" Class="rz-mb-2" />
-                <RadzenText TextStyle="TextStyle.Body2" TagName="TagName.P" Class="rz-text-secondary-color" Style="line-height: 1.6">
-                    Guide new users through your product with interactive walkthroughs that reduce time-to-value.
-                </RadzenText>
-            </RadzenCard>
-        </RadzenColumn>
-        <RadzenColumn Size="12" SizeMD="4">
-            <RadzenCard Variant="Variant.Outlined" Class="rz-p-6" Style="height: 100%">
-                <RadzenText Text="Upsell Campaigns" TextStyle="TextStyle.H5" Class="rz-mb-2" />
-                <RadzenText TextStyle="TextStyle.Body2" TagName="TagName.P" Class="rz-text-secondary-color" Style="line-height: 1.6">
-                    Show existing customers the features they haven't discovered yet to drive expansion revenue.
-                </RadzenText>
-            </RadzenCard>
-        </RadzenColumn>
-    </RadzenRow>
-</div>
+@* ── 5. Social Proof / G2 (white bg) ── *@
+<section class="home-section">
+    <div class="home-container" style="text-align: center">
+        <div class="home-g2-stars">&#9733; &#9733; &#9733; &#9733; &#9733;</div>
+        <p class="home-g2-rating">4.8 stars &middot; 700+ reviews</p>
+        <h2 class="home-section-headline">Top-rated platform and customer service</h2>
+    </div>
+</section>
 
-@* ── 5. Metrics ── *@
-<div class="home-section">
-    <RadzenStack AlignItems="AlignItems.Center" Gap="0" Class="rz-mb-10" Style="max-width: 1200px; margin: 0 auto">
-        <RadzenText Text="The numbers speak for themselves." TextStyle="TextStyle.H2" TextAlign="TextAlign.Center" />
-    </RadzenStack>
-    <RadzenRow Gap="2rem" Class="rz-mx-auto" Style="max-width: 1200px">
-        <RadzenColumn Size="6" SizeMD="3">
-            <RadzenStack AlignItems="AlignItems.Center" Gap="0.5rem">
-                <RadzenText Text="3x" TextStyle="TextStyle.DisplayH1" TextAlign="TextAlign.Center" Class="rz-color-info" />
-                <RadzenText Text="higher engagement vs. static screenshots" TextStyle="TextStyle.Body2" TextAlign="TextAlign.Center" Class="rz-text-secondary-color" Style="max-width: 200px" />
-            </RadzenStack>
-        </RadzenColumn>
-        <RadzenColumn Size="6" SizeMD="3">
-            <RadzenStack AlignItems="AlignItems.Center" Gap="0.5rem">
-                <RadzenText Text="47%" TextStyle="TextStyle.DisplayH1" TextAlign="TextAlign.Center" Class="rz-color-info" />
-                <RadzenText Text="faster deal velocity" TextStyle="TextStyle.Body2" TextAlign="TextAlign.Center" Class="rz-text-secondary-color" Style="max-width: 200px" />
-            </RadzenStack>
-        </RadzenColumn>
-        <RadzenColumn Size="6" SizeMD="3">
-            <RadzenStack AlignItems="AlignItems.Center" Gap="0.5rem">
-                <RadzenText Text="2x" TextStyle="TextStyle.DisplayH1" TextAlign="TextAlign.Center" Class="rz-color-info" />
-                <RadzenText Text="more qualified pipeline" TextStyle="TextStyle.Body2" TextAlign="TextAlign.Center" Class="rz-text-secondary-color" Style="max-width: 200px" />
-            </RadzenStack>
-        </RadzenColumn>
-        <RadzenColumn Size="6" SizeMD="3">
-            <RadzenStack AlignItems="AlignItems.Center" Gap="0.5rem">
-                <RadzenText Text="60%" TextStyle="TextStyle.DisplayH1" TextAlign="TextAlign.Center" Class="rz-color-info" />
-                <RadzenText Text="reduction in first-call no-shows" TextStyle="TextStyle.Body2" TextAlign="TextAlign.Center" Class="rz-text-secondary-color" Style="max-width: 200px" />
-            </RadzenStack>
-        </RadzenColumn>
-    </RadzenRow>
-</div>
+@* ── 6. Impact Metrics (white bg) ── *@
+<section class="home-section" style="padding-bottom: 3rem">
+    <div class="home-container">
+        <h2 class="home-section-headline" style="margin-bottom: 3rem">Impact that's impossible to ignore.</h2>
+        <div class="home-metrics-row">
+            <div class="home-metric-card">
+                <span class="home-metric-value">$10M</span>
+                <span class="home-metric-label">ARR influenced</span>
+            </div>
+            <div class="home-metric-card">
+                <span class="home-metric-value">450%</span>
+                <span class="home-metric-label">increase in trial signups</span>
+            </div>
+            <div class="home-metric-card">
+                <span class="home-metric-value">1,000s</span>
+                <span class="home-metric-label">of high-intent leads</span>
+            </div>
+            <div class="home-metric-card">
+                <span class="home-metric-value">15%</span>
+                <span class="home-metric-label">of website leads</span>
+            </div>
+        </div>
+    </div>
+</section>
 
-@* ── 6. Testimonial ── *@
-<div class="home-section" style="background: var(--rz-base-100, #f5f5f5)">
-    <RadzenStack AlignItems="AlignItems.Center" Style="max-width: 1200px; margin: 0 auto">
-        <RadzenCard Variant="Variant.Text" Style="max-width: 700px; text-align: center">
-            <RadzenText TextStyle="TextStyle.H4" TagName="TagName.P" Style="font-style: italic; line-height: 1.7" Class="rz-mb-6">
-                "NavTour transformed how we share product demos with prospects. Our sales cycle shortened by 40% and engagement went through the roof."
-            </RadzenText>
-            <RadzenText Text="VP of Sales" TextStyle="TextStyle.Subtitle1" TextAlign="TextAlign.Center" />
-            <RadzenText Text="Enterprise SaaS Company" TextStyle="TextStyle.Body2" TextAlign="TextAlign.Center" Class="rz-text-secondary-color" />
-        </RadzenCard>
-    </RadzenStack>
-</div>
+@* ── 7. Customer Logos + Testimonial (light gray bg) ── *@
+<section class="home-section home-section-gray">
+    <div class="home-container">
+        <div class="home-logos rz-mb-10">
+            <span class="home-logo-placeholder">Acme Corp</span>
+            <span class="home-logo-placeholder">Beacon AI</span>
+            <span class="home-logo-placeholder">CloudStack</span>
+            <span class="home-logo-placeholder">DataPulse</span>
+            <span class="home-logo-placeholder">Elevate</span>
+        </div>
+        <blockquote class="home-testimonial">
+            <p>&ldquo;Since launching NavTour, it's been responsible for 15% of the leads on our website.&rdquo;</p>
+            <footer>
+                <strong>VP of Marketing</strong>
+                <span class="home-testimonial-company">Enterprise SaaS Company</span>
+            </footer>
+        </blockquote>
+    </div>
+</section>
 
-@* ── 7. Trust Badges ── *@
-<div style="padding: 3rem 0; background: #fff; border-top: 1px solid var(--rz-base-200, #e0e0e0); border-bottom: 1px solid var(--rz-base-200, #e0e0e0)">
-    <RadzenStack Orientation="Orientation.Horizontal" Gap="3rem" JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap">
-        <RadzenText Text="SOC 2 Type II" TextStyle="TextStyle.Body2" Style="font-weight: 600" Class="rz-text-secondary-color" />
-        <RadzenText Text="Microsoft Azure" TextStyle="TextStyle.Body2" Style="font-weight: 600" Class="rz-text-secondary-color" />
-        <RadzenText Text="99.9% Uptime" TextStyle="TextStyle.Body2" Style="font-weight: 600" Class="rz-text-secondary-color" />
-        <RadzenText Text="GDPR Compliant" TextStyle="TextStyle.Body2" Style="font-weight: 600" Class="rz-text-secondary-color" />
-    </RadzenStack>
-</div>
+@* ── 8. Final CTA (white bg) ── *@
+<section class="home-section home-cta-section">
+    <div class="home-container" style="text-align: center">
+        <h2 class="home-headline" style="font-size: clamp(2rem, 4vw, 3.5rem); margin-bottom: 1rem">Turn demos into deals.</h2>
+        <p class="home-subtitle" style="margin-bottom: 2.5rem">
+            Join hundreds of teams using NavTour to accelerate their sales pipeline.
+        </p>
+        <form class="home-cta-form" @onsubmit:preventDefault>
+            <input type="email" placeholder="Enter your work email" class="home-cta-input" @bind="_ctaEmail" />
+            <a href="/contact" class="home-btn home-btn-dark">Book a demo</a>
+        </form>
+    </div>
+</section>
 
-@* ── 8. Final CTA ── *@
-<div class="home-section" style="background: var(--rz-base-100, #f5f5f5)">
-    <RadzenRow Class="rz-mx-auto" Style="max-width: 1200px">
-        <RadzenColumn Size="12">
-            <RadzenStack AlignItems="AlignItems.Center" Gap="0">
-                <RadzenText Text="Turn demos into deals." TextStyle="TextStyle.H2" TextAlign="TextAlign.Center" />
-                <RadzenText TextStyle="TextStyle.Body1" TextAlign="TextAlign.Center" TagName="TagName.P" Class="rz-text-secondary-color rz-mt-4" Style="max-width: 480px; line-height: 1.6">
-                    Join hundreds of teams using NavTour to accelerate their sales pipeline.
-                </RadzenText>
-                <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem" JustifyContent="JustifyContent.Center" Class="rz-mt-8">
-                    <RadzenLink Text="Start Free Trial" Path="/register" Class="rz-button rz-button-lg rz-variant-flat rz-dark rz-shade-default" Style="--rz-link-hover-text-decoration: none" />
-                </RadzenStack>
-            </RadzenStack>
-        </RadzenColumn>
-    </RadzenRow>
-</div>
+@code {
+    private int _activeProduct = 0;
+    private string _ctaEmail = "";
+}
 
 <style>
-    /* Section spacing only — no color definitions */
+    /* ── Typography ── */
+    .home-headline,
+    .home-feature-headline,
+    .home-section-headline,
+    .home-metric-value {
+        font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+        color: #0F172A;
+    }
+
+    /* ── Container ── */
+    .home-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+    }
+
+    /* ── Section Spacing ── */
     .home-section {
-        padding: 5rem 1.5rem;
+        padding: 6rem 0;
+    }
+
+    .home-section-gray {
+        background: #F8FAFC;
+    }
+
+    /* ── Hero ── */
+    .home-hero {
+        padding: 6rem 0 4rem;
+        background: #fff;
+    }
+
+    .home-overline {
+        display: inline-block;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: #64748B;
+        margin-bottom: 1.5rem;
+    }
+
+    .home-headline {
+        font-size: clamp(2.5rem, 5.5vw, 4.5rem);
+        font-weight: 800;
+        line-height: 1.08;
+        letter-spacing: -0.025em;
+        text-align: center;
+        margin: 0 0 1.5rem;
+        color: #0F172A;
+    }
+
+    .home-subtitle {
+        font-family: 'Inter', sans-serif;
+        font-size: 1.125rem;
+        line-height: 1.7;
+        color: #64748B;
+        text-align: center;
+        max-width: 640px;
+        margin: 0 auto;
+    }
+
+    /* ── Buttons ── */
+    .home-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: 'Inter', sans-serif;
+        font-size: 1rem;
+        font-weight: 600;
+        padding: 0.875rem 2rem;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: all 0.15s ease;
+        cursor: pointer;
+        border: none;
+    }
+
+    .home-btn-dark {
+        background: #1E293B;
+        color: #fff;
+    }
+
+    .home-btn-dark:hover {
+        background: #0F172A;
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .home-btn-outlined {
+        background: transparent;
+        color: #0F172A;
+        border: 1.5px solid #CBD5E1;
+    }
+
+    .home-btn-outlined:hover {
+        border-color: #94A3B8;
+        color: #0F172A;
+        text-decoration: none;
+    }
+
+    .home-arrow-down {
+        font-size: 1.1em;
+    }
+
+    /* ── Product Selector Pills ── */
+    .home-product-pills {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 3rem;
+        margin-bottom: 3rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .home-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9375rem;
+        font-weight: 600;
+        padding: 0.625rem 1.25rem;
+        border-radius: 999px;
+        border: 1.5px solid #E2E8F0;
+        background: #fff;
+        color: #475569;
+        cursor: pointer;
+        transition: all 0.15s ease;
+    }
+
+    .home-pill:hover {
+        border-color: #94A3B8;
+    }
+
+    .home-pill.active {
+        border-color: #1E293B;
+        color: #0F172A;
+        background: #F8FAFC;
+    }
+
+    /* ── Colored Dots ── */
+    .home-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+
+    .home-dot-blue {
+        background: #3B82F6;
+    }
+
+    .home-dot-teal {
+        background: #14B8A6;
+    }
+
+    .home-dot-orange {
+        background: #F59E0B;
+    }
+
+    /* ── Hero Screenshot ── */
+    .home-hero-screenshot {
+        width: 100%;
+        max-width: 1000px;
+        margin: 0 auto;
+        border-radius: 12px;
+        box-shadow: 0 25px 60px rgba(15, 23, 42, 0.08), 0 4px 16px rgba(15, 23, 42, 0.04);
+        overflow: hidden;
+        border: 1px solid #E2E8F0;
+    }
+
+    /* ── Trusted By ── */
+    .home-section-label {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9375rem;
+        font-weight: 600;
+        color: #64748B;
+    }
+
+    .home-link {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9375rem;
+        font-weight: 600;
+        color: #3B82F6;
+        text-decoration: none;
+    }
+
+    .home-link:hover {
+        text-decoration: underline;
+    }
+
+    .home-logos {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 3rem;
+        flex-wrap: wrap;
+    }
+
+    .home-logo-placeholder {
+        font-family: 'Inter', sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #94A3B8;
+        letter-spacing: 0.02em;
+        user-select: none;
+    }
+
+    /* ── Feature Cards ── */
+    .home-feature-card {
+        padding: 3rem 0;
+        border-bottom: 1px solid #F1F5F9;
+    }
+
+    .home-feature-card:last-child {
+        border-bottom: none;
+    }
+
+    .home-feature-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #64748B;
+        margin-bottom: 1rem;
+    }
+
+    .home-feature-headline {
+        font-size: clamp(1.5rem, 2.5vw, 2rem);
+        font-weight: 700;
+        line-height: 1.2;
+        letter-spacing: -0.015em;
+        margin: 0 0 1rem;
+    }
+
+    .home-feature-desc {
+        font-family: 'Inter', sans-serif;
+        font-size: 1rem;
+        line-height: 1.7;
+        color: #64748B;
+        margin: 0 0 1.5rem;
+        max-width: 440px;
+    }
+
+    .home-feature-image-placeholder {
+        width: 100%;
+        aspect-ratio: 16 / 10;
+        background: #F8FAFC;
+        border: 1px solid #E2E8F0;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #94A3B8;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.875rem;
+    }
+
+    /* ── Section Headlines ── */
+    .home-section-headline {
+        font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+        font-weight: 700;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        text-align: center;
+        margin: 0;
+        color: #0F172A;
+    }
+
+    /* ── Buyer Journey ── */
+    .home-journey-image-placeholder {
+        width: 100%;
+        aspect-ratio: 4 / 5;
+        background: #F1F5F9;
+        border: 1px solid #E2E8F0;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #94A3B8;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.875rem;
+        position: sticky;
+        top: 2rem;
+    }
+
+    .home-journey-list {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .home-journey-item {
+        padding: 1.5rem;
+        border-radius: 10px;
+        transition: background 0.15s ease;
+    }
+
+    .home-journey-item:hover {
+        background: #F1F5F9;
+    }
+
+    .home-journey-item-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .home-journey-label {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #64748B;
+    }
+
+    .home-journey-title {
+        font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #0F172A;
+        margin: 0 0 0.5rem;
+    }
+
+    .home-journey-desc {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        color: #64748B;
+        margin: 0;
+    }
+
+    /* ── G2 / Social Proof ── */
+    .home-g2-stars {
+        font-size: 2rem;
+        color: #F59E0B;
+        letter-spacing: 0.1em;
+        margin-bottom: 0.5rem;
+    }
+
+    .home-g2-rating {
+        font-family: 'Inter', sans-serif;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #64748B;
+        margin: 0 0 1.5rem;
+    }
+
+    /* ── Impact Metrics ── */
+    .home-metrics-row {
+        display: flex;
+        gap: 1.5rem;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 1rem;
+    }
+
+    .home-metric-card {
+        flex: 1;
+        min-width: 220px;
+        background: #F8FAFC;
+        border: 1px solid #E2E8F0;
+        border-radius: 12px;
+        padding: 2.5rem 2rem;
+        text-align: center;
+        scroll-snap-align: start;
+    }
+
+    .home-metric-value {
+        display: block;
+        font-size: clamp(2rem, 3.5vw, 3rem);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        margin-bottom: 0.5rem;
+    }
+
+    .home-metric-label {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9375rem;
+        color: #64748B;
+        line-height: 1.5;
+    }
+
+    /* ── Testimonial ── */
+    .home-testimonial {
+        max-width: 700px;
+        margin: 0 auto;
+        text-align: center;
+        border: none;
+        padding: 0;
+    }
+
+    .home-testimonial p {
+        font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+        font-size: clamp(1.25rem, 2vw, 1.5rem);
+        font-weight: 600;
+        line-height: 1.6;
+        color: #0F172A;
+        margin: 0 0 1.5rem;
+    }
+
+    .home-testimonial footer {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        align-items: center;
+    }
+
+    .home-testimonial footer strong {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9375rem;
+        color: #0F172A;
+    }
+
+    .home-testimonial-company {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.875rem;
+        color: #64748B;
+    }
+
+    /* ── Final CTA ── */
+    .home-cta-section {
+        padding: 6rem 0;
+    }
+
+    .home-cta-form {
+        display: flex;
+        gap: 0.75rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .home-cta-input {
+        flex: 1;
+        min-width: 240px;
+        font-family: 'Inter', sans-serif;
+        font-size: 1rem;
+        padding: 0.875rem 1.25rem;
+        border: 1.5px solid #CBD5E1;
+        border-radius: 8px;
+        background: #fff;
+        color: #0F172A;
+        outline: none;
+        transition: border-color 0.15s ease;
+    }
+
+    .home-cta-input:focus {
+        border-color: #3B82F6;
+    }
+
+    .home-cta-input::placeholder {
+        color: #94A3B8;
+    }
+
+    /* ── Responsive ── */
+    @@media (max-width: 768px) {
+        .home-hero {
+            padding: 4rem 0 2rem;
+        }
+
+        .home-section {
+            padding: 4rem 0;
+        }
+
+        .home-feature-card {
+            padding: 2rem 0;
+        }
+
+        .home-journey-image-placeholder {
+            position: static;
+            aspect-ratio: 16 / 9;
+        }
+
+        .home-metrics-row {
+            flex-wrap: nowrap;
+        }
+
+        .home-metric-card {
+            min-width: 200px;
+        }
     }
 </style>
