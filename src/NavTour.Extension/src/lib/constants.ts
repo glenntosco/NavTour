@@ -77,9 +77,8 @@ export const API_URLS = {
   },
 } as const;
 
-// Extension environment
-export const ENV = (typeof chrome !== 'undefined' && chrome.runtime?.getManifest()?.env) || 'production';
-export const IS_DEV = ENV === 'development';
+// Extension environment — detect dev by checking if running on localhost
+export const IS_DEV = typeof location !== 'undefined' && location.hostname === 'localhost';
 
 export function getApiUrl(): string {
   return IS_DEV ? API_URLS.API.DEV : API_URLS.API.PROD;
