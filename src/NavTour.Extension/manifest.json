@@ -9,6 +9,7 @@
     "service_worker": "worker.js"
   },
   "action": {
+    "default_popup": "static/index.html",
     "default_icon": {
       "16": "static/icons/icon-16.png",
       "48": "static/icons/icon-48.png",

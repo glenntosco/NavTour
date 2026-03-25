@@ -687,16 +687,6 @@ chrome.webNavigation?.onHistoryStateUpdated?.addListener((details) => {
   }, 2000);
 });
 
-// ── Action click handler (opens popup or toggles capture) ───────────
-
-chrome.action.onClicked.addListener(async (tab) => {
-  // If no default_popup, this fires. We use popup HTML, so this shouldn't fire.
-  // But if it does, open the popup page
-  if (tab.id) {
-    chrome.action.setPopup({ popup: 'static/index.html' });
-  }
-});
-
 // ── Startup ─────────────────────────────────────────────────────────
 
 console.log('[NavTour Worker] Service worker started, version:', chrome.runtime.getManifest().version);
