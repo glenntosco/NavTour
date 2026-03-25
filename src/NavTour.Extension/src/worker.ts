@@ -174,18 +174,28 @@ async function uploadFrame(
   demoId: string,
   html: string,
   title: string,
-  url: string
+  sourceUrl: string
 ): Promise<any> {
-  return apiCall(`/demos/${demoId}/frames`, {
+  // Server expects IFormFile — send as multipart/form-data
+  const fileName = `${title || 'frame'}-${Date.now()}.html`;
+  const blob = new Blob([html], { type: 'text/html' });
+  const formData = new FormData();
+  formData.append('file', blob, fileName);
+
+  const response = await fetch(`${getApiUrl()}/demos/${demoId}/frames`, {
     method: 'POST',
-    token,
-    body: {
-      html,
-      title,
-      sourceUrl: url,
-      fileName: `frame-${Date.now()}.html`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      // Do NOT set Content-Type — browser sets it with boundary for FormData
     },
+    body: formData,
   });
+
+  if (!response.ok) {
+    throw new Error(`Upload failed ${response.status}: ${await response.text()}`);
+  }
+
+  return response.json();
 }
 
 async function uploadResource(
