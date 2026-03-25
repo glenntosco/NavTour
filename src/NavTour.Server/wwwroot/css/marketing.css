@@ -2,15 +2,15 @@
 
 /* ========== Design Tokens ========== */
 :root {
-    /* Brand — NavTour Indigo/Emerald */
-    --nt-primary: #4F46E5;
-    --nt-primary-dark: #4338CA;
-    --nt-primary-deeper: #3730A3;
-    --nt-primary-light: #EEF2FF;
-    --nt-primary-subtle: #F5F3FF;
-    --nt-accent: #10B981;
-    --nt-accent-dark: #059669;
-    --nt-accent-light: #ECFDF5;
+    /* Brand — NavTour Monochrome + Blue accent */
+    --nt-primary: #1E293B;
+    --nt-primary-dark: #0F172A;
+    --nt-primary-deeper: #020617;
+    --nt-primary-light: #F1F5F9;
+    --nt-primary-subtle: #F8FAFC;
+    --nt-accent: #3B82F6;
+    --nt-accent-dark: #2563EB;
+    --nt-accent-light: #EFF6FF;
 
     --nt-success: #059669;
     --nt-warning: #D97706;

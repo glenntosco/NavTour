@@ -98,14 +98,15 @@
     transition: 0.2s;
 }
 
-/* Footer */
+/* Footer — white background matching Navattic */
 ::deep .mkt-footer {
-    background: #1a1a2e;
-    color: var(--neutral-400, #94A3B8);
+    background: #FFFFFF;
+    color: var(--neutral-600, #475569);
     padding: 80px 24px 40px;
+    border-top: 1px solid var(--neutral-200, #E2E8F0);
 }
 ::deep .mkt-footer h4 {
-    color: #fff;
+    color: var(--neutral-950, #0F172A);
     margin-bottom: 16px;
     font-size: 0.75rem;
     font-weight: 600;
@@ -124,19 +125,19 @@
     gap: 10px;
 }
 ::deep .mkt-footer-col a {
-    color: var(--neutral-400, #94A3B8);
+    color: var(--neutral-500, #64748B);
     font-size: 0.875rem;
     text-decoration: none;
     transition: color 150ms ease;
 }
-::deep .mkt-footer-col a:hover { color: #fff; }
+::deep .mkt-footer-col a:hover { color: var(--neutral-950, #0F172A); }
 ::deep .mkt-footer-bottom {
-    border-top: 1px solid var(--neutral-800, #1E3A5F);
+    border-top: 1px solid var(--neutral-200, #E2E8F0);
     padding-top: 24px;
 }
 ::deep .mkt-footer-bottom p {
     font-size: 0.8125rem;
-    color: var(--neutral-500, #64748B);
+    color: var(--neutral-400, #94A3B8);
 }
 
 /* Mobile-only links hidden on desktop */
