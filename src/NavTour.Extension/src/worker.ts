@@ -829,21 +829,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
   }
 });
 
-// ── Web navigation tracking (SPA support) ───────────────────────────
-
-chrome.webNavigation?.onHistoryStateUpdated?.addListener((details) => {
-  if (details.frameId !== 0) return; // Only top-level frame
-
-  const session = activeSessions.get(details.tabId);
-  if (!session || session.settings.clickToCapture !== false) return;
-
-  // SPA navigation detected — auto-capture
-  setTimeout(() => {
-    if (activeSessions.has(details.tabId)) {
-      captureTab(details.tabId);
-    }
-  }, 2000);
-});
+// Note: SPA navigation is handled by onUpdated above — no separate
+// onHistoryStateUpdated listener needed (it would cause duplicate captures).
 
 // ── Startup ─────────────────────────────────────────────────────────
 
