@@ -213,7 +213,8 @@ async function captureTab(tabId: number): Promise<void> {
   console.log(`[NavTour Worker] Capturing tab ${tabId} for demo ${session.demoName}`);
 
   try {
-    // Ensure offscreen document is ready
+    // Ensure content scripts and offscreen document are ready
+    await ensureContentScripts(tabId);
     await ensureOffscreenDocument();
 
     // Request DOM capture from content script
@@ -325,9 +326,6 @@ async function startSession(tabId: number, data: any): Promise<CaptureSession> {
   activeSessions.set(tabId, session);
   await addCorsRule(tabId);
   updateBadge(tabId, session.frameCount);
-
-  // Inject the floating capture toolbar pill into the page
-  injectToolbarInTab(tabId, session);
 
   console.log(`[NavTour Worker] Session started: tab=${tabId}, demo=${session.demoName}`);
   return session;
@@ -578,6 +576,9 @@ async function handlePopupStartCapture(msg: any): Promise<any> {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   if (!tab?.id) return { success: false, error: 'No active tab' };
 
+  // Inject content scripts FIRST, before starting session
+  await ensureContentScripts(tab.id);
+
   const session = await startSession(tab.id, {
     token: msg.token,
     demoId: msg.demoId,
@@ -586,23 +587,43 @@ async function handlePopupStartCapture(msg: any): Promise<any> {
     settings: msg.settings || {},
   });
 
-  // Inject content scripts into the tab if not already present
+  // Small delay to let content scripts initialize, then inject toolbar
+  setTimeout(() => injectToolbarInTab(tab.id!, session), 300);
+
+  return { success: true, tabId: tab.id, ...session };
+}
+
+/** Ensure content scripts are injected in the tab */
+async function ensureContentScripts(tabId: number): Promise<void> {
+  // Check if content script is already responding
+  try {
+    const response = await chrome.tabs.sendMessage(tabId, { kind: 'navtour:get-page-info' });
+    if (response?.title) return; // Already injected
+  } catch {
+    // Not injected yet — inject now
+  }
+
   try {
     await chrome.scripting.executeScript({
-      target: { tabId: tab.id },
+      target: { tabId, allFrames: false },
       files: ['content-script-main.js'],
       world: 'MAIN' as any,
     });
-  } catch {}
+  } catch (e) {
+    console.warn('[NavTour Worker] Failed to inject MAIN script:', e);
+  }
 
   try {
     await chrome.scripting.executeScript({
-      target: { tabId: tab.id },
+      target: { tabId, allFrames: false },
       files: ['content-script-isolated.js'],
     });
-  } catch {}
+  } catch (e) {
+    console.warn('[NavTour Worker] Failed to inject ISOLATED script:', e);
+  }
 
-  return { success: true, tabId: tab.id, ...session };
+  // Wait for scripts to initialize
+  await new Promise(resolve => setTimeout(resolve, 500));
 }
 
 // ── Resource fetching ───────────────────────────────────────────────
@@ -660,14 +681,23 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
 
   const session = activeSessions.get(tabId)!;
 
-  // Auto-capture on navigation complete (for auto-capture mode)
-  if (changeInfo.status === 'complete' && session.settings.clickToCapture === false) {
-    // Small delay to let page settle
-    setTimeout(() => {
-      if (activeSessions.has(tabId)) {
-        captureTab(tabId);
+  // On page load complete, re-inject toolbar and optionally auto-capture
+  if (changeInfo.status === 'complete') {
+    // Re-inject content scripts and toolbar after navigation
+    setTimeout(async () => {
+      if (!activeSessions.has(tabId)) return;
+      await ensureContentScripts(tabId);
+      injectToolbarInTab(tabId, session);
+
+      // Auto-capture if not in click-to-capture mode
+      if (session.settings.clickToCapture === false) {
+        setTimeout(() => {
+          if (activeSessions.has(tabId)) {
+            captureTab(tabId);
+          }
+        }, 1000);
       }
-    }, 1500);
+    }, 500);
   }
 });
 
