@@ -1,5 +1,6 @@
 @page "/"
 @layout MarketingLayout
+@rendermode InteractiveServer
 
 <PageTitle>NavTour — Interactive Product Demos That Sell</PageTitle>
 <HeadContent>
@@ -17,412 +18,228 @@
     <link rel="alternate" hreflang="x-default" href="https://navtour.cloud/" />
 </HeadContent>
 
-@* ── 1. Hero ── *@
-<HeroSection
-    Eyebrow="Interactive Product Demos"
-    Title="Let your product sell itself."
-    Subtitle="Create no-code interactive walkthroughs of your software. Embed them on your website, share in sales emails, or use in ad campaigns — and watch engagement soar."
-    PrimaryCtaText="Start Free Trial"
-    PrimaryCtaUrl="/register"
-    SecondaryCtaText="Book a Demo"
-    SecondaryCtaUrl="/contact"
-    ImageUrl="/images/product-form-builder.png" />
+@* ── 1. Hero — Centered CTA Block ── *@
+<RadzenRow Class="rz-mx-auto" Style="max-width: 1200px">
+    <RadzenColumn Size="12" Class="rz-p-6 rz-p-sm-12">
+        <RadzenStack AlignItems="AlignItems.Center" Gap="0" Class="rz-my-12">
+            <RadzenText Text="Interactive Product Demos" TextStyle="TextStyle.Overline" TextAlign="TextAlign.Center" Class="rz-color-primary" Style="font-size: 1rem" />
+            <RadzenText Text="Let your product sell itself." TextStyle="TextStyle.DisplayH1" TextAlign="TextAlign.Center" Style="max-width: 800px" />
+            <RadzenText TextStyle="TextStyle.H5" TextAlign="TextAlign.Center" TagName="TagName.P" Style="max-width: 700px; line-height: 1.6" Class="rz-text-secondary-color">
+                Create no-code interactive walkthroughs of your software. Embed them on your website, share in sales emails, or use in ad campaigns.
+            </RadzenText>
+            <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap" Class="rz-mt-8">
+                <RadzenLink Text="Start Free Trial" Path="/register" Class="rz-button rz-button-lg rz-variant-flat rz-success rz-shade-default" Style="--rz-link-hover-text-decoration: none" />
+                <RadzenLink Text="Book a Demo" Path="/contact" Class="rz-button rz-button-lg rz-variant-outlined rz-base rz-shade-default" Style="--rz-link-hover-text-decoration: none" />
+            </RadzenStack>
+        </RadzenStack>
+        <RadzenImage Path="/images/product-form-builder.png" Style="width: 100%; max-width: 960px; margin: 0 auto; display: block; border-radius: 12px; box-shadow: 0 20px 48px rgba(0,0,0,0.08)" AlternateText="NavTour Product" />
+    </RadzenColumn>
+</RadzenRow>
 
 @* ── 2. Logo Bar ── *@
-<section class="mkt-logos">
-    <div class="mkt-container">
-        <p class="mkt-logos-label reveal">Trusted by innovative teams</p>
-        <div class="mkt-logos-row reveal">
-            <div class="mkt-logo-slot">Acme Corp</div>
-            <div class="mkt-logo-slot">Beacon AI</div>
-            <div class="mkt-logo-slot">CloudStack</div>
-            <div class="mkt-logo-slot">DataPulse</div>
-            <div class="mkt-logo-slot">Elevate</div>
-            <div class="mkt-logo-slot">FinOps.io</div>
-        </div>
-    </div>
-</section>
+<div style="padding: 3rem 0; background: var(--rz-base-100, #f5f5f5); border-bottom: 1px solid var(--rz-base-200, #e0e0e0)">
+    <RadzenStack AlignItems="AlignItems.Center" Gap="1.5rem" Class="rz-mx-auto" Style="max-width: 1200px">
+        <RadzenText Text="TRUSTED BY INNOVATIVE TEAMS" TextStyle="TextStyle.Overline" TextAlign="TextAlign.Center" Class="rz-text-secondary-color" />
+        <RadzenStack Orientation="Orientation.Horizontal" Gap="2.5rem" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap">
+            <RadzenText Text="Acme Corp" TextStyle="TextStyle.Body2" Class="rz-text-secondary-color" Style="font-weight: 600" />
+            <RadzenText Text="Beacon AI" TextStyle="TextStyle.Body2" Class="rz-text-secondary-color" Style="font-weight: 600" />
+            <RadzenText Text="CloudStack" TextStyle="TextStyle.Body2" Class="rz-text-secondary-color" Style="font-weight: 600" />
+            <RadzenText Text="DataPulse" TextStyle="TextStyle.Body2" Class="rz-text-secondary-color" Style="font-weight: 600" />
+            <RadzenText Text="Elevate" TextStyle="TextStyle.Body2" Class="rz-text-secondary-color" Style="font-weight: 600" />
+            <RadzenText Text="FinOps.io" TextStyle="TextStyle.Body2" Class="rz-text-secondary-color" Style="font-weight: 600" />
+        </RadzenStack>
+    </RadzenStack>
+</div>
 
-@* ── 3. Product Tabs ── *@
-<section class="mkt-section">
-    <div class="mkt-container">
-        <div class="mkt-section-heading reveal">
-            <h2>One platform, three superpowers.</h2>
-        </div>
+@* ── 3. Product Features — RadzenTabs ── *@
+<div class="home-section">
+    <RadzenStack AlignItems="AlignItems.Center" Gap="0" Class="rz-mb-8" Style="max-width: 1200px; margin: 0 auto">
+        <RadzenText Text="One platform, three superpowers." TextStyle="TextStyle.H2" TextAlign="TextAlign.Center" />
+    </RadzenStack>
+    <RadzenTabs TabPosition="TabPosition.Top" Style="max-width: 1200px; margin: 0 auto">
+        <Tabs>
+            <RadzenTabsItem Text="Interactive Demos">
+                <RadzenRow Gap="2rem" Class="rz-mt-6 rz-align-items-center">
+                    <RadzenColumn Size="12" SizeMD="6" Class="rz-p-6">
+                        <RadzenText Text="Build walkthroughs your buyers actually finish." TextStyle="TextStyle.H4" Class="rz-mb-4" />
+                        <RadzenText TextStyle="TextStyle.Body1" TagName="TagName.P" Class="rz-text-secondary-color" Style="max-width: 480px; line-height: 1.7">
+                            Build step-by-step product walkthroughs from screenshots or live captures. Add hotspots, tooltips, guided flows, and branching logic. No coding required.
+                        </RadzenText>
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="6">
+                        <div style="width: 100%; aspect-ratio: 16/10; background: var(--rz-base-100, #f5f5f5); border: 1px solid var(--rz-base-200, #e0e0e0); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--rz-text-secondary-color)">
+                            <RadzenText Text="Interactive Demos Preview" TextStyle="TextStyle.Body2" Class="rz-text-secondary-color" />
+                        </div>
+                    </RadzenColumn>
+                </RadzenRow>
+            </RadzenTabsItem>
+            <RadzenTabsItem Text="Demo Hub">
+                <RadzenRow Gap="2rem" Class="rz-mt-6 rz-align-items-center">
+                    <RadzenColumn Size="12" SizeMD="6" Class="rz-p-6">
+                        <RadzenText Text="Let prospects self-serve the right demo." TextStyle="TextStyle.H4" Class="rz-mb-4" />
+                        <RadzenText TextStyle="TextStyle.Body1" TagName="TagName.P" Class="rz-text-secondary-color" Style="max-width: 480px; line-height: 1.7">
+                            A centralized library where prospects self-serve demos by persona, use case, or product line. Reduces sales friction and lets buyers explore on their own terms.
+                        </RadzenText>
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="6">
+                        <div style="width: 100%; aspect-ratio: 16/10; background: var(--rz-base-100, #f5f5f5); border: 1px solid var(--rz-base-200, #e0e0e0); border-radius: 12px; display: flex; align-items: center; justify-content: center">
+                            <RadzenText Text="Demo Hub Preview" TextStyle="TextStyle.Body2" Class="rz-text-secondary-color" />
+                        </div>
+                    </RadzenColumn>
+                </RadzenRow>
+            </RadzenTabsItem>
+            <RadzenTabsItem Text="Analytics Dashboard">
+                <RadzenRow Gap="2rem" Class="rz-mt-6 rz-align-items-center">
+                    <RadzenColumn Size="12" SizeMD="6" Class="rz-p-6">
+                        <RadzenText Text="Know exactly what resonates." TextStyle="TextStyle.H4" Class="rz-mb-4" />
+                        <RadzenText TextStyle="TextStyle.Body1" TagName="TagName.P" Class="rz-text-secondary-color" Style="max-width: 480px; line-height: 1.7">
+                            Track who viewed your demos, how far they got, where they dropped off, and which features generated the most interest. Feed intent data directly into your CRM.
+                        </RadzenText>
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="6">
+                        <div style="width: 100%; aspect-ratio: 16/10; background: var(--rz-base-100, #f5f5f5); border: 1px solid var(--rz-base-200, #e0e0e0); border-radius: 12px; display: flex; align-items: center; justify-content: center">
+                            <RadzenText Text="Analytics Dashboard Preview" TextStyle="TextStyle.Body2" Class="rz-text-secondary-color" />
+                        </div>
+                    </RadzenColumn>
+                </RadzenRow>
+            </RadzenTabsItem>
+        </Tabs>
+    </RadzenTabs>
+</div>
 
-        <div class="mkt-tabs reveal" role="tablist">
-            <input type="radio" name="product-tab" id="tab-demos" class="mkt-tab-radio" checked />
-            <input type="radio" name="product-tab" id="tab-hub" class="mkt-tab-radio" />
-            <input type="radio" name="product-tab" id="tab-analytics" class="mkt-tab-radio" />
-
-            <div class="mkt-tab-labels">
-                <label for="tab-demos" class="mkt-tab-label" role="tab">Interactive Demos</label>
-                <label for="tab-hub" class="mkt-tab-label" role="tab">Demo Hub</label>
-                <label for="tab-analytics" class="mkt-tab-label" role="tab">Analytics Dashboard</label>
-            </div>
-
-            <div class="mkt-tab-panels">
-                <div class="mkt-tab-panel mkt-tab-panel-1">
-                    <div class="mkt-tab-panel-body">
-                        <h3>Build walkthroughs your buyers actually finish.</h3>
-                        <p>Build step-by-step product walkthroughs from screenshots or live captures. Add hotspots, tooltips, guided flows, and branching logic. No coding required.</p>
-                    </div>
-                    <div class="mkt-tab-panel-visual">
-                        <div class="mkt-tab-screen">Interactive Demos Preview</div>
-                    </div>
-                </div>
-                <div class="mkt-tab-panel mkt-tab-panel-2">
-                    <div class="mkt-tab-panel-body">
-                        <h3>Let prospects self-serve the right demo.</h3>
-                        <p>A centralized library where prospects self-serve demos by persona, use case, or product line. Reduces sales friction and lets buyers explore on their own terms.</p>
-                    </div>
-                    <div class="mkt-tab-panel-visual">
-                        <div class="mkt-tab-screen">Demo Hub Preview</div>
-                    </div>
-                </div>
-                <div class="mkt-tab-panel mkt-tab-panel-3">
-                    <div class="mkt-tab-panel-body">
-                        <h3>Know exactly what resonates.</h3>
-                        <p>Track who viewed your demos, how far they got, where they dropped off, and which features generated the most interest. Feed intent data directly into your CRM.</p>
-                    </div>
-                    <div class="mkt-tab-panel-visual">
-                        <div class="mkt-tab-screen">Analytics Dashboard Preview</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-@* ── 4. Buyer Journey ── *@
-<section class="mkt-section-alt">
-    <div class="mkt-container">
-        <div class="mkt-section-heading reveal">
-            <div class="mkt-eyebrow" style="color:var(--nt-accent)">Use Cases</div>
-            <h2>Demos for every stage of the buyer journey.</h2>
-        </div>
-        <div class="mkt-grid mkt-journey-grid reveal-stagger">
-            <div class="mkt-card mkt-journey-card">
-                <h3>Paid Ads</h3>
-                <p>Replace static landing pages with interactive demos that convert ad clicks into qualified pipeline.</p>
-            </div>
-            <div class="mkt-card mkt-journey-card">
-                <h3>Website Embeds</h3>
-                <p>Let visitors explore your product on your homepage before they ever talk to sales.</p>
-            </div>
-            <div class="mkt-card mkt-journey-card">
-                <h3>Pre-Call Discovery</h3>
-                <p>Send personalized demos before meetings so prospects arrive educated and ready to buy.</p>
-            </div>
-            <div class="mkt-card mkt-journey-card">
-                <h3>Post-Call Follow-Up</h3>
-                <p>Reinforce your pitch with a shareable walkthrough champions can forward to decision makers.</p>
-            </div>
-            <div class="mkt-card mkt-journey-card">
-                <h3>Onboarding</h3>
-                <p>Guide new users through your product with interactive walkthroughs that reduce time-to-value.</p>
-            </div>
-            <div class="mkt-card mkt-journey-card">
-                <h3>Upsell Campaigns</h3>
-                <p>Show existing customers the features they haven't discovered yet to drive expansion revenue.</p>
-            </div>
-        </div>
-    </div>
-</section>
+@* ── 4. Buyer Journey — 6 Cards ── *@
+<div class="home-section" style="background: var(--rz-base-100, #f5f5f5)">
+    <RadzenStack AlignItems="AlignItems.Center" Gap="0" Class="rz-mb-10" Style="max-width: 1200px; margin: 0 auto">
+        <RadzenText Text="Demos for every stage of the buyer journey." TextStyle="TextStyle.H2" TextAlign="TextAlign.Center" />
+    </RadzenStack>
+    <RadzenRow Gap="1.5rem" Class="rz-mx-auto" Style="max-width: 1200px">
+        <RadzenColumn Size="12" SizeMD="4">
+            <RadzenCard Variant="Variant.Outlined" Class="rz-p-6" Style="height: 100%">
+                <RadzenText Text="Paid Ads" TextStyle="TextStyle.H5" Class="rz-mb-2" />
+                <RadzenText TextStyle="TextStyle.Body2" TagName="TagName.P" Class="rz-text-secondary-color" Style="line-height: 1.6">
+                    Replace static landing pages with interactive demos that convert ad clicks into qualified pipeline.
+                </RadzenText>
+            </RadzenCard>
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="4">
+            <RadzenCard Variant="Variant.Outlined" Class="rz-p-6" Style="height: 100%">
+                <RadzenText Text="Website Embeds" TextStyle="TextStyle.H5" Class="rz-mb-2" />
+                <RadzenText TextStyle="TextStyle.Body2" TagName="TagName.P" Class="rz-text-secondary-color" Style="line-height: 1.6">
+                    Let visitors explore your product on your homepage before they ever talk to sales.
+                </RadzenText>
+            </RadzenCard>
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="4">
+            <RadzenCard Variant="Variant.Outlined" Class="rz-p-6" Style="height: 100%">
+                <RadzenText Text="Pre-Call Discovery" TextStyle="TextStyle.H5" Class="rz-mb-2" />
+                <RadzenText TextStyle="TextStyle.Body2" TagName="TagName.P" Class="rz-text-secondary-color" Style="line-height: 1.6">
+                    Send personalized demos before meetings so prospects arrive educated and ready to buy.
+                </RadzenText>
+            </RadzenCard>
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="4">
+            <RadzenCard Variant="Variant.Outlined" Class="rz-p-6" Style="height: 100%">
+                <RadzenText Text="Post-Call Follow-Up" TextStyle="TextStyle.H5" Class="rz-mb-2" />
+                <RadzenText TextStyle="TextStyle.Body2" TagName="TagName.P" Class="rz-text-secondary-color" Style="line-height: 1.6">
+                    Reinforce your pitch with a shareable walkthrough champions can forward to decision makers.
+                </RadzenText>
+            </RadzenCard>
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="4">
+            <RadzenCard Variant="Variant.Outlined" Class="rz-p-6" Style="height: 100%">
+                <RadzenText Text="Onboarding" TextStyle="TextStyle.H5" Class="rz-mb-2" />
+                <RadzenText TextStyle="TextStyle.Body2" TagName="TagName.P" Class="rz-text-secondary-color" Style="line-height: 1.6">
+                    Guide new users through your product with interactive walkthroughs that reduce time-to-value.
+                </RadzenText>
+            </RadzenCard>
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="4">
+            <RadzenCard Variant="Variant.Outlined" Class="rz-p-6" Style="height: 100%">
+                <RadzenText Text="Upsell Campaigns" TextStyle="TextStyle.H5" Class="rz-mb-2" />
+                <RadzenText TextStyle="TextStyle.Body2" TagName="TagName.P" Class="rz-text-secondary-color" Style="line-height: 1.6">
+                    Show existing customers the features they haven't discovered yet to drive expansion revenue.
+                </RadzenText>
+            </RadzenCard>
+        </RadzenColumn>
+    </RadzenRow>
+</div>
 
 @* ── 5. Metrics ── *@
-<section class="mkt-section">
-    <div class="mkt-container">
-        <div class="mkt-section-heading reveal">
-            <h2>The numbers speak for themselves.</h2>
-        </div>
-        <div class="mkt-metrics-row reveal-stagger">
-            <div class="mkt-metric">
-                <div class="mkt-metric-value">3x</div>
-                <div class="mkt-metric-label">higher engagement vs. static screenshots</div>
-            </div>
-            <div class="mkt-metric">
-                <div class="mkt-metric-value">47%</div>
-                <div class="mkt-metric-label">faster deal velocity</div>
-            </div>
-            <div class="mkt-metric">
-                <div class="mkt-metric-value">2x</div>
-                <div class="mkt-metric-label">more qualified pipeline</div>
-            </div>
-            <div class="mkt-metric">
-                <div class="mkt-metric-value">60%</div>
-                <div class="mkt-metric-label">reduction in first-call no-shows</div>
-            </div>
-        </div>
-    </div>
-</section>
+<div class="home-section">
+    <RadzenStack AlignItems="AlignItems.Center" Gap="0" Class="rz-mb-10" Style="max-width: 1200px; margin: 0 auto">
+        <RadzenText Text="The numbers speak for themselves." TextStyle="TextStyle.H2" TextAlign="TextAlign.Center" />
+    </RadzenStack>
+    <RadzenRow Gap="2rem" Class="rz-mx-auto" Style="max-width: 1200px">
+        <RadzenColumn Size="6" SizeMD="3">
+            <RadzenStack AlignItems="AlignItems.Center" Gap="0.5rem">
+                <RadzenText Text="3x" TextStyle="TextStyle.DisplayH1" TextAlign="TextAlign.Center" Class="rz-color-primary" />
+                <RadzenText Text="higher engagement vs. static screenshots" TextStyle="TextStyle.Body2" TextAlign="TextAlign.Center" Class="rz-text-secondary-color" Style="max-width: 200px" />
+            </RadzenStack>
+        </RadzenColumn>
+        <RadzenColumn Size="6" SizeMD="3">
+            <RadzenStack AlignItems="AlignItems.Center" Gap="0.5rem">
+                <RadzenText Text="47%" TextStyle="TextStyle.DisplayH1" TextAlign="TextAlign.Center" Class="rz-color-primary" />
+                <RadzenText Text="faster deal velocity" TextStyle="TextStyle.Body2" TextAlign="TextAlign.Center" Class="rz-text-secondary-color" Style="max-width: 200px" />
+            </RadzenStack>
+        </RadzenColumn>
+        <RadzenColumn Size="6" SizeMD="3">
+            <RadzenStack AlignItems="AlignItems.Center" Gap="0.5rem">
+                <RadzenText Text="2x" TextStyle="TextStyle.DisplayH1" TextAlign="TextAlign.Center" Class="rz-color-primary" />
+                <RadzenText Text="more qualified pipeline" TextStyle="TextStyle.Body2" TextAlign="TextAlign.Center" Class="rz-text-secondary-color" Style="max-width: 200px" />
+            </RadzenStack>
+        </RadzenColumn>
+        <RadzenColumn Size="6" SizeMD="3">
+            <RadzenStack AlignItems="AlignItems.Center" Gap="0.5rem">
+                <RadzenText Text="60%" TextStyle="TextStyle.DisplayH1" TextAlign="TextAlign.Center" Class="rz-color-primary" />
+                <RadzenText Text="reduction in first-call no-shows" TextStyle="TextStyle.Body2" TextAlign="TextAlign.Center" Class="rz-text-secondary-color" Style="max-width: 200px" />
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+</div>
 
 @* ── 6. Testimonial ── *@
-<section class="mkt-section-alt">
-    <div class="mkt-container">
-        <div class="mkt-testimonial-featured reveal">
-            <blockquote>"NavTour transformed how we share product demos with prospects. Our sales cycle shortened by 40% and engagement went through the roof."</blockquote>
-            <div class="mkt-testimonial-attribution" style="justify-content:center">
-                <div>
-                    <div class="mkt-testimonial-name">VP of Sales</div>
-                    <div class="mkt-testimonial-role">Enterprise SaaS Company</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+<div class="home-section" style="background: var(--rz-base-100, #f5f5f5)">
+    <RadzenStack AlignItems="AlignItems.Center" Style="max-width: 1200px; margin: 0 auto">
+        <RadzenCard Variant="Variant.Text" Style="max-width: 700px; text-align: center">
+            <RadzenText TextStyle="TextStyle.H4" TagName="TagName.P" Style="font-style: italic; line-height: 1.7" Class="rz-mb-6">
+                "NavTour transformed how we share product demos with prospects. Our sales cycle shortened by 40% and engagement went through the roof."
+            </RadzenText>
+            <RadzenText Text="VP of Sales" TextStyle="TextStyle.Subtitle1" TextAlign="TextAlign.Center" />
+            <RadzenText Text="Enterprise SaaS Company" TextStyle="TextStyle.Body2" TextAlign="TextAlign.Center" Class="rz-text-secondary-color" />
+        </RadzenCard>
+    </RadzenStack>
+</div>
 
 @* ── 7. Trust Badges ── *@
-<section class="mkt-trust">
-    <div class="mkt-container">
-        <div class="mkt-trust-row reveal">
-            <div class="mkt-trust-badge">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--nt-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                <span>SOC 2</span>
-            </div>
-            <div class="mkt-trust-badge">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--nt-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                <span>Azure Hosted</span>
-            </div>
-            <div class="mkt-trust-badge">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--nt-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-                <span>99.9% Uptime</span>
-            </div>
-            <div class="mkt-trust-badge">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--nt-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                <span>GDPR Compliant</span>
-            </div>
-        </div>
-    </div>
-</section>
+<div style="padding: 3rem 0; background: #fff; border-top: 1px solid var(--rz-base-200, #e0e0e0); border-bottom: 1px solid var(--rz-base-200, #e0e0e0)">
+    <RadzenStack Orientation="Orientation.Horizontal" Gap="3rem" JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap">
+        <RadzenText Text="SOC 2 Type II" TextStyle="TextStyle.Body2" Style="font-weight: 600" Class="rz-text-secondary-color" />
+        <RadzenText Text="Microsoft Azure" TextStyle="TextStyle.Body2" Style="font-weight: 600" Class="rz-text-secondary-color" />
+        <RadzenText Text="99.9% Uptime" TextStyle="TextStyle.Body2" Style="font-weight: 600" Class="rz-text-secondary-color" />
+        <RadzenText Text="GDPR Compliant" TextStyle="TextStyle.Body2" Style="font-weight: 600" Class="rz-text-secondary-color" />
+    </RadzenStack>
+</div>
 
 @* ── 8. Final CTA ── *@
-<CtaSection Dark="true"
-    Title="Turn demos into deals."
-    Subtitle="Join hundreds of teams using NavTour to accelerate their sales pipeline."
-    CtaText="Start Free Trial"
-    CtaUrl="/register" />
+<div class="home-section" style="background: var(--rz-base-100, #f5f5f5)">
+    <RadzenRow Class="rz-mx-auto" Style="max-width: 1200px">
+        <RadzenColumn Size="12">
+            <RadzenStack AlignItems="AlignItems.Center" Gap="0">
+                <RadzenText Text="Turn demos into deals." TextStyle="TextStyle.H2" TextAlign="TextAlign.Center" />
+                <RadzenText TextStyle="TextStyle.Body1" TextAlign="TextAlign.Center" TagName="TagName.P" Class="rz-text-secondary-color rz-mt-4" Style="max-width: 480px; line-height: 1.6">
+                    Join hundreds of teams using NavTour to accelerate their sales pipeline.
+                </RadzenText>
+                <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem" JustifyContent="JustifyContent.Center" Class="rz-mt-8">
+                    <RadzenLink Text="Start Free Trial" Path="/register" Class="rz-button rz-button-lg rz-variant-flat rz-success rz-shade-default" Style="--rz-link-hover-text-decoration: none" />
+                </RadzenStack>
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+</div>
 
-@* ── Scoped Styles ── *@
 <style>
-    /* ── Logo Bar ── */
-    .mkt-logos {
-        padding: var(--space-16) var(--space-6);
-        border-bottom: 1px solid var(--neutral-200);
-    }
-    .mkt-logos-label {
-        text-align: center;
-        font-size: var(--text-sm);
-        font-weight: var(--weight-medium);
-        color: var(--text-tertiary);
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        margin-bottom: var(--space-8);
-    }
-    .mkt-logos-row {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: var(--space-10);
-        flex-wrap: wrap;
-    }
-    .mkt-logo-slot {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 140px;
-        height: 48px;
-        border: 1px dashed var(--neutral-300);
-        border-radius: var(--radius);
-        color: var(--text-tertiary);
-        font-size: var(--text-sm);
-        font-weight: var(--weight-medium);
-    }
-
-    /* ── Product Tabs ── */
-    .mkt-tab-radio {
-        position: absolute;
-        opacity: 0;
-        pointer-events: none;
-    }
-    .mkt-tabs {
-        margin-top: var(--space-12);
-    }
-    .mkt-tab-labels {
-        display: flex;
-        justify-content: center;
-        gap: var(--space-2);
-        border-bottom: 1px solid var(--neutral-200);
-        margin-bottom: var(--space-12);
-    }
-    .mkt-tab-label {
-        padding: var(--space-4) var(--space-6);
-        font-size: var(--text-base);
-        font-weight: var(--weight-medium);
-        color: var(--text-tertiary);
-        cursor: pointer;
-        border-bottom: 2px solid transparent;
-        margin-bottom: -1px;
-        transition: color 200ms ease, border-color 200ms ease;
-    }
-    .mkt-tab-label:hover {
-        color: var(--text-primary);
-    }
-
-    /* Tab selection — pure CSS */
-    .mkt-tab-panel { display: none; }
-    #tab-demos:checked ~ .mkt-tab-labels label[for="tab-demos"],
-    #tab-hub:checked ~ .mkt-tab-labels label[for="tab-hub"],
-    #tab-analytics:checked ~ .mkt-tab-labels label[for="tab-analytics"] {
-        color: var(--nt-primary);
-        border-bottom-color: var(--nt-primary);
-    }
-    #tab-demos:checked ~ .mkt-tab-panels .mkt-tab-panel-1,
-    #tab-hub:checked ~ .mkt-tab-panels .mkt-tab-panel-2,
-    #tab-analytics:checked ~ .mkt-tab-panels .mkt-tab-panel-3 {
-        display: grid;
-    }
-
-    .mkt-tab-panel {
-        grid-template-columns: 1fr 1fr;
-        gap: var(--space-12);
-        align-items: center;
-    }
-    .mkt-tab-panel-body h3 {
-        margin-bottom: var(--space-4);
-    }
-    .mkt-tab-panel-body p {
-        max-width: 480px;
-        font-size: var(--text-lg);
-        color: var(--text-secondary);
-        line-height: var(--leading-normal);
-    }
-    .mkt-tab-screen {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        aspect-ratio: 16 / 10;
-        background: var(--neutral-100);
-        border: 1px solid var(--neutral-200);
-        border-radius: var(--radius-lg);
-        color: var(--text-tertiary);
-        font-size: var(--text-sm);
-        font-weight: var(--weight-medium);
-    }
-
-    /* ── Buyer Journey Grid ── */
-    .mkt-journey-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-    .mkt-journey-card {
-        padding: var(--space-8);
-    }
-    .mkt-journey-card h3 {
-        margin-bottom: var(--space-3);
-    }
-    .mkt-journey-card p {
-        font-size: var(--text-base);
-        color: var(--text-secondary);
-        line-height: var(--leading-normal);
-    }
-
-    /* ── Metrics ── */
-    .mkt-metrics-row {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: var(--space-8);
-        margin-top: var(--space-12);
-    }
-    .mkt-metric {
-        text-align: center;
-        padding: var(--space-10) var(--space-6);
-        background: var(--surface-primary);
-        border: 1px solid var(--neutral-200);
-        border-radius: var(--radius-lg);
-    }
-    .mkt-metric-value {
-        font-family: var(--font-display);
-        font-size: var(--text-5xl);
-        font-weight: var(--weight-bold);
-        color: var(--nt-primary);
-        letter-spacing: -0.03em;
-        line-height: 1;
-        margin-bottom: var(--space-3);
-    }
-    .mkt-metric-label {
-        font-size: var(--text-sm);
-        color: var(--text-secondary);
-        line-height: var(--leading-normal);
-        max-width: 200px;
-        margin: 0 auto;
-    }
-
-    /* ── Trust Badges ── */
-    .mkt-trust {
-        padding: var(--space-16) var(--space-6);
-        border-top: 1px solid var(--neutral-200);
-        border-bottom: 1px solid var(--neutral-200);
-    }
-    .mkt-trust-row {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: var(--space-12);
-        flex-wrap: wrap;
-    }
-    .mkt-trust-badge {
-        display: flex;
-        align-items: center;
-        gap: var(--space-3);
-        font-size: var(--text-sm);
-        font-weight: var(--weight-medium);
-        color: var(--text-secondary);
-    }
-
-    /* ── Responsive ── */
-    @@media (max-width: 1024px) {
-        .mkt-journey-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-        .mkt-metrics-row {
-            grid-template-columns: repeat(2, 1fr);
-        }
-        .mkt-tab-panel {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    @@media (max-width: 640px) {
-        .mkt-journey-grid {
-            grid-template-columns: 1fr;
-        }
-        .mkt-metrics-row {
-            grid-template-columns: 1fr 1fr;
-        }
-        .mkt-tab-labels {
-            flex-direction: column;
-            align-items: stretch;
-            border-bottom: none;
-            gap: 0;
-        }
-        .mkt-tab-label {
-            border-bottom: 1px solid var(--neutral-200);
-            text-align: center;
-            padding: var(--space-3) var(--space-4);
-        }
-        .mkt-logos-row {
-            gap: var(--space-6);
-        }
-        .mkt-logo-slot {
-            width: 120px;
-            height: 40px;
-        }
-        .mkt-trust-row {
-            gap: var(--space-6);
-        }
-        .mkt-metric-value {
-            font-size: var(--text-4xl);
-        }
+    /* Section spacing only — no color definitions */
+    .home-section {
+        padding: 5rem 1.5rem;
     }
 </style>

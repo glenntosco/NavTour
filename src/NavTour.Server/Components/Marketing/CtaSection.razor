@@ -1,11 +1,11 @@
 @if (Dark)
 {
-    <section class="mkt-section mkt-cta-section" style="background:var(--nt-primary-deeper);color:white">
+    <section class="mkt-section mkt-cta-section" style="background:var(--neutral-950);color:white">
         <div class="mkt-container text-center">
             <h2 style="color:white">@Title</h2>
             <p style="color:rgba(255,255,255,0.8)">@Subtitle</p>
             <div class="mkt-hero-actions" style="justify-content:center;margin-top:var(--space-8)">
-                <a href="@CtaUrl" class="mkt-btn mkt-btn-lg" style="background:white;color:var(--nt-primary-deeper);border-color:white">@CtaText</a>
+                <a href="@CtaUrl" class="mkt-btn mkt-btn-lg" style="background:var(--nt-accent);color:white;border-color:var(--nt-accent)">@CtaText</a>
                 @if (!string.IsNullOrEmpty(SecondaryCtaText))
                 {
                     <a href="@SecondaryCtaUrl" class="mkt-btn mkt-btn-lg" style="background:transparent;color:white;border-color:rgba(255,255,255,0.3)">@SecondaryCtaText</a>

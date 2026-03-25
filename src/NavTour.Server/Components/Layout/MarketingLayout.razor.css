@@ -100,7 +100,7 @@
 
 /* Footer */
 ::deep .mkt-footer {
-    background: var(--neutral-950, #0B1929);
+    background: #1a1a2e;
     color: var(--neutral-400, #94A3B8);
     padding: 80px 24px 40px;
 }
