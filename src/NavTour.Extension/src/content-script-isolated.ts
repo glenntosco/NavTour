@@ -311,8 +311,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           chrome.runtime.sendMessage({
             kind: 'navtour:popup:stop-capture',
             tabId: message.tabId,
+            demoId: message.demoId,
+          }, (response) => {
+            removeToolbar();
+            // Navigate to the NavTour editor
+            if (response?.editorUrl) {
+              window.location.href = response.editorUrl;
+            }
           });
-          removeToolbar();
         },
       });
       sendResponse({ success: true });

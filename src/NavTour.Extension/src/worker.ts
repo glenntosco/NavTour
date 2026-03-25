@@ -303,6 +303,7 @@ function injectToolbarInTab(tabId: number, session: CaptureSession): void {
   notifyTab(tabId, {
     kind: 'navtour:inject-toolbar',
     demoName: session.demoName,
+    demoId: session.demoId,
     frameCount: session.frameCount,
     tabId,
   });
@@ -518,9 +519,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     case 'navtour:popup:stop-capture': {
       const tabId = message.tabId;
+      const demoId = message.demoId;
       if (tabId) {
         stopSession(tabId)
-          .then(() => sendResponse({ success: true }))
+          .then(() => {
+            const editorUrl = demoId
+              ? `${getAppUrl()}/demos/${demoId}/edit`
+              : undefined;
+            sendResponse({ success: true, editorUrl });
+          })
           .catch((e) => sendResponse({ success: false, error: (e as Error).message }));
         return true;
       }
