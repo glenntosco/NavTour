@@ -314,9 +314,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             demoId: message.demoId,
           }, (response) => {
             removeToolbar();
-            // Navigate to the NavTour editor
+            // Open NavTour editor in a new tab
             if (response?.editorUrl) {
-              window.location.href = response.editorUrl;
+              window.open(response.editorUrl, '_blank');
             }
           });
         },
