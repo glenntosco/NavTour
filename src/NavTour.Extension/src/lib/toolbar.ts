@@ -10,34 +10,38 @@
 const TOOLBAR_ID = '__navtour_capture_toolbar__';
 
 const TOOLBAR_CSS = `
-/* ── Main bar container ──────────────────────────── */
+/* ── Main bar container — floating bottom center ── */
 #${TOOLBAR_ID} {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 2147483647;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
   font-size: 13px;
-  animation: __nt_slide_down 0.25s ease-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: __nt_slide_up 0.3s ease-out;
 }
 
-@keyframes __nt_slide_down {
-  from { transform: translateY(-100%); }
-  to { transform: translateY(0); }
+@keyframes __nt_slide_up {
+  from { transform: translateX(-50%) translateY(30px); opacity: 0; }
+  to { transform: translateX(-50%) translateY(0); opacity: 1; }
 }
 
 #${TOOLBAR_ID} * { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ── Top bar row ─────────────────────────────────── */
+/* ── Floating pill bar ───────────────────────────── */
 #${TOOLBAR_ID} .nt-bar {
   display: flex;
   align-items: center;
   gap: 6px;
   padding: 6px 12px;
   background: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e5e7eb;
+  border-radius: 100px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
   min-height: 40px;
 }
 
@@ -136,7 +140,7 @@ const TOOLBAR_CSS = `
   gap: 4px;
   padding: 5px 14px;
   border: 1px solid #d1d5db;
-  border-radius: 6px;
+  border-radius: 100px;
   background: #ffffff;
   color: #374151;
   font-size: 13px;
@@ -144,7 +148,6 @@ const TOOLBAR_CSS = `
   font-family: inherit;
   cursor: pointer;
   transition: all 0.12s;
-  margin-left: auto;
   white-space: nowrap;
 }
 
@@ -157,17 +160,21 @@ const TOOLBAR_CSS = `
   background: #f3f4f6;
 }
 
-/* ── Helper text banner ──────────────────────────── */
+/* ── Helper text (above pill) ────────────────────── */
 #${TOOLBAR_ID} .nt-helper {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 6px 12px;
-  background: #f9fafb;
-  border-bottom: 1px solid #e5e7eb;
+  padding: 6px 14px;
+  margin-bottom: 8px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 100px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   font-size: 13px;
   color: #6b7280;
+  white-space: nowrap;
 }
 
 #${TOOLBAR_ID} .nt-helper-icon {
@@ -184,26 +191,26 @@ const TOOLBAR_CSS = `
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border: none;
-  border-radius: 4px;
+  border-radius: 50%;
   background: transparent;
   color: #9ca3af;
   cursor: pointer;
-  margin-left: auto;
   padding: 0;
   transition: all 0.12s;
+  margin-left: 4px;
 }
 
 #${TOOLBAR_ID} .nt-helper-close:hover {
-  background: #e5e7eb;
+  background: #f3f4f6;
   color: #374151;
 }
 
 #${TOOLBAR_ID} .nt-helper-close svg {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
 }
 
 /* ── Capturing flash ─────────────────────────────── */
@@ -513,9 +520,6 @@ export function injectToolbar(demoName: string, frameCount: number, callbacks: T
 
   document.body.appendChild(container);
 
-  // Push page content down so toolbar doesn't overlap
-  document.body.style.marginTop = (container.offsetHeight) + 'px';
-
   // ── Event bindings ──
   pauseBtn.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -552,7 +556,6 @@ export function injectToolbar(demoName: string, frameCount: number, callbacks: T
   helperClose.addEventListener('click', (e) => {
     e.stopPropagation();
     helper.remove();
-    document.body.style.marginTop = (bar.offsetHeight) + 'px';
   });
 }
 
@@ -578,5 +581,4 @@ export function updateToolbarCount(count: number): void {
 export function removeToolbar(): void {
   document.getElementById(TOOLBAR_ID)?.remove();
   document.getElementById(`${TOOLBAR_ID}_style`)?.remove();
-  document.body.style.marginTop = '';
 }
