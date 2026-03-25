@@ -712,37 +712,21 @@ async function handlePopupStartCapture(msg: any): Promise<any> {
   return { success: true, tabId: tab.id, ...session };
 }
 
-/** Ensure content scripts are injected in the tab */
+/** Wait for content scripts to be ready (manifest auto-injects them) */
 async function ensureContentScripts(tabId: number): Promise<void> {
-  // Check if content script is already responding
-  try {
-    const response = await chrome.tabs.sendMessage(tabId, { kind: 'navtour:get-page-info' });
-    if (response?.title) return; // Already injected
-  } catch {
-    // Not injected yet — inject now
+  // Content scripts are auto-injected by manifest at document_idle.
+  // We just need to wait until they're responding — do NOT re-inject
+  // via executeScript as that creates duplicate listeners.
+  for (let attempt = 0; attempt < 5; attempt++) {
+    try {
+      const response = await chrome.tabs.sendMessage(tabId, { kind: 'navtour:get-page-info' });
+      if (response?.title) return; // Script is ready
+    } catch {
+      // Not ready yet — wait and retry
+    }
+    await new Promise(resolve => setTimeout(resolve, 500));
   }
-
-  try {
-    await chrome.scripting.executeScript({
-      target: { tabId, allFrames: false },
-      files: ['content-script-main.js'],
-      world: 'MAIN' as any,
-    });
-  } catch (e) {
-    console.warn('[NavTour Worker] Failed to inject MAIN script:', e);
-  }
-
-  try {
-    await chrome.scripting.executeScript({
-      target: { tabId, allFrames: false },
-      files: ['content-script-isolated.js'],
-    });
-  } catch (e) {
-    console.warn('[NavTour Worker] Failed to inject ISOLATED script:', e);
-  }
-
-  // Wait for scripts to initialize
-  await new Promise(resolve => setTimeout(resolve, 500));
+  console.warn('[NavTour Worker] Content scripts not responding after 2.5s for tab:', tabId);
 }
 
 // ── Resource fetching ───────────────────────────────────────────────

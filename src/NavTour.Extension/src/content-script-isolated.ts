@@ -251,13 +251,6 @@ async function captureFullPage(): Promise<CaptureResult> {
   };
 }
 
-// ── Guard against duplicate injection ────────────────────────────────
-
-if ((window as any).__navtour_isolated_loaded__) {
-  // Already loaded — skip duplicate initialization
-} else {
-(window as any).__navtour_isolated_loaded__ = true;
-
 // ── Message handling ────────────────────────────────────────────────
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -444,5 +437,3 @@ function requestGlobals(keys: string[]): Promise<Record<string, any>> {
 }
 
 logger.debug('Content script (isolated) loaded:', window.location.href);
-
-} // end duplicate guard
