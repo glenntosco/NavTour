@@ -46,11 +46,14 @@
                 </button>
             </div>
 
-            @* Hero screenshot *@
-            <div class="home-hero-screenshot">
-                <RadzenImage Path="/images/product-form-builder.png"
-                             Style="width: 100%; border-radius: 12px;"
-                             AlternateText="NavTour product screenshot" />
+            @* Live interactive demo embed *@
+            <div class="home-hero-screenshot" style="aspect-ratio: 16/10; min-height: 500px;">
+                <iframe
+                    src="/demo/pickticket-creation"
+                    style="width: 100%; height: 100%; border: none;"
+                    loading="lazy"
+                    title="NavTour Interactive Demo"
+                    allowfullscreen></iframe>
             </div>
         </RadzenStack>
     </div>
