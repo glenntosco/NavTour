@@ -47,13 +47,15 @@
             </div>
 
             @* Live interactive demo embed *@
-            <div class="home-hero-screenshot" style="min-height: 600px;">
-                <iframe
-                    src="https://navtour.cloud/demo/navtour"
-                    style="width: 100%; height: 600px; border: none; border-radius: 8px;"
-                    loading="lazy"
-                    title="NavTour Interactive Demo"
-                    allowfullscreen></iframe>
+            <div class="home-hero-screenshot" style="position: relative; width: 100%; max-width: 1000px; margin: 0 auto;">
+                <div style="position: relative; padding-bottom: 62.5%; height: 0; overflow: hidden;">
+                    <iframe
+                        src="https://navtour.cloud/demo/navtour"
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; border-radius: 8px;"
+                        loading="lazy"
+                        title="NavTour Interactive Demo"
+                        allowfullscreen></iframe>
+                </div>
             </div>
         </RadzenStack>
     </div>
