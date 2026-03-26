@@ -58,7 +58,14 @@ public class FormService : IFormService
 
     public async Task<FormResponse> CreateAsync(CreateFormRequest request)
     {
-        var slug = GenerateSlug(request.Name);
+        // If name is empty or "Untitled Form", assign a unique Aztec-inspired name
+        var name = request.Name;
+        if (string.IsNullOrWhiteSpace(name) || name.Equals("Untitled Form", StringComparison.OrdinalIgnoreCase))
+        {
+            name = GenerateAztecName();
+        }
+
+        var slug = GenerateSlug(name);
 
         // Ensure unique slug within tenant
         var baseSlug = slug;
@@ -70,7 +77,7 @@ public class FormService : IFormService
 
         var form = new Form
         {
-            Name = request.Name,
+            Name = name,
             Slug = slug,
             Description = request.Description,
             FieldsJson = JsonSerializer.Serialize(request.Fields, JsonOptions),
@@ -194,6 +201,23 @@ public class FormService : IFormService
         await _db.SaveChangesAsync();
 
         return lead.Id;
+    }
+
+    private static string GenerateAztecName()
+    {
+        var prefixes = new[] {
+            "Quetzal", "Tlaloc", "Tonali", "Xochitl", "Itzel",
+            "Citlali", "Nahui", "Coatl", "Tezca", "Mictlan",
+            "Chimalli", "Atl", "Centeotl", "Ehecatl", "Ixchel",
+            "Kukulkan", "Ocelotl", "Tepetl", "Xiuhtl", "Yolotl"
+        };
+        var suffixes = new[] {
+            "Form", "Codex", "Glyph", "Stone", "Jade",
+            "Obsidian", "Cacao", "Maize", "Eagle", "Jaguar",
+            "Serpent", "Temple", "Sun", "Moon", "Star"
+        };
+        var rng = Random.Shared;
+        return $"{prefixes[rng.Next(prefixes.Length)]}-{suffixes[rng.Next(suffixes.Length)]}-{rng.Next(100, 999)}";
     }
 
     private static string GenerateSlug(string name)
