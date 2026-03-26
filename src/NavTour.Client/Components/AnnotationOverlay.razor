@@ -151,6 +151,7 @@
     [Parameter] public EventCallback<AnnotationPositionChange> OnPositionChanged { get; set; }
     [Parameter] public EventCallback<AnnotationSizeChange> OnSizeChanged { get; set; }
     [Parameter] public EventCallback<Guid> OnAnnotationDoubleClicked { get; set; }
+    [Parameter] public EventCallback<Guid> OnAnnotationClicked { get; set; }
 
     private async Task OnDoubleClick()
     {
@@ -212,9 +213,15 @@
     {
         if (!isDragging) return;
         isDragging = false;
-        if (Math.Abs(dragX - dragStartPosX) > 0.5 || Math.Abs(dragY - dragStartPosY) > 0.5)
+        var wasDragged = Math.Abs(dragX - dragStartPosX) > 0.5 || Math.Abs(dragY - dragStartPosY) > 0.5;
+        if (wasDragged)
         {
             await OnPositionChanged.InvokeAsync(new AnnotationPositionChange(Annotation.Id, dragX, dragY));
+        }
+        else if (Mode == AnnotationOverlayMode.Edit)
+        {
+            // Single click (no drag) — open annotation drawer
+            await OnAnnotationClicked.InvokeAsync(Annotation.Id);
         }
         StateHasChanged();
     }
