@@ -11,4 +11,5 @@ public class ApplicationUser : IdentityUser<Guid>
     public bool IsActive { get; set; } = true;
     public Guid? InvitedBy { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public bool HasCompletedOnboarding { get; set; }
 }

@@ -68,7 +68,7 @@ public class AuthController : ControllerBase
         var refreshToken = _jwtService.GenerateRefreshToken();
 
         SetAuthCookie(accessToken);
-        return Ok(new LoginResponse(accessToken, refreshToken, DateTime.UtcNow.AddHours(24), tenant.Id));
+        return Ok(new LoginResponse(accessToken, refreshToken, DateTime.UtcNow.AddHours(24), tenant.Id, false));
     }
 
     [HttpPost("login")]
@@ -85,7 +85,7 @@ public class AuthController : ControllerBase
         var refreshToken = _jwtService.GenerateRefreshToken();
 
         SetAuthCookie(accessToken);
-        return Ok(new LoginResponse(accessToken, refreshToken, DateTime.UtcNow.AddHours(24), user.TenantId));
+        return Ok(new LoginResponse(accessToken, refreshToken, DateTime.UtcNow.AddHours(24), user.TenantId, user.HasCompletedOnboarding));
     }
 
     [HttpPost("logout")]
@@ -99,6 +99,21 @@ public class AuthController : ControllerBase
     public ActionResult<LoginResponse> Refresh(RefreshRequest request)
     {
         return BadRequest(new { message = "Refresh not yet implemented — re-login required" });
+    }
+
+    [HttpPost("complete-onboarding")]
+    [Microsoft.AspNetCore.Authorization.Authorize]
+    public async Task<IActionResult> CompleteOnboarding()
+    {
+        var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        if (userId == null) return Unauthorized();
+
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null) return NotFound();
+
+        user.HasCompletedOnboarding = true;
+        await _userManager.UpdateAsync(user);
+        return Ok();
     }
 
     private void SetAuthCookie(string token)
