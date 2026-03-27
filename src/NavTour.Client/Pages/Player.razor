@@ -34,23 +34,25 @@ else
         </div>
 
         @* Frame content with overlays *@
-        <div @ref="frameContainer" class="player-frame-container" style="flex:1;position:relative;overflow:hidden">
-            @if (currentFrame != null)
-            {
-                <iframe @ref="iframeRef" id="@_playerIframeId"
-                    src="/api/v1/player/frames/@currentFrame.Id/html"
-                    sandbox="allow-same-origin"
-                    style="width:100%;height:100%;border:none"></iframe>
-            }
+        <div @ref="frameContainer" class="player-frame-container" style="flex:1;position:relative;overflow:hidden;background:#f5f5f5">
+            <div id="player-scale-wrapper" style="width:1440px;height:900px;position:absolute;top:0;left:0;transform-origin:top left">
+                @if (currentFrame != null)
+                {
+                    <iframe @ref="iframeRef" id="@_playerIframeId"
+                        src="/api/v1/player/frames/@currentFrame.Id/html"
+                        sandbox="allow-same-origin"
+                        style="width:1440px;height:900px;border:none"></iframe>
+                }
 
-            @* Spotlight overlay is managed by JS (playerSpotlight) *@
+                @* Spotlight overlay is managed by JS (playerSpotlight) *@
 
-            @if (currentStep != null)
-            {
-                <PlayerOverlay Annotations="currentStep.Annotations" OnClickZone="HandleClickZone"
-                    StepIndex="currentStepIndex" TotalSteps="@(manifest?.Steps.Count ?? 0)"
-                    OnNavigate="HandleAnnotationNavigate" />
-            }
+                @if (currentStep != null)
+                {
+                    <PlayerOverlay Annotations="currentStep.Annotations" OnClickZone="HandleClickZone"
+                        StepIndex="currentStepIndex" TotalSteps="@(manifest?.Steps.Count ?? 0)"
+                        OnNavigate="HandleAnnotationNavigate" />
+                }
+            </div>
 
             @* Timer progress indicator *@
             @if (currentStep?.TriggerType == TriggerType.Timer && currentStep.TriggerDurationMs > 0)
@@ -216,10 +218,17 @@ else
         // Load frame HTML via server URL when frame changes
         if (currentFrame != null && currentFrame.Id != _lastRenderedFrameId)
         {
+            var isFirstFrame = _lastRenderedFrameId == null;
             _lastRenderedFrameId = currentFrame.Id;
             // Set iframe src to server-rendered HTML (resources load from /api/v1/resources/{hash})
             await JS.InvokeVoidAsync("navtourSetFrameSrc", _playerIframeId, $"/api/v1/player/frames/{currentFrame.Id}/html");
             await Task.Delay(300); // Wait for stylesheets/resources to load
+
+            // Init scaling after the first frame renders (wrapper exists now)
+            if (isFirstFrame)
+            {
+                await JS.InvokeVoidAsync("playerInterop.initScaling", frameContainer);
+            }
         }
 
         // Set up trigger for current step after render
@@ -464,12 +473,12 @@ else
                 var y = Math.Max(0, target.PositionY - pad);
                 var w = Math.Min(100 - x, target.Width + pad * 2);
                 var h = Math.Min(100 - y, target.Height + pad * 2);
-                await JS.InvokeVoidAsync("playerSpotlight.show", frameContainer, x, y, w, h, opacity);
+                await JS.InvokeVoidAsync("playerSpotlight.show", x, y, w, h, opacity);
             }
             else
             {
                 // No spotlight target — use flat backdrop
-                await JS.InvokeVoidAsync("playerSpotlight.showFlat", frameContainer, opacity);
+                await JS.InvokeVoidAsync("playerSpotlight.showFlat", opacity);
             }
         }
         catch { /* Component may be disposing */ }
@@ -569,5 +578,6 @@ else
         _ = FlushEvents();
         try { _ = JS.InvokeVoidAsync("playerSpotlight.hide"); } catch { }
         try { _ = JS.InvokeVoidAsync("voiceover.stop"); } catch { }
+        try { _ = JS.InvokeVoidAsync("playerInterop.disposeScaling"); } catch { }
     }
 }

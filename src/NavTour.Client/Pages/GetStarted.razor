@@ -84,6 +84,12 @@
             </a>
         </div>
     </div>
+
+    <div class="gs-dismiss">
+        <a href="/dashboard" @onclick="CompleteOnboarding" @onclick:preventDefault="false" class="gs-dismiss-link">
+            Don't show this again
+        </a>
+    </div>
 </div>
 
 @code {
@@ -272,6 +278,22 @@
             max-width: 360px;
             margin: 0 auto;
         }
+    }
+
+    /* Dismiss link */
+    .gs-dismiss {
+        margin-top: 32px;
+    }
+
+    .gs-dismiss-link {
+        font-size: 0.8125rem;
+        color: #94A3B8;
+        text-decoration: none;
+        transition: color 150ms;
+    }
+
+    .gs-dismiss-link:hover {
+        color: #64748B;
     }
 
     /* Reduced motion */

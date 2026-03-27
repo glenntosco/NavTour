@@ -1,18 +1,23 @@
 // Spotlight overlay — premium box-shadow cutout effect
+// Appended inside player-scale-wrapper so it scales with annotations
 window.playerSpotlight = {
     _el: null,
-    _container: null,
+    _wrapper: null,
 
-    show: function (containerEl, xPct, yPct, wPct, hPct, opacity) {
-        var container = containerEl || document.querySelector('.player-frame-container');
-        if (!container) return;
-        this._container = container;
+    _getWrapper: function () {
+        if (!this._wrapper) this._wrapper = document.getElementById('player-scale-wrapper');
+        return this._wrapper;
+    },
+
+    show: function (xPct, yPct, wPct, hPct, opacity) {
+        var wrapper = this._getWrapper();
+        if (!wrapper) return;
 
         if (!this._el) {
             this._el = document.createElement('div');
             this._el.className = 'player-spotlight';
             this._el.style.cssText = 'position:absolute;border-radius:8px;pointer-events:none;transition:all 0.35s ease;z-index:100;';
-            container.appendChild(this._el);
+            wrapper.appendChild(this._el);
         }
 
         var op = opacity != null ? opacity : 0.5;
@@ -32,19 +37,19 @@ window.playerSpotlight = {
         this._el.style.height = hPct + '%';
     },
 
-    showFlat: function (containerEl, opacity) {
-        var container = containerEl || document.querySelector('.player-frame-container');
-        if (!container) return;
-        this._container = container;
+    showFlat: function (opacity) {
+        var wrapper = this._getWrapper();
+        if (!wrapper) return;
 
         if (!this._el) {
             this._el = document.createElement('div');
             this._el.className = 'player-spotlight';
-            container.appendChild(this._el);
+            wrapper.appendChild(this._el);
         }
 
         var op = opacity != null ? opacity : 0.35;
-        this._el.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:100;background:rgba(0,0,0,' + op + ');transition:all 0.35s ease;';
+        // Use box-shadow to dim beyond wrapper bounds (covers margins around scaled content)
+        this._el.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:100;box-shadow:0 0 0 9999px rgba(0,0,0,' + op + ');transition:all 0.35s ease;';
     },
 
     hide: function () {
@@ -52,6 +57,7 @@ window.playerSpotlight = {
             this._el.remove();
             this._el = null;
         }
+        this._wrapper = null;
     }
 };
 
@@ -156,5 +162,39 @@ window.playerInterop = {
     // Focus the player container for keyboard events
     focusElement: function (element) {
         if (element) element.focus();
+    },
+
+    // Scale the player wrapper to fit its container while preserving aspect ratio
+    _resizeObserver: null,
+    initScaling: function (containerEl) {
+        var DESIGN_W = 1440, DESIGN_H = 900;
+        var wrapper = document.getElementById('player-scale-wrapper');
+        if (!wrapper || !containerEl) return;
+
+        function applyScale() {
+            var cw = containerEl.clientWidth;
+            var ch = containerEl.clientHeight;
+            if (cw === 0 || ch === 0) return;
+            var scale = Math.min(cw / DESIGN_W, ch / DESIGN_H);
+            wrapper.style.transform = 'scale(' + scale + ')';
+            var scaledW = DESIGN_W * scale;
+            var scaledH = DESIGN_H * scale;
+            wrapper.style.left = Math.max(0, (cw - scaledW) / 2) + 'px';
+            wrapper.style.top = Math.max(0, (ch - scaledH) / 2) + 'px';
+        }
+
+        applyScale();
+
+        this.disposeScaling();
+        // ResizeObserver reliably detects container size changes (window resize, layout shifts)
+        this._resizeObserver = new ResizeObserver(applyScale);
+        this._resizeObserver.observe(containerEl);
+    },
+
+    disposeScaling: function () {
+        if (this._resizeObserver) {
+            this._resizeObserver.disconnect();
+            this._resizeObserver = null;
+        }
     }
 };
