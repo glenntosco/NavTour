@@ -146,11 +146,9 @@
 
         try
         {
-            // Call login API from the BROWSER (not server-side HttpClient)
-            // so the Set-Cookie header is received by the browser
-            var success = await JS.InvokeAsync<bool>("authLogin.login", email, password);
-            if (success)
-                Nav.NavigateTo("/dashboard", forceLoad: true);
+            var result = await JS.InvokeAsync<LoginResult>("authLogin.login", email, password);
+            if (result != null)
+                Nav.NavigateTo(result.HasCompletedOnboarding ? "/dashboard" : "/get-started", forceLoad: true);
             else
                 errorMessage = "Invalid email or password";
         }
@@ -161,4 +159,6 @@
 
         loading = false;
     }
+
+    private record LoginResult(bool HasCompletedOnboarding);
 }

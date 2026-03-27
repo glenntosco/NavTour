@@ -230,9 +230,11 @@ window.authLogin = {
                 credentials: 'include',
                 body: JSON.stringify({ email: email, password: password })
             });
-            return r.ok;
+            if (!r.ok) return null;
+            var data = await r.json();
+            return { hasCompletedOnboarding: data.hasCompletedOnboarding };
         } catch {
-            return false;
+            return null;
         }
     }
 };

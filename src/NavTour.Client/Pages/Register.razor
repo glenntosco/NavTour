@@ -52,7 +52,7 @@
         errorMessage = null;
         var (success, error) = await Auth.RegisterAsync(email, password, companyName, fullName, acceptedTerms);
         if (success)
-            Nav.NavigateTo("/dashboard");
+            Nav.NavigateTo("/get-started");
         else
             errorMessage = error ?? "Registration failed";
         loading = false;
