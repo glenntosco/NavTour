@@ -1,0 +1,97 @@
+@inherits LayoutComponentBase
+@inject HttpClient Http
+@inject NavigationManager Nav
+
+<div class="onboarding-page">
+    <header class="onboarding-header">
+        <a href="/dashboard" class="onboarding-nav-link">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Back
+        </a>
+        <a href="/dashboard" class="onboarding-nav-link" @onclick="SkipOnboarding" @onclick:preventDefault="false">
+            Skip to dashboard
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </a>
+    </header>
+    <main class="onboarding-content">
+        @Body
+    </main>
+</div>
+
+<RadzenDialog />
+<RadzenNotification />
+<RadzenTooltip />
+
+@code {
+    private async Task SkipOnboarding()
+    {
+        try { await Http.PostAsync("api/v1/auth/complete-onboarding", null); } catch { }
+    }
+}
+
+<style>
+    .onboarding-page {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background: linear-gradient(135deg, #f8f9ff 0%, #eef1ff 50%, #f0e6ff 100%);
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    .onboarding-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 32px;
+        flex-shrink: 0;
+    }
+
+    .onboarding-nav-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #64748B;
+        text-decoration: none;
+        transition: color 200ms ease;
+        cursor: pointer;
+    }
+
+    .onboarding-nav-link:hover {
+        color: #1E3A5F;
+    }
+
+    .onboarding-nav-link svg {
+        flex-shrink: 0;
+    }
+
+    .onboarding-content {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 24px 48px;
+    }
+
+    @@media (max-width: 768px) {
+        .onboarding-header {
+            padding: 16px 20px;
+        }
+
+        .onboarding-content {
+            padding: 0 16px 32px;
+        }
+    }
+
+    @@media (prefers-reduced-motion: reduce) {
+        .onboarding-page * {
+            animation: none !important;
+            transition: none !important;
+        }
+    }
+</style>
