@@ -395,11 +395,15 @@ else
         // Auto-select first demo for sidebar layout
         if (showcase?.LayoutTheme == "Sidebar")
         {
-            var firstItem = showcase.Sections.FirstOrDefault()?.Items.FirstOrDefault();
-            if (firstItem != null)
+            // Only auto-select first demo for sidebar layout (not checklist)
+            if (showcase.LayoutTheme?.Equals("Sidebar", StringComparison.OrdinalIgnoreCase) == true)
             {
-                activeDemoId = firstItem.DemoId;
-                activeDemoSlug = firstItem.DemoSlug;
+                var firstItem = showcase.Sections.FirstOrDefault()?.Items.FirstOrDefault();
+                if (firstItem != null)
+                {
+                    activeDemoId = firstItem.DemoId;
+                    activeDemoSlug = firstItem.DemoSlug;
+                }
             }
         }
     }
