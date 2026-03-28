@@ -1,161 +1,211 @@
 @using NavTour.Shared.DTOs
 
-<div class="cover-slide cover-slide-@(Settings.Theme)">
-    @if (Settings.BackgroundType == "frame" && BackgroundImageUrl != null)
+@{
+    var buttons = Settings.Buttons?.Count > 0
+        ? Settings.Buttons
+        : new List<ChapterButton> { new() { Text = Settings.CtaText ?? "Get Started", ActionType = Settings.CtaAction ?? "step" } };
+    var isSplit = Settings.Layout == "left" || Settings.Layout == "right";
+    var overlayColor = Settings.Theme == "custom" && Settings.CustomOverlayColor != null
+        ? Settings.CustomOverlayColor
+        : Settings.Theme == "dark" ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.6)";
+    var textColor = Settings.Theme == "custom" && Settings.CustomTextColor != null
+        ? Settings.CustomTextColor
+        : Settings.Theme == "dark" ? "#ffffff" : "#0A0A0A";
+    var descColor = Settings.Theme == "dark" ? "rgba(255,255,255,0.7)" : "#737373";
+    if (Settings.Theme == "custom" && Settings.CustomTextColor != null) descColor = Settings.CustomTextColor + "BB";
+    var blurPx = (int)(Settings.BackdropOpacity * 0.2);
+}
+
+<div class="cs" style="background:@(Settings.Theme == "dark" ? "#0A0A0A" : "#FAFAFA")">
+    @* Background layer *@
+    @if (BackgroundImageUrl != null && (Settings.BackgroundType == "step" || Settings.BackgroundType == "frame"))
     {
-        var bgPos = "center";
-        if (Settings.BackgroundUrl?.StartsWith("position:") == true)
-            bgPos = Settings.BackgroundUrl.Replace("position:", "");
-        <div class="cover-bg-frame" style="opacity:@((Settings.BackdropOpacity / 100.0).ToString("F2"))">
-            <iframe src="@BackgroundImageUrl" class="cover-bg-iframe" style="object-position:@bgPos;transform-origin:top @bgPos"></iframe>
+        <div class="cs-bg" style="opacity:@((Settings.BackdropOpacity / 100.0).ToString("F2"))">
+            <iframe src="@BackgroundImageUrl" class="cs-bg-iframe"></iframe>
         </div>
+        <div class="cs-bg-blur" style="background:@overlayColor;backdrop-filter:blur(@(blurPx)px)"></div>
     }
-    else if (Settings.BackgroundType == "custom" && Settings.BackgroundUrl != null && !Settings.BackgroundUrl.StartsWith("position:"))
+    else if (Settings.BackgroundType == "custom" && !string.IsNullOrEmpty(Settings.BackgroundUrl) && !Settings.BackgroundUrl.StartsWith("position:"))
     {
-        <div class="cover-bg" style="background-image:url('@Settings.BackgroundUrl');opacity:@((Settings.BackdropOpacity / 100.0).ToString("F2"))"></div>
+        <div class="cs-bg" style="opacity:@((Settings.BackdropOpacity / 100.0).ToString("F2"))">
+            <div style="width:100%;height:100%;background-image:url('@Settings.BackgroundUrl');background-size:cover;background-position:center"></div>
+        </div>
+        <div class="cs-bg-blur" style="background:@overlayColor;backdrop-filter:blur(@(blurPx)px)"></div>
+    }
+    else
+    {
+        <div class="cs-bg-blur" style="background:@overlayColor"></div>
     }
 
-    <div class="cover-overlay"></div>
-
-    <div class="cover-content cover-layout-@(Settings.Layout)">
-        <div class="cover-card">
+    @* Content — split or centered *@
+    <div class="cs-content @(isSplit ? "cs-split" : "cs-centered") @(Settings.Layout == "right" ? "cs-reverse" : "")">
+        @* Text card *@
+        <div class="cs-text" style="color:@textColor">
             @if (Settings.ShowLogo && !string.IsNullOrEmpty(LogoUrl))
             {
-                <img src="@LogoUrl" alt="Logo" class="cover-logo" />
+                <img src="@LogoUrl" alt="Logo" class="cs-logo" />
             }
-            <h2 class="cover-title">@Settings.Title</h2>
+            <h2 class="cs-title" style="color:@textColor">@(string.IsNullOrEmpty(Settings.Title) ? "Welcome" : Settings.Title)</h2>
             @if (!string.IsNullOrEmpty(Settings.Description))
             {
-                <p class="cover-desc">@Settings.Description</p>
+                <p class="cs-desc" style="color:@descColor">@Settings.Description</p>
             }
-            <div class="cover-meta">
-                <span class="cover-badge">@TotalSteps steps · Interactive demo</span>
+            <div class="cs-buttons">
+                @foreach (var btn in buttons)
+                {
+                    var btnStyle = btn.Style switch
+                    {
+                        "outline" => $"background:transparent;color:{btn.Color};border:2px solid {btn.Color}",
+                        "ghost" => $"background:transparent;color:{btn.Color};border:none",
+                        _ => $"background:{btn.Color};color:#fff;border:none"
+                    };
+                    var textStyle = (btn.Bold ? "font-weight:700;" : "") + (btn.Italic ? "font-style:italic;" : "");
+                    <button class="cs-btn" style="@btnStyle;@textStyle" @onclick="() => HandleButtonClick(btn)">@btn.Text</button>
+                }
             </div>
-            <button class="cover-cta" @onclick="OnCtaClick">@Settings.CtaText</button>
         </div>
+
+        @* Frame preview (split layout only) *@
+        @if (isSplit && BackgroundImageUrl != null)
+        {
+            <div class="cs-preview">
+                @if (Settings.ShowBrowserChrome)
+                {
+                    <div class="cs-chrome">
+                        <div class="cs-chrome-bar">
+                            <span class="cs-dot cs-dot-red"></span>
+                            <span class="cs-dot cs-dot-yellow"></span>
+                            <span class="cs-dot cs-dot-green"></span>
+                            <span class="cs-chrome-title">@Settings.Title</span>
+                        </div>
+                        <iframe src="@BackgroundImageUrl" class="cs-preview-iframe"></iframe>
+                    </div>
+                }
+                else
+                {
+                    <div class="cs-preview-bare">
+                        <iframe src="@BackgroundImageUrl" class="cs-preview-iframe"></iframe>
+                    </div>
+                }
+            </div>
+        }
     </div>
 </div>
 
 <style>
-    .cover-slide {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        font-family: var(--nt-font);
-    }
-
-    .cover-slide-dark { background: var(--nt-neutral-950); color: #fff; }
-    .cover-slide-dark .cover-overlay { background: rgba(0,0,0,0.4); }
-    .cover-slide-dark .cover-card { background: rgba(0,0,0,0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
-    .cover-slide-dark .cover-title { color: #fff; }
-    .cover-slide-dark .cover-desc { color: rgba(255,255,255,0.7); }
-    .cover-slide-dark .cover-badge { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); }
-    .cover-slide-dark .cover-cta { background: var(--nt-accent); color: #fff; }
-    .cover-slide-dark .cover-cta:hover { background: var(--nt-accent-hover); }
-
-    .cover-slide-light { background: var(--nt-neutral-50); color: var(--nt-text-primary); }
-    .cover-slide-light .cover-overlay { background: rgba(255,255,255,0.5); }
-    .cover-slide-light .cover-card { background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); border: 1px solid var(--nt-border); box-shadow: var(--nt-shadow-xl); }
-    .cover-slide-light .cover-title { color: var(--nt-text-primary); }
-    .cover-slide-light .cover-desc { color: var(--nt-text-secondary); }
-    .cover-slide-light .cover-badge { background: var(--nt-surface-subtle); color: var(--nt-text-secondary); }
-    .cover-slide-light .cover-cta { background: var(--nt-primary); color: #fff; }
-    .cover-slide-light .cover-cta:hover { background: var(--nt-primary-hover); }
-
-    .cover-bg {
+    .cs {
         position: absolute; inset: 0;
-        background-size: cover; background-position: center;
-        z-index: 0;
+        display: flex; align-items: center; justify-content: center;
+        overflow: hidden; font-family: var(--nt-font);
     }
 
-    .cover-bg-frame {
-        position: absolute; inset: 0; z-index: 0;
-        overflow: hidden;
+    /* ── Background layers ── */
+    .cs-bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+    .cs-bg-iframe { width: 100%; height: 100%; border: none; pointer-events: none; }
+    .cs-bg-blur { position: absolute; inset: 0; z-index: 1; }
+
+    /* ── Content layouts ── */
+    .cs-content { position: relative; z-index: 2; width: 100%; height: 100%; padding: 48px; }
+
+    .cs-centered {
+        display: flex; align-items: center; justify-content: center;
+    }
+    .cs-centered .cs-text {
+        max-width: 520px; text-align: center;
+        animation: cs-enter 600ms cubic-bezier(0.1, 0.9, 0.2, 1) both;
+    }
+    .cs-centered .cs-logo { margin: 0 auto 24px; display: block; }
+    .cs-centered .cs-buttons { justify-content: center; }
+
+    .cs-split {
+        display: flex; align-items: center; gap: 48px;
+    }
+    .cs-split .cs-text {
+        flex: 1; max-width: 55%; text-align: left;
+        animation: cs-enter 600ms cubic-bezier(0.1, 0.9, 0.2, 1) both;
+    }
+    .cs-split .cs-preview {
+        flex: 0 0 40%; max-width: 45%;
+        animation: cs-preview-enter 700ms cubic-bezier(0.1, 0.9, 0.2, 1) 150ms both;
+    }
+    .cs-reverse { flex-direction: row-reverse; }
+    .cs-reverse .cs-text { text-align: right; }
+    .cs-reverse .cs-buttons { justify-content: flex-end; }
+
+    /* ── Text elements ── */
+    .cs-logo { height: 40px; width: auto; margin-bottom: 24px; object-fit: contain; }
+    .cs-title {
+        font-size: 2rem; font-weight: 700; margin: 0 0 12px;
+        line-height: 1.15; letter-spacing: -0.02em;
+    }
+    .cs-desc {
+        font-size: 0.9375rem; line-height: 1.6; margin: 0 0 28px;
     }
 
-    .cover-bg-iframe {
-        width: 100%; height: 100%;
-        border: none; pointer-events: none;
-    }
-
-    .cover-overlay {
-        position: absolute; inset: 0; z-index: 1;
-    }
-
-    .cover-content {
-        position: relative; z-index: 2;
-        width: 100%; height: 100%;
-        display: flex; align-items: center;
-        padding: 48px;
-    }
-
-    .cover-layout-center { justify-content: center; }
-    .cover-layout-left { justify-content: flex-start; }
-    .cover-layout-right { justify-content: flex-end; }
-
-    .cover-card {
-        max-width: 480px; padding: 40px;
-        border-radius: var(--nt-radius-lg);
-        text-align: center;
-        animation: cover-enter 600ms cubic-bezier(0.1, 0.9, 0.2, 1) both;
-    }
-
-    .cover-layout-left .cover-card,
-    .cover-layout-right .cover-card { text-align: left; }
-
-    .cover-logo {
-        height: 40px; width: auto; margin-bottom: 24px;
-        object-fit: contain;
-    }
-
-    .cover-layout-center .cover-logo { display: block; margin-left: auto; margin-right: auto; margin-bottom: 24px; }
-
-    .cover-title {
-        font-size: 1.75rem; font-weight: 700;
-        margin: 0 0 12px; line-height: 1.2;
-        letter-spacing: -0.02em;
-    }
-
-    .cover-desc {
-        font-size: 0.9375rem; line-height: 1.6;
-        margin: 0 0 24px;
-    }
-
-    .cover-meta { margin-bottom: 28px; }
-
-    .cover-badge {
-        display: inline-block;
-        padding: 6px 14px; border-radius: 20px;
-        font-size: 0.75rem; font-weight: 500;
-    }
-
-    .cover-cta {
-        display: inline-flex; align-items: center;
-        padding: 12px 32px; border: none;
-        border-radius: var(--nt-radius); font-size: 0.9375rem;
-        font-weight: 600; cursor: pointer;
+    /* ── Buttons ── */
+    .cs-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+    .cs-btn {
+        padding: 12px 28px; border-radius: 8px;
+        font-size: 0.9375rem; font-weight: 600; cursor: pointer;
         font-family: var(--nt-font);
-        transition: background 150ms, transform 100ms;
+        transition: opacity 150ms, transform 100ms;
+    }
+    .cs-btn:hover { opacity: 0.9; }
+    .cs-btn:active { transform: scale(0.97); }
+
+    /* ── Frame preview (split) ── */
+    .cs-chrome {
+        border-radius: 10px; overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.1);
+        background: #1a1a1a;
+    }
+    .cs-chrome-bar {
+        display: flex; align-items: center; gap: 8px;
+        padding: 10px 14px; background: #2a2a2a;
+    }
+    .cs-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .cs-dot-red { background: #ff5f57; }
+    .cs-dot-yellow { background: #febc2e; }
+    .cs-dot-green { background: #28c840; }
+    .cs-chrome-title {
+        flex: 1; text-align: center; font-size: 11px;
+        color: rgba(255,255,255,0.5); font-weight: 500;
+        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
 
-    .cover-cta:active { transform: scale(0.98); }
+    .cs-preview-iframe {
+        width: 100%; height: 400px; border: none;
+        pointer-events: none; display: block;
+    }
 
-    @@keyframes cover-enter {
-        from { opacity: 0; transform: translateY(20px) scale(0.97); }
-        to { opacity: 1; transform: translateY(0) scale(1); }
+    .cs-preview-bare {
+        border-radius: 10px; overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    /* ── Animations ── */
+    @@keyframes cs-enter {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @@keyframes cs-preview-enter {
+        from { opacity: 0; transform: translateX(40px) scale(0.95); }
+        to { opacity: 1; transform: translateX(0) scale(1); }
     }
 
     @@media (prefers-reduced-motion: reduce) {
-        .cover-card { animation: none; }
+        .cs-centered .cs-text, .cs-split .cs-text, .cs-split .cs-preview {
+            animation: none;
+        }
     }
 
-    @@media (max-width: 768px) {
-        .cover-content { padding: 24px; }
-        .cover-card { max-width: 100%; padding: 28px; }
-        .cover-title { font-size: 1.375rem; }
+    @@media (max-width: 900px) {
+        .cs-split { flex-direction: column; gap: 24px; }
+        .cs-split .cs-text { max-width: 100%; text-align: center; }
+        .cs-split .cs-preview { max-width: 80%; }
+        .cs-reverse { flex-direction: column; }
+        .cs-content { padding: 24px; }
+        .cs-title { font-size: 1.5rem; }
     }
 </style>
 
@@ -165,5 +215,14 @@
     [Parameter] public string LogoUrl { get; set; } = "favicon.svg";
     [Parameter] public int TotalSteps { get; set; }
     [Parameter] public EventCallback OnCtaClick { get; set; }
+    [Parameter] public EventCallback<ChapterButton> OnButtonClick { get; set; }
     [Parameter] public bool IsClosing { get; set; }
+
+    private async Task HandleButtonClick(ChapterButton btn)
+    {
+        if (OnButtonClick.HasDelegate)
+            await OnButtonClick.InvokeAsync(btn);
+        else
+            await OnCtaClick.InvokeAsync();
+    }
 }

@@ -4,242 +4,207 @@
     <h3 class="chapter-panel-title">Chapter Settings</h3>
 
     @* Layout *@
-    <div class="chapter-field">
+    <div class="ch-field">
         <label>Layout</label>
         <div class="seg-buttons">
-            <button class="seg-btn @(Settings.Layout == "left" ? "active" : "")" @onclick='() => { Settings.Layout = "left"; }'>Left</button>
-            <button class="seg-btn @(Settings.Layout == "center" ? "active" : "")" @onclick='() => { Settings.Layout = "center"; }'>Center</button>
-            <button class="seg-btn @(Settings.Layout == "right" ? "active" : "")" @onclick='() => { Settings.Layout = "right"; }'>Right</button>
+            <button class="seg-btn @(Settings.Layout == "left" ? "active" : "")" @onclick='() => Settings.Layout = "left"'>Left</button>
+            <button class="seg-btn @(Settings.Layout == "center" ? "active" : "")" @onclick='() => Settings.Layout = "center"'>Center</button>
+            <button class="seg-btn @(Settings.Layout == "right" ? "active" : "")" @onclick='() => Settings.Layout = "right"'>Right</button>
         </div>
     </div>
 
     @* Theme *@
-    <div class="chapter-field">
+    <div class="ch-field">
         <label>Theme</label>
         <div class="seg-buttons">
-            <button class="seg-btn @(Settings.Theme == "dark" ? "active" : "")" @onclick='() => { Settings.Theme = "dark"; }'>Dark</button>
-            <button class="seg-btn @(Settings.Theme == "light" ? "active" : "")" @onclick='() => { Settings.Theme = "light"; }'>Light</button>
+            <button class="seg-btn @(Settings.Theme == "dark" ? "active" : "")" @onclick='() => Settings.Theme = "dark"'>Dark</button>
+            <button class="seg-btn @(Settings.Theme == "light" ? "active" : "")" @onclick='() => Settings.Theme = "light"'>Light</button>
+            <button class="seg-btn @(Settings.Theme == "custom" ? "active" : "")" @onclick='() => Settings.Theme = "custom"'>Custom</button>
+        </div>
+    </div>
+
+    @if (Settings.Theme == "custom")
+    {
+        <div class="ch-field">
+            <label>Overlay Color</label>
+            <div class="ch-color-row">
+                <input type="color" @bind="Settings.CustomOverlayColor" class="ch-color" />
+                <input type="text" @bind="Settings.CustomOverlayColor" class="ch-color-hex" />
+            </div>
+        </div>
+        <div class="ch-field">
+            <label>Text Color</label>
+            <div class="ch-color-row">
+                <input type="color" @bind="Settings.CustomTextColor" class="ch-color" />
+                <input type="text" @bind="Settings.CustomTextColor" class="ch-color-hex" />
+            </div>
+        </div>
+    }
+
+    @* Opacity and Blur *@
+    <div class="ch-field">
+        <label>Opacity and Blur: @Settings.BackdropOpacity</label>
+        <input type="range" min="0" max="100" @bind="Settings.BackdropOpacity" @bind:event="oninput"
+            style="width:100%;accent-color:var(--nt-accent)" />
+    </div>
+
+    @* Logo *@
+    <div class="ch-field">
+        <label>Logo</label>
+        <span class="ch-hint">Configured in Themes</span>
+        <div class="seg-buttons">
+            <button class="seg-btn @(!Settings.ShowLogo ? "active" : "")" @onclick="() => Settings.ShowLogo = false">Hide</button>
+            <button class="seg-btn @(Settings.ShowLogo ? "active" : "")" @onclick="() => Settings.ShowLogo = true">Show</button>
         </div>
     </div>
 
     @* Title *@
-    <div class="chapter-field">
+    <div class="ch-field">
         <label>Title</label>
         <RadzenTextBox @bind-Value="Settings.Title" Style="width:100%" />
     </div>
 
     @* Description *@
-    <div class="chapter-field">
+    <div class="ch-field">
         <label>Description</label>
         <RadzenTextArea @bind-Value="Settings.Description" Rows="3" Style="width:100%" />
     </div>
 
-    @* CTA Text *@
-    <div class="chapter-field">
-        <label>CTA Text</label>
-        <RadzenTextBox @bind-Value="Settings.CtaText" Style="width:100%" />
+    @* Cover Image *@
+    <div class="ch-field">
+        <label>Cover Image</label>
+        <div class="seg-buttons">
+            <button class="seg-btn @(Settings.BackgroundType == "none" ? "active" : "")" @onclick='() => Settings.BackgroundType = "none"'>None</button>
+            <button class="seg-btn @(Settings.BackgroundType == "step" || Settings.BackgroundType == "frame" ? "active" : "")" @onclick='() => Settings.BackgroundType = "step"'>Step</button>
+            <button class="seg-btn @(Settings.BackgroundType == "custom" ? "active" : "")" @onclick='() => Settings.BackgroundType = "custom"'>Custom</button>
+        </div>
     </div>
 
-    @* CTA Action *@
-    <div class="chapter-field">
-        <label>CTA Action</label>
-        <RadzenDropDown TValue="string" @bind-Value="Settings.CtaAction"
-            Data="@ctaActions" TextProperty="Text" ValueProperty="Value"
-            Style="width:100%" />
-    </div>
-
-    @* CTA URL (only when action is "url") *@
-    @if (Settings.CtaAction == "url")
+    @if (Settings.BackgroundType == "step" || Settings.BackgroundType == "frame")
     {
-        <div class="chapter-field">
-            <label>CTA URL</label>
-            <RadzenTextBox @bind-Value="Settings.CtaUrl" Placeholder="https://..." Style="width:100%" />
+        <div class="ch-field">
+            <label>Background Step</label>
+            <RadzenDropDown TValue="int?" @bind-Value="Settings.BackgroundStepNumber"
+                Data="@stepOptions" TextProperty="Text" ValueProperty="Value"
+                Placeholder="First content step" Style="width:100%" AllowClear="true" />
         </div>
     }
 
-    @* Logo toggle — uses logo from Theme, not per-chapter *@
-    <div class="chapter-field">
-        <label>Show Logo</label>
-        <div class="chapter-hint">Logo is configured in Themes</div>
-        <RadzenSwitch @bind-Value="Settings.ShowLogo" />
-    </div>
-
-    @* Background *@
-    <div class="chapter-field">
-        <label>Background</label>
-        <RadzenDropDown TValue="string" @bind-Value="Settings.BackgroundType"
-            Data="@bgTypes" TextProperty="Text" ValueProperty="Value"
-            Style="width:100%" />
-    </div>
-
-    @* Background Position (when "frame") *@
-    @if (Settings.BackgroundType == "frame")
-    {
-        <div class="chapter-field">
-            <label>Background Position</label>
-            <div class="seg-buttons">
-                <button class="seg-btn @(GetBgPosition() == "top" ? "active" : "")" @onclick='() => SetBgPosition("top")'>Top</button>
-                <button class="seg-btn @(GetBgPosition() == "center" ? "active" : "")" @onclick='() => SetBgPosition("center")'>Center</button>
-                <button class="seg-btn @(GetBgPosition() == "bottom" ? "active" : "")" @onclick='() => SetBgPosition("bottom")'>Bottom</button>
-            </div>
-        </div>
-    }
-
-    @* Background URL (only when "custom") *@
     @if (Settings.BackgroundType == "custom")
     {
-        <div class="chapter-field">
-            <label>Background Image URL</label>
+        <div class="ch-field">
+            <label>Image URL</label>
             <RadzenTextBox @bind-Value="Settings.BackgroundUrl" Placeholder="https://..." Style="width:100%" />
         </div>
     }
 
-    @* Backdrop Opacity *@
-    <div class="chapter-field">
-        <label>Backdrop Opacity: @Settings.BackdropOpacity%</label>
-        <input type="range" min="0" max="100" @bind="Settings.BackdropOpacity" @bind:event="oninput"
-            style="width:100%;accent-color:var(--nt-accent)" />
+    @* Browser Chrome *@
+    <div class="ch-field">
+        <label>Browser Frame</label>
+        <RadzenSwitch @bind-Value="Settings.ShowBrowserChrome" />
+    </div>
+
+    @* Buttons *@
+    <div class="ch-field">
+        <label>Buttons</label>
+        @if (Settings.Buttons == null) { Settings.Buttons = [new()]; }
+        @for (int i = 0; i < Settings.Buttons.Count; i++)
+        {
+            var idx = i;
+            var btn = Settings.Buttons[idx];
+            <div class="ch-btn-card">
+                <div class="ch-btn-row">
+                    <input type="text" @bind="btn.Text" @bind:event="oninput" class="ch-btn-text" placeholder="Button text" />
+                    <input type="color" @bind="btn.Color" class="ch-color-sm" title="Button color" />
+                    @if (Settings.Buttons.Count > 1)
+                    {
+                        <button class="ch-btn-delete" @onclick="() => Settings.Buttons.RemoveAt(idx)" title="Remove">&times;</button>
+                    }
+                </div>
+                <div class="ch-btn-row">
+                    <div class="seg-buttons seg-sm">
+                        <button class="seg-btn @(btn.Style == "filled" ? "active" : "")" @onclick='() => btn.Style = "filled"'>Filled</button>
+                        <button class="seg-btn @(btn.Style == "outline" ? "active" : "")" @onclick='() => btn.Style = "outline"'>Outline</button>
+                        <button class="seg-btn @(btn.Style == "ghost" ? "active" : "")" @onclick='() => btn.Style = "ghost"'>Ghost</button>
+                    </div>
+                </div>
+                <div class="ch-btn-row">
+                    <label class="ch-mini-label">Link to:</label>
+                    <div class="seg-buttons seg-sm">
+                        <button class="seg-btn @(btn.ActionType == "step" ? "active" : "")" @onclick='() => btn.ActionType = "step"'>Steps</button>
+                        <button class="seg-btn @(btn.ActionType == "url" ? "active" : "")" @onclick='() => btn.ActionType = "url"'>URL</button>
+                    </div>
+                </div>
+                @if (btn.ActionType == "step")
+                {
+                    <RadzenDropDown TValue="int?" @bind-Value="btn.ActionStepNumber"
+                        Data="@stepOptions" TextProperty="Text" ValueProperty="Value"
+                        Placeholder="Next step" Style="width:100%;font-size:12px" AllowClear="true" />
+                }
+                else
+                {
+                    <RadzenTextBox @bind-Value="btn.ActionUrl" Placeholder="https://..." Style="width:100%;font-size:12px" />
+                }
+            </div>
+        }
+        <button class="ch-add-btn" @onclick="() => Settings.Buttons.Add(new ChapterButton())">+ Add Button</button>
     </div>
 
     @* Show Form (closing slide only) *@
     @if (IsClosingSlide)
     {
-        <div class="chapter-field">
+        <div class="ch-field">
             <label>Show Lead Capture Form</label>
-            <div class="chapter-hint">Display the demo's configured form on this slide</div>
+            <span class="ch-hint">Display the demo's form on this slide</span>
             <RadzenSwitch @bind-Value="Settings.ShowForm" />
         </div>
     }
 
-    @* Save *@
-    <button class="chapter-save-btn" @onclick="HandleSave">Save Settings</button>
+    <button class="ch-save" @onclick="HandleSave">Save Settings</button>
 </div>
 
 <style>
-    .chapter-panel {
-        padding: 16px;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
+    .chapter-panel { padding: 16px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+    .chapter-panel-title { font-size: 14px; font-weight: 700; color: var(--nt-text-primary); margin: 0 0 4px; }
 
-    .chapter-panel-title {
-        font-size: 14px;
-        font-weight: 700;
-        color: var(--nt-text-primary);
-        margin: 0 0 4px;
-        letter-spacing: -0.01em;
-    }
+    .ch-field { display: flex; flex-direction: column; gap: 4px; }
+    .ch-field > label { font-size: 11px; font-weight: 600; color: var(--nt-text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+    .ch-hint { font-size: 10px; color: var(--nt-text-muted); font-style: italic; }
+    .ch-mini-label { font-size: 10px; color: var(--nt-text-muted); font-weight: 600; }
 
-    .chapter-field {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-    }
+    .ch-color-row { display: flex; gap: 8px; align-items: center; }
+    .ch-color { width: 32px; height: 32px; border: 1px solid var(--nt-border); border-radius: 4px; padding: 2px; cursor: pointer; }
+    .ch-color-sm { width: 28px; height: 28px; border: 1px solid var(--nt-border); border-radius: 4px; padding: 1px; cursor: pointer; flex-shrink: 0; }
+    .ch-color-hex { flex: 1; padding: 6px 10px; border: 1px solid var(--nt-border); border-radius: var(--nt-radius); font-size: 12px; font-family: var(--nt-font-mono); }
 
-    .chapter-field > label {
-        font-size: 11px;
-        font-weight: 600;
-        color: var(--nt-text-secondary);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
+    .seg-buttons { display: flex; border: 1px solid var(--nt-border); border-radius: var(--nt-radius); overflow: hidden; }
+    .seg-btn { flex: 1; padding: 6px 10px; border: none; background: var(--nt-surface-subtle); color: var(--nt-text-secondary); font-size: 11px; font-weight: 500; cursor: pointer; font-family: var(--nt-font); transition: all 150ms; }
+    .seg-btn + .seg-btn { border-left: 1px solid var(--nt-border); }
+    .seg-btn.active { background: var(--nt-accent); color: #fff; }
+    .seg-btn:hover:not(.active) { background: var(--nt-neutral-100); }
+    .seg-sm .seg-btn { padding: 4px 8px; font-size: 10px; }
 
-    .chapter-hint {
-        font-size: 11px;
-        color: var(--nt-text-muted);
-        font-style: italic;
-    }
+    /* Button editor cards */
+    .ch-btn-card { background: var(--nt-surface-subtle); border: 1px solid var(--nt-border); border-radius: var(--nt-radius); padding: 10px; display: flex; flex-direction: column; gap: 8px; margin-bottom: 6px; }
+    .ch-btn-row { display: flex; align-items: center; gap: 6px; }
+    .ch-btn-text { flex: 1; padding: 6px 10px; border: 1px solid var(--nt-border); border-radius: var(--nt-radius); font-size: 12px; font-family: var(--nt-font); }
+    .ch-btn-delete { background: none; border: none; color: var(--nt-error); font-size: 18px; cursor: pointer; padding: 0 4px; line-height: 1; }
+    .ch-add-btn { padding: 8px; border: 2px dashed var(--nt-border); border-radius: var(--nt-radius); background: none; color: var(--nt-text-muted); font-size: 12px; font-weight: 500; cursor: pointer; font-family: var(--nt-font); transition: all 150ms; }
+    .ch-add-btn:hover { border-color: var(--nt-accent); color: var(--nt-accent); }
 
-    .seg-buttons {
-        display: flex;
-        gap: 0;
-        border: 1px solid var(--nt-border);
-        border-radius: var(--nt-radius);
-        overflow: hidden;
-    }
-
-    .seg-btn {
-        flex: 1;
-        padding: 6px 12px;
-        border: none;
-        background: var(--nt-surface-subtle);
-        color: var(--nt-text-secondary);
-        font-size: 12px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: background 150ms, color 150ms;
-        font-family: var(--nt-font);
-    }
-
-    .seg-btn + .seg-btn {
-        border-left: 1px solid var(--nt-border);
-    }
-
-    .seg-btn.active {
-        background: var(--nt-accent);
-        color: #fff;
-    }
-
-    .seg-btn:hover:not(.active) {
-        background: var(--nt-neutral-100);
-    }
-
-    .chapter-save-btn {
-        margin-top: 8px;
-        padding: 10px 20px;
-        background: var(--nt-accent);
-        color: #fff;
-        border: none;
-        border-radius: var(--nt-radius);
-        font-size: 13px;
-        font-weight: 600;
-        cursor: pointer;
-        font-family: var(--nt-font);
-        transition: background 150ms;
-    }
-
-    .chapter-save-btn:hover {
-        background: var(--nt-accent-hover);
-    }
+    .ch-save { margin-top: 8px; padding: 10px 20px; background: var(--nt-accent); color: #fff; border: none; border-radius: var(--nt-radius); font-size: 13px; font-weight: 600; cursor: pointer; font-family: var(--nt-font); transition: background 150ms; }
+    .ch-save:hover { background: var(--nt-accent-hover); }
 </style>
 
 @code {
     [Parameter] public ChapterSettings Settings { get; set; } = new();
     [Parameter] public EventCallback<ChapterSettings> OnSave { get; set; }
     [Parameter] public bool IsClosingSlide { get; set; }
+    [Parameter] public int TotalSteps { get; set; }
 
-    private static readonly object[] ctaActions =
-    [
-        new { Text = "Next Step", Value = "next" },
-        new { Text = "Open URL", Value = "url" },
-    ];
+    private List<object> stepOptions => Enumerable.Range(1, Math.Max(1, TotalSteps))
+        .Select(i => (object)new { Text = $"Step {i}", Value = (int?)i })
+        .ToList();
 
-    private static readonly object[] bgTypes =
-    [
-        new { Text = "None", Value = "none" },
-        new { Text = "First Frame", Value = "frame" },
-        new { Text = "Custom Image", Value = "custom" },
-    ];
-
-    // Background position is stored in BackgroundUrl when type is "frame"
-    // Format: "position:top" / "position:center" / "position:bottom"
-    private string GetBgPosition()
-    {
-        if (Settings.BackgroundType != "frame") return "center";
-        if (string.IsNullOrEmpty(Settings.BackgroundUrl)) return "center";
-        if (Settings.BackgroundUrl.StartsWith("position:"))
-            return Settings.BackgroundUrl.Replace("position:", "");
-        return "center";
-    }
-
-    private void SetBgPosition(string pos)
-    {
-        Settings.BackgroundUrl = $"position:{pos}";
-    }
-
-    private async Task HandleSave()
-    {
-        await OnSave.InvokeAsync(Settings);
-    }
+    private async Task HandleSave() => await OnSave.InvokeAsync(Settings);
 }

@@ -126,7 +126,8 @@
             @if (editingChapterSettings != null)
             {
                 <ChapterSettingsPanel Settings="editingChapterSettings" OnSave="SaveChapterSettings"
-                    IsClosingSlide="@(editingChapterStep?.Type == StepType.ClosingSlide)" />
+                    IsClosingSlide="@(editingChapterStep?.Type == StepType.ClosingSlide)"
+                    TotalSteps="@steps.Count" />
             }
         </div>
 
