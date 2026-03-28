@@ -66,10 +66,9 @@ else
                         Share
                     </button>
                     <button class="he-btn-primary" @onclick="SaveHub" disabled="@saving">@(saving ? "Saving..." : "Save")</button>
-                </div>
-                @if (showShareMenu)
-                {
-                    <div class="he-share-menu" @onclick:stopPropagation="true">
+                    @if (showShareMenu)
+                    {
+                        <div class="he-share-menu" @onclick:stopPropagation="true">
                         <div class="he-share-url">
                             <input type="text" readonly value="@GetHubUrl()" class="he-share-url-input" />
                             <button class="he-share-copy" @onclick="CopyHubUrl">@(linkCopied ? "Copied!" : "Copy")</button>
@@ -93,7 +92,8 @@ else
                             </a>
                         </div>
                     </div>
-                }
+                    }
+                </div>
             </div>
 
             @* ── Tab Bar ── *@
@@ -665,6 +665,7 @@ else
     .he-btn-back:hover { color: var(--nt-accent); }
     .he-top-actions {
         display: flex; align-items: center; gap: 16px;
+        position: relative;
     }
     .he-publish-toggle {
         display: flex; align-items: center; gap: 8px; cursor: pointer;
