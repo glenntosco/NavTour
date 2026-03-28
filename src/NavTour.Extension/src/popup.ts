@@ -1,15 +1,23 @@
 /**
- * Popup Controller — manages the three-screen popup UI
- * Mirrors Navattic's popup architecture (login → demo select → capture active)
+ * Popup Controller — manages the multi-screen popup UI
+ * Flow: mode select → login → demo select → capture active
  */
 
 // ── Elements ────────────────────────────────────────────────────────
 
 const $ = (id: string) => document.getElementById(id)!;
 
+const screenModeSelect = $('screen-mode-select');
 const screenLogin = $('screen-login');
 const screenDemos = $('screen-demos');
 const screenCapture = $('screen-capture');
+const screenCaptureScreenshot = $('screen-capture-screenshot');
+const screenCaptureVideo = $('screen-capture-video');
+
+const allScreens = [
+  screenModeSelect, screenLogin, screenDemos,
+  screenCapture, screenCaptureScreenshot, screenCaptureVideo,
+];
 
 const loginForm = $('login-form') as HTMLFormElement;
 const emailInput = $('email') as HTMLInputElement;
@@ -29,6 +37,24 @@ const frameCount = $('frame-count');
 const manualCaptureBtn = $('manual-capture-btn') as HTMLButtonElement;
 const finishBtn = $('finish-btn') as HTMLButtonElement;
 
+// Screenshot mode elements
+const captureScreenshotDemoName = $('capture-screenshot-demo-name');
+const screenshotCount = $('screenshot-count');
+const takeScreenshotBtn = $('take-screenshot-btn') as HTMLButtonElement;
+const screenshotFinishBtn = $('screenshot-finish-btn') as HTMLButtonElement;
+
+// Video mode elements
+const captureVideoDemoName = $('capture-video-demo-name');
+const videoDuration = $('video-duration');
+const videoToggleBtn = $('video-toggle-btn') as HTMLButtonElement;
+const videoFinishBtn = $('video-finish-btn') as HTMLButtonElement;
+const videoStatusText = $('video-status-text');
+const videoIndicator = $('video-indicator');
+
+// ── Types ───────────────────────────────────────────────────────────
+
+type CaptureType = 'html' | 'screenshot' | 'video';
+
 // ── State ───────────────────────────────────────────────────────────
 
 interface StoredSession {
@@ -41,13 +67,15 @@ interface StoredSession {
 }
 
 let currentSession: StoredSession | null = null;
+let activeMode: CaptureType = 'html';
+let videoRecording = false;
 
 // ── Screen navigation ───────────────────────────────────────────────
 
 function showScreen(screen: HTMLElement): void {
-  screenLogin.hidden = true;
-  screenDemos.hidden = true;
-  screenCapture.hidden = true;
+  for (const s of allScreens) {
+    s.hidden = true;
+  }
   screen.hidden = false;
 }
 
@@ -80,6 +108,20 @@ function addSelectOption(select: HTMLSelectElement, value: string, text: string,
   select.appendChild(opt);
 }
 
+// ── Mode storage ────────────────────────────────────────────────────
+
+const MODE_STORAGE_KEY = 'navtour_capture_mode';
+
+async function saveMode(mode: CaptureType): Promise<void> {
+  activeMode = mode;
+  await chrome.storage.local.set({ [MODE_STORAGE_KEY]: mode });
+}
+
+async function getActiveMode(): Promise<CaptureType> {
+  const data = await chrome.storage.local.get(MODE_STORAGE_KEY);
+  return (data[MODE_STORAGE_KEY] as CaptureType) || 'html';
+}
+
 // ── Chrome storage ──────────────────────────────────────────────────
 
 async function loadSession(): Promise<StoredSession | null> {
@@ -94,6 +136,31 @@ async function saveSession(session: StoredSession): Promise<void> {
 async function clearSessionStorage(): Promise<void> {
   await chrome.storage.local.remove('navtour_session');
 }
+
+// ── Mode Select ─────────────────────────────────────────────────────
+
+function showModeSelect(): void {
+  showScreen(screenModeSelect);
+}
+
+// Attach click handlers to mode cards
+document.querySelectorAll('.mode-card').forEach((card) => {
+  card.addEventListener('click', async () => {
+    const mode = (card as HTMLElement).dataset.mode as CaptureType;
+    if (!mode) return;
+
+    await saveMode(mode);
+
+    // Proceed to login or demo-select depending on auth state
+    currentSession = await loadSession();
+    if (currentSession?.accessToken) {
+      await loadDemos();
+      showScreen(screenDemos);
+    } else {
+      showScreen(screenLogin);
+    }
+  });
+});
 
 // ── Login ───────────────────────────────────────────────────────────
 
@@ -205,38 +272,79 @@ startCaptureBtn.addEventListener('click', async () => {
       existingFrameCount = 0;
     }
 
-    const captureMode = (
-      document.querySelector('input[name="capture-mode"]:checked') as HTMLInputElement
-    )?.value || 'auto';
+    const mode = await getActiveMode();
 
-    const response = await chrome.runtime.sendMessage({
-      kind: 'navtour:popup:start-capture',
-      token: currentSession!.accessToken,
-      demoId,
-      demoName,
-      frameCount: existingFrameCount,
-      settings: {
-        clickToCapture: captureMode === 'click',
-        generateSandbox: false,
-      },
-    });
+    if (mode === 'html') {
+      // Existing HTML capture flow
+      const captureMode = (
+        document.querySelector('input[name="capture-mode"]:checked') as HTMLInputElement
+      )?.value || 'auto';
 
-    if (!response?.success) {
-      throw new Error(response?.error || 'Failed to start capture');
+      const response = await chrome.runtime.sendMessage({
+        kind: 'navtour:popup:start-capture',
+        token: currentSession!.accessToken,
+        demoId,
+        demoName,
+        frameCount: existingFrameCount,
+        settings: {
+          clickToCapture: captureMode === 'click',
+          generateSandbox: false,
+        },
+      });
+
+      if (!response?.success) {
+        throw new Error(response?.error || 'Failed to start capture');
+      }
+
+      currentSession!.demoId = demoId;
+      currentSession!.demoName = demoName;
+      currentSession!.frameCount = existingFrameCount;
+      currentSession!.tabId = response.tabId;
+      await saveSession(currentSession!);
+
+      captureDemoName.textContent = demoName!;
+      frameCount.textContent = String(existingFrameCount);
+      showScreen(screenCapture);
+
+      // Close popup
+      window.close();
+    } else if (mode === 'screenshot') {
+      // Screenshot mode — dispatch to worker
+      const response = await chrome.runtime.sendMessage({
+        kind: 'navtour:popup:start-screenshot',
+        token: currentSession!.accessToken,
+        demoId,
+        demoName,
+        frameCount: existingFrameCount,
+      });
+
+      currentSession!.demoId = demoId;
+      currentSession!.demoName = demoName;
+      currentSession!.frameCount = existingFrameCount;
+      currentSession!.tabId = response?.tabId;
+      await saveSession(currentSession!);
+
+      captureScreenshotDemoName.textContent = demoName!;
+      screenshotCount.textContent = String(existingFrameCount);
+      showScreen(screenCaptureScreenshot);
+    } else if (mode === 'video') {
+      // Video mode — dispatch to worker
+      const response = await chrome.runtime.sendMessage({
+        kind: 'navtour:popup:start-video',
+        token: currentSession!.accessToken,
+        demoId,
+        demoName,
+      });
+
+      currentSession!.demoId = demoId;
+      currentSession!.demoName = demoName;
+      currentSession!.tabId = response?.tabId;
+      await saveSession(currentSession!);
+
+      captureVideoDemoName.textContent = demoName!;
+      videoDuration.textContent = '0:00';
+      showScreen(screenCaptureVideo);
     }
-
-    currentSession!.demoId = demoId;
-    currentSession!.demoName = demoName;
-    currentSession!.frameCount = existingFrameCount;
-    currentSession!.tabId = response.tabId;
-    await saveSession(currentSession!);
-
-    captureDemoName.textContent = demoName!;
-    frameCount.textContent = String(existingFrameCount);
-    showScreen(screenCapture);
-
-    // Close popup
-    window.close();
   } catch (err: any) {
     showError(demoError, err.message);
   } finally {
@@ -245,7 +353,7 @@ startCaptureBtn.addEventListener('click', async () => {
   }
 });
 
-// ── Manual capture ──────────────────────────────────────────────────
+// ── Manual capture (HTML mode) ──────────────────────────────────────
 
 manualCaptureBtn.addEventListener('click', async () => {
   if (!currentSession?.tabId) return;
@@ -270,7 +378,76 @@ manualCaptureBtn.addEventListener('click', async () => {
   }
 });
 
-// ── Finish capture ──────────────────────────────────────────────────
+// ── Take Screenshot (Screenshot mode) ───────────────────────────────
+
+takeScreenshotBtn.addEventListener('click', async () => {
+  if (!currentSession?.tabId) return;
+
+  takeScreenshotBtn.disabled = true;
+  takeScreenshotBtn.textContent = 'Capturing...';
+
+  try {
+    const response = await chrome.runtime.sendMessage({
+      kind: 'navtour:popup:take-screenshot',
+      tabId: currentSession.tabId,
+      demoId: currentSession.demoId,
+      token: currentSession.accessToken,
+    });
+
+    if (response?.success) {
+      currentSession.frameCount = (currentSession.frameCount || 0) + 1;
+      screenshotCount.textContent = String(currentSession.frameCount);
+      await saveSession(currentSession);
+    }
+  } finally {
+    takeScreenshotBtn.disabled = false;
+    takeScreenshotBtn.textContent = 'Take Screenshot';
+  }
+});
+
+// ── Video toggle (Video mode) ───────────────────────────────────────
+
+videoToggleBtn.addEventListener('click', async () => {
+  if (!currentSession?.tabId) return;
+
+  if (!videoRecording) {
+    // Start recording
+    const response = await chrome.runtime.sendMessage({
+      kind: 'navtour:popup:start-video-recording',
+      tabId: currentSession.tabId,
+      demoId: currentSession.demoId,
+      token: currentSession.accessToken,
+    });
+
+    if (response?.success) {
+      videoRecording = true;
+      videoToggleBtn.textContent = 'Stop Recording';
+      videoToggleBtn.classList.add('btn-recording');
+      videoStatusText.textContent = 'Recording';
+      const dot = videoIndicator.querySelector('.dot');
+      if (dot) {
+        dot.classList.remove('dot-idle');
+      }
+    }
+  } else {
+    // Stop recording
+    const response = await chrome.runtime.sendMessage({
+      kind: 'navtour:popup:stop-video-recording',
+      tabId: currentSession.tabId,
+    });
+
+    videoRecording = false;
+    videoToggleBtn.textContent = 'Start Recording';
+    videoToggleBtn.classList.remove('btn-recording');
+    videoStatusText.textContent = 'Stopped';
+    const dot = videoIndicator.querySelector('.dot');
+    if (dot) {
+      dot.classList.add('dot-idle');
+    }
+  }
+});
+
+// ── Finish capture (HTML mode) ──────────────────────────────────────
 
 finishBtn.addEventListener('click', async () => {
   if (!currentSession?.tabId) return;
@@ -290,21 +467,73 @@ finishBtn.addEventListener('click', async () => {
   showScreen(screenDemos);
 });
 
+// ── Finish capture (Screenshot mode) ────────────────────────────────
+
+screenshotFinishBtn.addEventListener('click', async () => {
+  if (!currentSession?.tabId) return;
+
+  await chrome.runtime.sendMessage({
+    kind: 'navtour:popup:stop-capture',
+    tabId: currentSession.tabId,
+    demoId: currentSession.demoId,
+  });
+
+  currentSession.demoId = undefined;
+  currentSession.demoName = undefined;
+  currentSession.frameCount = undefined;
+  currentSession.tabId = undefined;
+  await saveSession(currentSession);
+
+  await loadDemos();
+  showScreen(screenDemos);
+});
+
+// ── Finish capture (Video mode) ─────────────────────────────────────
+
+videoFinishBtn.addEventListener('click', async () => {
+  if (!currentSession?.tabId) return;
+
+  // Stop recording if still active
+  if (videoRecording) {
+    await chrome.runtime.sendMessage({
+      kind: 'navtour:popup:stop-video-recording',
+      tabId: currentSession.tabId,
+    });
+    videoRecording = false;
+  }
+
+  await chrome.runtime.sendMessage({
+    kind: 'navtour:popup:download-video',
+    tabId: currentSession.tabId,
+    demoId: currentSession.demoId,
+  });
+
+  currentSession.demoId = undefined;
+  currentSession.demoName = undefined;
+  currentSession.tabId = undefined;
+  await saveSession(currentSession);
+
+  await loadDemos();
+  showScreen(screenDemos);
+});
+
 // ── Logout ──────────────────────────────────────────────────────────
 
 logoutBtn.addEventListener('click', async () => {
   await clearSessionStorage();
   currentSession = null;
-  showScreen(screenLogin);
+  showModeSelect();
 });
 
 // ── Initialize ──────────────────────────────────────────────────────
 
 async function init(): Promise<void> {
+  activeMode = await getActiveMode();
   currentSession = await loadSession();
 
   if (!currentSession?.accessToken) {
-    showScreen(screenLogin);
+    // No session — always show mode select first
+    showModeSelect();
     return;
   }
 
@@ -316,23 +545,36 @@ async function init(): Promise<void> {
   if (state?.sessions?.length > 0 && currentSession.tabId) {
     const active = state.sessions.find((s: any) => s.tabId === currentSession!.tabId);
     if (active) {
-      captureDemoName.textContent = active.demoName;
-      frameCount.textContent = String(active.frameCount);
-      showScreen(screenCapture);
+      // Show the appropriate capture screen based on active mode
+      if (activeMode === 'screenshot') {
+        captureScreenshotDemoName.textContent = active.demoName;
+        screenshotCount.textContent = String(active.frameCount);
+        showScreen(screenCaptureScreenshot);
+      } else if (activeMode === 'video') {
+        captureVideoDemoName.textContent = active.demoName;
+        showScreen(screenCaptureVideo);
+      } else {
+        captureDemoName.textContent = active.demoName;
+        frameCount.textContent = String(active.frameCount);
+        showScreen(screenCapture);
+      }
       return;
     }
   }
 
-  // Show demo selection
-  await loadDemos();
-  showScreen(screenDemos);
+  // No active capture — show mode select (user picks mode each time)
+  showModeSelect();
 }
 
 // Listen for capture updates from background
 chrome.runtime.onMessage.addListener((msg) => {
   if (msg?.kind === 'navtour:capture-complete' && currentSession) {
     currentSession.frameCount = msg.frameCount;
-    frameCount.textContent = String(msg.frameCount);
+    if (activeMode === 'screenshot') {
+      screenshotCount.textContent = String(msg.frameCount);
+    } else {
+      frameCount.textContent = String(msg.frameCount);
+    }
     saveSession(currentSession);
   }
 });

@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "NavTour Capture",
   "description": "Capture your application and build interactive product demos",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "minimum_chrome_version": "110",
   "incognito": "split",
   "background": {

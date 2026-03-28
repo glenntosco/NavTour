@@ -7,8 +7,67 @@
   </head>
   <body class="popup-body">
     <div id="root">
+      <!-- Mode Select Screen -->
+      <div id="screen-mode-select" class="screen">
+        <div class="popup-header">
+          <img src="icons/icon-48.png" alt="NavTour" class="popup-logo" />
+          <span class="popup-title">NavTour Capture</span>
+        </div>
+        <p class="mode-prompt">What kind of demo are you building?</p>
+
+        <div class="mode-cards">
+          <div class="mode-card mode-card-recommended" data-mode="html">
+            <div class="mode-card-badge">RECOMMENDED</div>
+            <div class="mode-card-icon">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="8 10 3 16 8 22" />
+                <polyline points="24 10 29 16 24 22" />
+                <line x1="18" y1="8" x2="14" y2="24" />
+              </svg>
+            </div>
+            <div class="mode-card-content">
+              <h3>HTML Capture</h3>
+              <p>Clone your app as editable HTML/CSS. Edit text, blur data, personalize per viewer.</p>
+              <span class="mode-best-for">Best for: sales demos, marketing pages</span>
+            </div>
+          </div>
+
+          <div class="mode-card" data-mode="screenshot">
+            <div class="mode-card-icon">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="4" y="6" width="24" height="20" rx="3" />
+                <circle cx="16" cy="16" r="5" />
+                <circle cx="16" cy="16" r="2" />
+                <line x1="24" y1="10" x2="24" y2="10.01" stroke-width="3" />
+              </svg>
+            </div>
+            <div class="mode-card-content">
+              <h3>Screenshot</h3>
+              <p>Capture flat images of each screen. Fast, reliable, works everywhere.</p>
+              <span class="mode-best-for">Best for: tutorials, help docs, onboarding</span>
+            </div>
+          </div>
+
+          <div class="mode-card" data-mode="video">
+            <div class="mode-card-icon">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="7" width="18" height="18" rx="3" />
+                <polygon points="25 12 29 9 29 23 25 20" />
+              </svg>
+            </div>
+            <div class="mode-card-content">
+              <h3>Video Recording</h3>
+              <p>Record your browser tab as a video walkthrough.</p>
+              <span class="mode-best-for">Best for: walkthroughs, email follow-ups</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="mode-hint">Not sure? Start with HTML Capture — you can always switch later.</p>
+      </div>
+
       <!-- Login Screen -->
-      <div id="screen-login" class="screen">
+      <div id="screen-login" class="screen" hidden>
         <div class="header">
           <img src="icons/icon-48.png" alt="NavTour" class="logo" />
           <h1>NavTour Capture</h1>
@@ -68,7 +127,7 @@
         <button id="start-capture-btn" class="btn btn-primary">Start Capturing</button>
       </div>
 
-      <!-- Capture Active Screen -->
+      <!-- Capture Active Screen (HTML mode) -->
       <div id="screen-capture" class="screen" hidden>
         <div class="header">
           <h2 id="capture-demo-name">Demo</h2>
@@ -86,6 +145,48 @@
         <div class="capture-actions">
           <button id="manual-capture-btn" class="btn btn-secondary">Capture Now</button>
           <button id="finish-btn" class="btn btn-primary">Finish</button>
+        </div>
+      </div>
+
+      <!-- Capture Active Screen (Screenshot mode) -->
+      <div id="screen-capture-screenshot" class="screen" hidden>
+        <div class="header">
+          <h2 id="capture-screenshot-demo-name">Demo</h2>
+        </div>
+        <div class="capture-status">
+          <div class="frame-count">
+            <span class="count-number" id="screenshot-count">0</span>
+            <span class="count-label">screenshots taken</span>
+          </div>
+          <div class="capture-indicator">
+            <span class="dot"></span>
+            <span>Ready</span>
+          </div>
+        </div>
+        <div class="capture-actions">
+          <button id="take-screenshot-btn" class="btn btn-secondary">Take Screenshot</button>
+          <button id="screenshot-finish-btn" class="btn btn-primary">Finish &amp; Open Builder</button>
+        </div>
+      </div>
+
+      <!-- Capture Active Screen (Video mode) -->
+      <div id="screen-capture-video" class="screen" hidden>
+        <div class="header">
+          <h2 id="capture-video-demo-name">Demo</h2>
+        </div>
+        <div class="capture-status">
+          <div class="frame-count">
+            <span class="count-number" id="video-duration">0:00</span>
+            <span class="count-label">recording duration</span>
+          </div>
+          <div class="capture-indicator" id="video-indicator">
+            <span class="dot dot-idle"></span>
+            <span id="video-status-text">Ready</span>
+          </div>
+        </div>
+        <div class="capture-actions">
+          <button id="video-toggle-btn" class="btn btn-secondary">Start Recording</button>
+          <button id="video-finish-btn" class="btn btn-primary">Download Video</button>
         </div>
       </div>
     </div>

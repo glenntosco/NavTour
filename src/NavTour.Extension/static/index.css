@@ -1,4 +1,4 @@
-/* NavTour Capture Popup — matches Navattic's extension UI structure */
+/* NavTour Capture Popup — visual refresh */
 
 * {
   margin: 0;
@@ -7,17 +7,25 @@
 }
 
 :root {
-  --nt-primary: #4361ee;
-  --nt-primary-hover: #3651d4;
-  --nt-bg: #ffffff;
-  --nt-bg-secondary: #f8f9fb;
-  --nt-text: #1a1d26;
-  --nt-text-secondary: #6b7280;
-  --nt-border: #e5e7eb;
-  --nt-error: #ef4444;
-  --nt-success: #22c55e;
-  --nt-radius: 8px;
-  --nt-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --nt-primary: #0A0A0A;
+  --nt-accent: #4361ee;
+  --nt-accent-hover: #3451d1;
+  --nt-accent-light: #EEF1FF;
+  --nt-text-primary: #0A0A0A;
+  --nt-text-secondary: #737373;
+  --nt-text-muted: #A3A3A3;
+  --nt-surface: #FFFFFF;
+  --nt-surface-subtle: #F5F5F5;
+  --nt-border: #E5E5E5;
+  --nt-border-hover: #D4D4D4;
+  --nt-success: #10B981;
+  --nt-error: #EF4444;
+  --nt-radius: 6px;
+  --nt-radius-md: 8px;
+  --nt-radius-lg: 12px;
+  --nt-shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --nt-shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.04);
+  --nt-font: 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 
 body.popup-body {
@@ -25,14 +33,133 @@ body.popup-body {
   min-height: 200px;
   font-family: var(--nt-font);
   font-size: 14px;
-  color: var(--nt-text);
-  background: var(--nt-bg);
+  color: var(--nt-text-primary);
+  background: var(--nt-surface);
   overflow: hidden;
 }
 
 .screen {
   padding: 20px;
 }
+
+/* ── Mode Select Screen ─────────────────────────────────────── */
+
+.popup-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.popup-logo {
+  width: 32px;
+  height: 32px;
+}
+
+.popup-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--nt-text-primary);
+}
+
+.mode-prompt {
+  font-size: 13px;
+  color: var(--nt-text-secondary);
+  margin-bottom: 14px;
+}
+
+.mode-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mode-card {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--nt-surface);
+  border: 1px solid var(--nt-border);
+  border-radius: var(--nt-radius-md);
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.mode-card:hover {
+  border-color: var(--nt-border-hover);
+  box-shadow: var(--nt-shadow-sm);
+}
+
+.mode-card-recommended {
+  border-left: 3px solid var(--nt-accent);
+}
+
+.mode-card-badge {
+  position: absolute;
+  top: -8px;
+  right: 12px;
+  display: inline-block;
+  padding: 2px 8px;
+  background: var(--nt-accent);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 10px;
+  line-height: 16px;
+}
+
+.mode-card-icon {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  color: var(--nt-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mode-card-icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+.mode-card-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.mode-card-content h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--nt-text-primary);
+  margin-bottom: 3px;
+}
+
+.mode-card-content p {
+  font-size: 12px;
+  color: var(--nt-text-secondary);
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+
+.mode-best-for {
+  font-size: 11px;
+  color: var(--nt-text-muted);
+  font-style: italic;
+}
+
+.mode-hint {
+  font-size: 11px;
+  color: var(--nt-text-muted);
+  text-align: center;
+  margin-top: 14px;
+}
+
+/* ── Header ─────────────────────────────────────────────────── */
 
 .header {
   display: flex;
@@ -42,13 +169,15 @@ body.popup-body {
 }
 
 .header h1 {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 600;
+  color: var(--nt-text-primary);
 }
 
 .header h2 {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
+  color: var(--nt-text-primary);
   flex: 1;
 }
 
@@ -57,13 +186,15 @@ body.popup-body {
   height: 32px;
 }
 
+/* ── Form Fields ────────────────────────────────────────────── */
+
 .field {
   margin-bottom: 14px;
 }
 
 .field label {
   display: block;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
   color: var(--nt-text-secondary);
   margin-bottom: 4px;
@@ -74,28 +205,32 @@ body.popup-body {
 .field input,
 .field select {
   width: 100%;
-  padding: 8px 12px;
+  height: 36px;
+  padding: 0 12px;
   border: 1px solid var(--nt-border);
   border-radius: var(--nt-radius);
   font-size: 14px;
   font-family: var(--nt-font);
-  color: var(--nt-text);
-  background: var(--nt-bg);
+  color: var(--nt-text-primary);
+  background: var(--nt-surface);
   outline: none;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .field input:focus,
 .field select:focus {
-  border-color: var(--nt-primary);
+  border-color: var(--nt-accent);
   box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
 }
+
+/* ── Buttons ────────────────────────────────────────────────── */
 
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 16px;
+  height: 36px;
+  padding: 0 16px;
   border-radius: var(--nt-radius);
   font-size: 14px;
   font-weight: 500;
@@ -113,44 +248,50 @@ body.popup-body {
 
 .btn-primary {
   width: 100%;
-  background: var(--nt-primary);
+  background: var(--nt-accent);
   color: #fff;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: var(--nt-primary-hover);
+  background: var(--nt-accent-hover);
 }
 
 .btn-secondary {
-  background: var(--nt-bg-secondary);
-  color: var(--nt-text);
+  background: var(--nt-surface);
+  color: var(--nt-text-primary);
   border: 1px solid var(--nt-border);
   flex: 1;
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background: #f0f1f3;
+  background: var(--nt-surface-subtle);
+  border-color: var(--nt-border-hover);
 }
 
 .btn-link {
   background: none;
   color: var(--nt-text-secondary);
-  padding: 4px 8px;
+  padding: 0 8px;
   font-size: 12px;
+  height: auto;
 }
 
 .btn-link:hover {
-  color: var(--nt-text);
+  color: var(--nt-text-primary);
 }
+
+/* ── Error ──────────────────────────────────────────────────── */
 
 .error {
   color: var(--nt-error);
   font-size: 12px;
   margin-bottom: 12px;
-  padding: 8px;
+  padding: 8px 10px;
   background: #fef2f2;
   border-radius: var(--nt-radius);
 }
+
+/* ── Radio Group ────────────────────────────────────────────── */
 
 .radio-group {
   display: flex;
@@ -171,24 +312,24 @@ body.popup-body {
 }
 
 .radio-option:hover {
-  border-color: var(--nt-primary);
-  background: rgba(67, 97, 238, 0.04);
+  border-color: var(--nt-accent);
+  background: var(--nt-accent-light);
 }
 
 .radio-option input[type="radio"] {
   width: auto;
-  accent-color: var(--nt-primary);
+  accent-color: var(--nt-accent);
 }
 
-/* Capture Active Screen */
+/* ── Capture Active Screen ──────────────────────────────────── */
 
 .capture-status {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 16px;
-  background: var(--nt-bg-secondary);
-  border-radius: var(--nt-radius);
+  background: var(--nt-surface-subtle);
+  border-radius: var(--nt-radius-md);
   margin-bottom: 16px;
 }
 
@@ -200,7 +341,7 @@ body.popup-body {
 .count-number {
   font-size: 28px;
   font-weight: 700;
-  color: var(--nt-primary);
+  color: var(--nt-accent);
   line-height: 1;
 }
 
@@ -225,6 +366,11 @@ body.popup-body {
   border-radius: 50%;
   background: var(--nt-success);
   animation: pulse 1.5s ease-in-out infinite;
+}
+
+.capture-indicator .dot-idle {
+  background: var(--nt-text-muted);
+  animation: none;
 }
 
 @keyframes pulse {
