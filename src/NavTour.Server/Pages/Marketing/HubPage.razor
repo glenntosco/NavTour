@@ -73,7 +73,16 @@ else
                 <div class="showcase-card" @onclick="() => LaunchDemo(item)">
                     @if (appearance.ShowThumbnails)
                     {
-                        <div class="showcase-card-thumb">
+                        <div class="showcase-card-thumb" style="@GetThumbStyle(item)">
+                            @if (string.IsNullOrEmpty(item.ThumbnailOverride))
+                            {
+                                <div class="showcase-card-thumb-icon" style="color:@GetThumbColor(item)">
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+                                    </svg>
+                                    <span class="showcase-card-thumb-label">@GetThumbInitial(item)</span>
+                                </div>
+                            }
                             <div class="showcase-card-play">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
                             </div>
@@ -255,6 +264,13 @@ else
         display: flex; align-items: center; justify-content: center;
         position: relative;
     }
+    .showcase-card-thumb-icon {
+        display: flex; flex-direction: column; align-items: center; gap: 6px;
+        opacity: 0.6;
+    }
+    .showcase-card-thumb-label {
+        font-size: 1.25rem; font-weight: 700; letter-spacing: 0.02em;
+    }
     .showcase-card-play {
         width: 48px; height: 48px; border-radius: 50%;
         background: rgba(0,0,0,0.5); display: flex;
@@ -398,6 +414,28 @@ else
     }
 
     private void CloseDemoPlayer() => activeDemoSlug = null;
+
+    private static readonly string[] ThumbColors = ["#4361ee", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6", "#EC4899", "#06B6D4"];
+
+    private string GetThumbColor(HubItemResponse item)
+    {
+        var name = item.TitleOverride ?? item.DemoName ?? "D";
+        return ThumbColors[Math.Abs(name.GetHashCode()) % ThumbColors.Length];
+    }
+
+    private string GetThumbInitial(HubItemResponse item)
+    {
+        var name = item.TitleOverride ?? item.DemoName ?? "D";
+        return name.Length > 0 ? name[0].ToString().ToUpper() : "D";
+    }
+
+    private string GetThumbStyle(HubItemResponse item)
+    {
+        if (!string.IsNullOrEmpty(item.ThumbnailOverride))
+            return $"background-image:url({item.ThumbnailOverride});background-size:cover;background-position:center";
+        var color = GetThumbColor(item);
+        return $"background:linear-gradient(135deg, {color}22, {color}11)";
+    }
 
     private string GetHeaderBg()
     {
