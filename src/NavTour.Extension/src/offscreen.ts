@@ -30,6 +30,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         .catch((err) => sendResponse({ success: false, error: err.message }));
       return true;
     }
+
+    case 'navtour:offscreen:start-recording': {
+      startRecording(message.streamId)
+        .then((result) => sendResponse(result))
+        .catch((err) => sendResponse({ success: false, error: err.message }));
+      return true;
+    }
+
+    case 'navtour:offscreen:stop-recording': {
+      stopRecording()
+        .then((result) => sendResponse(result))
+        .catch((err) => sendResponse({ success: false, error: err.message }));
+      return true;
+    }
   }
 });
 
@@ -150,6 +164,90 @@ async function processScreenshot(
     reader.onerror = reject;
     reader.readAsDataURL(blob);
   });
+}
+
+// ── Video recording ──────────────────────────────────────────────────
+
+let activeRecorder: MediaRecorder | null = null;
+let activeStream: MediaStream | null = null;
+let recordingChunks: Blob[] = [];
+
+async function startRecording(streamId: string): Promise<{ success: boolean; error?: string }> {
+  try {
+    // Stop any existing recording first
+    if (activeRecorder && activeRecorder.state !== 'inactive') {
+      activeRecorder.stop();
+    }
+
+    // Get the media stream from the stream ID
+    const stream = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        mandatory: {
+          chromeMediaSource: 'tab',
+          chromeMediaSourceId: streamId,
+        },
+      } as any,
+      video: {
+        mandatory: {
+          chromeMediaSource: 'tab',
+          chromeMediaSourceId: streamId,
+        },
+      } as any,
+    });
+
+    activeStream = stream;
+    recordingChunks = [];
+
+    // Pick a supported mime type
+    const mimeType = MediaRecorder.isTypeSupported('video/webm;codecs=vp9')
+      ? 'video/webm;codecs=vp9'
+      : 'video/webm';
+
+    const recorder = new MediaRecorder(stream, { mimeType });
+
+    recorder.ondataavailable = (e: BlobEvent) => {
+      if (e.data.size > 0) {
+        recordingChunks.push(e.data);
+      }
+    };
+
+    recorder.onstop = () => {
+      const blob = new Blob(recordingChunks, { type: mimeType });
+      const url = URL.createObjectURL(blob);
+
+      // Notify the worker that the recording is ready for download
+      chrome.runtime.sendMessage({
+        kind: 'navtour:offscreen:recording-ready',
+        url,
+        size: blob.size,
+      });
+
+      // Clean up stream tracks
+      if (activeStream) {
+        activeStream.getTracks().forEach((t) => t.stop());
+        activeStream = null;
+      }
+      activeRecorder = null;
+      recordingChunks = [];
+    };
+
+    recorder.start(1000); // Collect data every second
+    activeRecorder = recorder;
+
+    console.log('[NavTour Offscreen] Recording started');
+    return { success: true };
+  } catch (err) {
+    console.error('[NavTour Offscreen] Failed to start recording:', err);
+    return { success: false, error: String(err) };
+  }
+}
+
+async function stopRecording(): Promise<{ success: boolean }> {
+  if (activeRecorder && activeRecorder.state !== 'inactive') {
+    activeRecorder.stop();
+    console.log('[NavTour Offscreen] Recording stopped');
+  }
+  return { success: true };
 }
 
 console.log('[NavTour] Offscreen document ready');

@@ -37,6 +37,7 @@ interface CaptureSession {
   frameCount: number;
   frames: FrameCapture[];
   settings: CaptureSettings;
+  mode?: 'html' | 'screenshot' | 'video';
   cxtFeatureFlags?: string[];
   workspaceSlug?: string;
 }
@@ -212,6 +213,35 @@ async function uploadFrame(
   return response.json();
 }
 
+async function uploadScreenshot(
+  token: string,
+  demoId: string,
+  dataUrl: string,
+  name: string
+): Promise<any> {
+  // Convert data URL to Blob
+  const response = await fetch(dataUrl);
+  const blob = await response.blob();
+
+  const formData = new FormData();
+  formData.append('file', blob, `${name}.png`);
+  formData.append('name', name);
+
+  const res = await fetch(`${getApiUrl()}/demos/${demoId}/frames`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  });
+
+  if (!res.ok) {
+    throw new Error(`Screenshot upload failed ${res.status}: ${await res.text()}`);
+  }
+
+  return res.json();
+}
+
 async function uploadResource(
   token: string,
   url: string,
@@ -223,6 +253,76 @@ async function uploadResource(
     token,
     body: { url, data, contentType },
   });
+}
+
+// ── Screenshot capture ──────────────────────────────────────────────
+
+async function captureScreenshot(tabId: number): Promise<void> {
+  const session = activeSessions.get(tabId);
+  if (!session) {
+    console.warn('[NavTour Worker] No active session for tab:', tabId);
+    return;
+  }
+
+  console.log(`[NavTour Worker] Taking screenshot for tab ${tabId}, demo ${session.demoName}`);
+
+  try {
+    const tab = await chrome.tabs.get(tabId);
+    const dataUrl = await new Promise<string>((resolve, reject) => {
+      chrome.tabs.captureVisibleTab(
+        tab.windowId,
+        { format: 'png', quality: 100 },
+        (result) => {
+          if (chrome.runtime.lastError) {
+            reject(new Error(chrome.runtime.lastError.message));
+          } else {
+            resolve(result || '');
+          }
+        }
+      );
+    });
+
+    if (!dataUrl) {
+      throw new Error('Failed to capture visible tab');
+    }
+
+    const name = `Screenshot ${session.frameCount + 1}`;
+    const frameResult = await uploadScreenshot(session.token, session.demoId, dataUrl, name);
+
+    session.frameCount++;
+
+    const frameThumbnail: FrameCapture = {
+      index: session.frameCount,
+      title: name,
+      url: tab.url || '',
+      thumbnailDataUrl: dataUrl,
+      status: 'complete',
+      timestamp: Date.now(),
+      frameId: frameResult.id,
+    };
+    session.frames.push(frameThumbnail);
+
+    // Notify the tab about successful capture
+    notifyTab(tabId, {
+      kind: 'navtour:capture-complete',
+      frameCount: session.frameCount,
+      frameId: frameResult.id,
+      frameThumbnail,
+    });
+
+    updateBadge(tabId, session.frameCount);
+
+    console.log(
+      `[NavTour Worker] Screenshot ${session.frameCount} captured for demo ${session.demoName}`
+    );
+  } catch (e) {
+    console.error('[NavTour Worker] Screenshot capture error:', e);
+    notifyTab(tabId, {
+      kind: 'navtour:capture-error',
+      error: (e as Error).message,
+    });
+    throw e;
+  }
 }
 
 // ── Capture orchestration ───────────────────────────────────────────
@@ -593,12 +693,90 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     case 'navtour:popup:manual-capture': {
       const tabId = message.tabId;
       if (tabId && activeSessions.has(tabId)) {
-        captureTab(tabId)
-          .then(() => sendResponse({ success: true }))
+        const session = activeSessions.get(tabId)!;
+        if (session.mode === 'screenshot') {
+          captureScreenshot(tabId)
+            .then(() => sendResponse({ success: true, frameCount: session.frameCount }))
+            .catch((e) => sendResponse({ success: false, error: (e as Error).message }));
+        } else {
+          captureTab(tabId)
+            .then(() => sendResponse({ success: true }))
+            .catch((e) => sendResponse({ success: false, error: (e as Error).message }));
+        }
+        return true;
+      }
+      sendResponse({ success: false, error: 'No active session' });
+      break;
+    }
+
+    // ── Screenshot mode handlers ─────────────────────────────
+
+    case 'navtour:popup:start-screenshot': {
+      handlePopupStartScreenshot(message)
+        .then((result) => sendResponse(result))
+        .catch((e) => sendResponse({ success: false, error: (e as Error).message }));
+      return true;
+    }
+
+    case 'navtour:popup:take-screenshot': {
+      const tabId = message.tabId;
+      if (tabId && activeSessions.has(tabId)) {
+        captureScreenshot(tabId)
+          .then(() => {
+            const session = activeSessions.get(tabId);
+            sendResponse({ success: true, frameCount: session?.frameCount });
+          })
           .catch((e) => sendResponse({ success: false, error: (e as Error).message }));
         return true;
       }
       sendResponse({ success: false, error: 'No active session' });
+      break;
+    }
+
+    // ── Video mode handlers ──────────────────────────────────
+
+    case 'navtour:popup:start-video': {
+      handlePopupStartVideo(message)
+        .then((result) => sendResponse(result))
+        .catch((e) => sendResponse({ success: false, error: (e as Error).message }));
+      return true;
+    }
+
+    case 'navtour:popup:start-video-recording': {
+      const tabId = message.tabId;
+      handleStartVideoRecording(tabId)
+        .then((result) => sendResponse(result))
+        .catch((e) => sendResponse({ success: false, error: (e as Error).message }));
+      return true;
+    }
+
+    case 'navtour:popup:stop-video-recording': {
+      const tabId = message.tabId;
+      handleStopVideoRecording(tabId)
+        .then((result) => sendResponse(result))
+        .catch((e) => sendResponse({ success: false, error: (e as Error).message }));
+      return true;
+    }
+
+    case 'navtour:popup:download-video': {
+      // Video download is triggered automatically when recording stops
+      sendResponse({ success: true });
+      break;
+    }
+
+    case 'navtour:offscreen:recording-ready': {
+      // Offscreen doc finished assembling the recording — trigger download
+      const { url, size } = message;
+      const session = [...activeSessions.values()].find((s) => s.mode === 'video');
+      const filename = session
+        ? `${session.demoName}-${Date.now()}.webm`
+        : `navtour-recording-${Date.now()}.webm`;
+      chrome.downloads.download({
+        url,
+        filename,
+        saveAs: true,
+      });
+      sendResponse({ success: true });
       break;
     }
 
@@ -712,6 +890,80 @@ async function handlePopupStartCapture(msg: any): Promise<any> {
   return { success: true, tabId: tab.id, ...session };
 }
 
+async function handlePopupStartScreenshot(msg: any): Promise<any> {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (!tab?.id) return { success: false, error: 'No active tab' };
+
+  // Screenshot mode: no content scripts or toolbar needed
+  const session = await startSession(tab.id, {
+    token: msg.token,
+    demoId: msg.demoId,
+    demoName: msg.demoName,
+    frameCount: msg.frameCount || 0,
+    settings: {},
+  });
+  session.mode = 'screenshot';
+
+  return { success: true, tabId: tab.id, ...session };
+}
+
+async function handlePopupStartVideo(msg: any): Promise<any> {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (!tab?.id) return { success: false, error: 'No active tab' };
+
+  // Video mode: create session, recording starts when user clicks record
+  const session = await startSession(tab.id, {
+    token: msg.token,
+    demoId: msg.demoId,
+    demoName: msg.demoName,
+    frameCount: 0,
+    settings: {},
+  });
+  session.mode = 'video';
+
+  return { success: true, tabId: tab.id, ...session };
+}
+
+async function handleStartVideoRecording(tabId: number): Promise<any> {
+  const session = activeSessions.get(tabId);
+  if (!session || session.mode !== 'video') {
+    return { success: false, error: 'No active video session' };
+  }
+
+  try {
+    // Get a media stream ID for the tab
+    const streamId = await (chrome.tabCapture as any).getMediaStreamId({
+      targetTabId: tabId,
+    });
+
+    // Ensure offscreen document exists (with updated reasons for media)
+    await ensureOffscreenDocument();
+
+    // Tell the offscreen document to start recording
+    const result = await chrome.runtime.sendMessage({
+      kind: 'navtour:offscreen:start-recording',
+      streamId,
+    });
+
+    return { success: result?.success ?? false, error: result?.error };
+  } catch (e) {
+    console.error('[NavTour Worker] Failed to start video recording:', e);
+    return { success: false, error: (e as Error).message };
+  }
+}
+
+async function handleStopVideoRecording(tabId: number): Promise<any> {
+  try {
+    const result = await chrome.runtime.sendMessage({
+      kind: 'navtour:offscreen:stop-recording',
+    });
+    return { success: result?.success ?? true };
+  } catch (e) {
+    console.error('[NavTour Worker] Failed to stop video recording:', e);
+    return { success: false, error: (e as Error).message };
+  }
+}
+
 /** Ensure content scripts are ready, inject once if not present */
 async function ensureContentScripts(tabId: number): Promise<void> {
   // First check if manifest-injected scripts are already responding
@@ -801,7 +1053,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
   const session = activeSessions.get(tabId)!;
 
   // On page load complete, wait for manifest-injected scripts then inject toolbar
-  if (changeInfo.status === 'complete') {
+  // Skip toolbar/auto-capture for screenshot and video modes
+  if (changeInfo.status === 'complete' && session.mode !== 'screenshot' && session.mode !== 'video') {
     setTimeout(async () => {
       if (!activeSessions.has(tabId)) return;
 
