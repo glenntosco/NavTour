@@ -42,10 +42,12 @@ public class HubService
 
     public async Task<HubResponse?> GetBySlugAsync(string slug)
     {
+        // IgnoreQueryFilters: public endpoint has no tenant context
         var hub = await _db.DemoHubs
+            .IgnoreQueryFilters()
             .Include(h => h.Categories.OrderBy(c => c.SortOrder))
                 .ThenInclude(c => c.Items.OrderBy(i => i.SortOrder))
-            .FirstOrDefaultAsync(h => h.Slug == slug);
+            .FirstOrDefaultAsync(h => h.Slug == slug && !h.IsDeleted);
 
         return hub == null ? null : await MapHubAsync(hub);
     }
