@@ -1,13 +1,14 @@
 @inherits LayoutComponentBase
 @inject AuthService Auth
 @inject NavigationManager Nav
+@inject IJSRuntime JS
 
 <HeadContent>
     <meta name="robots" content="noindex, nofollow" />
 </HeadContent>
 
-<div class="app-shell">
-    <aside class="sidebar">
+<div class="app-shell" @onclick="CloseAvatarMenu" @onkeydown="HandleKeyDown" tabindex="-1">
+    <aside class="sidebar @(sidebarCollapsed ? "collapsed" : "")">
         <div class="sidebar-logo">
             <a href="/dashboard">
                 <img src="favicon.svg" alt="NavTour" />
@@ -15,52 +16,68 @@
             </a>
         </div>
         <nav class="sidebar-nav">
-            <a href="/dashboard" class="nav-item @ActiveClass("/dashboard")">
+            <a href="/dashboard" class="nav-item @ActiveClass("/dashboard")" title="Product Demos">
                 <svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
                 <span>Product Demos</span>
             </a>
             <div class="nav-group">Analyze</div>
-            <a href="/analytics" class="nav-item @ActiveClass("/analytics")">
+            <a href="/analytics" class="nav-item @ActiveClass("/analytics")" title="Analytics">
                 <svg class="nav-icon" viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg>
                 <span>Analytics</span>
             </a>
             <div class="nav-group">Capture</div>
-            <a href="/leads" class="nav-item @ActiveClass("/leads")">
+            <a href="/leads" class="nav-item @ActiveClass("/leads")" title="Leads">
                 <svg class="nav-icon" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
                 <span>Leads</span>
             </a>
-            <a href="/forms" class="nav-item @ActiveClass("/forms")">
+            <a href="/forms" class="nav-item @ActiveClass("/forms")" title="Forms">
                 <svg class="nav-icon" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zM7 17h5v-2H7v2zm10-4H7v-2h10v2z"/></svg>
                 <span>Forms</span>
             </a>
             <div class="nav-group">Manage</div>
-            <a href="/team" class="nav-item @ActiveClass("/team")">
+            <a href="/team" class="nav-item @ActiveClass("/team")" title="Team">
                 <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 12.75c1.63 0 3.07.39 4.24.9 1.08.48 1.76 1.56 1.76 2.73V18H6v-1.61c0-1.18.68-2.26 1.76-2.73 1.17-.52 2.61-.91 4.24-.91zM4 13c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm1.13 1.1c-.37-.06-.74-.1-1.13-.1-.99 0-1.93.21-2.78.58C.48 14.9 0 15.62 0 16.43V18h4.5v-1.61c0-.83.23-1.61.63-2.29zM20 13c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm4 3.43c0-.81-.48-1.53-1.22-1.85-.85-.37-1.79-.58-2.78-.58-.39 0-.76.04-1.13.1.4.68.63 1.46.63 2.29V18H24v-1.57zM12 6c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3z"/></svg>
                 <span>Team</span>
             </a>
-            <a href="/settings" class="nav-item @ActiveClass("/settings")">
+            <a href="/settings" class="nav-item @ActiveClass("/settings")" title="Settings">
                 <svg class="nav-icon" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
                 <span>Settings</span>
             </a>
         </nav>
         <div class="sidebar-bottom">
-            @if (Auth.IsAuthenticated)
-            {
-                <div class="sidebar-user">
-                    <div class="sidebar-avatar">@(Auth.UserEmail?.Substring(0, 1).ToUpper())</div>
-                    <span class="sidebar-email" title="@Auth.UserEmail">@Auth.UserEmail</span>
-                </div>
-                <a href="/login" onclick="document.cookie='navtour_auth=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT'" class="nav-item">
-                    <svg class="nav-icon" viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
-                    <span>Sign out</span>
-                </a>
-            }
             <div class="sidebar-ver">v@(AppVersion)</div>
+            <button class="collapse-toggle" @onclick="ToggleSidebar" title="@(sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar")">
+                <span class="collapse-chevron">@(sidebarCollapsed ? "\u00BB" : "\u00AB")</span>
+                <span class="collapse-text">Collapse</span>
+            </button>
         </div>
     </aside>
     <main class="main-area">
         <header class="top-bar">
             <span class="breadcrumb">@GetBreadcrumb()</span>
+            <div class="top-bar-right">
+                @if (Auth.IsAuthenticated)
+                {
+                    <div class="avatar-wrapper" @onclick="ToggleAvatarMenu" @onclick:stopPropagation="true">
+                        <div class="avatar">@(Auth.UserEmail?.Substring(0, 1).ToUpper())</div>
+                        @if (avatarMenuOpen)
+                        {
+                            <div class="avatar-menu">
+                                <div class="avatar-menu-email">@Auth.UserEmail</div>
+                                <div class="avatar-menu-divider"></div>
+                                <a href="/settings" class="avatar-menu-item">
+                                    <svg class="avatar-menu-icon" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+                                    Settings
+                                </a>
+                                <a href="/login" onclick="document.cookie='navtour_auth=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT'" class="avatar-menu-item">
+                                    <svg class="avatar-menu-icon" viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+                                    Sign out
+                                </a>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
         </header>
         <div class="content @(IsEditorPage ? "" : "padded")">
             @Body
@@ -74,22 +91,29 @@
 <RadzenContextMenu />
 
 <style>
-    .app-shell { display:flex; height:100vh; overflow:hidden; }
+    .app-shell { display:flex; height:100vh; overflow:hidden; outline:none; }
 
+    /* ── Sidebar ── */
     .sidebar {
         width:232px; flex-shrink:0; background:var(--nt-surface-secondary);
         border-right:1px solid var(--nt-border); display:flex; flex-direction:column;
+        transition:width var(--nt-duration-normal) var(--nt-ease);
+        overflow:hidden;
     }
+    .sidebar.collapsed { width:60px; }
 
     .sidebar-logo { padding:16px 20px; border-bottom:1px solid var(--nt-border); }
     .sidebar-logo a {
         display:flex; align-items:center; gap:10px; text-decoration:none;
+        white-space:nowrap; overflow:hidden;
     }
-    .sidebar-logo img { height:28px; width:28px; }
+    .sidebar-logo img { height:28px; width:28px; flex-shrink:0; }
     .sidebar-wordmark {
         font-size:1.0625rem; font-weight:700; color:var(--nt-navy);
         letter-spacing:-0.03em;
+        transition:opacity var(--nt-duration-normal) var(--nt-ease);
     }
+    .sidebar.collapsed .sidebar-wordmark { opacity:0; width:0; overflow:hidden; }
 
     .sidebar-nav { flex:1; overflow-y:auto; padding:16px 0 8px; }
 
@@ -97,8 +121,9 @@
         display:flex; align-items:center; gap:10px; padding:8px 14px;
         color:var(--nt-text-secondary); text-decoration:none;
         font-size:0.8125rem; font-weight:500;
-        border-radius:6px; margin:1px 10px;
+        border-radius:var(--nt-radius); margin:1px 10px;
         transition:background 150ms, color 150ms;
+        white-space:nowrap; overflow:hidden;
     }
     .nav-item:hover { background:var(--nt-surface-muted); color:var(--nt-text-primary); }
     .nav-item:hover .nav-icon { fill:var(--nt-text-secondary); }
@@ -108,41 +133,98 @@
     }
     .nav-item.active .nav-icon { fill:var(--nt-action); }
 
+    .sidebar.collapsed .nav-item {
+        justify-content:center; padding:8px; margin:1px 6px;
+    }
+    .sidebar.collapsed .nav-item span { display:none; }
+
     .nav-icon { width:18px; height:18px; flex-shrink:0; fill:var(--nt-text-muted); transition:fill 150ms; }
 
     .nav-group {
         padding:20px 14px 6px; margin:0 10px; font-size:0.625rem; font-weight:700;
         color:var(--nt-text-faint); text-transform:uppercase; letter-spacing:0.08em;
+        white-space:nowrap; overflow:hidden;
+        transition:opacity var(--nt-duration-normal) var(--nt-ease);
+    }
+    .sidebar.collapsed .nav-group { opacity:0; height:0; padding:0; margin:0; overflow:hidden; }
+
+    .sidebar-bottom {
+        border-top:1px solid var(--nt-border); padding:8px 10px;
     }
 
-    .sidebar-bottom { border-top:1px solid var(--nt-border); padding:12px 10px 8px; }
-
-    .sidebar-user {
-        display:flex; align-items:center; gap:10px;
-        padding:8px 10px; margin-bottom:4px;
+    .sidebar-ver {
+        text-align:center; font-size:0.625rem; color:var(--nt-border-hover); padding:4px 0;
+        transition:opacity var(--nt-duration-normal) var(--nt-ease);
     }
-    .sidebar-avatar {
-        width:28px; height:28px; border-radius:50%;
-        background:var(--nt-navy); color:#fff;
-        font-size:0.6875rem; font-weight:700;
-        display:flex; align-items:center; justify-content:center;
-        flex-shrink:0;
-    }
-    .sidebar-email {
-        font-size:0.75rem; color:var(--nt-text-muted);
-        overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
-    }
+    .sidebar.collapsed .sidebar-ver { opacity:0; height:0; padding:0; overflow:hidden; }
 
-    .sidebar-ver { text-align:center; font-size:0.625rem; color:var(--nt-border-hover); padding:4px 0; }
+    .collapse-toggle {
+        display:flex; align-items:center; gap:8px; width:100%;
+        padding:8px 14px; border:none; background:none; cursor:pointer;
+        color:var(--nt-text-muted); font-size:0.8125rem; font-weight:500;
+        border-radius:var(--nt-radius);
+        transition:background 150ms, color 150ms;
+    }
+    .collapse-toggle:hover { background:var(--nt-surface-muted); color:var(--nt-text-primary); }
 
+    .collapse-chevron { font-size:1rem; flex-shrink:0; line-height:1; }
+
+    .sidebar.collapsed .collapse-toggle {
+        justify-content:center; padding:8px;
+    }
+    .sidebar.collapsed .collapse-text { display:none; }
+
+    /* ── Main area ── */
     .main-area { flex:1; display:flex; flex-direction:column; overflow:hidden; min-width:0; }
 
     .top-bar {
-        height:48px; display:flex; align-items:center; padding:0 24px;
+        height:48px; display:flex; align-items:center; justify-content:space-between;
+        padding:0 24px;
         border-bottom:1px solid var(--nt-border); background:var(--nt-surface); flex-shrink:0;
     }
     .breadcrumb {
         font-size:0.8125rem; color:var(--nt-text-muted); font-weight:500;
+    }
+    .top-bar-right { display:flex; align-items:center; }
+
+    /* ── Avatar + Dropdown ── */
+    .avatar-wrapper { position:relative; cursor:pointer; }
+
+    .avatar {
+        width:32px; height:32px; border-radius:50%;
+        background:var(--nt-accent); color:#fff;
+        font-size:0.75rem; font-weight:700;
+        display:flex; align-items:center; justify-content:center;
+        user-select:none;
+    }
+
+    .avatar-menu {
+        position:absolute; top:calc(100% + 8px); right:0;
+        min-width:200px; background:var(--nt-surface);
+        border:1px solid var(--nt-border); border-radius:var(--nt-radius-md);
+        box-shadow:var(--nt-shadow-lg); z-index:200;
+        padding:4px 0;
+    }
+
+    .avatar-menu-email {
+        padding:10px 14px 8px; font-size:0.75rem; color:var(--nt-text-muted);
+        overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    }
+
+    .avatar-menu-divider {
+        height:1px; background:var(--nt-border); margin:4px 0;
+    }
+
+    .avatar-menu-item {
+        display:flex; align-items:center; gap:8px;
+        padding:8px 14px; font-size:0.8125rem; font-weight:500;
+        color:var(--nt-text-secondary); text-decoration:none;
+        transition:background 150ms;
+    }
+    .avatar-menu-item:hover { background:var(--nt-surface-subtle); }
+
+    .avatar-menu-icon {
+        width:16px; height:16px; flex-shrink:0; fill:var(--nt-text-muted);
     }
 
     .content { flex:1; overflow-y:auto; }
@@ -151,17 +233,45 @@
 
 @code {
     private bool _restored;
+    private bool sidebarCollapsed;
+    private bool avatarMenuOpen;
 
     private static string AppVersion =>
         typeof(MainLayout).Assembly.GetName().Version?.ToString(3) ?? "0.0.0";
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender && !_restored)
+        if (firstRender)
         {
-            _restored = true;
-            await Auth.TryRestoreAsync();
+            if (!_restored)
+            {
+                _restored = true;
+                await Auth.TryRestoreAsync();
+            }
+            try
+            {
+                var stored = await JS.InvokeAsync<string>("localStorage.getItem", "navtour_sidebar_collapsed");
+                if (stored == "true") sidebarCollapsed = true;
+            }
+            catch { }
             StateHasChanged();
+        }
+    }
+
+    private async Task ToggleSidebar()
+    {
+        sidebarCollapsed = !sidebarCollapsed;
+        try { await JS.InvokeVoidAsync("localStorage.setItem", "navtour_sidebar_collapsed", sidebarCollapsed ? "true" : "false"); } catch { }
+    }
+
+    private void ToggleAvatarMenu() => avatarMenuOpen = !avatarMenuOpen;
+    private void CloseAvatarMenu() => avatarMenuOpen = false;
+
+    private void HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Escape" && avatarMenuOpen)
+        {
+            avatarMenuOpen = false;
         }
     }
 
