@@ -1,0 +1,40 @@
+@page "/hub/{Slug}"
+@layout NavTour.Server.Components.Layout.MarketingLayout
+@attribute [Microsoft.AspNetCore.Authorization.AllowAnonymous]
+
+<HeadContent>
+    <title>@(hubName ?? "Demo Hub") — NavTour</title>
+    <meta name="description" content="Explore interactive product demos" />
+</HeadContent>
+
+<div id="hub-fullpage" style="position:fixed;inset:0;z-index:100;background:#fff">
+    <div id="hub-loading" style="display:flex;align-items:center;justify-content:center;height:100vh;color:#737373;font-family:system-ui">
+        Loading...
+    </div>
+</div>
+
+<script src="/js/hub.js"></script>
+<script>
+    (function() {
+        var slug = "@Slug";
+        // Override hub to render fullpage instead of drawer
+        fetch('/api/v1/hubs/public/' + slug)
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .then(function(data) {
+                if (!data) {
+                    document.getElementById('hub-loading').textContent = 'Hub not found';
+                    return;
+                }
+                // Init the hub widget but immediately open it
+                NavTour.hub.init(slug);
+                setTimeout(function() { NavTour.hub.open(); }, 500);
+                // Hide the loading indicator
+                document.getElementById('hub-loading').style.display = 'none';
+            });
+    })();
+</script>
+
+@code {
+    [Parameter] public string Slug { get; set; } = "";
+    private string? hubName;
+}
