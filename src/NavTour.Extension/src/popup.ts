@@ -30,6 +30,8 @@ const demoSelect = $('demo-select') as HTMLSelectElement;
 const newDemoName = $('new-demo-name') as HTMLInputElement;
 const demoError = $('demo-error');
 const startCaptureBtn = $('start-capture-btn') as HTMLButtonElement;
+const smartBlurToggle = $('smart-blur-toggle') as HTMLInputElement;
+const smartBlurHint = $('smart-blur-hint');
 const logoutBtn = $('logout-btn');
 
 const captureDemoName = $('capture-demo-name');
@@ -231,6 +233,22 @@ async function loadDemos(): Promise<void> {
   }
 }
 
+// ── Smart Blur toggle ───────────────────────────────────────────────
+if (smartBlurToggle) {
+  smartBlurToggle.addEventListener('change', () => {
+    if (smartBlurHint) {
+      smartBlurHint.style.display = smartBlurToggle.checked ? 'block' : 'none';
+    }
+    // Update the toggle slider visual
+    const slider = smartBlurToggle.nextElementSibling as HTMLElement;
+    const dot = slider?.nextElementSibling as HTMLElement;
+    if (slider && dot) {
+      slider.style.background = smartBlurToggle.checked ? 'var(--nt-accent)' : 'var(--nt-border)';
+      dot.style.transform = smartBlurToggle.checked ? 'translateX(16px)' : 'translateX(0)';
+    }
+  });
+}
+
 // ── Start capture ───────────────────────────────────────────────────
 
 startCaptureBtn.addEventListener('click', async () => {
@@ -301,6 +319,11 @@ startCaptureBtn.addEventListener('click', async () => {
       currentSession!.frameCount = existingFrameCount;
       currentSession!.tabId = response.tabId;
       await saveSession(currentSession!);
+
+      // Enable smart blur if toggled on
+      if (smartBlurToggle?.checked && response.tabId) {
+        await chrome.tabs.sendMessage(response.tabId, { kind: 'navtour:smart-blur-enable' });
+      }
 
       captureDemoName.textContent = demoName!;
       frameCount.textContent = String(existingFrameCount);

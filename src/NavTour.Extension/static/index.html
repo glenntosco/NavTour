@@ -124,6 +124,22 @@
           </div>
         </div>
         <div id="demo-error" class="error" hidden></div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;margin-bottom:8px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <span style="font-size:13px;font-weight:500;color:var(--nt-text-primary)">Smart Blur</span>
+          </div>
+          <label style="position:relative;width:36px;height:20px;cursor:pointer">
+            <input type="checkbox" id="smart-blur-toggle" style="opacity:0;width:0;height:0" />
+            <span style="position:absolute;inset:0;background:var(--nt-border);border-radius:10px;transition:background 200ms"></span>
+            <span style="position:absolute;top:2px;left:2px;width:16px;height:16px;background:#fff;border-radius:50%;transition:transform 200ms;box-shadow:0 1px 3px rgba(0,0,0,0.2)"></span>
+          </label>
+        </div>
+        <p id="smart-blur-hint" style="font-size:11px;color:var(--nt-text-muted);margin:-4px 0 12px;display:none">
+          Auto-blurs emails, phone numbers, prices, and PII during capture.
+        </p>
+
         <button id="start-capture-btn" class="btn btn-primary">Start Capturing</button>
       </div>
 

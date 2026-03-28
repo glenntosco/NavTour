@@ -24,8 +24,15 @@ import {
   createCapturesPanel, addFrameToPanel, togglePanel, removeCapturesPanel,
 } from './lib/toolbar';
 import type { PanelCallbacks } from './lib/toolbar';
+import {
+  autoBlurPII, applyBlurToClone, startManualBlur, stopManualBlur,
+  clearAllBlur, getBlurCount,
+} from './lib/smart-blur';
 
 const logger = createPrefixedLogger({ pre: red('capture:') });
+
+// Smart blur state
+let smartBlurEnabled = false;
 
 // ── Resource collection ─────────────────────────────────────────────
 
@@ -188,6 +195,14 @@ function serializeDocument(): string {
   toolbar?.remove();
   const toolbarStyle = clone.querySelector('#__navtour_capture_toolbar___style');
   toolbarStyle?.remove();
+  // Remove smart blur CSS (will be inlined on blurred elements)
+  clone.querySelector('#__navtour_smart_blur_css__')?.remove();
+
+  // Apply smart blur to the clone if enabled
+  if (smartBlurEnabled) {
+    const blurred = applyBlurToClone(clone);
+    if (blurred > 0) logger.log(`Smart blur applied to ${blurred} elements in capture`);
+  }
 
   // Process shadow roots in the clone
   const shadowHosts = clone.querySelectorAll(`[${SHADOW_ID_ATTR}]`);
@@ -301,6 +316,42 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         .then((dataUrl) => sendResponse({ success: !!dataUrl, dataUrl }))
         .catch(() => sendResponse({ success: false }));
       return true;
+    }
+
+    case 'navtour:smart-blur-enable': {
+      smartBlurEnabled = true;
+      const count = autoBlurPII();
+      logger.log(`Smart blur enabled: ${count} PII elements detected`);
+      sendResponse({ success: true, count });
+      break;
+    }
+
+    case 'navtour:smart-blur-disable': {
+      smartBlurEnabled = false;
+      clearAllBlur();
+      logger.log('Smart blur disabled');
+      sendResponse({ success: true });
+      break;
+    }
+
+    case 'navtour:smart-blur-manual-start': {
+      startManualBlur();
+      logger.log('Manual blur mode started');
+      sendResponse({ success: true });
+      break;
+    }
+
+    case 'navtour:smart-blur-manual-stop': {
+      stopManualBlur();
+      logger.log('Manual blur mode stopped');
+      sendResponse({ success: true });
+      break;
+    }
+
+    case 'navtour:smart-blur-status': {
+      const blurCount = getBlurCount();
+      sendResponse({ success: true, enabled: smartBlurEnabled, ...blurCount });
+      break;
     }
 
     case 'navtour:inject-toolbar': {
