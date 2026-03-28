@@ -117,6 +117,9 @@ builder.Services.AddScoped<IFormService, FormService>();
 // Theme Services
 builder.Services.AddScoped<NavTour.Server.Services.ThemeService>();
 
+// Hub Services
+builder.Services.AddScoped<HubService>();
+
 // Analytics Services
 builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 builder.Services.AddScoped<ILeadService, LeadService>();
@@ -159,6 +162,7 @@ builder.Services.AddScoped<AnalyticsApiService>();
 builder.Services.AddScoped<TeamApiService>();
 builder.Services.AddScoped<FormApiService>();
 builder.Services.AddScoped<ThemeApiService>();
+builder.Services.AddScoped<HubApiService>();
 builder.Services.AddScoped<AiApiService>();
 
 var app = builder.Build();
@@ -214,7 +218,7 @@ app.UseAuthorization();
 app.Use(async (context, next) =>
 {
     var path = context.Request.Path.Value?.ToLower() ?? "";
-    var protectedPaths = new[] { "/dashboard", "/analytics", "/leads", "/team", "/settings", "/demos/" };
+    var protectedPaths = new[] { "/dashboard", "/analytics", "/leads", "/team", "/settings", "/demos/", "/hub" };
     var isProtected = protectedPaths.Any(p => path.StartsWith(p));
 
     if (isProtected && context.User?.Identity?.IsAuthenticated != true)

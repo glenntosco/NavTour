@@ -33,6 +33,9 @@ public class NavTourDbContext : IdentityDbContext<ApplicationUser, IdentityRole<
     public DbSet<Form> Forms => Set<Form>();
     public DbSet<CapturedResource> CapturedResources => Set<CapturedResource>();
     public DbSet<DemoTheme> DemoThemes => Set<DemoTheme>();
+    public DbSet<DemoHub> DemoHubs => Set<DemoHub>();
+    public DbSet<HubCategory> HubCategories => Set<HubCategory>();
+    public DbSet<HubItem> HubItems => Set<HubItem>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -154,6 +157,36 @@ public class NavTourDbContext : IdentityDbContext<ApplicationUser, IdentityRole<
             e.Property(t => t.FontFamily).HasMaxLength(100);
             e.Property(t => t.ButtonStyle).HasMaxLength(20);
             e.Property(t => t.ShadowLevel).HasMaxLength(20);
+        });
+
+        // DemoHub
+        builder.Entity<DemoHub>(e =>
+        {
+            e.HasQueryFilter(h => h.TenantId == _tenantProvider.TenantId && !h.IsDeleted);
+            e.HasIndex(h => new { h.TenantId, h.Slug }).IsUnique();
+            e.Property(h => h.Name).HasMaxLength(200);
+            e.Property(h => h.Slug).HasMaxLength(100);
+        });
+
+        // HubCategory
+        builder.Entity<HubCategory>(e =>
+        {
+            e.HasQueryFilter(c => c.TenantId == _tenantProvider.TenantId && !c.IsDeleted);
+            e.HasOne<DemoHub>().WithMany(h => h.Categories).HasForeignKey(c => c.DemoHubId);
+            e.Property(c => c.Name).HasMaxLength(200);
+            e.Property(c => c.Description).HasMaxLength(2000);
+        });
+
+        // HubItem
+        builder.Entity<HubItem>(e =>
+        {
+            e.HasQueryFilter(i => i.TenantId == _tenantProvider.TenantId && !i.IsDeleted);
+            e.HasOne<HubCategory>().WithMany(c => c.Items).HasForeignKey(i => i.HubCategoryId);
+            e.Property(i => i.ItemType).HasMaxLength(20);
+            e.Property(i => i.TitleOverride).HasMaxLength(200);
+            e.Property(i => i.DescriptionOverride).HasMaxLength(2000);
+            e.Property(i => i.ExternalUrl).HasMaxLength(2000);
+            e.Property(i => i.ThumbnailOverride).HasMaxLength(2000);
         });
 
         // CapturedResource — content-addressed, shared across tenants (no query filter)
