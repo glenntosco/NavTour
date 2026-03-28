@@ -1,12 +1,12 @@
 @page "/hub/{Slug}"
 @layout NavTour.Server.Components.Layout.BlankLayout
 @attribute [Microsoft.AspNetCore.Authorization.AllowAnonymous]
-@inject HttpClient Http
+@inject NavTour.Server.Services.HubService HubService
 @using NavTour.Shared.DTOs.Hub
 @using System.Text.Json
 
 <HeadContent>
-    <title>@(hub?.Name ?? "Demo Hub")</title>
+    <title>@(hub?.Name ?? "TourHub")</title>
     <meta name="description" content="Explore interactive product demos" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <style>
@@ -376,7 +376,8 @@ else
     {
         try
         {
-            hub = await Http.GetFromJsonAsync<HubResponse>($"api/v1/hubs/public/{Slug}");
+            hub = await HubService.GetBySlugAsync(Slug);
+            if (hub != null && !hub.IsPublished) hub = null;
             if (hub != null)
             {
                 appearance = hub.Appearance;

@@ -9,7 +9,7 @@
 @inject IJSRuntime JS
 @using NavTour.Shared.DTOs.Hub
 
-<PageTitle>Demo Hub — NavTour</PageTitle>
+<PageTitle>TourHub — NavTour</PageTitle>
 
 @if (loading)
 {
@@ -22,7 +22,7 @@ else if (hub == null)
     @* ── Hub List / Selection ── *@
     <div class="he-hub-list">
         <div class="he-hub-list-header">
-            <h2 class="he-hub-list-title">Demo Hubs</h2>
+            <h2 class="he-hub-list-title">TourHubs</h2>
             <button class="he-btn-primary" @onclick="CreateHub">+ Create Hub</button>
         </div>
         <div class="he-hub-cards">
@@ -1248,10 +1248,10 @@ else
     private string GetHubUrl() => hub?.Slug != null ? $"{Nav.BaseUri.TrimEnd('/')}/hub/{hub.Slug}" : "";
 
     private string GetFacebookShareUrl() => $"https://www.facebook.com/sharer/sharer.php?u={Uri.EscapeDataString(GetHubUrl())}";
-    private string GetTwitterShareUrl() => $"https://twitter.com/intent/tweet?url={Uri.EscapeDataString(GetHubUrl())}&text={Uri.EscapeDataString($"Check out our interactive demos: {hub?.Name ?? "Demo Hub"}")}";
-    private string GetWhatsAppShareUrl() => $"https://wa.me/?text={Uri.EscapeDataString($"{hub?.Name ?? "Demo Hub"} — {GetHubUrl()}")}";
+    private string GetTwitterShareUrl() => $"https://twitter.com/intent/tweet?url={Uri.EscapeDataString(GetHubUrl())}&text={Uri.EscapeDataString($"Check out our interactive demos: {hub?.Name ?? "TourHub"}")}";
+    private string GetWhatsAppShareUrl() => $"https://wa.me/?text={Uri.EscapeDataString($"{hub?.Name ?? "TourHub"} — {GetHubUrl()}")}";
     private string GetLinkedInShareUrl() => $"https://www.linkedin.com/sharing/share-offsite/?url={Uri.EscapeDataString(GetHubUrl())}";
-    private string GetEmailShareUrl() => $"mailto:?subject={Uri.EscapeDataString(hub?.Name ?? "Demo Hub")}&body={Uri.EscapeDataString($"Check out our interactive demos: {GetHubUrl()}")}";
+    private string GetEmailShareUrl() => $"mailto:?subject={Uri.EscapeDataString(hub?.Name ?? "TourHub")}&body={Uri.EscapeDataString($"Check out our interactive demos: {GetHubUrl()}")}";
 
     private async Task CopyHubUrl()
     {
