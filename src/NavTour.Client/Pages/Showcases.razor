@@ -1,0 +1,954 @@
+@page "/showcases"
+@page "/showcases/{ShowcaseId:guid}"
+@rendermode InteractiveServer
+@inject ShowcaseApiService ShowcaseApi
+@inject DemoApiService DemoApi
+@inject AuthService Auth
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+@using NavTour.Shared.DTOs.Showcases
+
+<PageTitle>Showcases — NavTour</PageTitle>
+
+@if (loading)
+{
+    <div class="sc-loading">
+        <RadzenProgressBarCircular ShowValue="false" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.Medium" />
+    </div>
+}
+else if (ShowcaseId == null)
+{
+    @* ── List View ── *@
+    <div class="sc-list">
+        @if (showWelcome)
+        {
+            <div class="sc-welcome">
+                <div class="sc-welcome-content">
+                    <svg class="sc-welcome-icon" viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12zM10 9h8v2h-8zm0 3h4v2h-4zm0-6h8v2h-8z"/></svg>
+                    <div>
+                        <h3 class="sc-welcome-title">Welcome to Showcases!</h3>
+                        <p class="sc-welcome-text">Group multiple demos into a single, shareable URL. Perfect for onboarding flows, feature tours, and sales presentations.</p>
+                    </div>
+                </div>
+                <button class="sc-welcome-dismiss" @onclick="DismissWelcome" title="Dismiss">
+                    <svg width="16" height="16" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="currentColor"/></svg>
+                </button>
+            </div>
+        }
+
+        <div class="sc-list-header">
+            <h2 class="sc-list-title">Showcases</h2>
+            <button class="sc-btn-primary" @onclick="CreateShowcase">+ Create Showcase</button>
+        </div>
+
+        @if (showcases.Count > 0)
+        {
+            <div class="sc-table">
+                <div class="sc-table-head">
+                    <span class="sc-th sc-th-name">Name</span>
+                    <span class="sc-th sc-th-status">Status</span>
+                    <span class="sc-th sc-th-date">Date</span>
+                    <span class="sc-th sc-th-actions"></span>
+                </div>
+                @foreach (var sc in showcases)
+                {
+                    <div class="sc-table-row" @onclick="() => OpenEditor(sc.Id)">
+                        <span class="sc-td sc-td-name">
+                            <svg class="sc-row-icon" viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12zM10 9h8v2h-8zm0 3h4v2h-4zm0-6h8v2h-8z"/></svg>
+                            <div>
+                                <span class="sc-row-name">@sc.Name</span>
+                                <span class="sc-row-sub">@sc.Sections.Sum(s => s.Items.Count) demos &middot; @sc.ViewCount views</span>
+                            </div>
+                        </span>
+                        <span class="sc-td sc-td-status">
+                            <span class="sc-badge @(sc.Status == "Published" ? "sc-badge-pub" : "")">@sc.Status</span>
+                        </span>
+                        <span class="sc-td sc-td-date">@sc.CreatedAt.ToString("MMM d, yyyy")</span>
+                        <span class="sc-td sc-td-actions" @onclick:stopPropagation="true">
+                            <button class="sc-icon-btn" @onclick="() => CopyShowcaseLink(sc)" title="Copy link">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                            </button>
+                            <div class="sc-ctx-wrapper">
+                                <button class="sc-icon-btn" @onclick="() => ToggleContextMenu(sc.Id)" title="More actions">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
+                                </button>
+                                @if (contextMenuId == sc.Id)
+                                {
+                                    <div class="sc-ctx-menu">
+                                        <button class="sc-ctx-item" @onclick="() => CopyShowcaseLink(sc)">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                                            Copy link
+                                        </button>
+                                        <button class="sc-ctx-item" @onclick="() => OpenEditor(sc.Id)">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                            Edit
+                                        </button>
+                                        <button class="sc-ctx-item" @onclick="() => { OpenEditor(sc.Id); showShareMenu = true; }">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                                            Share
+                                        </button>
+                                        <button class="sc-ctx-item" @onclick="() => DuplicateShowcase(sc)">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                            Duplicate
+                                        </button>
+                                        <div class="sc-ctx-divider"></div>
+                                        <button class="sc-ctx-item sc-ctx-danger" @onclick="() => DeleteShowcase(sc.Id)">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                            Delete
+                                        </button>
+                                    </div>
+                                }
+                            </div>
+                        </span>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="sc-empty">
+                <svg class="sc-empty-icon" viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12zM10 9h8v2h-8zm0 3h4v2h-4zm0-6h8v2h-8z"/></svg>
+                <h3 class="sc-empty-title">No showcases yet</h3>
+                <p class="sc-empty-text">Create a showcase to group multiple demos into a single shareable link.</p>
+                <button class="sc-btn-primary" @onclick="CreateShowcase">+ Create Showcase</button>
+            </div>
+        }
+    </div>
+}
+else if (showcase != null)
+{
+    @* ── Editor View ── *@
+    <div class="sc-editor" @onclick="CloseMenus">
+        <div class="sc-editor-bar">
+            <div class="sc-editor-bar-left">
+                <button class="sc-btn-back" @onclick="BackToList">
+                    <svg viewBox="0 0 24 24" width="16" height="16"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" fill="currentColor"/></svg>
+                    Back
+                </button>
+                <input class="sc-name-input" type="text" @bind="editName" @bind:event="oninput" placeholder="Showcase name" />
+            </div>
+            <div class="sc-editor-bar-right">
+                <label class="sc-publish-toggle">
+                    <RadzenSwitch @bind-Value="isPublished" Change="@OnPublishToggle" />
+                    <span class="sc-publish-label">@(isPublished ? "Published" : "Draft")</span>
+                </label>
+                <button class="sc-btn-save" @onclick="SaveShowcase" disabled="@saving">@(saving ? "Saving..." : "Save")</button>
+                <div class="sc-share-wrapper" @onclick:stopPropagation="true">
+                    <button class="sc-btn-share" @onclick="() => showShareMenu = !showShareMenu">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                        Share
+                    </button>
+                    @if (showShareMenu)
+                    {
+                        <div class="sc-share-menu">
+                            <div class="sc-share-url">
+                                <input type="text" readonly value="@GetShowcaseUrl()" class="sc-share-url-input" />
+                                <button class="sc-share-copy" @onclick="CopyShowcaseUrl">@(linkCopied ? "Copied!" : "Copy")</button>
+                            </div>
+                            <div class="sc-share-divider"></div>
+                            <div class="sc-share-buttons">
+                                <a href="@GetFacebookShareUrl()" target="_blank" rel="noopener" class="sc-share-btn" title="Share on Facebook">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                                </a>
+                                <a href="@GetTwitterShareUrl()" target="_blank" rel="noopener" class="sc-share-btn" title="Share on X">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                                </a>
+                                <a href="@GetWhatsAppShareUrl()" target="_blank" rel="noopener" class="sc-share-btn" title="Share on WhatsApp">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+                                </a>
+                                <a href="@GetLinkedInShareUrl()" target="_blank" rel="noopener" class="sc-share-btn" title="Share on LinkedIn">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                                </a>
+                                <a href="@GetEmailShareUrl()" class="sc-share-btn" title="Share via Email">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="sc-editor-body">
+            @* ── Settings Panel ── *@
+            <div class="sc-settings">
+                <h3 class="sc-section-title">Settings</h3>
+
+                <div class="sc-field">
+                    <label class="sc-label">Layout Theme</label>
+                    <div class="sc-segmented">
+                        <button class="sc-seg-btn @(editLayoutTheme == "Checklist" ? "active" : "")" @onclick='() => editLayoutTheme = "Checklist"'>Checklist</button>
+                        <button class="sc-seg-btn @(editLayoutTheme == "Sidebar" ? "active" : "")" @onclick='() => editLayoutTheme = "Sidebar"'>Sidebar</button>
+                    </div>
+                </div>
+
+                <div class="sc-field">
+                    <label class="sc-label">Autoplay</label>
+                    <RadzenSwitch @bind-Value="editAutoplay" />
+                </div>
+
+                <div class="sc-field">
+                    <label class="sc-label">SEO Title</label>
+                    <input class="sc-input" type="text" @bind="editSeoTitle" @bind:event="oninput" placeholder="Page title for search engines" />
+                </div>
+
+                <div class="sc-field">
+                    <label class="sc-label">SEO Description</label>
+                    <textarea class="sc-textarea" @bind="editDescription" @bind:event="oninput" placeholder="Brief description for search engines" rows="3"></textarea>
+                </div>
+            </div>
+
+            @* ── Sections Manager ── *@
+            <div class="sc-sections">
+                <h3 class="sc-section-title">Sections &amp; Demos</h3>
+
+                @for (int si = 0; si < editSections.Count; si++)
+                {
+                    var sIdx = si;
+                    var sec = editSections[si];
+                    <div class="sc-section-card">
+                        <div class="sc-section-header" @onclick="() => ToggleSectionCollapse(sec.Id)">
+                            <svg class="sc-chevron @(collapsedSections.Contains(sec.Id) ? "" : "expanded")" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+                            @if (renamingSectionId == sec.Id)
+                            {
+                                <input class="sc-section-name-input" type="text" @bind="renamingSectionName" @bind:event="oninput"
+                                    @onkeydown="HandleSectionRenameKey"
+                                    @onclick:stopPropagation="true" />
+                                <button class="sc-icon-btn-sm" @onclick="FinishRenameSection" @onclick:stopPropagation="true" title="Save name">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                </button>
+                            }
+                            else
+                            {
+                                <span class="sc-section-name">@sec.Name</span>
+                                <span class="sc-section-count">@sec.Items.Count demos</span>
+                            }
+                            <div class="sc-section-actions" @onclick:stopPropagation="true">
+                                <button class="sc-icon-btn-sm" @onclick="() => StartRenameSection(sec)" title="Rename">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                </button>
+                                <button class="sc-icon-btn-sm sc-danger" @onclick="() => DeleteSection(sec.Id)" title="Delete section">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        @if (!collapsedSections.Contains(sec.Id))
+                        {
+                            <div class="sc-section-items">
+                                @for (int ii = 0; ii < sec.Items.Count; ii++)
+                                {
+                                    var iIdx = ii;
+                                    var item = sec.Items[ii];
+                                    <div class="sc-item">
+                                        <div class="sc-item-drag" title="Reorder">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                                        </div>
+                                        <div class="sc-item-info">
+                                            <span class="sc-item-title">@(item.TitleOverride ?? item.DemoName ?? "Untitled")</span>
+                                            <span class="sc-item-meta">@item.DemoStepCount steps</span>
+                                        </div>
+                                        <div class="sc-item-actions">
+                                            @if (iIdx > 0)
+                                            {
+                                                <button class="sc-icon-btn-sm" @onclick="() => MoveItem(sec, iIdx, -1)" title="Move up">
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7 14l5-5 5 5z"/></svg>
+                                                </button>
+                                            }
+                                            @if (iIdx < sec.Items.Count - 1)
+                                            {
+                                                <button class="sc-icon-btn-sm" @onclick="() => MoveItem(sec, iIdx, 1)" title="Move down">
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+                                                </button>
+                                            }
+                                            <button class="sc-icon-btn-sm sc-danger" @onclick="() => DeleteItem(sec, item.Id)" title="Remove demo">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                }
+                                @if (sec.Items.Count == 0)
+                                {
+                                    <div class="sc-items-empty">No demos in this section yet.</div>
+                                }
+                                <div class="sc-add-demo-wrap">
+                                    @if (addingDemoSectionId == sec.Id)
+                                    {
+                                        <div class="sc-demo-picker" @onclick:stopPropagation="true">
+                                            <input class="sc-demo-search" type="text" placeholder="Search demos..." @bind="demoSearchText" @bind:event="oninput" />
+                                            <div class="sc-demo-picker-list">
+                                                @foreach (var demo in GetFilteredDemos())
+                                                {
+                                                    <button class="sc-demo-picker-item" @onclick="() => AddDemoToSection(sec.Id, demo)">
+                                                        <span class="sc-demo-picker-name">@demo.Name</span>
+                                                        <span class="sc-demo-picker-meta">@demo.StepCount steps</span>
+                                                    </button>
+                                                }
+                                                @if (!GetFilteredDemos().Any())
+                                                {
+                                                    <div class="sc-demo-picker-empty">No published demos found</div>
+                                                }
+                                            </div>
+                                            <button class="sc-demo-picker-close" @onclick="() => addingDemoSectionId = null">Cancel</button>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <button class="sc-btn-add-demo" @onclick="() => OpenDemoPicker(sec.Id)">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                            Add Demo
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+
+                <button class="sc-btn-add-section" @onclick="AddSection">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Add Section
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+    /* ── Loading ── */
+    .sc-loading { display:flex; align-items:center; justify-content:center; min-height:60vh; }
+
+    /* ── Welcome Card ── */
+    .sc-welcome {
+        display:flex; align-items:flex-start; justify-content:space-between; gap:var(--nt-space-4);
+        padding:var(--nt-space-6); margin-bottom:var(--nt-space-6);
+        background:var(--nt-accent-light); border:1px solid var(--nt-accent);
+        border-radius:var(--nt-radius-lg);
+    }
+    .sc-welcome-content { display:flex; align-items:flex-start; gap:var(--nt-space-4); }
+    .sc-welcome-icon { width:32px; height:32px; flex-shrink:0; fill:var(--nt-accent); margin-top:2px; }
+    .sc-welcome-title { font-size:var(--nt-text-lg); font-weight:var(--nt-weight-semibold); color:var(--nt-text-primary); margin:0 0 var(--nt-space-1); }
+    .sc-welcome-text { font-size:var(--nt-text-sm); color:var(--nt-text-secondary); margin:0; line-height:var(--nt-leading-normal); }
+    .sc-welcome-dismiss {
+        background:none; border:none; cursor:pointer; padding:var(--nt-space-2);
+        color:var(--nt-text-muted); border-radius:var(--nt-radius); flex-shrink:0;
+        min-width:44px; min-height:44px; display:flex; align-items:center; justify-content:center;
+    }
+    .sc-welcome-dismiss:hover { background:var(--nt-surface-subtle); color:var(--nt-text-primary); }
+
+    /* ── List View ── */
+    .sc-list { max-width:960px; margin:0 auto; }
+    .sc-list-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:var(--nt-space-6); }
+    .sc-list-title { font-size:var(--nt-text-2xl); font-weight:var(--nt-weight-bold); color:var(--nt-text-primary); margin:0; }
+
+    .sc-btn-primary {
+        padding:var(--nt-space-2) var(--nt-space-5); background:var(--nt-accent); color:var(--nt-surface);
+        border:none; border-radius:var(--nt-radius-md); cursor:pointer;
+        font-size:var(--nt-text-sm); font-weight:var(--nt-weight-semibold); font-family:inherit;
+        min-height:44px; transition:background var(--nt-duration-fast) var(--nt-ease);
+    }
+    .sc-btn-primary:hover { background:var(--nt-accent-hover); }
+
+    /* ── Table ── */
+    .sc-table { border:1px solid var(--nt-border); border-radius:var(--nt-radius-lg); overflow:hidden; }
+    .sc-table-head {
+        display:grid; grid-template-columns:1fr 100px 120px 80px;
+        padding:var(--nt-space-3) var(--nt-space-4); background:var(--nt-surface-subtle);
+        border-bottom:1px solid var(--nt-border);
+    }
+    .sc-th { font-size:var(--nt-text-xs); font-weight:var(--nt-weight-semibold); color:var(--nt-text-muted); text-transform:uppercase; letter-spacing:0.05em; }
+    .sc-th-status, .sc-th-date { text-align:center; }
+
+    .sc-table-row {
+        display:grid; grid-template-columns:1fr 100px 120px 80px; align-items:center;
+        padding:var(--nt-space-3) var(--nt-space-4); cursor:pointer;
+        border-bottom:1px solid var(--nt-border);
+        transition:background var(--nt-duration-fast) var(--nt-ease);
+    }
+    .sc-table-row:last-child { border-bottom:none; }
+    .sc-table-row:hover { background:var(--nt-surface-subtle); }
+
+    .sc-td-name { display:flex; align-items:center; gap:var(--nt-space-3); }
+    .sc-row-icon { width:20px; height:20px; flex-shrink:0; fill:var(--nt-accent); }
+    .sc-row-name { display:block; font-size:var(--nt-text-sm); font-weight:var(--nt-weight-semibold); color:var(--nt-text-primary); }
+    .sc-row-sub { display:block; font-size:var(--nt-text-xs); color:var(--nt-text-muted); margin-top:2px; }
+    .sc-td-status { text-align:center; }
+    .sc-td-date { text-align:center; font-size:var(--nt-text-xs); color:var(--nt-text-secondary); }
+    .sc-td-actions { display:flex; align-items:center; gap:var(--nt-space-1); justify-content:flex-end; }
+
+    .sc-badge {
+        display:inline-block; padding:2px 10px; border-radius:99px;
+        font-size:var(--nt-text-xs); font-weight:var(--nt-weight-medium);
+        background:var(--nt-surface-subtle); color:var(--nt-text-muted);
+    }
+    .sc-badge-pub { background:var(--nt-success-light); color:var(--nt-success); }
+
+    .sc-icon-btn {
+        background:none; border:none; cursor:pointer; padding:var(--nt-space-2);
+        color:var(--nt-text-muted); border-radius:var(--nt-radius);
+        min-width:44px; min-height:44px; display:flex; align-items:center; justify-content:center;
+        transition:background var(--nt-duration-fast), color var(--nt-duration-fast);
+    }
+    .sc-icon-btn:hover { background:var(--nt-surface-subtle); color:var(--nt-text-primary); }
+
+    /* ── Context Menu ── */
+    .sc-ctx-wrapper { position:relative; }
+    .sc-ctx-menu {
+        position:absolute; top:100%; right:0; z-index:50; min-width:180px;
+        background:var(--nt-surface); border:1px solid var(--nt-border);
+        border-radius:var(--nt-radius-md); box-shadow:var(--nt-shadow-lg);
+        padding:var(--nt-space-1) 0;
+    }
+    .sc-ctx-item {
+        display:flex; align-items:center; gap:var(--nt-space-2); width:100%;
+        padding:var(--nt-space-2) var(--nt-space-4); background:none; border:none; cursor:pointer;
+        font-size:var(--nt-text-sm); color:var(--nt-text-secondary); font-family:inherit;
+        min-height:44px; transition:background var(--nt-duration-fast);
+    }
+    .sc-ctx-item:hover { background:var(--nt-surface-subtle); color:var(--nt-text-primary); }
+    .sc-ctx-danger { color:var(--nt-error); }
+    .sc-ctx-danger:hover { background:var(--nt-error-light); color:var(--nt-error); }
+    .sc-ctx-divider { height:1px; background:var(--nt-border); margin:var(--nt-space-1) 0; }
+
+    /* ── Empty State ── */
+    .sc-empty {
+        text-align:center; padding:80px var(--nt-space-6);
+        border:2px dashed var(--nt-border); border-radius:var(--nt-radius-lg);
+    }
+    .sc-empty-icon { width:48px; height:48px; fill:var(--nt-text-muted); margin-bottom:var(--nt-space-4); }
+    .sc-empty-title { font-size:var(--nt-text-lg); font-weight:var(--nt-weight-semibold); color:var(--nt-text-primary); margin:0 0 var(--nt-space-2); }
+    .sc-empty-text { font-size:var(--nt-text-sm); color:var(--nt-text-secondary); margin:0 0 var(--nt-space-6); }
+
+    /* ── Editor View ── */
+    .sc-editor { display:flex; flex-direction:column; height:100%; }
+    .sc-editor-bar {
+        display:flex; align-items:center; justify-content:space-between; gap:var(--nt-space-4);
+        padding:var(--nt-space-3) var(--nt-space-6);
+        border-bottom:1px solid var(--nt-border); background:var(--nt-surface);
+        flex-shrink:0;
+    }
+    .sc-editor-bar-left { display:flex; align-items:center; gap:var(--nt-space-3); flex:1; min-width:0; }
+    .sc-editor-bar-right { display:flex; align-items:center; gap:var(--nt-space-3); flex-shrink:0; }
+
+    .sc-btn-back {
+        display:flex; align-items:center; gap:var(--nt-space-2); background:none; border:none;
+        cursor:pointer; color:var(--nt-text-secondary); font-size:var(--nt-text-sm);
+        font-weight:var(--nt-weight-medium); font-family:inherit; padding:var(--nt-space-2);
+        border-radius:var(--nt-radius); min-height:44px; min-width:44px;
+        transition:color var(--nt-duration-fast);
+    }
+    .sc-btn-back:hover { color:var(--nt-text-primary); }
+
+    .sc-name-input {
+        flex:1; border:1px solid transparent; background:none; padding:var(--nt-space-2) var(--nt-space-3);
+        font-size:var(--nt-text-lg); font-weight:var(--nt-weight-semibold); color:var(--nt-text-primary);
+        font-family:inherit; border-radius:var(--nt-radius); min-width:0;
+        transition:border-color var(--nt-duration-fast);
+    }
+    .sc-name-input:focus { border-color:var(--nt-accent); outline:none; }
+
+    .sc-publish-toggle { display:flex; align-items:center; gap:var(--nt-space-2); }
+    .sc-publish-label { font-size:var(--nt-text-sm); font-weight:var(--nt-weight-medium); color:var(--nt-text-secondary); }
+
+    .sc-btn-save {
+        padding:var(--nt-space-2) var(--nt-space-5); background:var(--nt-accent); color:var(--nt-surface);
+        border:none; border-radius:var(--nt-radius-md); cursor:pointer;
+        font-size:var(--nt-text-sm); font-weight:var(--nt-weight-semibold); font-family:inherit;
+        min-height:44px; transition:background var(--nt-duration-fast) var(--nt-ease);
+    }
+    .sc-btn-save:hover { background:var(--nt-accent-hover); }
+    .sc-btn-save:disabled { opacity:0.6; cursor:not-allowed; }
+
+    .sc-btn-share {
+        display:flex; align-items:center; gap:var(--nt-space-2);
+        padding:var(--nt-space-2) var(--nt-space-4); background:var(--nt-surface);
+        border:1px solid var(--nt-border); border-radius:var(--nt-radius-md); cursor:pointer;
+        font-size:var(--nt-text-sm); font-weight:var(--nt-weight-medium); color:var(--nt-text-secondary);
+        font-family:inherit; min-height:44px;
+        transition:border-color var(--nt-duration-fast), color var(--nt-duration-fast);
+    }
+    .sc-btn-share:hover { border-color:var(--nt-border-hover); color:var(--nt-text-primary); }
+
+    /* ── Share Menu ── */
+    .sc-share-wrapper { position:relative; }
+    .sc-share-menu {
+        position:absolute; top:calc(100% + 8px); right:0; z-index:50;
+        min-width:320px; background:var(--nt-surface); border:1px solid var(--nt-border);
+        border-radius:var(--nt-radius-md); box-shadow:var(--nt-shadow-lg); padding:var(--nt-space-4);
+    }
+    .sc-share-url { display:flex; gap:var(--nt-space-2); }
+    .sc-share-url-input {
+        flex:1; padding:var(--nt-space-2) var(--nt-space-3); border:1px solid var(--nt-border);
+        border-radius:var(--nt-radius); font-size:var(--nt-text-xs); color:var(--nt-text-secondary);
+        background:var(--nt-surface-subtle); font-family:var(--nt-font-mono); min-width:0;
+    }
+    .sc-share-copy {
+        padding:var(--nt-space-2) var(--nt-space-3); background:var(--nt-accent); color:var(--nt-surface);
+        border:none; border-radius:var(--nt-radius); cursor:pointer; font-size:var(--nt-text-xs);
+        font-weight:var(--nt-weight-semibold); font-family:inherit; white-space:nowrap; min-height:44px;
+    }
+    .sc-share-copy:hover { background:var(--nt-accent-hover); }
+    .sc-share-divider { height:1px; background:var(--nt-border); margin:var(--nt-space-3) 0; }
+    .sc-share-buttons { display:flex; gap:var(--nt-space-2); justify-content:center; }
+    .sc-share-btn {
+        width:44px; height:44px; display:flex; align-items:center; justify-content:center;
+        border-radius:var(--nt-radius); color:var(--nt-text-secondary); text-decoration:none;
+        transition:background var(--nt-duration-fast), color var(--nt-duration-fast);
+    }
+    .sc-share-btn:hover { background:var(--nt-surface-subtle); color:var(--nt-text-primary); }
+
+    /* ── Editor Body ── */
+    .sc-editor-body {
+        flex:1; overflow-y:auto; padding:var(--nt-space-6);
+        display:grid; grid-template-columns:280px 1fr; gap:var(--nt-space-6);
+        align-items:start;
+    }
+
+    .sc-section-title {
+        font-size:var(--nt-text-sm); font-weight:var(--nt-weight-semibold); color:var(--nt-text-primary);
+        margin:0 0 var(--nt-space-4); text-transform:uppercase; letter-spacing:0.04em;
+    }
+
+    /* ── Settings Panel ── */
+    .sc-settings {
+        background:var(--nt-surface); border:1px solid var(--nt-border);
+        border-radius:var(--nt-radius-lg); padding:var(--nt-space-5);
+        position:sticky; top:var(--nt-space-6);
+    }
+    .sc-field { margin-bottom:var(--nt-space-4); }
+    .sc-field:last-child { margin-bottom:0; }
+    .sc-label {
+        display:block; font-size:var(--nt-text-xs); font-weight:var(--nt-weight-semibold);
+        color:var(--nt-text-secondary); margin-bottom:var(--nt-space-2);
+    }
+    .sc-input {
+        width:100%; padding:var(--nt-space-2) var(--nt-space-3); border:1px solid var(--nt-border);
+        border-radius:var(--nt-radius); font-size:var(--nt-text-sm); color:var(--nt-text-primary);
+        background:var(--nt-surface); font-family:inherit; box-sizing:border-box;
+        transition:border-color var(--nt-duration-fast);
+    }
+    .sc-input:focus { border-color:var(--nt-accent); outline:none; }
+    .sc-textarea {
+        width:100%; padding:var(--nt-space-2) var(--nt-space-3); border:1px solid var(--nt-border);
+        border-radius:var(--nt-radius); font-size:var(--nt-text-sm); color:var(--nt-text-primary);
+        background:var(--nt-surface); font-family:inherit; resize:vertical; box-sizing:border-box;
+        transition:border-color var(--nt-duration-fast);
+    }
+    .sc-textarea:focus { border-color:var(--nt-accent); outline:none; }
+
+    .sc-segmented { display:flex; border:1px solid var(--nt-border); border-radius:var(--nt-radius-md); overflow:hidden; }
+    .sc-seg-btn {
+        flex:1; padding:var(--nt-space-2) var(--nt-space-3); background:var(--nt-surface);
+        border:none; cursor:pointer; font-size:var(--nt-text-xs); font-weight:var(--nt-weight-medium);
+        color:var(--nt-text-secondary); font-family:inherit; min-height:44px;
+        transition:background var(--nt-duration-fast), color var(--nt-duration-fast);
+    }
+    .sc-seg-btn + .sc-seg-btn { border-left:1px solid var(--nt-border); }
+    .sc-seg-btn.active { background:var(--nt-accent); color:var(--nt-surface); }
+    .sc-seg-btn:not(.active):hover { background:var(--nt-surface-subtle); }
+
+    /* ── Sections Manager ── */
+    .sc-sections { min-width:0; }
+
+    .sc-section-card {
+        border:1px solid var(--nt-border); border-radius:var(--nt-radius-lg);
+        margin-bottom:var(--nt-space-4); overflow:hidden; background:var(--nt-surface);
+    }
+    .sc-section-header {
+        display:flex; align-items:center; gap:var(--nt-space-2);
+        padding:var(--nt-space-3) var(--nt-space-4); background:var(--nt-surface-subtle);
+        cursor:pointer; min-height:48px;
+        transition:background var(--nt-duration-fast);
+    }
+    .sc-section-header:hover { background:var(--nt-surface-secondary); }
+
+    .sc-chevron { transition:transform var(--nt-duration-normal) var(--nt-ease); flex-shrink:0; color:var(--nt-text-muted); }
+    .sc-chevron.expanded { transform:rotate(90deg); }
+
+    .sc-section-name { font-size:var(--nt-text-sm); font-weight:var(--nt-weight-semibold); color:var(--nt-text-primary); }
+    .sc-section-count { font-size:var(--nt-text-xs); color:var(--nt-text-muted); margin-left:var(--nt-space-2); }
+    .sc-section-name-input {
+        flex:1; border:1px solid var(--nt-accent); padding:var(--nt-space-1) var(--nt-space-2);
+        border-radius:var(--nt-radius); font-size:var(--nt-text-sm); font-family:inherit;
+        color:var(--nt-text-primary); background:var(--nt-surface); min-width:0;
+    }
+    .sc-section-name-input:focus { outline:none; }
+    .sc-section-actions { display:flex; align-items:center; gap:var(--nt-space-1); margin-left:auto; }
+
+    .sc-icon-btn-sm {
+        background:none; border:none; cursor:pointer; padding:var(--nt-space-2);
+        color:var(--nt-text-muted); border-radius:var(--nt-radius);
+        min-width:36px; min-height:36px; display:flex; align-items:center; justify-content:center;
+        transition:background var(--nt-duration-fast), color var(--nt-duration-fast);
+    }
+    .sc-icon-btn-sm:hover { background:var(--nt-surface-subtle); color:var(--nt-text-primary); }
+    .sc-icon-btn-sm.sc-danger:hover { background:var(--nt-error-light); color:var(--nt-error); }
+
+    .sc-section-items { padding:var(--nt-space-2) var(--nt-space-4) var(--nt-space-4); }
+
+    .sc-item {
+        display:flex; align-items:center; gap:var(--nt-space-3);
+        padding:var(--nt-space-2) var(--nt-space-3);
+        border:1px solid var(--nt-border); border-radius:var(--nt-radius);
+        margin-bottom:var(--nt-space-2); background:var(--nt-surface);
+        min-height:48px;
+        transition:border-color var(--nt-duration-fast);
+    }
+    .sc-item:hover { border-color:var(--nt-border-hover); }
+    .sc-item-drag { color:var(--nt-text-muted); cursor:grab; flex-shrink:0; padding:var(--nt-space-1); }
+    .sc-item-info { flex:1; min-width:0; }
+    .sc-item-title { display:block; font-size:var(--nt-text-sm); font-weight:var(--nt-weight-medium); color:var(--nt-text-primary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .sc-item-meta { font-size:var(--nt-text-xs); color:var(--nt-text-muted); }
+    .sc-item-actions { display:flex; align-items:center; gap:var(--nt-space-1); flex-shrink:0; }
+
+    .sc-items-empty { padding:var(--nt-space-4); text-align:center; font-size:var(--nt-text-sm); color:var(--nt-text-muted); }
+
+    .sc-add-demo-wrap { margin-top:var(--nt-space-2); }
+    .sc-btn-add-demo {
+        display:flex; align-items:center; gap:var(--nt-space-2); width:100%;
+        padding:var(--nt-space-2) var(--nt-space-3); background:none;
+        border:1px dashed var(--nt-border); border-radius:var(--nt-radius); cursor:pointer;
+        font-size:var(--nt-text-sm); color:var(--nt-text-muted); font-family:inherit;
+        min-height:44px; justify-content:center;
+        transition:border-color var(--nt-duration-fast), color var(--nt-duration-fast);
+    }
+    .sc-btn-add-demo:hover { border-color:var(--nt-accent); color:var(--nt-accent); }
+
+    /* ── Demo Picker ── */
+    .sc-demo-picker {
+        border:1px solid var(--nt-border); border-radius:var(--nt-radius-md);
+        background:var(--nt-surface); box-shadow:var(--nt-shadow-md); overflow:hidden;
+    }
+    .sc-demo-search {
+        width:100%; padding:var(--nt-space-3); border:none; border-bottom:1px solid var(--nt-border);
+        font-size:var(--nt-text-sm); color:var(--nt-text-primary); font-family:inherit;
+        background:var(--nt-surface-subtle); box-sizing:border-box;
+    }
+    .sc-demo-search:focus { outline:none; }
+    .sc-demo-picker-list { max-height:200px; overflow-y:auto; }
+    .sc-demo-picker-item {
+        display:flex; align-items:center; justify-content:space-between; width:100%;
+        padding:var(--nt-space-2) var(--nt-space-3); background:none; border:none; cursor:pointer;
+        font-family:inherit; min-height:44px;
+        transition:background var(--nt-duration-fast);
+    }
+    .sc-demo-picker-item:hover { background:var(--nt-surface-subtle); }
+    .sc-demo-picker-name { font-size:var(--nt-text-sm); color:var(--nt-text-primary); font-weight:var(--nt-weight-medium); }
+    .sc-demo-picker-meta { font-size:var(--nt-text-xs); color:var(--nt-text-muted); }
+    .sc-demo-picker-empty { padding:var(--nt-space-4); text-align:center; font-size:var(--nt-text-sm); color:var(--nt-text-muted); }
+    .sc-demo-picker-close {
+        width:100%; padding:var(--nt-space-2); background:none; border:none;
+        border-top:1px solid var(--nt-border); cursor:pointer;
+        font-size:var(--nt-text-xs); color:var(--nt-text-muted); font-family:inherit;
+        min-height:44px; transition:background var(--nt-duration-fast);
+    }
+    .sc-demo-picker-close:hover { background:var(--nt-surface-subtle); }
+
+    .sc-btn-add-section {
+        display:flex; align-items:center; justify-content:center; gap:var(--nt-space-2); width:100%;
+        padding:var(--nt-space-3); background:none; border:2px dashed var(--nt-border);
+        border-radius:var(--nt-radius-lg); cursor:pointer;
+        font-size:var(--nt-text-sm); font-weight:var(--nt-weight-medium); color:var(--nt-text-muted);
+        font-family:inherit; min-height:48px;
+        transition:border-color var(--nt-duration-fast), color var(--nt-duration-fast);
+    }
+    .sc-btn-add-section:hover { border-color:var(--nt-accent); color:var(--nt-accent); }
+
+    /* ── Responsive ── */
+    @@media (max-width:768px) {
+        .sc-table-head { display:none; }
+        .sc-table-row { grid-template-columns:1fr auto auto; gap:var(--nt-space-2); }
+        .sc-td-date { display:none; }
+        .sc-editor-body { grid-template-columns:1fr; }
+        .sc-settings { position:static; }
+        .sc-editor-bar { flex-wrap:wrap; }
+        .sc-editor-bar-left { min-width:100%; }
+        .sc-share-menu { right:-60px; min-width:280px; }
+    }
+
+    @@media (max-width:375px) {
+        .sc-list { padding:0 var(--nt-space-2); }
+        .sc-list-header { flex-direction:column; align-items:stretch; gap:var(--nt-space-3); }
+        .sc-welcome { flex-direction:column; }
+        .sc-share-menu { min-width:260px; right:-40px; }
+    }
+</style>
+
+@code {
+    [Parameter] public Guid? ShowcaseId { get; set; }
+
+    private bool loading = true;
+    private bool saving;
+    private bool showWelcome = true;
+    private bool showShareMenu;
+    private bool linkCopied;
+    private Guid? contextMenuId;
+
+    // List view
+    private List<ShowcaseResponse> showcases = [];
+
+    // Editor view
+    private ShowcaseResponse? showcase;
+    private string editName = "";
+    private string editDescription = "";
+    private string editSeoTitle = "";
+    private string editLayoutTheme = "Checklist";
+    private bool editAutoplay;
+    private bool isPublished;
+    private List<ShowcaseSectionResponse> editSections = [];
+    private HashSet<Guid> collapsedSections = [];
+
+    // Section rename
+    private Guid? renamingSectionId;
+    private string renamingSectionName = "";
+
+    // Add demo
+    private Guid? addingDemoSectionId;
+    private string demoSearchText = "";
+    private List<DemoListItemResponse> allDemos = [];
+
+    protected override async Task OnParametersSetAsync()
+    {
+        loading = true;
+        contextMenuId = null;
+        showShareMenu = false;
+
+        try
+        {
+            if (ShowcaseId.HasValue)
+            {
+                showcase = await ShowcaseApi.GetByIdAsync(ShowcaseId.Value);
+                if (showcase != null)
+                {
+                    editName = showcase.Name;
+                    editDescription = showcase.Description ?? "";
+                    editSeoTitle = "";
+                    editLayoutTheme = showcase.LayoutTheme;
+                    editAutoplay = showcase.Autoplay;
+                    isPublished = showcase.Status == "Published";
+                    editSections = showcase.Sections.Select(s =>
+                        new ShowcaseSectionResponse(s.Id, s.Name, s.SortOrder, s.Items.ToList())).ToList();
+                }
+                allDemos = await DemoApi.GetDemosAsync();
+            }
+            else
+            {
+                showcase = null;
+                showcases = await ShowcaseApi.GetAllAsync();
+            }
+        }
+        catch { }
+
+        try
+        {
+            var dismissed = await JS.InvokeAsync<string>("localStorage.getItem", "navtour_showcase_welcome_dismissed");
+            showWelcome = dismissed != "true";
+        }
+        catch { }
+
+        loading = false;
+    }
+
+    // ── List Actions ──
+
+    private async Task CreateShowcase()
+    {
+        var created = await ShowcaseApi.CreateAsync(new CreateShowcaseRequest(null));
+        if (created != null) Nav.NavigateTo($"/showcases/{created.Id}");
+    }
+
+    private void OpenEditor(Guid id) => Nav.NavigateTo($"/showcases/{id}");
+    private void BackToList() => Nav.NavigateTo("/showcases");
+
+    private async Task CopyShowcaseLink(ShowcaseResponse sc)
+    {
+        var url = $"{Nav.BaseUri.TrimEnd('/')}/showcase-view/{sc.Slug}";
+        try { await JS.InvokeVoidAsync("navigator.clipboard.writeText", url); } catch { }
+        contextMenuId = null;
+    }
+
+    private async Task DuplicateShowcase(ShowcaseResponse sc)
+    {
+        contextMenuId = null;
+        var dup = await ShowcaseApi.CreateAsync(new CreateShowcaseRequest($"{sc.Name} (copy)"));
+        if (dup != null)
+        {
+            // Copy sections and items
+            foreach (var section in sc.Sections)
+            {
+                var newSection = await ShowcaseApi.AddSectionAsync(new CreateSectionRequest(dup.Id, section.Name));
+                if (newSection != null)
+                {
+                    foreach (var item in section.Items)
+                    {
+                        await ShowcaseApi.AddItemAsync(new AddShowcaseItemRequest(newSection.Id, item.DemoId, item.TitleOverride));
+                    }
+                }
+            }
+            showcases = await ShowcaseApi.GetAllAsync();
+        }
+    }
+
+    private async Task DeleteShowcase(Guid id)
+    {
+        contextMenuId = null;
+        await ShowcaseApi.DeleteAsync(id);
+        showcases = await ShowcaseApi.GetAllAsync();
+    }
+
+    private void ToggleContextMenu(Guid id)
+    {
+        contextMenuId = contextMenuId == id ? null : id;
+    }
+
+    private async Task DismissWelcome()
+    {
+        showWelcome = false;
+        try { await JS.InvokeVoidAsync("localStorage.setItem", "navtour_showcase_welcome_dismissed", "true"); } catch { }
+    }
+
+    // ── Editor Actions ──
+
+    private async Task SaveShowcase()
+    {
+        if (showcase == null) return;
+        saving = true;
+        try
+        {
+            await ShowcaseApi.UpdateAsync(showcase.Id, new UpdateShowcaseRequest(
+                editName, editDescription,
+                isPublished ? "Published" : "Draft",
+                editLayoutTheme, editAutoplay));
+
+            // Sync section order
+            for (int i = 0; i < editSections.Count; i++)
+            {
+                await ShowcaseApi.UpdateSectionAsync(editSections[i].Id, new UpdateSectionRequest(null, i));
+            }
+        }
+        catch { }
+        saving = false;
+    }
+
+    private async Task OnPublishToggle()
+    {
+        if (showcase == null) return;
+        await ShowcaseApi.UpdateAsync(showcase.Id, new UpdateShowcaseRequest(
+            null, null, isPublished ? "Published" : "Draft", null, null));
+    }
+
+    // ── Section Actions ──
+
+    private async Task AddSection()
+    {
+        if (showcase == null) return;
+        var section = await ShowcaseApi.AddSectionAsync(new CreateSectionRequest(showcase.Id, $"Section {editSections.Count + 1}"));
+        if (section != null) editSections.Add(section);
+    }
+
+    private void StartRenameSection(ShowcaseSectionResponse section)
+    {
+        renamingSectionId = section.Id;
+        renamingSectionName = section.Name;
+    }
+
+    private async Task FinishRenameSection()
+    {
+        if (renamingSectionId == null) return;
+        var updated = await ShowcaseApi.UpdateSectionAsync(renamingSectionId.Value, new UpdateSectionRequest(renamingSectionName, null));
+        if (updated != null)
+        {
+            var idx = editSections.FindIndex(s => s.Id == renamingSectionId.Value);
+            if (idx >= 0) editSections[idx] = updated;
+        }
+        renamingSectionId = null;
+    }
+
+    private async Task DeleteSection(Guid sectionId)
+    {
+        await ShowcaseApi.DeleteSectionAsync(sectionId);
+        editSections.RemoveAll(s => s.Id == sectionId);
+    }
+
+    private void ToggleSectionCollapse(Guid sectionId)
+    {
+        if (!collapsedSections.Remove(sectionId)) collapsedSections.Add(sectionId);
+    }
+
+    // ── Item Actions ──
+
+    private async Task AddDemoToSection(Guid sectionId, DemoListItemResponse demo)
+    {
+        var item = await ShowcaseApi.AddItemAsync(new AddShowcaseItemRequest(sectionId, demo.Id, null));
+        if (item != null)
+        {
+            var section = editSections.FirstOrDefault(s => s.Id == sectionId);
+            if (section != null)
+            {
+                section.Items.Add(item);
+            }
+        }
+        addingDemoSectionId = null;
+    }
+
+    private async Task DeleteItem(ShowcaseSectionResponse section, Guid itemId)
+    {
+        await ShowcaseApi.DeleteItemAsync(itemId);
+        section.Items.RemoveAll(i => i.Id == itemId);
+    }
+
+    private async Task MoveItem(ShowcaseSectionResponse section, int index, int direction)
+    {
+        var newIndex = index + direction;
+        if (newIndex < 0 || newIndex >= section.Items.Count) return;
+        var item = section.Items[index];
+        section.Items.RemoveAt(index);
+        section.Items.Insert(newIndex, item);
+
+        // Update sort orders
+        for (int i = 0; i < section.Items.Count; i++)
+        {
+            await ShowcaseApi.UpdateItemAsync(section.Items[i].Id, new UpdateShowcaseItemRequest(null, i));
+        }
+    }
+
+    private IEnumerable<DemoListItemResponse> GetFilteredDemos()
+    {
+        var demos = allDemos.Where(d => d.Status == DemoStatus.Published);
+        if (!string.IsNullOrWhiteSpace(demoSearchText))
+            demos = demos.Where(d => d.Name.Contains(demoSearchText, StringComparison.OrdinalIgnoreCase));
+        return demos;
+    }
+
+    // ── Share Helpers ──
+
+    private string GetShowcaseUrl() => showcase?.Slug != null ? $"{Nav.BaseUri.TrimEnd('/')}/showcase-view/{showcase.Slug}" : "";
+    private string GetFacebookShareUrl() => $"https://www.facebook.com/sharer/sharer.php?u={Uri.EscapeDataString(GetShowcaseUrl())}";
+    private string GetTwitterShareUrl() => $"https://twitter.com/intent/tweet?url={Uri.EscapeDataString(GetShowcaseUrl())}&text={Uri.EscapeDataString($"Check out this showcase: {showcase?.Name ?? "Showcase"}")}";
+    private string GetWhatsAppShareUrl() => $"https://wa.me/?text={Uri.EscapeDataString($"{showcase?.Name ?? "Showcase"} — {GetShowcaseUrl()}")}";
+    private string GetLinkedInShareUrl() => $"https://www.linkedin.com/sharing/share-offsite/?url={Uri.EscapeDataString(GetShowcaseUrl())}";
+    private string GetEmailShareUrl() => $"mailto:?subject={Uri.EscapeDataString(showcase?.Name ?? "Showcase")}&body={Uri.EscapeDataString($"Check out this showcase: {GetShowcaseUrl()}")}";
+
+    private async Task CopyShowcaseUrl()
+    {
+        try { await JS.InvokeVoidAsync("navigator.clipboard.writeText", GetShowcaseUrl()); linkCopied = true; StateHasChanged(); await Task.Delay(2000); linkCopied = false; StateHasChanged(); } catch { }
+    }
+
+    private void CloseMenus()
+    {
+        contextMenuId = null;
+        showShareMenu = false;
+        addingDemoSectionId = null;
+    }
+
+    private async Task HandleSectionRenameKey(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter") await FinishRenameSection();
+    }
+
+    private void OpenDemoPicker(Guid sectionId)
+    {
+        addingDemoSectionId = sectionId;
+        demoSearchText = "";
+    }
+}

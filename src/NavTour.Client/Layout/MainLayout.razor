@@ -24,6 +24,10 @@
                 <svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9h-4v4h-2v-4H9V9h4V5h2v4h4v2z"/></svg>
                 <span>TourHub</span>
             </a>
+            <a href="/showcases" class="nav-item @ActiveClass("/showcases")" title="Showcases">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12zM10 9h8v2h-8zm0 3h4v2h-4zm0-6h8v2h-8z"/></svg>
+                <span>Showcases</span>
+            </a>
             <div class="nav-group">Analyze</div>
             <a href="/analytics" class="nav-item @ActiveClass("/analytics")" title="Analytics">
                 <svg class="nav-icon" viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg>
@@ -300,6 +304,7 @@
     private string GetBreadcrumb()
     {
         var uri = Nav.Uri;
+        if (uri.Contains("/showcases", StringComparison.OrdinalIgnoreCase)) return "Showcases";
         if (uri.Contains("/hub", StringComparison.OrdinalIgnoreCase)) return "TourHub";
         if (uri.Contains("/dashboard", StringComparison.OrdinalIgnoreCase)) return "Product Demos";
         if (uri.Contains("/analytics", StringComparison.OrdinalIgnoreCase)) return "Analytics";
