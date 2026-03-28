@@ -243,8 +243,9 @@ public class HubService
         if (item.ItemType == "demo" && item.DemoId.HasValue)
         {
             var demo = await _db.Demos
+                .IgnoreQueryFilters()
                 .Include(d => d.Steps)
-                .FirstOrDefaultAsync(d => d.Id == item.DemoId.Value);
+                .FirstOrDefaultAsync(d => d.Id == item.DemoId.Value && !d.IsDeleted);
 
             if (demo != null)
             {
