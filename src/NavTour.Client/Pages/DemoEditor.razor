@@ -116,6 +116,18 @@
                 OnAnnotationsChanged="RefreshAnnotations" />
         </div>
 
+        @* Chapter settings drawer *@
+        <div class="editor-drawer @(activeDrawer == "chapter" ? "open" : "")">
+            <div class="drawer-header">
+                <strong>@(editingChapterStep?.Type == StepType.CoverSlide ? "Cover Slide" : "Closing Slide") Settings</strong>
+                <button class="drawer-close" @onclick="CloseDrawer">&times;</button>
+            </div>
+            @if (editingChapterSettings != null)
+            {
+                <ChapterSettingsPanel Settings="editingChapterSettings" OnSave="SaveChapterSettings" />
+            }
+        </div>
+
         @if (generating)
         {
             <div style="position:absolute;inset:0;z-index:100;background:rgba(255,255,255,0.9);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px">
@@ -251,6 +263,8 @@
     private bool generating;
     private string generatingStatus = "";
     private string? activeDrawer = "steps";
+    private StepResponse? editingChapterStep;
+    private NavTour.Shared.DTOs.ChapterSettings? editingChapterSettings;
 
     private void ToggleDrawer(string drawer)
     {
@@ -386,8 +400,11 @@ $@"<iframe
         {
             if (step.Type == StepType.CoverSlide || step.Type == StepType.ClosingSlide)
             {
-                // Chapter steps don't have frames — just select and show cover preview
+                // Chapter steps — open chapter settings drawer
+                editingChapterStep = step;
+                editingChapterSettings = ParseChapterSettings(step.ChapterSettings);
                 currentAnnotations = step.Annotations;
+                activeDrawer = "chapter";
                 StateHasChanged();
             }
             else
@@ -587,6 +604,28 @@ $@"<iframe
         steps = await DemoApi.GetStepsAsync(DemoId);
         StateHasChanged();
         Notification.Notify(NotificationSeverity.Success, "Closing slide added");
+    }
+
+    private async Task SaveChapterSettings(NavTour.Shared.DTOs.ChapterSettings settings)
+    {
+        if (editingChapterStep == null) return;
+        editingChapterSettings = settings;
+        var json = System.Text.Json.JsonSerializer.Serialize(settings);
+
+        // Update the step's ChapterSettings via batch update
+        var allSteps = steps.Select(s =>
+        {
+            var dto = MapStepToDto(s);
+            if (s.Id == editingChapterStep.Id)
+                return dto with { ChapterSettings = json };
+            return dto;
+        }).ToList();
+
+        await DemoApi.UpdateStepsAsync(DemoId, new UpdateStepsRequest(allSteps));
+        steps = await DemoApi.GetStepsAsync(DemoId);
+        editingChapterStep = steps.FirstOrDefault(s => s.Id == editingChapterStep.Id);
+        StateHasChanged();
+        Notification.Notify(NotificationSeverity.Success, "Chapter settings saved");
     }
 
     private async Task DeleteStep(Guid stepId)
