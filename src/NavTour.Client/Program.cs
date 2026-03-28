@@ -18,4 +18,7 @@ builder.Services.AddScoped<AnalyticsApiService>();
 // Theme Services
 builder.Services.AddScoped<ThemeApiService>();
 
+// AI Services
+builder.Services.AddScoped<AiApiService>();
+
 await builder.Build().RunAsync();

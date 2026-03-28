@@ -5,6 +5,8 @@
 @inject NotificationService Notification
 @inject AuthService Auth
 @inject IJSRuntime JS
+@inject AiApiService AiApi
+@using NavTour.Shared.DTOs.Ai
 
 <RadzenStack Gap="0" Style="height:calc(100vh - 80px)">
     @* Toolbar *@
@@ -16,6 +18,17 @@
         <RadzenButton Text="Find & Replace" Icon="find_replace" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Click="() => showFindReplace = !showFindReplace" title="Search and replace text across the current frame" />
         <RadzenButton Text="Save Edits" Icon="save_alt" ButtonStyle="ButtonStyle.Warning" Size="ButtonSize.Small" Click="SaveFrameEdits" Visible="@(frameEditor?.HasUnsavedEdits == true)" title="Save changes to the current frame's HTML" />
         <RadzenButton Text="AI Generate" Icon="auto_awesome" ButtonStyle="ButtonStyle.Success" Size="ButtonSize.Small" Click="GenerateTour" IsBusy="generating" Disabled="@(frames == null || frames.Count == 0)" title="AI generates steps, annotations, and voiceover for all frames" />
+        <RadzenButton Text="AI Write" Icon="edit_note" ButtonStyle="ButtonStyle.Info" Size="ButtonSize.Small" Click="AiWriteContent" IsBusy="aiWriting" Disabled="@(selectedStepId == null)" title="AI rewrites the selected step's content" />
+        <RadzenSplitButton Text="Translate" Icon="translate" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Click="@(args => TranslateSteps(args?.Value?.ToString() ?? "Spanish"))" IsBusy="aiTranslating" Disabled="@(steps.Count == 0)">
+            <ChildContent>
+                <RadzenSplitButtonItem Text="Spanish" Value="Spanish" />
+                <RadzenSplitButtonItem Text="French" Value="French" />
+                <RadzenSplitButtonItem Text="German" Value="German" />
+                <RadzenSplitButtonItem Text="Portuguese" Value="Portuguese" />
+                <RadzenSplitButtonItem Text="Japanese" Value="Japanese" />
+            </ChildContent>
+        </RadzenSplitButton>
+        <RadzenButton Text="Quality" Icon="insights" ButtonStyle="ButtonStyle.Warning" Size="ButtonSize.Small" Click="ScoreQuality" IsBusy="aiScoring" Disabled="@(steps.Count == 0)" title="AI scores your demo quality" />
         <RadzenButton Text="Save" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" Click="SaveSteps" IsBusy="saving" title="Save all step configurations and annotations" />
         <RadzenButton Text="Preview" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Click="OpenPreview" class="preview-btn" title="Open demo player in a new tab" />
         @if (demo?.Status == DemoStatus.Published)
@@ -115,6 +128,56 @@
     <OnboardingTour @bind-Visible="showTour" />
 </RadzenStack>
 
+@if (showQualityScore && qualityScore != null)
+{
+    <div style="position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center" @onclick="() => showQualityScore = false">
+        <div style="background:white;border-radius:16px;padding:28px 32px;width:480px;max-height:80vh;overflow-y:auto;box-shadow:0 12px 48px rgba(0,0,0,0.2)" @onclick:stopPropagation="true">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+                <RadzenText TextStyle="TextStyle.H5" class="rz-m-0" Style="font-weight:700">Demo Quality Score</RadzenText>
+                <button @onclick="() => showQualityScore = false" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--nt-text-muted)">&times;</button>
+            </div>
+
+            <div style="text-align:center;margin-bottom:24px">
+                <div style="font-size:56px;font-weight:800;color:@ScoreColor(qualityScore.OverallScore);line-height:1">@qualityScore.OverallScore</div>
+                <div style="font-size:13px;color:var(--nt-text-secondary);margin-top:4px">out of 100</div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
+                @foreach (var (label, score) in new[] { ("Content", qualityScore.ContentScore), ("Flow", qualityScore.FlowScore), ("Completeness", qualityScore.CompletenessScore), ("Engagement", qualityScore.EngagementScore) })
+                {
+                    <div style="background:var(--nt-surface-subtle);border-radius:10px;padding:12px">
+                        <div style="font-size:12px;color:var(--nt-text-secondary);margin-bottom:6px">@label</div>
+                        <div style="background:#e2e8f0;border-radius:6px;height:8px;overflow:hidden">
+                            <div style="background:@ScoreColor(score);height:100%;width:@(score)%;border-radius:6px;transition:width 0.5s"></div>
+                        </div>
+                        <div style="font-size:13px;font-weight:600;color:@ScoreColor(score);margin-top:4px">@score</div>
+                    </div>
+                }
+            </div>
+
+            <div style="margin-bottom:16px">
+                <div style="font-weight:600;font-size:14px;margin-bottom:8px;color:var(--nt-text-primary)">Strengths</div>
+                @foreach (var s in qualityScore.Strengths)
+                {
+                    <div style="font-size:13px;color:var(--nt-text-secondary);padding:3px 0">+ @s</div>
+                }
+            </div>
+
+            <div style="margin-bottom:16px">
+                <div style="font-weight:600;font-size:14px;margin-bottom:8px;color:var(--nt-text-primary)">Improvements</div>
+                @foreach (var s in qualityScore.Improvements)
+                {
+                    <div style="font-size:13px;color:var(--nt-text-secondary);padding:3px 0">- @s</div>
+                }
+            </div>
+
+            <div style="background:var(--nt-surface-subtle);border-radius:10px;padding:14px;font-size:13px;color:var(--nt-text-secondary);line-height:1.5">
+                @qualityScore.Summary
+            </div>
+        </div>
+    </div>
+}
+
 @if (showSharePopover)
 {
     <div style="position:fixed;inset:0;z-index:999" @onclick="() => showSharePopover = false"></div>
@@ -209,6 +272,11 @@
     private string shareCopyLabel = "Copy Link";
     private string embedCopyLabel = "Copy Embed Code";
     private FrameEditor? frameEditor;
+    private bool aiWriting;
+    private bool aiTranslating;
+    private bool aiScoring;
+    private bool showQualityScore;
+    private DemoQualityScore? qualityScore;
 
     private string DemoUrl
     {
@@ -657,6 +725,156 @@ $@"<iframe
         await Task.Delay(2000);
         embedCopyLabel = "Copy Embed Code";
     }
+
+    private async Task AiWriteContent()
+    {
+        if (selectedStepId == null) return;
+        var step = steps.FirstOrDefault(s => s.Id == selectedStepId);
+        if (step == null) return;
+
+        aiWriting = true;
+        StateHasChanged();
+
+        try
+        {
+            var title = step.Annotations.FirstOrDefault()?.Title ?? "Step " + step.StepNumber;
+            var context = step.Annotations.FirstOrDefault()?.Content ?? "";
+            var result = await AiApi.WriteContentAsync(title, context);
+            if (result != null)
+            {
+                // Update the first annotation's title and content
+                var ann = step.Annotations.FirstOrDefault();
+                if (ann != null)
+                {
+                    var request = new CreateAnnotationRequest(
+                        ann.Type, result.Title, result.Content,
+                        ann.PositionX, ann.PositionY, ann.Width, ann.Height, ann.Style,
+                        ann.TargetSelector, ann.ArrowDirection, ann.BadgeNumber);
+                    await DemoApi.UpdateAnnotationAsync(step.Id, ann.Id, request);
+
+                    // Update voiceover on the step
+                    var stepDto = MapStepToDto(step) with { VoiceoverText = result.VoiceoverText };
+                    var allSteps = steps.Select(s => s.Id == step.Id ? stepDto : MapStepToDto(s)).ToList();
+                    await DemoApi.UpdateStepsAsync(DemoId, new UpdateStepsRequest(allSteps));
+
+                    await RefreshAnnotations();
+                    Notification.Notify(NotificationSeverity.Success, "AI Write", "Step content updated by AI.");
+                }
+            }
+            else
+            {
+                Notification.Notify(NotificationSeverity.Error, "AI Write", "Failed to generate content.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Notification.Notify(NotificationSeverity.Error, "Error", ex.Message);
+        }
+        finally
+        {
+            aiWriting = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task TranslateSteps(string language)
+    {
+        if (steps.Count == 0) return;
+
+        aiTranslating = true;
+        StateHasChanged();
+
+        try
+        {
+            var translatableSteps = steps.Select(s =>
+            {
+                var ann = s.Annotations.FirstOrDefault();
+                return new TranslatableStep(s.StepNumber, ann?.Title ?? "", ann?.Content ?? "", s.VoiceoverText ?? "");
+            }).ToList();
+
+            var result = await AiApi.TranslateAsync(translatableSteps, language);
+            if (result != null)
+            {
+                // Apply translations to each step's annotation
+                foreach (var translated in result)
+                {
+                    var step = steps.FirstOrDefault(s => s.StepNumber == translated.StepNumber);
+                    var ann = step?.Annotations.FirstOrDefault();
+                    if (step != null && ann != null)
+                    {
+                        var request = new CreateAnnotationRequest(
+                            ann.Type, translated.Title, translated.Content,
+                            ann.PositionX, ann.PositionY, ann.Width, ann.Height, ann.Style,
+                            ann.TargetSelector, ann.ArrowDirection, ann.BadgeNumber);
+                        await DemoApi.UpdateAnnotationAsync(step.Id, ann.Id, request);
+                    }
+                }
+
+                // Update voiceover text on steps
+                var stepDtos = steps.Select(s =>
+                {
+                    var translated = result.FirstOrDefault(t => t.StepNumber == s.StepNumber);
+                    var dto = MapStepToDto(s);
+                    return translated != null ? dto with { VoiceoverText = translated.VoiceoverText } : dto;
+                }).ToList();
+                await DemoApi.UpdateStepsAsync(DemoId, new UpdateStepsRequest(stepDtos));
+
+                await RefreshAnnotations();
+                Notification.Notify(NotificationSeverity.Success, "Translated", $"Steps translated to {language}.");
+            }
+            else
+            {
+                Notification.Notify(NotificationSeverity.Error, "Translation", "Failed to translate steps.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Notification.Notify(NotificationSeverity.Error, "Error", ex.Message);
+        }
+        finally
+        {
+            aiTranslating = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task ScoreQuality()
+    {
+        if (steps.Count == 0) return;
+
+        aiScoring = true;
+        StateHasChanged();
+
+        try
+        {
+            var summaries = steps.Select(s =>
+            {
+                var ann = s.Annotations.FirstOrDefault();
+                return new StepSummary(s.StepNumber, ann?.Title, ann?.Content, s.VoiceoverText);
+            }).ToList();
+
+            qualityScore = await AiApi.ScoreAsync(summaries, frames?.Count ?? 0);
+            if (qualityScore != null)
+            {
+                showQualityScore = true;
+            }
+            else
+            {
+                Notification.Notify(NotificationSeverity.Error, "Quality Score", "Failed to score demo.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Notification.Notify(NotificationSeverity.Error, "Error", ex.Message);
+        }
+        finally
+        {
+            aiScoring = false;
+            StateHasChanged();
+        }
+    }
+
+    private static string ScoreColor(int score) => score > 70 ? "#22c55e" : score >= 50 ? "#eab308" : "#ef4444";
 
     private static StepDto MapStepToDto(StepResponse s) => new StepDto(
         s.Id, s.FrameId, s.StepNumber, s.ClickTargetSelector,

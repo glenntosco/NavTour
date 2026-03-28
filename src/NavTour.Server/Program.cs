@@ -159,6 +159,7 @@ builder.Services.AddScoped<AnalyticsApiService>();
 builder.Services.AddScoped<TeamApiService>();
 builder.Services.AddScoped<FormApiService>();
 builder.Services.AddScoped<ThemeApiService>();
+builder.Services.AddScoped<AiApiService>();
 
 var app = builder.Build();
 
