@@ -179,8 +179,19 @@ else
         }
         else
         {
-            <label class="he-label">Logo URL</label>
-            <RadzenTextBox @bind-Value="appearance.LogoUrl" Placeholder="https://..." Style="width:100%" />
+            <label class="he-label">Logo</label>
+            @if (!string.IsNullOrEmpty(appearance.LogoUrl))
+            {
+                <div class="he-logo-preview">
+                    <img src="@appearance.LogoUrl" alt="Logo" style="max-height:40px;max-width:200px" />
+                    <button class="he-logo-remove" @onclick='() => appearance.LogoUrl = null'>Remove</button>
+                </div>
+            }
+            <label class="he-upload-btn">
+                <InputFile OnChange="HandleLogoUpload" accept=".png,.jpg,.jpeg,.svg,.webp,.gif" />
+                <span>@(string.IsNullOrEmpty(appearance.LogoUrl) ? "Upload Logo" : "Replace")</span>
+            </label>
+            @if (logoUploading) { <span class="he-upload-status">Uploading...</span> }
         }
 
         <label class="he-label">Subtitle</label>
@@ -655,6 +666,32 @@ else
     }
     .he-label:first-child { margin-top: 0; }
 
+    .he-logo-preview {
+        display: flex; align-items: center; gap: 12px;
+        padding: 8px 12px; background: var(--nt-surface-subtle);
+        border-radius: var(--nt-radius); margin-top: 6px;
+    }
+    .he-logo-remove {
+        font-size: var(--nt-text-xs); color: var(--nt-error);
+        background: none; border: none; cursor: pointer; font-weight: 500;
+    }
+    .he-logo-remove:hover { text-decoration: underline; }
+
+    .he-upload-btn {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 8px 16px; margin-top: 6px;
+        background: var(--nt-surface-subtle); border: 1px dashed var(--nt-border);
+        border-radius: var(--nt-radius); cursor: pointer;
+        font-size: var(--nt-text-sm); font-weight: 500; color: var(--nt-text-secondary);
+        transition: border-color 150ms, background 150ms;
+    }
+    .he-upload-btn:hover { border-color: var(--nt-accent); background: var(--nt-accent-light); color: var(--nt-accent); }
+    .he-upload-btn input[type="file"] { display: none; }
+
+    .he-upload-status {
+        font-size: var(--nt-text-xs); color: var(--nt-accent); font-weight: 500; margin-left: 8px;
+    }
+
     /* ── Segmented Buttons ── */
     .he-seg {
         display: inline-flex; border: 1px solid var(--nt-border); border-radius: var(--nt-radius);
@@ -1002,6 +1039,7 @@ else
     private List<DemoListItemResponse> availableDemos = [];
     private bool loading = true;
     private bool saving;
+    private bool logoUploading;
     private bool isPublished;
     private string activeTab = "appearance";
 
@@ -1086,6 +1124,31 @@ else
             }
         }
     }
+
+    private async Task HandleLogoUpload(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file == null) return;
+        logoUploading = true;
+        StateHasChanged();
+        try
+        {
+            using var content = new MultipartFormDataContent();
+            using var stream = file.OpenReadStream(5 * 1024 * 1024);
+            content.Add(new StreamContent(stream), "file", file.Name);
+            var response = await Http.PostAsync("api/v1/uploads/image", content);
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<UploadResult>();
+                if (result?.Url != null) appearance.LogoUrl = result.Url;
+            }
+        }
+        catch { }
+        logoUploading = false;
+        StateHasChanged();
+    }
+
+    private record UploadResult(string? Url);
 
     private async Task SaveHub()
     {
