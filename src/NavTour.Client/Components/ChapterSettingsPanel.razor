@@ -1,0 +1,207 @@
+@using NavTour.Shared.DTOs
+
+<div class="chapter-panel">
+    <h3 class="chapter-panel-title">Chapter Settings</h3>
+
+    @* Layout *@
+    <div class="chapter-field">
+        <label>Layout</label>
+        <div class="seg-buttons">
+            <button class="seg-btn @(Settings.Layout == "left" ? "active" : "")" @onclick='() => { Settings.Layout = "left"; }'>Left</button>
+            <button class="seg-btn @(Settings.Layout == "center" ? "active" : "")" @onclick='() => { Settings.Layout = "center"; }'>Center</button>
+            <button class="seg-btn @(Settings.Layout == "right" ? "active" : "")" @onclick='() => { Settings.Layout = "right"; }'>Right</button>
+        </div>
+    </div>
+
+    @* Theme *@
+    <div class="chapter-field">
+        <label>Theme</label>
+        <div class="seg-buttons">
+            <button class="seg-btn @(Settings.Theme == "dark" ? "active" : "")" @onclick='() => { Settings.Theme = "dark"; }'>Dark</button>
+            <button class="seg-btn @(Settings.Theme == "light" ? "active" : "")" @onclick='() => { Settings.Theme = "light"; }'>Light</button>
+        </div>
+    </div>
+
+    @* Title *@
+    <div class="chapter-field">
+        <label>Title</label>
+        <RadzenTextBox @bind-Value="Settings.Title" Style="width:100%" />
+    </div>
+
+    @* Description *@
+    <div class="chapter-field">
+        <label>Description</label>
+        <RadzenTextArea @bind-Value="Settings.Description" Rows="3" Style="width:100%" />
+    </div>
+
+    @* CTA Text *@
+    <div class="chapter-field">
+        <label>CTA Text</label>
+        <RadzenTextBox @bind-Value="Settings.CtaText" Style="width:100%" />
+    </div>
+
+    @* CTA Action *@
+    <div class="chapter-field">
+        <label>CTA Action</label>
+        <RadzenDropDown TValue="string" @bind-Value="Settings.CtaAction"
+            Data="@ctaActions" TextProperty="Text" ValueProperty="Value"
+            Style="width:100%" />
+    </div>
+
+    @* CTA URL (only when action is "url") *@
+    @if (Settings.CtaAction == "url")
+    {
+        <div class="chapter-field">
+            <label>CTA URL</label>
+            <RadzenTextBox @bind-Value="Settings.CtaUrl" Placeholder="https://..." Style="width:100%" />
+        </div>
+    }
+
+    @* Logo toggle *@
+    <div class="chapter-field">
+        <label>Show Logo</label>
+        <RadzenSwitch @bind-Value="Settings.ShowLogo" />
+    </div>
+
+    @* Logo URL (only when logo is on) *@
+    @if (Settings.ShowLogo)
+    {
+        <div class="chapter-field">
+            <label>Logo URL</label>
+            <RadzenTextBox @bind-Value="Settings.LogoUrl" Placeholder="Leave empty for default" Style="width:100%" />
+        </div>
+    }
+
+    @* Background *@
+    <div class="chapter-field">
+        <label>Background</label>
+        <RadzenDropDown TValue="string" @bind-Value="Settings.BackgroundType"
+            Data="@bgTypes" TextProperty="Text" ValueProperty="Value"
+            Style="width:100%" />
+    </div>
+
+    @* Background URL (only when "custom") *@
+    @if (Settings.BackgroundType == "custom")
+    {
+        <div class="chapter-field">
+            <label>Background URL</label>
+            <RadzenTextBox @bind-Value="Settings.BackgroundUrl" Placeholder="https://..." Style="width:100%" />
+        </div>
+    }
+
+    @* Backdrop Opacity *@
+    <div class="chapter-field">
+        <label>Backdrop Opacity: @Settings.BackdropOpacity%</label>
+        <input type="range" min="0" max="100" @bind="Settings.BackdropOpacity" @bind:event="oninput"
+            style="width:100%;accent-color:var(--nt-accent)" />
+    </div>
+
+    @* Save *@
+    <button class="chapter-save-btn" @onclick="HandleSave">Save Settings</button>
+</div>
+
+<style>
+    .chapter-panel {
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .chapter-panel-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--nt-text-primary);
+        margin: 0 0 4px;
+        letter-spacing: -0.01em;
+    }
+
+    .chapter-field {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .chapter-field > label {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--nt-text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .seg-buttons {
+        display: flex;
+        gap: 0;
+        border: 1px solid var(--nt-border);
+        border-radius: var(--nt-radius);
+        overflow: hidden;
+    }
+
+    .seg-btn {
+        flex: 1;
+        padding: 6px 12px;
+        border: none;
+        background: var(--nt-surface-subtle);
+        color: var(--nt-text-secondary);
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 150ms, color 150ms;
+        font-family: var(--nt-font);
+    }
+
+    .seg-btn + .seg-btn {
+        border-left: 1px solid var(--nt-border);
+    }
+
+    .seg-btn.active {
+        background: var(--nt-accent);
+        color: #fff;
+    }
+
+    .seg-btn:hover:not(.active) {
+        background: var(--nt-neutral-100);
+    }
+
+    .chapter-save-btn {
+        margin-top: 8px;
+        padding: 10px 20px;
+        background: var(--nt-accent);
+        color: #fff;
+        border: none;
+        border-radius: var(--nt-radius);
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: var(--nt-font);
+        transition: background 150ms;
+    }
+
+    .chapter-save-btn:hover {
+        background: var(--nt-accent-hover);
+    }
+</style>
+
+@code {
+    [Parameter] public ChapterSettings Settings { get; set; } = new();
+    [Parameter] public EventCallback<ChapterSettings> OnSave { get; set; }
+
+    private static readonly object[] ctaActions =
+    [
+        new { Text = "Next Step", Value = "next" },
+        new { Text = "Open URL", Value = "url" },
+    ];
+
+    private static readonly object[] bgTypes =
+    [
+        new { Text = "None", Value = "none" },
+        new { Text = "First Frame", Value = "frame" },
+        new { Text = "Custom Image", Value = "custom" },
+    ];
+
+    private async Task HandleSave()
+    {
+        await OnSave.InvokeAsync(Settings);
+    }
+}

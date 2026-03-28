@@ -52,14 +52,27 @@
         </div>
 
         <div class="frame-editor" style="flex:1;display:flex;overflow:hidden">
-            <FrameEditor @ref="frameEditor" DemoId="@DemoId" HtmlContent="@currentFrameHtml"
-                Annotations="@currentAnnotations"
-                ShowFindReplace="@showFindReplace"
-                ShowFindReplaceChanged="(v) => showFindReplace = v"
-                OnHtmlChanged="OnFrameHtmlSaved"
-                OnAnnotationMoved="HandleAnnotationMoved"
-                OnAnnotationResized="HandleAnnotationResized"
-                OnAnnotationDoubleClicked="HandleAnnotationDoubleClicked" />
+            @{ var selectedStep = selectedStepId.HasValue ? steps.FirstOrDefault(s => s.Id == selectedStepId) : null; }
+            @if (selectedStep?.Type == StepType.CoverSlide || selectedStep?.Type == StepType.ClosingSlide)
+            {
+                var chapterSettings = ParseChapterSettings(selectedStep.ChapterSettings);
+                <div style="width:1440px;height:900px;position:relative;background:var(--nt-neutral-950)">
+                    <CoverSlideRenderer Settings="chapterSettings"
+                        TotalSteps="@steps.Count"
+                        IsClosing="@(selectedStep.Type == StepType.ClosingSlide)" />
+                </div>
+            }
+            else
+            {
+                <FrameEditor @ref="frameEditor" DemoId="@DemoId" HtmlContent="@currentFrameHtml"
+                    Annotations="@currentAnnotations"
+                    ShowFindReplace="@showFindReplace"
+                    ShowFindReplaceChanged="(v) => showFindReplace = v"
+                    OnHtmlChanged="OnFrameHtmlSaved"
+                    OnAnnotationMoved="HandleAnnotationMoved"
+                    OnAnnotationResized="HandleAnnotationResized"
+                    OnAnnotationDoubleClicked="HandleAnnotationDoubleClicked" />
+            }
         </div>
 
         @* Drawer backdrop *@
@@ -302,10 +315,19 @@ $@"<iframe
         var step = steps.FirstOrDefault(s => s.Id == stepId);
         if (step != null)
         {
-            selectedFrameId = step.FrameId;
-            currentAnnotations = step.Annotations;
-            if (step.FrameId.HasValue)
-                _ = SelectFrame(step.FrameId.Value);
+            if (step.Type == StepType.CoverSlide || step.Type == StepType.ClosingSlide)
+            {
+                // Chapter steps don't have frames — just select and show cover preview
+                currentAnnotations = step.Annotations;
+                StateHasChanged();
+            }
+            else
+            {
+                selectedFrameId = step.FrameId;
+                currentAnnotations = step.Annotations;
+                if (step.FrameId.HasValue)
+                    _ = SelectFrame(step.FrameId.Value);
+            }
         }
     }
 
@@ -643,5 +665,13 @@ $@"<iframe
             a.Id, a.Type, a.Title, a.Content,
             a.PositionX, a.PositionY, a.Width, a.Height, a.Style,
             a.TargetSelector, a.ArrowDirection, a.BadgeNumber)).ToList(),
-        s.TriggerType, s.TriggerDurationMs, s.BackdropLevel, s.VoiceoverText, s.VoiceId);
+        s.TriggerType, s.TriggerDurationMs, s.BackdropLevel, s.VoiceoverText, s.VoiceId,
+        s.Type, s.ChapterSettings);
+
+    private static NavTour.Shared.DTOs.ChapterSettings ParseChapterSettings(string? json)
+    {
+        if (string.IsNullOrEmpty(json)) return new NavTour.Shared.DTOs.ChapterSettings();
+        try { return System.Text.Json.JsonSerializer.Deserialize<NavTour.Shared.DTOs.ChapterSettings>(json, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new(); }
+        catch { return new NavTour.Shared.DTOs.ChapterSettings(); }
+    }
 }

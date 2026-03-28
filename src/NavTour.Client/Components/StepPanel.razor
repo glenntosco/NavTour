@@ -18,7 +18,8 @@
         var isSelected = step.Id == SelectedStepId;
         var isFirst = step.Id == orderedSteps[0].Id;
         var isLast = step.Id == orderedSteps[^1].Id;
-        <RadzenCard Style="@($"position:relative;padding:10px;cursor:pointer;{(isSelected ? "border:2px solid var(--rz-primary)" : "")}")"
+        var isChapter = step.Type == StepType.CoverSlide || step.Type == StepType.ClosingSlide;
+        <RadzenCard Style="@($"position:relative;padding:10px;cursor:pointer;{(isSelected ? "border:2px solid var(--rz-primary)" : "")}{(isChapter ? ";border-left:3px solid var(--nt-accent)" : "")}")"
             @onclick="() => OnStepSelected.InvokeAsync(step.Id)">
             <div class="step-actions" @onclick:stopPropagation="true">
                 <button class="step-reorder" disabled="@isFirst" @onclick="() => MoveUp(step)" title="Move up">&#9650;</button>
@@ -27,9 +28,21 @@
             </div>
             <RadzenStack Gap="4px">
                 <div style="display:flex;align-items:center;gap:6px">
-                    <RadzenText TextStyle="TextStyle.Subtitle2" class="rz-m-0">Step @step.StepNumber</RadzenText>
-                    @{ var frameName = Frames.FirstOrDefault(f => f.Id == step.FrameId)?.Name ?? "Untitled"; }
-                    <span class="frame-badge">@frameName</span>
+                    @if (step.Type == StepType.CoverSlide)
+                    {
+                        <RadzenIcon Icon="slideshow" Style="font-size:16px;color:var(--nt-accent)" />
+                        <RadzenText TextStyle="TextStyle.Subtitle2" class="rz-m-0" Style="color:var(--nt-accent)">Cover Slide</RadzenText>
+                    }
+                    else if (step.Type == StepType.ClosingSlide)
+                    {
+                        <RadzenIcon Icon="flag" Style="font-size:16px;color:var(--nt-accent)" />
+                        <RadzenText TextStyle="TextStyle.Subtitle2" class="rz-m-0" Style="color:var(--nt-accent)">Closing Slide</RadzenText>
+                    }
+                    else
+                    {
+                        <RadzenText TextStyle="TextStyle.Subtitle2" class="rz-m-0">Step @step.StepNumber</RadzenText>
+                        <span class="frame-badge">@(Frames.FirstOrDefault(f => f.Id == step.FrameId)?.Name ?? "Untitled")</span>
+                    }
                 </div>
                 <RadzenText TextStyle="TextStyle.Caption" Style="color:var(--rz-text-secondary-color)">
                     @step.NavigationAction.ToString()
@@ -150,6 +163,15 @@
     }
 
     <RadzenButton Text="+ Add Step" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Style="width:100%" Click="OnAddStep" title="Create a new step on the selected frame" />
+
+    @if (!Steps.Any(s => s.Type == StepType.CoverSlide))
+    {
+        <RadzenButton Text="+ Cover Slide" Icon="slideshow" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Small" Style="width:100%" Click="OnAddCoverSlide" title="Add a cover slide at the start of the demo" />
+    }
+    @if (!Steps.Any(s => s.Type == StepType.ClosingSlide))
+    {
+        <RadzenButton Text="+ Closing Slide" Icon="flag" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Small" Style="width:100%" Click="OnAddClosingSlide" title="Add a closing slide at the end of the demo" />
+    }
 </RadzenStack>
 
 <style>
@@ -191,6 +213,8 @@
     [Parameter] public EventCallback<Guid> OnDeleteStep { get; set; }
     [Parameter] public EventCallback<(Guid StepId, int Direction)> OnReorderStep { get; set; }
     [Parameter] public EventCallback<StepResponse> OnStepSettingsChanged { get; set; }
+    [Parameter] public EventCallback OnAddCoverSlide { get; set; }
+    [Parameter] public EventCallback OnAddClosingSlide { get; set; }
 
     private List<StepResponse> OrderedSteps => Steps.OrderBy(s => s.StepNumber).ToList();
 

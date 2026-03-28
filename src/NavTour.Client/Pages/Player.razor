@@ -36,21 +36,33 @@ else
         @* Frame content with overlays *@
         <div @ref="frameContainer" class="player-frame-container" style="flex:1;position:relative;overflow:hidden;background:#f5f5f5">
             <div id="player-scale-wrapper" style="width:1440px;height:900px;position:absolute;top:0;left:0;transform-origin:top left">
-                @if (currentFrame != null)
+                @if (currentStep?.Type == StepType.CoverSlide || currentStep?.Type == StepType.ClosingSlide)
                 {
-                    <iframe @ref="iframeRef" id="@_playerIframeId"
-                        src="/api/v1/player/frames/@currentFrame.Id/html"
-                        sandbox="allow-same-origin"
-                        style="width:1440px;height:900px;border:none"></iframe>
+                    var chapterSettings = ParseChapterSettings(currentStep.ChapterSettings);
+                    <CoverSlideRenderer Settings="chapterSettings"
+                        BackgroundImageUrl="@(currentFrame != null ? $"/api/v1/player/frames/{currentFrame.Id}/html" : null)"
+                        TotalSteps="@(manifest?.Steps.Count ?? 0)"
+                        IsClosing="@(currentStep.Type == StepType.ClosingSlide)"
+                        OnCtaClick="HandleCoverCtaClick" />
                 }
-
-                @* Spotlight overlay is managed by JS (playerSpotlight) *@
-
-                @if (currentStep != null)
+                else
                 {
-                    <PlayerOverlay Annotations="currentStep.Annotations" OnClickZone="HandleClickZone"
-                        StepIndex="currentStepIndex" TotalSteps="@(manifest?.Steps.Count ?? 0)"
-                        OnNavigate="HandleAnnotationNavigate" />
+                    @if (currentFrame != null)
+                    {
+                        <iframe @ref="iframeRef" id="@_playerIframeId"
+                            src="/api/v1/player/frames/@currentFrame.Id/html"
+                            sandbox="allow-same-origin"
+                            style="width:1440px;height:900px;border:none"></iframe>
+                    }
+
+                    @* Spotlight overlay is managed by JS (playerSpotlight) *@
+
+                    @if (currentStep != null)
+                    {
+                        <PlayerOverlay Annotations="currentStep.Annotations" OnClickZone="HandleClickZone"
+                            StepIndex="currentStepIndex" TotalSteps="@(manifest?.Steps.Count ?? 0)"
+                            OnNavigate="HandleAnnotationNavigate" />
+                    }
                 }
             </div>
 
@@ -71,23 +83,6 @@ else
             </div>
         }
     </div>
-
-    @* Start Demo overlay — provides user interaction to unlock audio *@
-    @if (GetSettingValue("showWelcomeScreen") != "false")
-    {
-        <div id="start-overlay" onclick="this.style.display='none';if(typeof voiceover!=='undefined'){var u=document.querySelector('[data-first-audio]');if(u&&u.dataset.firstAudio)voiceover.play(u.dataset.firstAudio)}" class="start-overlay">
-            <div class="start-card">
-                <img src="favicon.svg" alt="NavTour" style="height:40px;width:40px;margin-bottom:16px" />
-                <h2 style="margin:0 0 4px;font-size:22px;font-weight:700;color:#1a1a2e">@GetWelcomeTitle()</h2>
-                <p style="margin:0 0 24px;color:#666;font-size:14px">@GetWelcomeSubtitle()</p>
-                <button class="start-btn">
-                    <svg viewBox="0 0 24 24" width="20" height="20" style="fill:white"><path d="M8 5v14l11-7z"/></svg>
-                    @GetWelcomeButtonText()
-                </button>
-            </div>
-        </div>
-    }
-    <span hidden data-first-audio="@(currentStep?.VoiceoverAudioUrl)"></span>
 
     @* Escape View overlay *@
     @if (showEscapeView)
@@ -133,25 +128,6 @@ else
         padding: 4px 8px; border-radius: 4px; opacity: 0.6;
     }
     .voice-btn:hover { opacity: 1; background: #f0f0f0; }
-
-    .start-overlay {
-        position: fixed; inset: 0; z-index: 2000;
-        background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
-        display: flex; align-items: center; justify-content: center;
-        cursor: pointer;
-    }
-    .start-card {
-        background: white; border-radius: 20px; padding: 40px 48px;
-        text-align: center; box-shadow: 0 24px 80px rgba(0,0,0,0.25);
-        max-width: 400px;
-    }
-    .start-btn {
-        display: inline-flex; align-items: center; gap: 8px;
-        padding: 14px 36px; background: #4361ee; color: white;
-        border: none; border-radius: 12px; font-size: 16px; font-weight: 600;
-        cursor: pointer; transition: background 0.15s;
-    }
-    .start-btn:hover { background: #3451d1; }
 
     .timer-progress {
         height: 100%;
@@ -215,8 +191,8 @@ else
             await JS.InvokeVoidAsync("playerInterop.focusElement", playerContainer);
         }
 
-        // Load frame HTML via server URL when frame changes
-        if (currentFrame != null && currentFrame.Id != _lastRenderedFrameId)
+        // Load frame HTML via server URL when frame changes (content steps only)
+        if (currentStep?.Type == StepType.Content && currentFrame != null && currentFrame.Id != _lastRenderedFrameId)
         {
             var isFirstFrame = _lastRenderedFrameId == null;
             _lastRenderedFrameId = currentFrame.Id;
@@ -231,8 +207,8 @@ else
             }
         }
 
-        // Set up trigger for current step after render
-        if (manifest != null && currentStep != null && dotnetRef != null)
+        // Set up trigger for current step after render (content steps only)
+        if (currentStep?.Type == StepType.Content && manifest != null && currentStep != null && dotnetRef != null)
         {
             await SetupCurrentStepTrigger();
         }
@@ -241,8 +217,8 @@ else
         if (firstRender && manifest != null && currentStep?.VoiceoverAudioUrl != null)
             try { await JS.InvokeVoidAsync("voiceover.play", currentStep.VoiceoverAudioUrl); } catch { }
 
-        // Update spotlight for current step
-        if (manifest != null && currentStep != null)
+        // Update spotlight for current step (content steps only)
+        if (currentStep?.Type == StepType.Content && manifest != null && currentStep != null)
         {
             await UpdateSpotlight();
         }
@@ -538,37 +514,20 @@ else
         showLeadForm = false;
     }
 
-    private Dictionary<string, string>? _settingsCache;
-    private Dictionary<string, string> GetSettings()
+    private NavTour.Shared.DTOs.ChapterSettings ParseChapterSettings(string? json)
     {
-        if (_settingsCache != null) return _settingsCache;
-        if (string.IsNullOrEmpty(manifest?.Settings)) return _settingsCache = new();
-        try { return _settingsCache = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(manifest.Settings) ?? new(); }
-        catch { return _settingsCache = new(); }
+        if (string.IsNullOrEmpty(json)) return new NavTour.Shared.DTOs.ChapterSettings();
+        try { return System.Text.Json.JsonSerializer.Deserialize<NavTour.Shared.DTOs.ChapterSettings>(json, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new(); }
+        catch { return new NavTour.Shared.DTOs.ChapterSettings(); }
     }
 
-    private string GetSettingValue(string key)
+    private async Task HandleCoverCtaClick()
     {
-        var settings = GetSettings();
-        return settings.TryGetValue(key, out var val) ? val : "";
-    }
-
-    private string GetWelcomeTitle()
-    {
-        var val = GetSettingValue("welcomeTitle");
-        return !string.IsNullOrEmpty(val) ? val : manifest?.DemoName ?? "";
-    }
-
-    private string GetWelcomeSubtitle()
-    {
-        var val = GetSettingValue("welcomeSubtitle");
-        return !string.IsNullOrEmpty(val) ? val : $"{manifest?.Steps.Count ?? 0} steps \u00b7 Interactive product demo";
-    }
-
-    private string GetWelcomeButtonText()
-    {
-        var val = GetSettingValue("welcomeButtonText");
-        return !string.IsNullOrEmpty(val) ? val : "Start Demo";
+        var settings = currentStep != null ? ParseChapterSettings(currentStep.ChapterSettings) : new NavTour.Shared.DTOs.ChapterSettings();
+        if (settings.CtaAction == "url" && !string.IsNullOrEmpty(settings.CtaUrl))
+            Nav.NavigateTo(settings.CtaUrl, true);
+        else
+            await NextStep();
     }
 
     public void Dispose()
