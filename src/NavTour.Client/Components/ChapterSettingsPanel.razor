@@ -57,20 +57,12 @@
         </div>
     }
 
-    @* Logo toggle *@
+    @* Logo toggle — uses logo from Theme, not per-chapter *@
     <div class="chapter-field">
         <label>Show Logo</label>
+        <div class="chapter-hint">Logo is configured in Themes</div>
         <RadzenSwitch @bind-Value="Settings.ShowLogo" />
     </div>
-
-    @* Logo URL (only when logo is on) *@
-    @if (Settings.ShowLogo)
-    {
-        <div class="chapter-field">
-            <label>Logo URL</label>
-            <RadzenTextBox @bind-Value="Settings.LogoUrl" Placeholder="Leave empty for default" Style="width:100%" />
-        </div>
-    }
 
     @* Background *@
     <div class="chapter-field">
@@ -80,11 +72,24 @@
             Style="width:100%" />
     </div>
 
+    @* Background Position (when "frame") *@
+    @if (Settings.BackgroundType == "frame")
+    {
+        <div class="chapter-field">
+            <label>Background Position</label>
+            <div class="seg-buttons">
+                <button class="seg-btn @(GetBgPosition() == "top" ? "active" : "")" @onclick='() => SetBgPosition("top")'>Top</button>
+                <button class="seg-btn @(GetBgPosition() == "center" ? "active" : "")" @onclick='() => SetBgPosition("center")'>Center</button>
+                <button class="seg-btn @(GetBgPosition() == "bottom" ? "active" : "")" @onclick='() => SetBgPosition("bottom")'>Bottom</button>
+            </div>
+        </div>
+    }
+
     @* Background URL (only when "custom") *@
     @if (Settings.BackgroundType == "custom")
     {
         <div class="chapter-field">
-            <label>Background URL</label>
+            <label>Background Image URL</label>
             <RadzenTextBox @bind-Value="Settings.BackgroundUrl" Placeholder="https://..." Style="width:100%" />
         </div>
     }
@@ -128,6 +133,12 @@
         color: var(--nt-text-secondary);
         text-transform: uppercase;
         letter-spacing: 0.5px;
+    }
+
+    .chapter-hint {
+        font-size: 11px;
+        color: var(--nt-text-muted);
+        font-style: italic;
     }
 
     .seg-buttons {
@@ -199,6 +210,22 @@
         new { Text = "First Frame", Value = "frame" },
         new { Text = "Custom Image", Value = "custom" },
     ];
+
+    // Background position is stored in BackgroundUrl when type is "frame"
+    // Format: "position:top" / "position:center" / "position:bottom"
+    private string GetBgPosition()
+    {
+        if (Settings.BackgroundType != "frame") return "center";
+        if (string.IsNullOrEmpty(Settings.BackgroundUrl)) return "center";
+        if (Settings.BackgroundUrl.StartsWith("position:"))
+            return Settings.BackgroundUrl.Replace("position:", "");
+        return "center";
+    }
+
+    private void SetBgPosition(string pos)
+    {
+        Settings.BackgroundUrl = $"position:{pos}";
+    }
 
     private async Task HandleSave()
     {

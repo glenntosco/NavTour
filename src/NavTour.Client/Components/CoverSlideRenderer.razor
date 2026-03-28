@@ -3,20 +3,25 @@
 <div class="cover-slide cover-slide-@(Settings.Theme)">
     @if (Settings.BackgroundType == "frame" && BackgroundImageUrl != null)
     {
-        <div class="cover-bg" style="background-image:url('@BackgroundImageUrl');opacity:@(Settings.BackdropOpacity / 100.0)"></div>
+        var bgPos = "center";
+        if (Settings.BackgroundUrl?.StartsWith("position:") == true)
+            bgPos = Settings.BackgroundUrl.Replace("position:", "");
+        <div class="cover-bg-frame" style="opacity:@((Settings.BackdropOpacity / 100.0).ToString("F2"))">
+            <iframe src="@BackgroundImageUrl" class="cover-bg-iframe" style="object-position:@bgPos;transform-origin:top @bgPos"></iframe>
+        </div>
     }
-    else if (Settings.BackgroundType == "custom" && Settings.BackgroundUrl != null)
+    else if (Settings.BackgroundType == "custom" && Settings.BackgroundUrl != null && !Settings.BackgroundUrl.StartsWith("position:"))
     {
-        <div class="cover-bg" style="background-image:url('@Settings.BackgroundUrl');opacity:@(Settings.BackdropOpacity / 100.0)"></div>
+        <div class="cover-bg" style="background-image:url('@Settings.BackgroundUrl');opacity:@((Settings.BackdropOpacity / 100.0).ToString("F2"))"></div>
     }
 
     <div class="cover-overlay"></div>
 
     <div class="cover-content cover-layout-@(Settings.Layout)">
         <div class="cover-card">
-            @if (Settings.ShowLogo)
+            @if (Settings.ShowLogo && !string.IsNullOrEmpty(LogoUrl))
             {
-                <img src="@(Settings.LogoUrl ?? LogoUrl)" alt="Logo" class="cover-logo" />
+                <img src="@LogoUrl" alt="Logo" class="cover-logo" />
             }
             <h2 class="cover-title">@Settings.Title</h2>
             @if (!string.IsNullOrEmpty(Settings.Description))
@@ -64,6 +69,16 @@
         position: absolute; inset: 0;
         background-size: cover; background-position: center;
         z-index: 0;
+    }
+
+    .cover-bg-frame {
+        position: absolute; inset: 0; z-index: 0;
+        overflow: hidden;
+    }
+
+    .cover-bg-iframe {
+        width: 100%; height: 100%;
+        border: none; pointer-events: none;
     }
 
     .cover-overlay {
