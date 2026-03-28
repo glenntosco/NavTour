@@ -102,7 +102,8 @@
             </div>
             <StepPanel Steps="steps" Frames="frames" SelectedStepId="selectedStepId"
                 OnStepSelected="SelectStep" OnAddStep="AddStep" OnDeleteStep="DeleteStep"
-                OnReorderStep="ReorderStep" OnStepSettingsChanged="HandleStepSettingsChanged" />
+                OnReorderStep="ReorderStep" OnStepSettingsChanged="HandleStepSettingsChanged"
+                OnAddCoverSlide="AddCoverSlide" OnAddClosingSlide="AddClosingSlide" />
         </div>
 
         @* Annotations drawer *@
@@ -531,6 +532,61 @@ $@"<iframe
         await DemoApi.UpdateStepsAsync(DemoId, new UpdateStepsRequest(allSteps));
         steps = await DemoApi.GetStepsAsync(DemoId);
         Notification.Notify(NotificationSeverity.Success, "Step added");
+    }
+
+    private async Task AddCoverSlide()
+    {
+        if (steps.Any(s => s.Type == StepType.CoverSlide)) return;
+
+        var settings = System.Text.Json.JsonSerializer.Serialize(new
+        {
+            layout = "center", theme = "dark", title = demo?.Name ?? "Welcome",
+            description = "Interactive product demo", ctaText = "Get Started",
+            ctaAction = "next", showLogo = true, backgroundType = "frame", backdropOpacity = 60
+        });
+
+        var coverStep = new StepDto(
+            null, null, 0, null, NavigationAction.NextStep, null, [],
+            TriggerType.ButtonClick, null, null, null, null,
+            StepType.CoverSlide, settings);
+
+        // Renumber: cover becomes step 1, everything else shifts up
+        var allSteps = new List<StepDto> { coverStep };
+        foreach (var s in steps)
+        {
+            var dto = MapStepToDto(s);
+            allSteps.Add(dto with { StepNumber = allSteps.Count + 1 });
+        }
+
+        await DemoApi.UpdateStepsAsync(DemoId, new UpdateStepsRequest(allSteps));
+        steps = await DemoApi.GetStepsAsync(DemoId);
+        StateHasChanged();
+        Notification.Notify(NotificationSeverity.Success, "Cover slide added");
+    }
+
+    private async Task AddClosingSlide()
+    {
+        if (steps.Any(s => s.Type == StepType.ClosingSlide)) return;
+
+        var settings = System.Text.Json.JsonSerializer.Serialize(new
+        {
+            layout = "center", theme = "dark", title = "Enjoyed the demo?",
+            description = "Learn more about our features on our website.",
+            ctaText = "Learn More", ctaAction = "next", showLogo = true,
+            backgroundType = "none", backdropOpacity = 60
+        });
+
+        var closingStep = new StepDto(
+            null, null, steps.Count + 1, null, NavigationAction.EndDemo, null, [],
+            TriggerType.ButtonClick, null, null, null, null,
+            StepType.ClosingSlide, settings);
+
+        var allSteps = steps.Select(s => MapStepToDto(s)).Append(closingStep).ToList();
+
+        await DemoApi.UpdateStepsAsync(DemoId, new UpdateStepsRequest(allSteps));
+        steps = await DemoApi.GetStepsAsync(DemoId);
+        StateHasChanged();
+        Notification.Notify(NotificationSeverity.Success, "Closing slide added");
     }
 
     private async Task DeleteStep(Guid stepId)
