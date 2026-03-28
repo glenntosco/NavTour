@@ -1245,7 +1245,7 @@ else
     private bool showShareMenu;
     private bool linkCopied;
 
-    private string GetHubUrl() => hub?.Slug != null ? $"{Nav.BaseUri.TrimEnd('/')}/hub/{hub.Slug}" : "";
+    private string GetHubUrl() => hub?.Slug != null ? $"{Nav.BaseUri.TrimEnd('/')}/showcase/{hub.Slug}" : "";
 
     private string GetFacebookShareUrl() => $"https://www.facebook.com/sharer/sharer.php?u={Uri.EscapeDataString(GetHubUrl())}";
     private string GetTwitterShareUrl() => $"https://twitter.com/intent/tweet?url={Uri.EscapeDataString(GetHubUrl())}&text={Uri.EscapeDataString($"Check out our interactive demos: {hub?.Name ?? "TourHub"}")}";
