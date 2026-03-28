@@ -9,7 +9,10 @@
 <div class="app-shell">
     <aside class="sidebar">
         <div class="sidebar-logo">
-            <a href="/dashboard"><img src="favicon.svg" alt="NavTour" /></a>
+            <a href="/dashboard">
+                <img src="favicon.svg" alt="NavTour" />
+                <span class="sidebar-wordmark">NavTour</span>
+            </a>
         </div>
         <nav class="sidebar-nav">
             <a href="/dashboard" class="nav-item @ActiveClass("/dashboard")">
@@ -21,7 +24,7 @@
                 <svg class="nav-icon" viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg>
                 <span>Analytics</span>
             </a>
-            <div class="nav-group">Leads</div>
+            <div class="nav-group">Capture</div>
             <a href="/leads" class="nav-item @ActiveClass("/leads")">
                 <svg class="nav-icon" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
                 <span>Leads</span>
@@ -43,9 +46,13 @@
         <div class="sidebar-bottom">
             @if (Auth.IsAuthenticated)
             {
+                <div class="sidebar-user">
+                    <div class="sidebar-avatar">@(Auth.UserEmail?.Substring(0, 1).ToUpper())</div>
+                    <span class="sidebar-email" title="@Auth.UserEmail">@Auth.UserEmail</span>
+                </div>
                 <a href="/login" onclick="document.cookie='navtour_auth=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT'" class="nav-item">
                     <svg class="nav-icon" viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
-                    <span>Logout</span>
+                    <span>Sign out</span>
                 </a>
             }
             <div class="sidebar-ver">v@(AppVersion)</div>
@@ -70,44 +77,76 @@
     .app-shell { display:flex; height:100vh; overflow:hidden; }
 
     .sidebar {
-        width:220px; flex-shrink:0; background:#fafbfc;
-        border-right:1px solid #e5e7eb; display:flex; flex-direction:column;
+        width:232px; flex-shrink:0; background:var(--nt-surface-secondary);
+        border-right:1px solid var(--nt-border); display:flex; flex-direction:column;
     }
 
-    .sidebar-logo { padding:16px; text-align:center; border-bottom:1px solid #e5e7eb; }
-    .sidebar-logo img { height:32px; width:32px; }
+    .sidebar-logo { padding:16px 20px; border-bottom:1px solid var(--nt-border); }
+    .sidebar-logo a {
+        display:flex; align-items:center; gap:10px; text-decoration:none;
+    }
+    .sidebar-logo img { height:28px; width:28px; }
+    .sidebar-wordmark {
+        font-size:1.0625rem; font-weight:700; color:var(--nt-navy);
+        letter-spacing:-0.03em;
+    }
 
-    .sidebar-nav { flex:1; overflow-y:auto; padding:12px 0; }
+    .sidebar-nav { flex:1; overflow-y:auto; padding:16px 0 8px; }
 
     .nav-item {
-        display:flex; align-items:center; gap:10px; padding:8px 16px;
-        color:#4a4a4a; text-decoration:none; font-size:13px; font-weight:500;
-        border-radius:6px; margin:1px 8px;
+        display:flex; align-items:center; gap:10px; padding:8px 14px;
+        color:var(--nt-text-secondary); text-decoration:none;
+        font-size:0.8125rem; font-weight:500;
+        border-radius:6px; margin:1px 10px;
+        transition:background 150ms, color 150ms;
     }
-    .nav-item:hover { background:#eee; }
-    .nav-item.active { background:#e8eafd; color:#4361ee; font-weight:600; }
-    .nav-item.active .nav-icon { fill:#4361ee; }
+    .nav-item:hover { background:var(--nt-surface-muted); color:var(--nt-text-primary); }
+    .nav-item:hover .nav-icon { fill:var(--nt-text-secondary); }
+    .nav-item.active {
+        background:var(--nt-action-light); color:var(--nt-action);
+        font-weight:600;
+    }
+    .nav-item.active .nav-icon { fill:var(--nt-action); }
 
-    .nav-icon { width:18px; height:18px; flex-shrink:0; fill:#757575; }
+    .nav-icon { width:18px; height:18px; flex-shrink:0; fill:var(--nt-text-muted); transition:fill 150ms; }
 
     .nav-group {
-        padding:16px 16px 4px; font-size:10px; font-weight:700;
-        color:#aaa; text-transform:uppercase; letter-spacing:0.5px;
+        padding:20px 14px 6px; margin:0 10px; font-size:0.625rem; font-weight:700;
+        color:var(--nt-text-faint); text-transform:uppercase; letter-spacing:0.08em;
     }
 
-    .sidebar-bottom { border-top:1px solid #e5e7eb; padding:8px 0; }
-    .sidebar-ver { text-align:center; font-size:10px; color:#ccc; padding:4px 0; }
+    .sidebar-bottom { border-top:1px solid var(--nt-border); padding:12px 10px 8px; }
+
+    .sidebar-user {
+        display:flex; align-items:center; gap:10px;
+        padding:8px 10px; margin-bottom:4px;
+    }
+    .sidebar-avatar {
+        width:28px; height:28px; border-radius:50%;
+        background:var(--nt-navy); color:#fff;
+        font-size:0.6875rem; font-weight:700;
+        display:flex; align-items:center; justify-content:center;
+        flex-shrink:0;
+    }
+    .sidebar-email {
+        font-size:0.75rem; color:var(--nt-text-muted);
+        overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    }
+
+    .sidebar-ver { text-align:center; font-size:0.625rem; color:var(--nt-border-hover); padding:4px 0; }
 
     .main-area { flex:1; display:flex; flex-direction:column; overflow:hidden; min-width:0; }
 
     .top-bar {
-        height:48px; display:flex; align-items:center; padding:0 16px;
-        border-bottom:1px solid #e5e7eb; background:#fff; flex-shrink:0;
+        height:48px; display:flex; align-items:center; padding:0 24px;
+        border-bottom:1px solid var(--nt-border); background:var(--nt-surface); flex-shrink:0;
     }
-    .breadcrumb { font-size:13px; color:#757575; font-weight:500; }
+    .breadcrumb {
+        font-size:0.8125rem; color:var(--nt-text-muted); font-weight:500;
+    }
 
     .content { flex:1; overflow-y:auto; }
-    .content.padded { padding:16px; }
+    .content.padded { padding:24px; }
 </style>
 
 @code {
