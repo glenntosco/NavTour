@@ -8,30 +8,32 @@ namespace NavTour.Server.Controllers;
 [Authorize]
 public class UploadsController : ControllerBase
 {
-    private readonly IWebHostEnvironment _env;
-
-    public UploadsController(IWebHostEnvironment env) => _env = env;
-
     [HttpPost("image")]
-    [RequestSizeLimit(5_000_000)]
+    [RequestSizeLimit(2_000_000)] // 2MB max for base64 (keeps DB reasonable)
     public async Task<IActionResult> UploadImage(IFormFile file)
     {
         if (file == null || file.Length == 0)
             return BadRequest("No file provided");
 
         var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
-        if (ext != ".png" && ext != ".jpg" && ext != ".jpeg" && ext != ".svg" && ext != ".webp" && ext != ".gif")
-            return BadRequest("Invalid image format");
+        var mimeType = ext switch
+        {
+            ".png" => "image/png",
+            ".jpg" or ".jpeg" => "image/jpeg",
+            ".svg" => "image/svg+xml",
+            ".webp" => "image/webp",
+            ".gif" => "image/gif",
+            _ => null
+        };
 
-        var fileName = $"{Guid.NewGuid():N}{ext}";
-        var uploadsDir = Path.Combine(_env.WebRootPath, "uploads");
-        Directory.CreateDirectory(uploadsDir);
+        if (mimeType == null)
+            return BadRequest("Invalid image format. Supported: PNG, JPG, SVG, WebP, GIF");
 
-        var filePath = Path.Combine(uploadsDir, fileName);
-        await using var stream = new FileStream(filePath, FileMode.Create);
-        await file.CopyToAsync(stream);
+        using var ms = new MemoryStream();
+        await file.CopyToAsync(ms);
+        var base64 = Convert.ToBase64String(ms.ToArray());
+        var dataUrl = $"data:{mimeType};base64,{base64}";
 
-        var url = $"/uploads/{fileName}";
-        return Ok(new { url });
+        return Ok(new { url = dataUrl });
     }
 }
