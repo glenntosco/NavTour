@@ -1,0 +1,1058 @@
+@page "/hub"
+@page "/hub/{HubId:guid}"
+@rendermode InteractiveServer
+@inject HubApiService HubApi
+@inject DemoApiService DemoApi
+@inject AuthService Auth
+@inject NavigationManager Nav
+
+<PageTitle>Demo Hub — NavTour</PageTitle>
+
+@if (loading)
+{
+    <div class="he-loading">
+        <RadzenProgressBarCircular ShowValue="false" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.Medium" />
+    </div>
+}
+else if (hub == null)
+{
+    @* ── Hub List / Selection ── *@
+    <div class="he-hub-list">
+        <div class="he-hub-list-header">
+            <h2 class="he-hub-list-title">Demo Hubs</h2>
+            <button class="he-btn-primary" @onclick="CreateHub">+ Create Hub</button>
+        </div>
+        <div class="he-hub-cards">
+            @foreach (var h in hubs)
+            {
+                <div class="he-hub-card" @onclick="() => SelectHub(h)">
+                    <div class="he-hub-card-info">
+                        <span class="he-hub-card-name">@h.Name</span>
+                        <span class="he-hub-card-meta">@h.Categories.Sum(c => c.Items.Count) demos &middot; @h.CreatedAt.ToString("MMM d, yyyy")</span>
+                    </div>
+                    <span class="he-hub-card-status @(h.IsPublished ? "published" : "")">@(h.IsPublished ? "Published" : "Draft")</span>
+                </div>
+            }
+            @if (hubs.Count == 0)
+            {
+                <div class="he-empty">
+                    <p>No hubs yet. Create one to get started.</p>
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+    @* ── Editor Shell ── *@
+    <div class="he-shell">
+        @* ── Left Panel: Tabs + Settings ── *@
+        <div class="he-left">
+            <div class="he-top-bar">
+                <button class="he-btn-back" @onclick="BackToList" title="Back to hub list">
+                    <svg viewBox="0 0 24 24" width="16" height="16"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" fill="currentColor"/></svg>
+                    <span>@hub.Name</span>
+                </button>
+                <div class="he-top-actions">
+                    <label class="he-publish-toggle">
+                        <RadzenSwitch @bind-Value="isPublished" Change="@OnPublishToggle" />
+                        <span class="he-publish-label">@(isPublished ? "Published" : "Draft")</span>
+                    </label>
+                    <button class="he-btn-primary" @onclick="SaveHub" disabled="@saving">@(saving ? "Saving..." : "Save")</button>
+                </div>
+            </div>
+
+            @* ── Tab Bar ── *@
+            <div class="he-tabs">
+                <button class="he-tab @(activeTab == "appearance" ? "active" : "")" @onclick='() => activeTab = "appearance"'>Appearance</button>
+                <button class="he-tab @(activeTab == "content" ? "active" : "")" @onclick='() => activeTab = "content"'>Content</button>
+                <button class="he-tab @(activeTab == "behavior" ? "active" : "")" @onclick='() => activeTab = "behavior"'>Behavior</button>
+                <button class="he-tab @(activeTab == "install" ? "active" : "")" @onclick='() => activeTab = "install"'>Install</button>
+                <button class="he-tab @(activeTab == "analytics" ? "active" : "")" @onclick='() => activeTab = "analytics"'>Analytics</button>
+            </div>
+
+            @* ── Tab Content ── *@
+            <div class="he-panel">
+                @switch (activeTab)
+                {
+                    case "appearance":
+                        @AppearanceTab();
+                        break;
+                    case "content":
+                        @ContentTab();
+                        break;
+                    case "behavior":
+                        @BehaviorTab();
+                        break;
+                    case "install":
+                        @InstallTab();
+                        break;
+                    case "analytics":
+                        @AnalyticsTab();
+                        break;
+                }
+            </div>
+        </div>
+
+        @* ── Right Panel: Live Preview ── *@
+        <aside class="he-preview-pane">
+            <h3 class="he-preview-title">Live Preview</h3>
+            <div class="he-preview-stage">
+                <div class="hub-preview" style="
+                    --hub-bg1: @appearance.BackgroundColor1;
+                    --hub-bg2: @(appearance.BackgroundColor2 ?? appearance.BackgroundColor1);
+                    --hub-text: @appearance.TextColor;
+                    --hub-accent: @(appearance.AccentColor ?? "#4361ee");
+                    --hub-radius: @(appearance.BorderRadius)px;
+                ">
+                    <div class="hub-preview-header" style="background: @GetHeaderBackground()">
+                        @if (appearance.ShowCloseButton) { <span class="preview-close">&times;</span> }
+                        @if (appearance.DisplayType == "logo" && !string.IsNullOrEmpty(appearance.LogoUrl))
+                        {
+                            <img src="@appearance.LogoUrl" class="preview-logo" alt="Logo" />
+                        }
+                        else
+                        {
+                            <h3 class="preview-header-title" style="color:@appearance.TextColor;text-align:@appearance.Alignment">@(appearance.Title ?? "Help Center")</h3>
+                        }
+                        @if (!string.IsNullOrEmpty(appearance.Subtitle))
+                        {
+                            <p class="preview-header-sub" style="color:@appearance.TextColor;opacity:0.7;text-align:@appearance.Alignment">@appearance.Subtitle</p>
+                        }
+                    </div>
+                    @if (behavior.SearchEnabled)
+                    {
+                        <div class="hub-preview-search">
+                            <svg viewBox="0 0 24 24" width="14" height="14" style="opacity:0.5"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="currentColor"/></svg>
+                            <span>@(behavior.SearchPlaceholder ?? "Search demos...")</span>
+                        </div>
+                    }
+                    <div class="hub-preview-tabs">
+                        <span class="preview-tab active">All</span>
+                        @foreach (var cat in categories.Take(3))
+                        {
+                            <span class="preview-tab">@cat.Name</span>
+                        }
+                    </div>
+                    <div class="hub-preview-cards @(appearance.CardStyle == "list" ? "list-view" : "")">
+                        @{ var totalItems = categories.Sum(c => c.Items.Count); }
+                        @for (int i = 0; i < Math.Max(Math.Min(4, totalItems), 2); i++)
+                        {
+                            <div class="preview-card">
+                                @if (appearance.ShowThumbnails) { <div class="preview-thumb"></div> }
+                                <div class="preview-card-body">
+                                    <span class="preview-card-title">Demo @(i + 1)</span>
+                                    @if (appearance.ShowDescriptions) { <span class="preview-card-desc">Interactive product walkthrough</span> }
+                                    <div class="preview-card-meta">
+                                        @if (appearance.ShowStepCount) { <span>5 steps</span> }
+                                        @if (appearance.ShowDuration) { <span>2 min</span> }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="hub-preview-footer">
+                        <span>@appearance.FooterMenuLabel</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+}
+
+@* ── Render Fragments ── *@
+
+@{
+    RenderFragment AppearanceTab() => @<div class="he-form">
+        <label class="he-label">Display Type</label>
+        <div class="he-seg">
+            <button class="he-seg-btn @(appearance.DisplayType == "title" ? "active" : "")" @onclick='() => appearance.DisplayType = "title"'>Title</button>
+            <button class="he-seg-btn @(appearance.DisplayType == "logo" ? "active" : "")" @onclick='() => appearance.DisplayType = "logo"'>Logo</button>
+        </div>
+
+        @if (appearance.DisplayType == "title")
+        {
+            <label class="he-label">Header Title</label>
+            <RadzenTextBox @bind-Value="appearance.Title" Style="width:100%" />
+        }
+        else
+        {
+            <label class="he-label">Logo URL</label>
+            <RadzenTextBox @bind-Value="appearance.LogoUrl" Placeholder="https://..." Style="width:100%" />
+        }
+
+        <label class="he-label">Subtitle</label>
+        <RadzenTextBox @bind-Value="appearance.Subtitle" Placeholder="Optional subtitle" Style="width:100%" />
+
+        <label class="he-label">Alignment</label>
+        <div class="he-seg">
+            <button class="he-seg-btn @(appearance.Alignment == "left" ? "active" : "")" @onclick='() => appearance.Alignment = "left"'>Left</button>
+            <button class="he-seg-btn @(appearance.Alignment == "center" ? "active" : "")" @onclick='() => appearance.Alignment = "center"'>Center</button>
+            <button class="he-seg-btn @(appearance.Alignment == "right" ? "active" : "")" @onclick='() => appearance.Alignment = "right"'>Right</button>
+        </div>
+
+        <label class="he-label">Background Type</label>
+        <div class="he-seg">
+            <button class="he-seg-btn @(appearance.BackgroundType == "solid" ? "active" : "")" @onclick='() => appearance.BackgroundType = "solid"'>Solid</button>
+            <button class="he-seg-btn @(appearance.BackgroundType == "gradient" ? "active" : "")" @onclick='() => appearance.BackgroundType = "gradient"'>Gradient</button>
+            <button class="he-seg-btn @(appearance.BackgroundType == "image" ? "active" : "")" @onclick='() => appearance.BackgroundType = "image"'>Image</button>
+        </div>
+
+        <label class="he-label">Background Color</label>
+        <div class="he-color-row">
+            <input type="color" class="he-color-picker" @bind="appearance.BackgroundColor1" />
+            <input type="text" class="he-color-hex" @bind="appearance.BackgroundColor1" @bind:event="oninput" />
+        </div>
+
+        @if (appearance.BackgroundType == "gradient")
+        {
+            <label class="he-label">Background Color 2</label>
+            <div class="he-color-row">
+                <input type="color" class="he-color-picker" value="@(appearance.BackgroundColor2 ?? "#4361ee")" @onchange="e => appearance.BackgroundColor2 = e.Value?.ToString()" />
+                <input type="text" class="he-color-hex" value="@(appearance.BackgroundColor2 ?? "#4361ee")" @onchange="e => appearance.BackgroundColor2 = e.Value?.ToString()" />
+            </div>
+        }
+
+        <label class="he-label">Text Color</label>
+        <div class="he-color-row">
+            <input type="color" class="he-color-picker" @bind="appearance.TextColor" />
+            <input type="text" class="he-color-hex" @bind="appearance.TextColor" @bind:event="oninput" />
+        </div>
+
+        <label class="he-label">Accent Color</label>
+        <div class="he-color-row">
+            <input type="color" class="he-color-picker" value="@(appearance.AccentColor ?? "#4361ee")" @onchange="e => appearance.AccentColor = e.Value?.ToString()" />
+            <input type="text" class="he-color-hex" value="@(appearance.AccentColor ?? "#4361ee")" @onchange="e => appearance.AccentColor = e.Value?.ToString()" />
+        </div>
+
+        <label class="he-label">Close Button</label>
+        <RadzenSwitch @bind-Value="appearance.ShowCloseButton" />
+
+        <label class="he-label">Content Theme</label>
+        <div class="he-seg">
+            <button class="he-seg-btn @(appearance.ContentTheme == "light" ? "active" : "")" @onclick='() => appearance.ContentTheme = "light"'>Light</button>
+            <button class="he-seg-btn @(appearance.ContentTheme == "dark" ? "active" : "")" @onclick='() => appearance.ContentTheme = "dark"'>Dark</button>
+            <button class="he-seg-btn @(appearance.ContentTheme == "auto" ? "active" : "")" @onclick='() => appearance.ContentTheme = "auto"'>Auto</button>
+        </div>
+
+        <label class="he-label">Card Style</label>
+        <div class="he-seg">
+            <button class="he-seg-btn @(appearance.CardStyle == "grid" ? "active" : "")" @onclick='() => appearance.CardStyle = "grid"'>Grid</button>
+            <button class="he-seg-btn @(appearance.CardStyle == "list" ? "active" : "")" @onclick='() => appearance.CardStyle = "list"'>List</button>
+        </div>
+
+        <label class="he-label">Border Radius &mdash; @(appearance.BorderRadius)px</label>
+        <input type="range" class="he-range" min="0" max="24" @bind="appearance.BorderRadius" @bind:event="oninput" />
+
+        <div class="he-switch-group">
+            <label class="he-switch-row"><RadzenSwitch @bind-Value="appearance.ShowThumbnails" /><span>Show Thumbnails</span></label>
+            <label class="he-switch-row"><RadzenSwitch @bind-Value="appearance.ShowDescriptions" /><span>Show Descriptions</span></label>
+            <label class="he-switch-row"><RadzenSwitch @bind-Value="appearance.ShowDuration" /><span>Show Duration</span></label>
+            <label class="he-switch-row"><RadzenSwitch @bind-Value="appearance.ShowStepCount" /><span>Show Step Count</span></label>
+        </div>
+
+        <label class="he-label">Footer Menu Label</label>
+        <RadzenTextBox @bind-Value="appearance.FooterMenuLabel" Style="width:100%" />
+
+        <label class="he-label">Footer Links</label>
+        @for (int i = 0; i < appearance.FooterLinks.Count; i++)
+        {
+            var idx = i;
+            <div class="he-footer-link-row">
+                <RadzenTextBox @bind-Value="appearance.FooterLinks[idx].Text" Placeholder="Label" Style="flex:1" />
+                <RadzenTextBox @bind-Value="appearance.FooterLinks[idx].Url" Placeholder="https://..." Style="flex:2" />
+                <button class="he-btn-icon-danger" @onclick="() => appearance.FooterLinks.RemoveAt(idx)">
+                    <svg viewBox="0 0 24 24" width="14" height="14"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="currentColor"/></svg>
+                </button>
+            </div>
+        }
+        <button class="he-btn-text" @onclick="() => appearance.FooterLinks.Add(new FooterLink())">+ Add Link</button>
+    </div>;
+
+    RenderFragment ContentTab() => @<div class="he-form">
+        @foreach (var cat in categories)
+        {
+            var catRef = cat;
+            <div class="he-category">
+                <div class="he-category-header" @onclick="() => ToggleCategory(catRef.Id)">
+                    <svg viewBox="0 0 24 24" width="16" height="16" class="he-chevron @(expandedCategories.Contains(catRef.Id) ? "expanded" : "")">
+                        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="currentColor"/>
+                    </svg>
+                    <input type="text" class="he-inline-edit" value="@catRef.Name" @onchange="e => RenameCategoryLocal(catRef, e.Value?.ToString())" @onclick:stopPropagation="true" />
+                    <span class="he-category-count">@catRef.Items.Count</span>
+                    <button class="he-btn-icon-danger" @onclick="() => DeleteCategory(catRef)" @onclick:stopPropagation="true" title="Delete category">
+                        <svg viewBox="0 0 24 24" width="14" height="14"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" fill="currentColor"/></svg>
+                    </button>
+                </div>
+                @if (expandedCategories.Contains(catRef.Id))
+                {
+                    <div class="he-category-body">
+                        @foreach (var item in catRef.Items.OrderBy(i => i.SortOrder))
+                        {
+                            <div class="he-item-row">
+                                <svg viewBox="0 0 24 24" width="14" height="14" class="he-drag-handle"><path d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" fill="currentColor"/></svg>
+                                <span class="he-item-name">@(item.TitleOverride ?? item.DemoName ?? "Untitled")</span>
+                                <span class="he-item-type">@item.ItemType</span>
+                                <button class="he-btn-icon-danger" @onclick="() => DeleteItem(catRef, item)" title="Remove">
+                                    <svg viewBox="0 0 24 24" width="14" height="14"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="currentColor"/></svg>
+                                </button>
+                            </div>
+                        }
+                        <div class="he-add-item-row">
+                            <RadzenDropDown TValue="Guid?" @bind-Value="selectedDemoId" Data="availableDemos"
+                                TextProperty="Name" ValueProperty="Id" Placeholder="Select a demo..." Style="flex:1" AllowClear="true" />
+                            <button class="he-btn-secondary" @onclick="() => AddItemToCategory(catRef)" disabled="@(selectedDemoId == null)">Add</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        <button class="he-btn-secondary he-btn-add-cat" @onclick="AddCategory">+ Add Category</button>
+    </div>;
+
+    RenderFragment BehaviorTab() => @<div class="he-form">
+        <label class="he-label">Open Trigger</label>
+        <RadzenDropDown TValue="string" @bind-Value="behavior.OpenTrigger"
+            Data='new[] { "launcher", "custom", "hash", "api" }' Style="width:100%" />
+
+        <label class="he-label">Auto Open</label>
+        <div class="he-seg">
+            <button class="he-seg-btn @(behavior.AutoOpen == "off" ? "active" : "")" @onclick='() => behavior.AutoOpen = "off"'>Off</button>
+            <button class="he-seg-btn @(behavior.AutoOpen == "firstVisit" ? "active" : "")" @onclick='() => behavior.AutoOpen = "firstVisit"'>First Visit</button>
+            <button class="he-seg-btn @(behavior.AutoOpen == "always" ? "active" : "")" @onclick='() => behavior.AutoOpen = "always"'>Always</button>
+        </div>
+
+        @if (behavior.AutoOpen != "off")
+        {
+            <label class="he-label">Auto Open Delay (ms)</label>
+            <RadzenNumeric TValue="int" @bind-Value="behavior.AutoOpenDelay" Min="0" Max="30000" Step="500" Style="width:100%" />
+        }
+
+        <label class="he-label">Remember State</label>
+        <RadzenSwitch @bind-Value="behavior.RememberState" />
+
+        <label class="he-label">Search</label>
+        <RadzenSwitch @bind-Value="behavior.SearchEnabled" />
+
+        @if (behavior.SearchEnabled)
+        {
+            <label class="he-label">Search Placeholder</label>
+            <RadzenTextBox @bind-Value="behavior.SearchPlaceholder" Style="width:100%" />
+        }
+
+        <label class="he-label">Keyboard Shortcut</label>
+        <RadzenTextBox @bind-Value="behavior.KeyboardShortcut" Placeholder="e.g. Ctrl+K" Style="width:100%" />
+
+        <label class="he-label">Mobile Behavior</label>
+        <RadzenDropDown TValue="string" @bind-Value="behavior.MobileBehavior"
+            Data='new[] { "drawer", "fullscreen", "redirect" }' Style="width:100%" />
+
+        <label class="he-label">Notification Badge</label>
+        <div class="he-seg">
+            <button class="he-seg-btn @(behavior.NotificationBadge == "off" ? "active" : "")" @onclick='() => behavior.NotificationBadge = "off"'>Off</button>
+            <button class="he-seg-btn @(behavior.NotificationBadge == "count" ? "active" : "")" @onclick='() => behavior.NotificationBadge = "count"'>Count</button>
+            <button class="he-seg-btn @(behavior.NotificationBadge == "dot" ? "active" : "")" @onclick='() => behavior.NotificationBadge = "dot"'>Dot</button>
+        </div>
+
+        <label class="he-label">New Content Indicator</label>
+        <RadzenSwitch @bind-Value="behavior.NewContentIndicator" />
+
+        <label class="he-label">Completion Tracking</label>
+        <RadzenSwitch @bind-Value="behavior.CompletionTracking" />
+    </div>;
+
+    RenderFragment InstallTab() => @<div class="he-form">
+        <label class="he-label">Display Mode</label>
+        <div class="he-seg">
+            <button class="he-seg-btn @(install.DisplayMode == "launcher" ? "active" : "")" @onclick='() => install.DisplayMode = "launcher"'>Launcher</button>
+            <button class="he-seg-btn @(install.DisplayMode == "customTrigger" ? "active" : "")" @onclick='() => install.DisplayMode = "customTrigger"'>Custom Trigger</button>
+        </div>
+
+        @if (install.DisplayMode == "launcher")
+        {
+            <label class="he-label">Launcher Style</label>
+            <div class="he-seg">
+                <button class="he-seg-btn @(install.LauncherStyle == "icon" ? "active" : "")" @onclick='() => install.LauncherStyle = "icon"'>Icon</button>
+                <button class="he-seg-btn @(install.LauncherStyle == "iconText" ? "active" : "")" @onclick='() => install.LauncherStyle = "iconText"'>Icon + Text</button>
+                <button class="he-seg-btn @(install.LauncherStyle == "text" ? "active" : "")" @onclick='() => install.LauncherStyle = "text"'>Text</button>
+            </div>
+
+            <label class="he-label">Launcher Text</label>
+            <RadzenTextBox @bind-Value="install.LauncherText" Style="width:100%" />
+
+            <label class="he-label">Launcher Color</label>
+            <div class="he-color-row">
+                <input type="color" class="he-color-picker" @bind="install.LauncherColor" />
+                <input type="text" class="he-color-hex" @bind="install.LauncherColor" @bind:event="oninput" />
+            </div>
+
+            <label class="he-label">Position</label>
+            <RadzenDropDown TValue="string" @bind-Value="install.Position"
+                Data='new[] { "bottomRight", "bottomLeft", "topRight", "topLeft" }' Style="width:100%" />
+
+            <div class="he-offset-row">
+                <div class="he-offset-field">
+                    <label class="he-label">Offset X (px)</label>
+                    <RadzenNumeric TValue="int" @bind-Value="install.OffsetX" Min="0" Max="200" Style="width:100%" />
+                </div>
+                <div class="he-offset-field">
+                    <label class="he-label">Offset Y (px)</label>
+                    <RadzenNumeric TValue="int" @bind-Value="install.OffsetY" Min="0" Max="200" Style="width:100%" />
+                </div>
+            </div>
+        }
+
+        <label class="he-label" style="margin-top:24px">Installation Code</label>
+        <div class="he-code-block">
+            <div class="he-code-header">
+                <span>Add to your website</span>
+                <button class="he-btn-copy" @onclick="CopyScript">Copy</button>
+            </div>
+            <pre class="he-code"><code>&lt;script src="https://cdn.navtour.cloud/hub.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  NavTour.hub.init("@hub.Slug", @("{")
+    position: "@install.Position",
+    theme: "@appearance.ContentTheme"
+  @("}"));
+&lt;/script&gt;</code></pre>
+        </div>
+
+        <label class="he-label">Allowed Domains</label>
+        <div class="he-domain-input">
+            <RadzenTextBox @bind-Value="newDomain" Placeholder="example.com" Style="flex:1" />
+            <button class="he-btn-secondary" @onclick="AddDomain" disabled="@string.IsNullOrWhiteSpace(newDomain)">Add</button>
+        </div>
+        <div class="he-domain-list">
+            @foreach (var domain in install.AllowedDomains)
+            {
+                var d = domain;
+                <span class="he-domain-tag">
+                    @d
+                    <button class="he-domain-remove" @onclick="() => install.AllowedDomains.Remove(d)">&times;</button>
+                </span>
+            }
+        </div>
+    </div>;
+
+    RenderFragment AnalyticsTab() => @<div class="he-form">
+        <div class="he-analytics-placeholder">
+            <svg viewBox="0 0 24 24" width="48" height="48" fill="var(--nt-text-muted)"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+            <h3>Hub Analytics</h3>
+            <p>Analytics tracking will be available once the hub is published and the widget SDK is installed.</p>
+        </div>
+    </div>;
+}
+
+<style>
+    /* ── Loading ── */
+    .he-loading {
+        display: flex; align-items: center; justify-content: center;
+        height: 100%; min-height: 400px;
+    }
+
+    /* ── Hub List View ── */
+    .he-hub-list {
+        max-width: 720px; margin: 0 auto; padding: 32px 24px;
+    }
+    .he-hub-list-header {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 24px;
+    }
+    .he-hub-list-title {
+        font-size: var(--nt-text-xl); font-weight: var(--nt-weight-bold);
+        color: var(--nt-text-primary); margin: 0;
+    }
+    .he-hub-cards {
+        display: flex; flex-direction: column; gap: 8px;
+    }
+    .he-hub-card {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 16px 20px; border-radius: var(--nt-radius-md);
+        border: 1px solid var(--nt-border); background: var(--nt-surface);
+        cursor: pointer; transition: border-color var(--nt-duration-fast) var(--nt-ease), box-shadow var(--nt-duration-fast) var(--nt-ease);
+    }
+    .he-hub-card:hover {
+        border-color: var(--nt-accent); box-shadow: 0 2px 8px rgba(67, 97, 238, 0.08);
+    }
+    .he-hub-card-info { display: flex; flex-direction: column; gap: 4px; }
+    .he-hub-card-name {
+        font-size: var(--nt-text-sm); font-weight: var(--nt-weight-semibold);
+        color: var(--nt-text-primary);
+    }
+    .he-hub-card-meta {
+        font-size: var(--nt-text-xs); color: var(--nt-text-muted);
+    }
+    .he-hub-card-status {
+        font-size: var(--nt-text-xs); font-weight: var(--nt-weight-semibold);
+        padding: 4px 10px; border-radius: 99px;
+        background: var(--nt-neutral-100); color: var(--nt-text-muted);
+    }
+    .he-hub-card-status.published {
+        background: rgba(16, 185, 129, 0.1); color: #059669;
+    }
+    .he-empty {
+        padding: 48px 24px; text-align: center;
+        font-size: var(--nt-text-sm); color: var(--nt-text-muted);
+    }
+    .he-empty p { margin: 0; }
+
+    /* ── Editor Shell ── */
+    .he-shell {
+        display: flex; height: 100%; min-height: 0;
+    }
+    .he-left {
+        flex: 1; display: flex; flex-direction: column; min-width: 0;
+        border-right: 1px solid var(--nt-border);
+    }
+
+    /* ── Top Bar ── */
+    .he-top-bar {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 12px 20px; border-bottom: 1px solid var(--nt-border);
+        background: var(--nt-surface);
+    }
+    .he-btn-back {
+        display: flex; align-items: center; gap: 8px;
+        border: none; background: none; cursor: pointer;
+        font-size: var(--nt-text-sm); font-weight: var(--nt-weight-semibold);
+        color: var(--nt-text-primary); padding: 4px 0;
+    }
+    .he-btn-back:hover { color: var(--nt-accent); }
+    .he-top-actions {
+        display: flex; align-items: center; gap: 16px;
+    }
+    .he-publish-toggle {
+        display: flex; align-items: center; gap: 8px; cursor: pointer;
+    }
+    .he-publish-label {
+        font-size: var(--nt-text-xs); font-weight: var(--nt-weight-semibold);
+        color: var(--nt-text-secondary);
+    }
+
+    /* ── Tabs ── */
+    .he-tabs {
+        display: flex; border-bottom: 1px solid var(--nt-border);
+        padding: 0 20px; background: var(--nt-surface);
+    }
+    .he-tab {
+        padding: 10px 16px; border: none; background: none; cursor: pointer;
+        font-size: var(--nt-text-sm); font-weight: var(--nt-weight-medium);
+        color: var(--nt-text-muted); position: relative;
+        transition: color var(--nt-duration-fast) var(--nt-ease);
+    }
+    .he-tab:hover { color: var(--nt-text-primary); }
+    .he-tab.active {
+        color: var(--nt-accent); font-weight: var(--nt-weight-semibold);
+    }
+    .he-tab.active::after {
+        content: ''; position: absolute; bottom: -1px; left: 0; right: 0;
+        height: 2px; background: var(--nt-accent); border-radius: 2px 2px 0 0;
+    }
+
+    /* ── Settings Panel ── */
+    .he-panel {
+        flex: 1; overflow-y: auto; padding: 20px;
+    }
+    .he-form {
+        display: flex; flex-direction: column; gap: 4px;
+    }
+    .he-label {
+        display: block; font-size: var(--nt-text-xs); font-weight: var(--nt-weight-semibold);
+        color: var(--nt-text-secondary); text-transform: uppercase; letter-spacing: 0.04em;
+        margin-top: 14px;
+    }
+    .he-label:first-child { margin-top: 0; }
+
+    /* ── Segmented Buttons ── */
+    .he-seg {
+        display: inline-flex; border: 1px solid var(--nt-border); border-radius: var(--nt-radius);
+        overflow: hidden;
+    }
+    .he-seg-btn {
+        padding: 6px 14px; border: none; border-right: 1px solid var(--nt-border);
+        background: var(--nt-surface); color: var(--nt-text-secondary);
+        font-size: var(--nt-text-xs); font-weight: var(--nt-weight-medium);
+        cursor: pointer; transition: all var(--nt-duration-fast) var(--nt-ease);
+    }
+    .he-seg-btn:last-child { border-right: none; }
+    .he-seg-btn.active {
+        background: var(--nt-accent); color: #fff;
+        font-weight: var(--nt-weight-semibold);
+    }
+    .he-seg-btn:hover:not(.active) { background: var(--nt-surface-subtle); }
+
+    /* ── Color Inputs ── */
+    .he-color-row {
+        display: flex; gap: 8px; align-items: center;
+    }
+    .he-color-picker {
+        width: 40px; height: 36px; padding: 2px; border: 1px solid var(--nt-border);
+        border-radius: var(--nt-radius); cursor: pointer; background: var(--nt-surface);
+    }
+    .he-color-hex {
+        flex: 1; padding: 8px 12px;
+        border: 1px solid var(--nt-border); border-radius: var(--nt-radius);
+        font-size: var(--nt-text-sm); font-family: var(--nt-font-mono);
+        color: var(--nt-text-primary); background: var(--nt-surface);
+        outline: none; transition: border-color var(--nt-duration-fast);
+    }
+    .he-color-hex:focus { border-color: var(--nt-accent); }
+
+    /* ── Range ── */
+    .he-range { width: 100%; accent-color: var(--nt-accent); cursor: pointer; }
+
+    /* ── Switch Group ── */
+    .he-switch-group {
+        display: flex; flex-direction: column; gap: 10px; margin-top: 14px;
+    }
+    .he-switch-row {
+        display: flex; align-items: center; gap: 10px; cursor: pointer;
+    }
+    .he-switch-row span {
+        font-size: var(--nt-text-sm); color: var(--nt-text-primary);
+    }
+
+    /* ── Footer Links ── */
+    .he-footer-link-row {
+        display: flex; gap: 8px; align-items: center; margin-top: 6px;
+    }
+
+    /* ── Content Tab: Categories ── */
+    .he-category {
+        border: 1px solid var(--nt-border); border-radius: var(--nt-radius-md);
+        overflow: hidden; margin-top: 8px;
+    }
+    .he-category:first-child { margin-top: 0; }
+    .he-category-header {
+        display: flex; align-items: center; gap: 8px;
+        padding: 10px 14px; background: var(--nt-surface-secondary);
+        cursor: pointer; transition: background var(--nt-duration-fast);
+    }
+    .he-category-header:hover { background: var(--nt-surface-subtle); }
+    .he-chevron {
+        transition: transform var(--nt-duration-fast); flex-shrink: 0;
+    }
+    .he-chevron.expanded { transform: rotate(90deg); }
+    .he-inline-edit {
+        flex: 1; border: none; background: transparent;
+        font-size: var(--nt-text-sm); font-weight: var(--nt-weight-semibold);
+        color: var(--nt-text-primary); outline: none; padding: 2px 4px;
+        border-radius: var(--nt-radius-sm);
+    }
+    .he-inline-edit:focus { background: var(--nt-surface); box-shadow: 0 0 0 2px var(--nt-accent); }
+    .he-category-count {
+        font-size: var(--nt-text-xs); color: var(--nt-text-muted);
+        background: var(--nt-neutral-100); padding: 2px 8px;
+        border-radius: 99px;
+    }
+    .he-category-body {
+        padding: 10px 14px; display: flex; flex-direction: column; gap: 6px;
+    }
+    .he-item-row {
+        display: flex; align-items: center; gap: 8px;
+        padding: 8px 10px; border-radius: var(--nt-radius);
+        background: var(--nt-surface); border: 1px solid var(--nt-border);
+    }
+    .he-drag-handle { color: var(--nt-text-muted); cursor: grab; flex-shrink: 0; }
+    .he-item-name {
+        flex: 1; font-size: var(--nt-text-sm); color: var(--nt-text-primary);
+        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .he-item-type {
+        font-size: var(--nt-text-xs); color: var(--nt-text-muted);
+        background: var(--nt-neutral-100); padding: 2px 8px; border-radius: 99px;
+    }
+    .he-add-item-row {
+        display: flex; gap: 8px; align-items: center; margin-top: 6px;
+    }
+    .he-btn-add-cat { margin-top: 12px; }
+
+    /* ── Install Tab ── */
+    .he-code-block {
+        border: 1px solid var(--nt-border); border-radius: var(--nt-radius-md);
+        overflow: hidden; margin-top: 4px;
+    }
+    .he-code-header {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 8px 14px; background: var(--nt-surface-secondary);
+        border-bottom: 1px solid var(--nt-border);
+        font-size: var(--nt-text-xs); font-weight: var(--nt-weight-semibold);
+        color: var(--nt-text-secondary);
+    }
+    .he-btn-copy {
+        padding: 4px 10px; border: 1px solid var(--nt-border); border-radius: var(--nt-radius);
+        background: var(--nt-surface); color: var(--nt-text-secondary);
+        font-size: var(--nt-text-xs); cursor: pointer;
+        transition: all var(--nt-duration-fast);
+    }
+    .he-btn-copy:hover { border-color: var(--nt-accent); color: var(--nt-accent); }
+    .he-code {
+        margin: 0; padding: 14px; background: #1a1a2e;
+        color: #e0e0e0; font-size: 12px; font-family: var(--nt-font-mono);
+        overflow-x: auto; line-height: 1.6;
+    }
+    .he-offset-row {
+        display: flex; gap: 12px; margin-top: 4px;
+    }
+    .he-offset-field { flex: 1; }
+    .he-domain-input {
+        display: flex; gap: 8px; align-items: center; margin-top: 4px;
+    }
+    .he-domain-list {
+        display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;
+    }
+    .he-domain-tag {
+        display: inline-flex; align-items: center; gap: 4px;
+        padding: 4px 10px; border-radius: 99px;
+        background: var(--nt-accent-light); color: var(--nt-accent);
+        font-size: var(--nt-text-xs); font-weight: var(--nt-weight-medium);
+    }
+    .he-domain-remove {
+        border: none; background: none; cursor: pointer; color: inherit;
+        font-size: 14px; line-height: 1; padding: 0 2px; opacity: 0.7;
+    }
+    .he-domain-remove:hover { opacity: 1; }
+
+    /* ── Analytics Placeholder ── */
+    .he-analytics-placeholder {
+        display: flex; flex-direction: column; align-items: center;
+        justify-content: center; gap: 12px; padding: 64px 24px;
+        text-align: center;
+    }
+    .he-analytics-placeholder h3 {
+        margin: 0; font-size: var(--nt-text-lg); font-weight: var(--nt-weight-semibold);
+        color: var(--nt-text-primary);
+    }
+    .he-analytics-placeholder p {
+        margin: 0; font-size: var(--nt-text-sm); color: var(--nt-text-muted);
+        max-width: 340px; line-height: 1.5;
+    }
+
+    /* ── Buttons ── */
+    .he-btn-primary {
+        padding: 8px 20px; border: none; border-radius: var(--nt-radius);
+        background: var(--nt-accent); color: #fff;
+        font-size: var(--nt-text-sm); font-weight: var(--nt-weight-semibold);
+        cursor: pointer; transition: background var(--nt-duration-fast) var(--nt-ease);
+    }
+    .he-btn-primary:hover { background: var(--nt-accent-hover); }
+    .he-btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .he-btn-secondary {
+        padding: 6px 14px; border: 1px solid var(--nt-border); border-radius: var(--nt-radius);
+        background: var(--nt-surface); color: var(--nt-text-primary);
+        font-size: var(--nt-text-sm); font-weight: var(--nt-weight-medium);
+        cursor: pointer; transition: all var(--nt-duration-fast) var(--nt-ease);
+    }
+    .he-btn-secondary:hover { border-color: var(--nt-accent); color: var(--nt-accent); }
+    .he-btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .he-btn-text {
+        padding: 6px 0; border: none; background: none;
+        color: var(--nt-accent); font-size: var(--nt-text-sm);
+        font-weight: var(--nt-weight-medium); cursor: pointer;
+    }
+    .he-btn-text:hover { text-decoration: underline; }
+
+    .he-btn-icon-danger {
+        border: none; background: none; cursor: pointer;
+        color: var(--nt-text-muted); padding: 4px;
+        border-radius: var(--nt-radius-sm); display: flex;
+        transition: color var(--nt-duration-fast);
+    }
+    .he-btn-icon-danger:hover { color: var(--nt-error); }
+
+    /* ── Live Preview (Right Panel) ── */
+    .he-preview-pane {
+        width: 400px; flex-shrink: 0; padding: 20px;
+        background: var(--nt-surface-secondary); overflow-y: auto;
+    }
+    .he-preview-title {
+        font-size: var(--nt-text-sm); font-weight: var(--nt-weight-semibold);
+        color: var(--nt-text-secondary); text-transform: uppercase;
+        letter-spacing: 0.04em; margin: 0 0 16px;
+    }
+    .he-preview-stage {
+        border-radius: var(--nt-radius-lg); overflow: hidden;
+        border: 1px solid var(--nt-border);
+        box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    }
+
+    /* ── Hub Widget Preview ── */
+    .hub-preview {
+        font-family: system-ui, -apple-system, sans-serif;
+    }
+    .hub-preview-header {
+        padding: 24px 20px 20px; position: relative;
+    }
+    .preview-close {
+        position: absolute; top: 12px; right: 14px;
+        font-size: 18px; color: var(--hub-text); opacity: 0.6; cursor: pointer;
+    }
+    .preview-logo { max-height: 32px; max-width: 140px; }
+    .preview-header-title {
+        margin: 0; font-size: 17px; font-weight: 700;
+        color: var(--hub-text);
+    }
+    .preview-header-sub {
+        margin: 6px 0 0; font-size: 13px; line-height: 1.4;
+    }
+    .hub-preview-search {
+        display: flex; align-items: center; gap: 8px;
+        margin: 0 12px 12px; padding: 8px 12px;
+        border-radius: var(--hub-radius);
+        background: rgba(0,0,0,0.04); color: var(--nt-text-muted);
+        font-size: 13px;
+    }
+    .hub-preview-tabs {
+        display: flex; gap: 2px; padding: 0 12px 10px;
+        overflow-x: hidden;
+    }
+    .preview-tab {
+        padding: 5px 12px; border-radius: 99px;
+        font-size: 12px; font-weight: 500;
+        color: var(--nt-text-muted); background: transparent;
+        white-space: nowrap;
+    }
+    .preview-tab.active {
+        background: var(--hub-accent); color: #fff; font-weight: 600;
+    }
+    .hub-preview-cards {
+        display: grid; grid-template-columns: 1fr 1fr;
+        gap: 8px; padding: 0 12px 12px;
+    }
+    .hub-preview-cards.list-view {
+        grid-template-columns: 1fr;
+    }
+    .preview-card {
+        border: 1px solid var(--nt-border); border-radius: var(--hub-radius);
+        overflow: hidden; background: var(--nt-surface);
+    }
+    .preview-thumb {
+        height: 56px; background: linear-gradient(135deg, #f0f0f0, #e8e8e8);
+    }
+    .preview-card-body { padding: 8px 10px; }
+    .preview-card-title {
+        display: block; font-size: 11px; font-weight: 600;
+        color: var(--nt-text-primary);
+    }
+    .preview-card-desc {
+        display: block; font-size: 10px; color: var(--nt-text-muted);
+        margin-top: 2px; line-height: 1.3;
+    }
+    .preview-card-meta {
+        display: flex; gap: 8px; margin-top: 4px;
+        font-size: 10px; color: var(--nt-text-muted);
+    }
+    .hub-preview-footer {
+        padding: 10px 14px; border-top: 1px solid var(--nt-border);
+        font-size: 11px; font-weight: 600; color: var(--nt-text-muted);
+        text-align: center;
+    }
+</style>
+
+@code {
+    [Parameter] public Guid? HubId { get; set; }
+
+    private HubResponse? hub;
+    private List<HubResponse> hubs = [];
+    private List<DemoListItemResponse> allDemos = [];
+    private List<DemoListItemResponse> availableDemos = [];
+    private bool loading = true;
+    private bool saving;
+    private bool isPublished;
+    private string activeTab = "appearance";
+
+    // Editable settings
+    private HubAppearanceSettings appearance = new();
+    private HubBehaviorSettings behavior = new();
+    private HubInstallSettings install = new();
+    private List<HubCategoryResponse> categories = [];
+
+    // UI state
+    private HashSet<Guid> expandedCategories = [];
+    private Guid? selectedDemoId;
+    private string newDomain = "";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        await Auth.TryRestoreAsync();
+        if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
+
+        hubs = await HubApi.GetAllAsync();
+        allDemos = await DemoApi.GetDemosAsync();
+        availableDemos = allDemos.Where(d => d.Status == DemoStatus.Published).ToList();
+
+        if (HubId.HasValue)
+        {
+            hub = await HubApi.GetByIdAsync(HubId.Value);
+            if (hub != null) LoadSettings(hub);
+        }
+        else if (hubs.Count == 1)
+        {
+            hub = hubs[0];
+            LoadSettings(hub);
+        }
+
+        loading = false;
+        StateHasChanged();
+    }
+
+    private void LoadSettings(HubResponse h)
+    {
+        appearance = h.Appearance;
+        behavior = h.Behavior;
+        install = h.Install;
+        categories = h.Categories.ToList();
+        isPublished = h.IsPublished;
+        expandedCategories = categories.Select(c => c.Id).ToHashSet();
+    }
+
+    private void SelectHub(HubResponse h)
+    {
+        hub = h;
+        LoadSettings(h);
+    }
+
+    private void BackToList()
+    {
+        hub = null;
+    }
+
+    private async Task SaveHub()
+    {
+        if (hub == null) return;
+        saving = true;
+        StateHasChanged();
+
+        var result = await HubApi.UpdateAsync(hub.Id, new UpdateHubRequest(
+            null, null, isPublished, appearance, behavior, install));
+        if (result != null)
+        {
+            hub = result;
+            var idx = hubs.FindIndex(h => h.Id == result.Id);
+            if (idx >= 0) hubs[idx] = result;
+        }
+
+        saving = false;
+        StateHasChanged();
+    }
+
+    private async Task CreateHub()
+    {
+        var result = await HubApi.CreateAsync(new CreateHubRequest("New Hub"));
+        if (result != null)
+        {
+            hubs.Add(result);
+            hub = result;
+            LoadSettings(result);
+        }
+    }
+
+    private async Task OnPublishToggle()
+    {
+        // publish state is saved with the next Save
+        await Task.CompletedTask;
+    }
+
+    // ── Header background helper ──
+    private string GetHeaderBackground() => appearance.BackgroundType switch
+    {
+        "gradient" => $"linear-gradient(135deg, {appearance.BackgroundColor1}, {appearance.BackgroundColor2 ?? appearance.BackgroundColor1})",
+        "image" when !string.IsNullOrEmpty(appearance.BackgroundImageUrl) =>
+            $"url('{appearance.BackgroundImageUrl}') center/cover no-repeat",
+        _ => appearance.BackgroundColor1
+    };
+
+    // ── Category management ──
+    private void ToggleCategory(Guid categoryId)
+    {
+        if (!expandedCategories.Remove(categoryId))
+            expandedCategories.Add(categoryId);
+    }
+
+    private async Task AddCategory()
+    {
+        if (hub == null) return;
+        var result = await HubApi.AddCategoryAsync(new CreateCategoryRequest(
+            hub.Id, $"Category {categories.Count + 1}", null, null));
+        if (result != null)
+        {
+            categories.Add(result);
+            expandedCategories.Add(result.Id);
+        }
+    }
+
+    private void RenameCategoryLocal(HubCategoryResponse cat, string? newName)
+    {
+        if (string.IsNullOrWhiteSpace(newName)) return;
+        // Update locally; persisted via UpdateCategoryAsync on blur/save
+        var idx = categories.FindIndex(c => c.Id == cat.Id);
+        if (idx >= 0)
+        {
+            var old = categories[idx];
+            categories[idx] = new HubCategoryResponse(old.Id, newName, old.Icon, old.Description, old.SortOrder, old.IsDefault, old.Items);
+            _ = HubApi.UpdateCategoryAsync(cat.Id, new UpdateCategoryRequest(newName, null, null, null, null));
+        }
+    }
+
+    private async Task DeleteCategory(HubCategoryResponse cat)
+    {
+        if (await HubApi.DeleteCategoryAsync(cat.Id))
+        {
+            categories.RemoveAll(c => c.Id == cat.Id);
+            expandedCategories.Remove(cat.Id);
+        }
+    }
+
+    // ── Item management ──
+    private async Task AddItemToCategory(HubCategoryResponse cat)
+    {
+        if (selectedDemoId == null) return;
+        var result = await HubApi.AddItemAsync(new AddItemRequest(
+            cat.Id, "demo", selectedDemoId, null, null, null));
+        if (result != null)
+        {
+            var idx = categories.FindIndex(c => c.Id == cat.Id);
+            if (idx >= 0)
+            {
+                var old = categories[idx];
+                var newItems = old.Items.ToList();
+                newItems.Add(result);
+                categories[idx] = new HubCategoryResponse(old.Id, old.Name, old.Icon, old.Description, old.SortOrder, old.IsDefault, newItems);
+            }
+            selectedDemoId = null;
+        }
+    }
+
+    private async Task DeleteItem(HubCategoryResponse cat, HubItemResponse item)
+    {
+        if (await HubApi.DeleteItemAsync(item.Id))
+        {
+            var idx = categories.FindIndex(c => c.Id == cat.Id);
+            if (idx >= 0)
+            {
+                var old = categories[idx];
+                var newItems = old.Items.Where(i => i.Id != item.Id).ToList();
+                categories[idx] = new HubCategoryResponse(old.Id, old.Name, old.Icon, old.Description, old.SortOrder, old.IsDefault, newItems);
+            }
+        }
+    }
+
+    // ── Install helpers ──
+    private async Task CopyScript()
+    {
+        // JS interop for clipboard would go here
+        await Task.CompletedTask;
+    }
+
+    private void AddDomain()
+    {
+        if (string.IsNullOrWhiteSpace(newDomain)) return;
+        var domain = newDomain.Trim().ToLowerInvariant();
+        if (!install.AllowedDomains.Contains(domain))
+            install.AllowedDomains.Add(domain);
+        newDomain = "";
+    }
+}
