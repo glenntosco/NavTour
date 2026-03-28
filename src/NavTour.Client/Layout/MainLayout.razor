@@ -85,6 +85,8 @@
     </main>
 </div>
 
+<CommandPalette IsOpen="commandPaletteOpen" OnClose="() => commandPaletteOpen = false" />
+
 <RadzenDialog />
 <RadzenNotification />
 <RadzenTooltip />
@@ -235,6 +237,7 @@
     private bool _restored;
     private bool sidebarCollapsed;
     private bool avatarMenuOpen;
+    private bool commandPaletteOpen;
 
     private static string AppVersion =>
         typeof(MainLayout).Assembly.GetName().Version?.ToString(3) ?? "0.0.0";
@@ -269,9 +272,15 @@
 
     private void HandleKeyDown(KeyboardEventArgs e)
     {
-        if (e.Key == "Escape" && avatarMenuOpen)
+        if (e.Key == "k" && e.CtrlKey)
         {
-            avatarMenuOpen = false;
+            commandPaletteOpen = !commandPaletteOpen;
+            return;
+        }
+        if (e.Key == "Escape")
+        {
+            if (commandPaletteOpen) { commandPaletteOpen = false; return; }
+            if (avatarMenuOpen) { avatarMenuOpen = false; }
         }
     }
 
