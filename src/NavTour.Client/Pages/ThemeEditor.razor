@@ -3,6 +3,7 @@
 @inject ThemeApiService ThemeApi
 @inject AuthService Auth
 @inject NavigationManager Nav
+@inject HttpClient Http
 
 <PageTitle>Themes — NavTour</PageTitle>
 
@@ -44,43 +45,80 @@ else
         @if (selectedTheme != null)
         {
             <section class="te-editor">
-                <h3 class="te-section-title">Design Tokens</h3>
-
-                <label class="te-label">Theme Name</label>
-                <input type="text" class="te-input" @bind="editName" @bind:event="oninput" />
-
-                <label class="te-label">Brand Color</label>
-                <div class="te-color-row">
-                    <input type="color" class="te-color-picker" @bind="editBrandColor" />
-                    <input type="text" class="te-color-hex" @bind="editBrandColor" @bind:event="oninput" />
+                @* ── Tab Bar ── *@
+                <div class="te-tabs">
+                    <button class="te-tab @(activeThemeTab == "tooltip" ? "active" : "")" @onclick='() => activeThemeTab = "tooltip"'>Tooltip Style</button>
+                    <button class="te-tab @(activeThemeTab == "cover" ? "active" : "")" @onclick='() => activeThemeTab = "cover"'>Cover Slide</button>
+                    <button class="te-tab @(activeThemeTab == "closing" ? "active" : "")" @onclick='() => activeThemeTab = "closing"'>Closing Slide</button>
                 </div>
 
-                <label class="te-label">Text Color</label>
-                <div class="te-color-row">
-                    <input type="color" class="te-color-picker" @bind="editTextColor" />
-                    <input type="text" class="te-color-hex" @bind="editTextColor" @bind:event="oninput" />
-                </div>
+                @* ── Tab 1: Tooltip Style ── *@
+                @if (activeThemeTab == "tooltip")
+                {
+                    <div class="te-form">
+                        <label class="te-label">Theme Name</label>
+                        <input type="text" class="te-input" @bind="editName" @bind:event="oninput" />
 
-                <label class="te-label">Background Color</label>
-                <div class="te-color-row">
-                    <input type="color" class="te-color-picker" @bind="editBackgroundColor" />
-                    <input type="text" class="te-color-hex" @bind="editBackgroundColor" @bind:event="oninput" />
-                </div>
+                        <label class="te-label">Brand Color</label>
+                        <div class="te-color-row">
+                            <input type="color" class="te-color-picker" @bind="editBrandColor" />
+                            <input type="text" class="te-color-hex" @bind="editBrandColor" @bind:event="oninput" />
+                        </div>
 
-                <label class="te-label">Font Family</label>
-                <RadzenDropDown TValue="string" @bind-Value="editFontFamily"
-                    Data="fontFamilies" Style="width:100%;" />
+                        <label class="te-label">Text Color</label>
+                        <div class="te-color-row">
+                            <input type="color" class="te-color-picker" @bind="editTextColor" />
+                            <input type="text" class="te-color-hex" @bind="editTextColor" @bind:event="oninput" />
+                        </div>
 
-                <label class="te-label">Border Radius — @(editBorderRadius)px</label>
-                <input type="range" class="te-range" min="0" max="20" @bind="editBorderRadius" @bind:event="oninput" />
+                        <label class="te-label">Background Color</label>
+                        <div class="te-color-row">
+                            <input type="color" class="te-color-picker" @bind="editBackgroundColor" />
+                            <input type="text" class="te-color-hex" @bind="editBackgroundColor" @bind:event="oninput" />
+                        </div>
 
-                <label class="te-label">Button Style</label>
-                <RadzenDropDown TValue="string" @bind-Value="editButtonStyle"
-                    Data="buttonStyles" Style="width:100%;" />
+                        <label class="te-label">Font Family</label>
+                        <RadzenDropDown TValue="string" @bind-Value="editFontFamily"
+                            Data="fontFamilies" Style="width:100%;" />
 
-                <label class="te-label">Shadow Level</label>
-                <RadzenDropDown TValue="string" @bind-Value="editShadowLevel"
-                    Data="shadowLevels" Style="width:100%;" />
+                        <label class="te-label">Border Radius — @(editBorderRadius)px</label>
+                        <input type="range" class="te-range" min="0" max="20" @bind="editBorderRadius" @bind:event="oninput" />
+
+                        <label class="te-label">Button Style</label>
+                        <RadzenDropDown TValue="string" @bind-Value="editButtonStyle"
+                            Data="buttonStyles" Style="width:100%;" />
+
+                        <label class="te-label">Shadow Level</label>
+                        <RadzenDropDown TValue="string" @bind-Value="editShadowLevel"
+                            Data="shadowLevels" Style="width:100%;" />
+
+                        <label class="te-label">Company Logo</label>
+                        @if (!string.IsNullOrEmpty(editLogoUrl))
+                        {
+                            <div style="display:flex;align-items:center;gap:12px;padding:8px 12px;background:var(--nt-surface-subtle);border-radius:var(--nt-radius);margin-top:6px">
+                                <img src="@editLogoUrl" alt="Logo" style="max-height:40px;max-width:200px" />
+                                <button style="font-size:0.75rem;color:var(--nt-error);background:none;border:none;cursor:pointer" @onclick='() => editLogoUrl = null'>Remove</button>
+                            </div>
+                        }
+                        <label style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;margin-top:6px;background:var(--nt-surface-subtle);border:1px dashed var(--nt-border);border-radius:var(--nt-radius);cursor:pointer;font-size:0.8125rem;color:var(--nt-text-secondary)">
+                            <InputFile OnChange="HandleThemeLogoUpload" accept=".png,.jpg,.jpeg,.svg,.webp,.gif" style="display:none" />
+                            <span>@(string.IsNullOrEmpty(editLogoUrl) ? "Upload Logo" : "Replace")</span>
+                        </label>
+                        @if (themeLogoUploading) { <span style="font-size:0.75rem;color:var(--nt-accent)">Uploading...</span> }
+                    </div>
+                }
+
+                @* ── Tab 2: Cover Slide ── *@
+                @if (activeThemeTab == "cover")
+                {
+                    @SlideSettingsForm(editCoverSlide)
+                }
+
+                @* ── Tab 3: Closing Slide ── *@
+                @if (activeThemeTab == "closing")
+                {
+                    @SlideSettingsForm(editClosingSlide)
+                }
 
                 <div class="te-actions">
                     <button class="te-btn-save" @onclick="SaveTheme" disabled="@saving">@(saving ? "Saving..." : "Save Theme")</button>
@@ -90,27 +128,48 @@ else
 
             <aside class="te-preview">
                 <h3 class="te-section-title">Live Preview</h3>
-                <div class="te-preview-stage">
-                    <div class="theme-preview" style="
-                        --preview-brand: @editBrandColor;
-                        --preview-text: @editTextColor;
-                        --preview-bg: @editBackgroundColor;
-                        --preview-font: @editFontFamily;
-                        --preview-radius: @(editBorderRadius)px;
-                        --preview-shadow: @GetShadow();
-                    ">
-                        <div class="preview-backdrop"></div>
-                        <div class="preview-tooltip">
-                            <div class="preview-badge">1</div>
-                            <h4>Welcome to the demo</h4>
-                            <p>This is a preview of how your tooltips will look with the current theme.</p>
-                            <div class="preview-footer">
-                                <span class="preview-step">1 of 5</span>
-                                <button class="preview-btn @editButtonStyle">Next</button>
+
+                @* ── Tooltip Preview ── *@
+                @if (activeThemeTab == "tooltip")
+                {
+                    <div class="te-preview-stage">
+                        <div class="theme-preview" style="
+                            --preview-brand: @editBrandColor;
+                            --preview-text: @editTextColor;
+                            --preview-bg: @editBackgroundColor;
+                            --preview-font: @editFontFamily;
+                            --preview-radius: @(editBorderRadius)px;
+                            --preview-shadow: @GetShadow();
+                        ">
+                            <div class="preview-backdrop"></div>
+                            <div class="preview-tooltip">
+                                <div class="preview-badge">1</div>
+                                <h4>Welcome to the demo</h4>
+                                <p>This is a preview of how your tooltips will look with the current theme.</p>
+                                <div class="preview-footer">
+                                    <span class="preview-step">1 of 5</span>
+                                    <button class="preview-btn @editButtonStyle">Next</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                }
+
+                @* ── Cover Slide Preview ── *@
+                @if (activeThemeTab == "cover")
+                {
+                    <div class="te-preview-stage">
+                        @SlidePreview(editCoverSlide, "Get Started")
+                    </div>
+                }
+
+                @* ── Closing Slide Preview ── *@
+                @if (activeThemeTab == "closing")
+                {
+                    <div class="te-preview-stage">
+                        @SlidePreview(editClosingSlide, "Learn More")
+                    </div>
+                }
             </aside>
         }
         else
@@ -194,6 +253,24 @@ else
         font-size: var(--nt-text-sm); color: var(--nt-text-muted);
     }
 
+    /* ── Tabs ── */
+    .te-tabs {
+        display: flex; gap: 0; margin-bottom: 20px;
+        border-bottom: 1px solid var(--nt-border);
+    }
+    .te-tab {
+        padding: 10px 16px; border: none; background: none;
+        font-size: var(--nt-text-sm); font-weight: var(--nt-weight-medium);
+        color: var(--nt-text-secondary); cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition: color var(--nt-duration-fast) var(--nt-ease), border-color var(--nt-duration-fast) var(--nt-ease);
+    }
+    .te-tab:hover { color: var(--nt-text-primary); }
+    .te-tab.active {
+        color: var(--nt-accent); border-bottom-color: var(--nt-accent);
+        font-weight: var(--nt-weight-semibold);
+    }
+
     /* ── Editor (center) ── */
     .te-editor {
         flex: 1; padding: 24px; overflow-y: auto;
@@ -202,6 +279,9 @@ else
     .te-section-title {
         font-size: var(--nt-text-lg); font-weight: var(--nt-weight-semibold);
         color: var(--nt-text-primary); margin: 0 0 20px;
+    }
+    .te-form {
+        display: flex; flex-direction: column;
     }
     .te-label {
         display: block; font-size: var(--nt-text-xs); font-weight: var(--nt-weight-semibold);
@@ -238,6 +318,26 @@ else
 
     .te-range {
         width: 100%; accent-color: var(--nt-accent); cursor: pointer;
+    }
+
+    /* ── Segmented Buttons ── */
+    .te-seg {
+        display: flex; gap: 0;
+        border: 1px solid var(--nt-border); border-radius: var(--nt-radius);
+        overflow: hidden;
+    }
+    .te-seg-btn {
+        flex: 1; padding: 7px 12px; border: none;
+        background: var(--nt-surface); color: var(--nt-text-secondary);
+        font-size: var(--nt-text-xs); font-weight: var(--nt-weight-medium);
+        cursor: pointer; transition: background var(--nt-duration-fast), color var(--nt-duration-fast);
+    }
+    .te-seg-btn:not(:last-child) {
+        border-right: 1px solid var(--nt-border);
+    }
+    .te-seg-btn:hover { background: var(--nt-surface-subtle); }
+    .te-seg-btn.active {
+        background: var(--nt-accent); color: #fff;
     }
 
     .te-actions {
@@ -280,7 +380,7 @@ else
         padding: 32px 24px;
     }
 
-    /* ── Theme Preview Component ── */
+    /* ── Theme Preview Component (Tooltip) ── */
     .theme-preview {
         position: relative;
     }
@@ -340,6 +440,15 @@ else
     }
     .preview-btn:hover { opacity: 0.85; }
 
+    /* ── Slide Preview ── */
+    .te-slide-preview {
+        border-radius: var(--nt-radius-md);
+        padding: 24px;
+        text-align: center;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        min-height: 180px;
+    }
+
     /* ── Placeholder ── */
     .te-placeholder {
         flex: 1; display: flex; flex-direction: column;
@@ -355,8 +464,9 @@ else
     private ThemeResponse? selectedTheme;
     private bool loading = true;
     private bool saving;
+    private string activeThemeTab = "tooltip";
 
-    // Editable fields
+    // Editable fields — Tooltip Style
     private string editName = "";
     private string editBrandColor = "#4361ee";
     private string editTextColor = "#ffffff";
@@ -365,11 +475,18 @@ else
     private int editBorderRadius = 8;
     private string editButtonStyle = "filled";
     private string editShadowLevel = "medium";
+    private string? editLogoUrl;
+    private bool themeLogoUploading;
+
+    // Slide settings
+    private ThemeSlideSettings editCoverSlide = new();
+    private ThemeSlideSettings editClosingSlide = new() { Title = "Enjoyed the demo?", Description = "Learn more about our features", CtaText = "Learn More" };
 
     // Dropdown data
     private static readonly List<string> fontFamilies = ["Segoe UI", "Inter", "Arial", "Georgia", "Cascadia Code"];
     private static readonly List<string> buttonStyles = ["filled", "outline", "ghost"];
     private static readonly List<string> shadowLevels = ["none", "light", "medium", "heavy"];
+    private static readonly List<string> ctaActions = ["next", "url"];
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -393,12 +510,17 @@ else
         editBorderRadius = theme.BorderRadius;
         editButtonStyle = theme.ButtonStyle;
         editShadowLevel = theme.ShadowLevel;
+        editLogoUrl = theme.LogoUrl;
+        editCoverSlide = theme.CoverSlide ?? new ThemeSlideSettings();
+        editClosingSlide = theme.ClosingSlide ?? new ThemeSlideSettings { Title = "Enjoyed the demo?", Description = "Learn more about our features", CtaText = "Learn More" };
+        activeThemeTab = "tooltip";
     }
 
     private async Task CreateTheme()
     {
         var result = await ThemeApi.CreateAsync(new CreateThemeRequest(
-            "New Theme", "#4361ee", "#ffffff", "#1a1a2e", "Segoe UI", 8, "filled", "medium"));
+            "New Theme", "#4361ee", "#ffffff", "#1a1a2e", "Segoe UI", 8, "filled", "medium",
+            null, new ThemeSlideSettings(), new ThemeSlideSettings { Title = "Enjoyed the demo?", Description = "Learn more about our features", CtaText = "Learn More" }));
         if (result != null)
         {
             themes.Add(result);
@@ -412,7 +534,8 @@ else
         saving = true;
         var result = await ThemeApi.UpdateAsync(selectedTheme.Id, new UpdateThemeRequest(
             editName, editBrandColor, editTextColor, editBackgroundColor,
-            editFontFamily, editBorderRadius, editButtonStyle, editShadowLevel));
+            editFontFamily, editBorderRadius, editButtonStyle, editShadowLevel,
+            editLogoUrl, editCoverSlide, editClosingSlide));
         if (result != null)
         {
             var idx = themes.FindIndex(t => t.Id == result.Id);
@@ -421,6 +544,31 @@ else
         }
         saving = false;
     }
+
+    private async Task HandleThemeLogoUpload(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file == null) return;
+        themeLogoUploading = true;
+        StateHasChanged();
+        try
+        {
+            using var content = new MultipartFormDataContent();
+            using var stream = file.OpenReadStream(2 * 1024 * 1024);
+            content.Add(new StreamContent(stream), "file", file.Name);
+            var response = await Http.PostAsync("api/v1/uploads/image", content);
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<LogoUploadResult>();
+                if (result?.Url != null) editLogoUrl = result.Url;
+            }
+        }
+        catch { }
+        themeLogoUploading = false;
+        StateHasChanged();
+    }
+
+    private record LogoUploadResult(string? Url);
 
     private async Task DeleteTheme()
     {
@@ -452,6 +600,9 @@ else
         editBorderRadius = 8;
         editButtonStyle = "filled";
         editShadowLevel = "medium";
+        editLogoUrl = null;
+        editCoverSlide = new ThemeSlideSettings();
+        editClosingSlide = new ThemeSlideSettings { Title = "Enjoyed the demo?", Description = "Learn more about our features", CtaText = "Learn More" };
     }
 
     private string GetShadow() => editShadowLevel switch
@@ -462,4 +613,69 @@ else
         "heavy" => "0 8px 32px rgba(0,0,0,0.22)",
         _ => "0 4px 16px rgba(0,0,0,0.14)"
     };
+
+    // ── Reusable Slide Settings Form ──
+    RenderFragment SlideSettingsForm(ThemeSlideSettings settings) => @<div class="te-form">
+        <label class="te-label">Layout</label>
+        <div class="te-seg">
+            <button class="te-seg-btn @(settings.Layout == "left" ? "active" : "")" @onclick='() => settings.Layout = "left"'>Left</button>
+            <button class="te-seg-btn @(settings.Layout == "center" ? "active" : "")" @onclick='() => settings.Layout = "center"'>Center</button>
+            <button class="te-seg-btn @(settings.Layout == "right" ? "active" : "")" @onclick='() => settings.Layout = "right"'>Right</button>
+        </div>
+
+        <label class="te-label">Theme</label>
+        <div class="te-seg">
+            <button class="te-seg-btn @(settings.Theme == "dark" ? "active" : "")" @onclick='() => settings.Theme = "dark"'>Dark</button>
+            <button class="te-seg-btn @(settings.Theme == "light" ? "active" : "")" @onclick='() => settings.Theme = "light"'>Light</button>
+        </div>
+
+        <label class="te-label">Title</label>
+        <RadzenTextBox @bind-Value="settings.Title" Placeholder="Welcome to..." Style="width:100%" />
+
+        <label class="te-label">Description</label>
+        <RadzenTextArea @bind-Value="settings.Description" Rows="2" Style="width:100%" />
+
+        <label class="te-label">CTA Button Text</label>
+        <RadzenTextBox @bind-Value="settings.CtaText" Style="width:100%" />
+
+        <label class="te-label">CTA Action</label>
+        <RadzenDropDown TValue="string" @bind-Value="settings.CtaAction"
+            Data="ctaActions" Style="width:100%" />
+
+        @if (settings.CtaAction == "url")
+        {
+            <label class="te-label">CTA URL</label>
+            <RadzenTextBox @bind-Value="settings.CtaUrl" Placeholder="https://..." Style="width:100%" />
+        }
+
+        <label class="te-label">Show Logo</label>
+        <RadzenSwitch @bind-Value="settings.ShowLogo" />
+
+        <label class="te-label">Background</label>
+        <div class="te-seg">
+            <button class="te-seg-btn @(settings.BackgroundType == "none" ? "active" : "")" @onclick='() => settings.BackgroundType = "none"'>None</button>
+            <button class="te-seg-btn @(settings.BackgroundType == "frame" ? "active" : "")" @onclick='() => settings.BackgroundType = "frame"'>First Frame</button>
+            <button class="te-seg-btn @(settings.BackgroundType == "custom" ? "active" : "")" @onclick='() => settings.BackgroundType = "custom"'>Custom</button>
+        </div>
+
+        @if (settings.BackgroundType == "custom")
+        {
+            <label class="te-label">Background Image URL</label>
+            <RadzenTextBox @bind-Value="settings.BackgroundUrl" Placeholder="https://..." Style="width:100%" />
+        }
+
+        <label class="te-label">Backdrop Opacity — @(settings.BackdropOpacity)%</label>
+        <input type="range" min="0" max="100" @bind="settings.BackdropOpacity" @bind:event="oninput" style="width:100%" />
+    </div>;
+
+    // ── Reusable Slide Preview ──
+    RenderFragment SlidePreview(ThemeSlideSettings settings, string defaultCta) => @<div class="te-slide-preview" style="background:@(settings.Theme == "dark" ? "#0A0A0A" : "#FAFAFA")">
+        @if (settings.ShowLogo && !string.IsNullOrEmpty(editLogoUrl))
+        {
+            <img src="@editLogoUrl" alt="Logo" style="max-height:24px;margin-bottom:8px" />
+        }
+        <h4 style="color:@(settings.Theme == "dark" ? "#fff" : "#0A0A0A");margin:0 0 4px;font-size:14px;font-weight:700">@(settings.Title ?? "Title")</h4>
+        <p style="color:@(settings.Theme == "dark" ? "rgba(255,255,255,0.7)" : "#737373");margin:0 0 12px;font-size:11px">@(settings.Description ?? "Description")</p>
+        <button style="padding:6px 16px;border:none;border-radius:6px;font-size:11px;font-weight:600;background:@editBrandColor;color:#fff;cursor:default">@(settings.CtaText ?? defaultCta)</button>
+    </div>;
 }
