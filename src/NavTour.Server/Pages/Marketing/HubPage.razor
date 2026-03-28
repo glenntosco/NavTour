@@ -1,13 +1,17 @@
 @page "/hub/{Slug}"
-@layout NavTour.Server.Components.Layout.MarketingLayout
+@layout NavTour.Server.Components.Layout.BlankLayout
 @attribute [Microsoft.AspNetCore.Authorization.AllowAnonymous]
 @inject HttpClient Http
 @using NavTour.Shared.DTOs.Hub
 @using System.Text.Json
 
 <HeadContent>
-    <title>@(hub?.Name ?? "Demo Hub") — NavTour</title>
+    <title>@(hub?.Name ?? "Demo Hub")</title>
     <meta name="description" content="Explore interactive product demos" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+    </style>
 </HeadContent>
 
 @if (hub == null)
@@ -121,7 +125,14 @@ else
             }
             @if (appearance.PoweredBy != "hide")
             {
-                <span class="showcase-powered">@(appearance.PoweredBy == "custom" && appearance.PoweredByText != null ? appearance.PoweredByText : "Powered by NavTour")</span>
+                @if (appearance.PoweredBy == "custom" && appearance.PoweredByText != null)
+                {
+                    <span class="showcase-powered">@appearance.PoweredByText</span>
+                }
+                else
+                {
+                    <a href="https://navtour.cloud" target="_blank" rel="noopener" class="showcase-powered-link">Powered by NavTour.cloud</a>
+                }
             }
         </div>
     </div>
@@ -285,6 +296,11 @@ else
         font-size: 0.875rem; font-weight: 600;
     }
     .showcase-powered { font-size: 0.75rem; color: #A3A3A3; }
+    .showcase-powered-link {
+        font-size: 0.75rem; color: #A3A3A3; text-decoration: none;
+        transition: color 150ms;
+    }
+    .showcase-powered-link:hover { color: #737373; }
 
     /* ── Player Modal ── */
     .showcase-player-overlay {
