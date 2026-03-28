@@ -1,4 +1,6 @@
 using System.Net.Http.Json;
+using System.Security.Claims;
+using System.Text.Json;
 using Microsoft.JSInterop;
 using NavTour.Shared.DTOs.Auth;
 
@@ -10,6 +12,7 @@ public class AuthService
     private readonly IJSRuntime _js;
     private bool _isAuthenticated;
     private Guid? _tenantId;
+    private string? _userEmail;
 
     public AuthService(HttpClient http, IJSRuntime js)
     {
@@ -19,6 +22,7 @@ public class AuthService
 
     public bool IsAuthenticated => _isAuthenticated;
     public Guid? TenantId => _tenantId;
+    public string? UserEmail => _userEmail;
 
     public async Task TryRestoreAsync()
     {
@@ -28,6 +32,7 @@ public class AuthService
         if (_http.DefaultRequestHeaders.Authorization?.Parameter != null)
         {
             _isAuthenticated = true;
+            _userEmail ??= ExtractEmailFromJwt(_http.DefaultRequestHeaders.Authorization.Parameter);
             return;
         }
 
@@ -40,6 +45,7 @@ public class AuthService
                 _http.DefaultRequestHeaders.Authorization =
                     new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jsToken);
                 _isAuthenticated = true;
+                _userEmail ??= ExtractEmailFromJwt(jsToken);
                 return;
             }
         }
@@ -67,6 +73,7 @@ public class AuthService
         var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
         _isAuthenticated = true;
         _tenantId = result!.TenantId;
+        _userEmail = email;
 
         _http.DefaultRequestHeaders.Authorization =
             new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", result.AccessToken);
@@ -87,6 +94,7 @@ public class AuthService
         var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
         _isAuthenticated = true;
         _tenantId = result!.TenantId;
+        _userEmail = email;
 
         _http.DefaultRequestHeaders.Authorization =
             new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", result.AccessToken);
@@ -98,7 +106,34 @@ public class AuthService
     {
         _isAuthenticated = false;
         _tenantId = null;
+        _userEmail = null;
         _http.DefaultRequestHeaders.Authorization = null;
         try { await _http.PostAsync("api/v1/auth/logout", null); } catch { }
+    }
+
+    private static string? ExtractEmailFromJwt(string token)
+    {
+        try
+        {
+            var parts = token.Split('.');
+            if (parts.Length < 2) return null;
+            var payload = parts[1];
+            // Pad base64url
+            payload = payload.Replace('-', '+').Replace('_', '/');
+            switch (payload.Length % 4)
+            {
+                case 2: payload += "=="; break;
+                case 3: payload += "="; break;
+            }
+            var json = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(payload));
+            using var doc = JsonDocument.Parse(json);
+            if (doc.RootElement.TryGetProperty("email", out var emailProp))
+                return emailProp.GetString();
+            // Fallback: standard claim type
+            if (doc.RootElement.TryGetProperty("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress", out var emailClaim))
+                return emailClaim.GetString();
+            return null;
+        }
+        catch { return null; }
     }
 }
