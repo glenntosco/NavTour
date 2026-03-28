@@ -15,4 +15,7 @@ builder.Services.AddScoped<PlayerApiService>();
 // Analytics Services
 builder.Services.AddScoped<AnalyticsApiService>();
 
+// Theme Services
+builder.Services.AddScoped<ThemeApiService>();
+
 await builder.Build().RunAsync();

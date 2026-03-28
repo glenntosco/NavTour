@@ -32,6 +32,7 @@ public class NavTourDbContext : IdentityDbContext<ApplicationUser, IdentityRole<
     public DbSet<LeadEmailTemplate> LeadEmailTemplates => Set<LeadEmailTemplate>();
     public DbSet<Form> Forms => Set<Form>();
     public DbSet<CapturedResource> CapturedResources => Set<CapturedResource>();
+    public DbSet<DemoTheme> DemoThemes => Set<DemoTheme>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -140,6 +141,19 @@ public class NavTourDbContext : IdentityDbContext<ApplicationUser, IdentityRole<
             e.Property(t => t.CtaUrl).HasMaxLength(500);
             e.Property(t => t.AccentColor).HasMaxLength(7);
             e.HasIndex(t => t.TenantId).IsUnique();
+        });
+
+        // DemoTheme
+        builder.Entity<DemoTheme>(e =>
+        {
+            e.HasQueryFilter(t => t.TenantId == _tenantProvider.TenantId && !t.IsDeleted);
+            e.Property(t => t.Name).HasMaxLength(200);
+            e.Property(t => t.BrandColor).HasMaxLength(7);
+            e.Property(t => t.TextColor).HasMaxLength(7);
+            e.Property(t => t.BackgroundColor).HasMaxLength(7);
+            e.Property(t => t.FontFamily).HasMaxLength(100);
+            e.Property(t => t.ButtonStyle).HasMaxLength(20);
+            e.Property(t => t.ShadowLevel).HasMaxLength(20);
         });
 
         // CapturedResource — content-addressed, shared across tenants (no query filter)

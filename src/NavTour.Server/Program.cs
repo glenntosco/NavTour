@@ -114,6 +114,9 @@ builder.Services.AddScoped<IStepService, StepService>();
 builder.Services.AddScoped<IAnnotationService, AnnotationService>();
 builder.Services.AddScoped<IFormService, FormService>();
 
+// Theme Services
+builder.Services.AddScoped<NavTour.Server.Services.ThemeService>();
+
 // Analytics Services
 builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 builder.Services.AddScoped<ILeadService, LeadService>();
@@ -155,6 +158,7 @@ builder.Services.AddScoped<PlayerApiService>();
 builder.Services.AddScoped<AnalyticsApiService>();
 builder.Services.AddScoped<TeamApiService>();
 builder.Services.AddScoped<FormApiService>();
+builder.Services.AddScoped<ThemeApiService>();
 
 var app = builder.Build();
 
