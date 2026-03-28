@@ -65,7 +65,8 @@ public class PlayerService : IPlayerService
                     a.TargetSelector, a.ArrowDirection, a.BadgeNumber
                 )).ToList(),
                 s.TriggerType, s.TriggerDurationMs, s.BackdropLevel, s.VoiceoverText,
-                s.VoiceoverAudio != null ? $"/api/v1/steps/{s.Id}/audio" : null))
+                s.VoiceoverAudio != null ? $"/api/v1/steps/{s.Id}/audio" : null,
+                s.Type, s.ChapterSettings))
             .ToListAsync();
 
         // Resolve personalization variables

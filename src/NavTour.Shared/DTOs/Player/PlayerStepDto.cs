@@ -3,11 +3,13 @@ using NavTour.Shared.Enums;
 namespace NavTour.Shared.DTOs.Player;
 
 public record PlayerStepDto(
-    Guid Id, Guid FrameId, int StepNumber, string? ClickTargetSelector,
+    Guid Id, Guid? FrameId, int StepNumber, string? ClickTargetSelector,
     NavigationAction NavigationAction, string? NavigationTarget,
     List<PlayerAnnotationDto> Annotations,
     TriggerType TriggerType = TriggerType.ButtonClick,
     int? TriggerDurationMs = null,
     string? BackdropLevel = null,
     string? VoiceoverText = null,
-    string? VoiceoverAudioUrl = null);
+    string? VoiceoverAudioUrl = null,
+    StepType Type = StepType.Content,
+    string? ChapterSettings = null);

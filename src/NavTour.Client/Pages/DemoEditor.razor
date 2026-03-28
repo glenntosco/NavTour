@@ -304,7 +304,8 @@ $@"<iframe
         {
             selectedFrameId = step.FrameId;
             currentAnnotations = step.Annotations;
-            _ = SelectFrame(step.FrameId);
+            if (step.FrameId.HasValue)
+                _ = SelectFrame(step.FrameId.Value);
         }
     }
 

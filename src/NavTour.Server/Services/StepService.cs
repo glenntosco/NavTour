@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using NavTour.Server.Infrastructure.Data;
 using NavTour.Shared.DTOs.Annotations;
 using NavTour.Shared.DTOs.Steps;
+using NavTour.Shared.Enums;
 using NavTour.Shared.Models;
 
 namespace NavTour.Server.Services;
@@ -31,7 +32,8 @@ public class StepService : IStepService
                     a.PositionX, a.PositionY, a.Width, a.Height, a.Style,
                     a.TargetSelector, a.ArrowDirection, a.BadgeNumber
                 )).ToList(),
-                s.TriggerType, s.TriggerDurationMs, s.BackdropLevel, s.VoiceoverText, s.VoiceId))
+                s.TriggerType, s.TriggerDurationMs, s.BackdropLevel, s.VoiceoverText, s.VoiceId,
+                s.Type, s.ChapterSettings))
             .ToListAsync();
     }
 
@@ -81,6 +83,8 @@ public class StepService : IStepService
                 VoiceoverText = stepDto.VoiceoverText,
                 VoiceoverAudio = voiceoverAudio,
                 VoiceId = stepDto.VoiceId,
+                Type = stepDto.Type ?? StepType.Content,
+                ChapterSettings = stepDto.ChapterSettings,
                 Annotations = stepDto.Annotations.Select(a => new Annotation
                 {
                     Id = a.Id ?? Guid.NewGuid(),

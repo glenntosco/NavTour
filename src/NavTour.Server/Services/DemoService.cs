@@ -3,6 +3,7 @@ using NavTour.Server.Infrastructure.Data;
 using NavTour.Shared.DTOs.Demos;
 using NavTour.Shared.Enums;
 using NavTour.Shared.Models;
+using System.Text.Json;
 
 namespace NavTour.Server.Services;
 
@@ -60,6 +61,57 @@ public class DemoService : IDemoService
         };
 
         _db.Demos.Add(demo);
+        await _db.SaveChangesAsync();
+
+        // Auto-create cover slide (step 1)
+        var coverSettings = JsonSerializer.Serialize(new
+        {
+            layout = "center",
+            theme = "dark",
+            title = request.Name,
+            description = "Interactive product demo",
+            ctaText = "Get Started",
+            ctaAction = "next",
+            showLogo = true,
+            backgroundType = "frame",
+            backdropOpacity = 60
+        });
+
+        var coverStep = new Step
+        {
+            DemoId = demo.Id,
+            StepNumber = 1,
+            Type = StepType.CoverSlide,
+            TriggerType = TriggerType.ButtonClick,
+            NavigationAction = NavigationAction.NextStep,
+            ChapterSettings = coverSettings
+        };
+        _db.Steps.Add(coverStep);
+
+        // Auto-create closing slide (step 2)
+        var closingSettings = JsonSerializer.Serialize(new
+        {
+            layout = "center",
+            theme = "dark",
+            title = "Enjoyed the demo?",
+            description = "Learn more about our features on our website.",
+            ctaText = "Learn More",
+            ctaAction = "next",
+            showLogo = true,
+            backgroundType = "none",
+            backdropOpacity = 60
+        });
+
+        var closingStep = new Step
+        {
+            DemoId = demo.Id,
+            StepNumber = 2,
+            Type = StepType.ClosingSlide,
+            TriggerType = TriggerType.ButtonClick,
+            NavigationAction = NavigationAction.EndDemo,
+            ChapterSettings = closingSettings
+        };
+        _db.Steps.Add(closingStep);
         await _db.SaveChangesAsync();
 
         return new DemoResponse(demo.Id, demo.Name, demo.Slug, demo.Description,

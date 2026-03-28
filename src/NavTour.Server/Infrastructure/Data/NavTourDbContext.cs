@@ -79,7 +79,7 @@ public class NavTourDbContext : IdentityDbContext<ApplicationUser, IdentityRole<
         {
             e.HasQueryFilter(s => s.TenantId == _tenantProvider.TenantId && !s.IsDeleted);
             e.HasOne(s => s.Demo).WithMany(d => d.Steps).HasForeignKey(s => s.DemoId).OnDelete(DeleteBehavior.Cascade);
-            e.HasOne(s => s.Frame).WithMany().HasForeignKey(s => s.FrameId).OnDelete(DeleteBehavior.NoAction);
+            e.HasOne(s => s.Frame).WithMany().HasForeignKey(s => s.FrameId).IsRequired(false).OnDelete(DeleteBehavior.NoAction);
         });
 
         // Annotation
