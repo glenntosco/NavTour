@@ -219,12 +219,12 @@ async function uploadScreenshot(
   dataUrl: string,
   name: string
 ): Promise<any> {
-  // Convert data URL to Blob
-  const response = await fetch(dataUrl);
-  const blob = await response.blob();
+  // Wrap screenshot in HTML so the frame editor can render it
+  const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><style>*{margin:0;padding:0}body{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#f5f5f5}img{max-width:100%;height:auto}</style></head><body><img src="${dataUrl}" alt="${name}" /></body></html>`;
+  const blob = new Blob([html], { type: 'text/html' });
 
   const formData = new FormData();
-  formData.append('file', blob, `${name}.png`);
+  formData.append('file', blob, `${name}.html`);
   formData.append('name', name);
 
   const res = await fetch(`${getApiUrl()}/demos/${demoId}/frames`, {
