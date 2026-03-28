@@ -30,7 +30,7 @@
         <RadzenRow Gap="16px">
             <RadzenColumn SizeMD="3" Size="6">
                 <div class="analytics-stat-card">
-                    <span class="analytics-stat-icon" style="background:#E8F1FA;color:#0A5FAD">
+                    <span class="analytics-stat-icon" style="background:var(--nt-accent-light);color:var(--nt-accent)">
                         <RadzenIcon Icon="visibility" />
                     </span>
                     <span class="analytics-stat-value">@summary.TotalViews</span>
@@ -39,7 +39,7 @@
             </RadzenColumn>
             <RadzenColumn SizeMD="3" Size="6">
                 <div class="analytics-stat-card">
-                    <span class="analytics-stat-icon" style="background:#E8F5E9;color:#2E7D32">
+                    <span class="analytics-stat-icon" style="background:var(--nt-success-light, #E8F5E9);color:var(--nt-success)">
                         <RadzenIcon Icon="check_circle" />
                     </span>
                     <span class="analytics-stat-value">@summary.Completions</span>
@@ -48,7 +48,7 @@
             </RadzenColumn>
             <RadzenColumn SizeMD="3" Size="6">
                 <div class="analytics-stat-card">
-                    <span class="analytics-stat-icon" style="background:#FFF4E5;color:#E89A2E">
+                    <span class="analytics-stat-icon" style="background:var(--nt-warning-light, #FFF4E5);color:var(--nt-warning, #F59E0B)">
                         <RadzenIcon Icon="percent" />
                     </span>
                     <span class="analytics-stat-value">@summary.CompletionRate.ToString("F1")%</span>
@@ -57,7 +57,7 @@
             </RadzenColumn>
             <RadzenColumn SizeMD="3" Size="6">
                 <div class="analytics-stat-card">
-                    <span class="analytics-stat-icon" style="background:#F3E5F5;color:#7B1FA2">
+                    <span class="analytics-stat-icon" style="background:var(--nt-surface-subtle);color:var(--nt-neutral-600)">
                         <RadzenIcon Icon="schedule" />
                     </span>
                     <span class="analytics-stat-value">@TimeSpan.FromSeconds(summary.AvgTimeSeconds).ToString(@"m\:ss")</span>
@@ -73,7 +73,7 @@
             {
                 <RadzenChart Style="height:280px">
                     <RadzenAreaSeries Data="@summary.ViewsOverTime" CategoryProperty="Date" ValueProperty="Count"
-                        Stroke="rgba(10, 95, 173, 1)" Fill="rgba(10, 95, 173, 0.08)" StrokeWidth="2" />
+                        Stroke="rgba(67, 97, 238, 1)" Fill="rgba(67, 97, 238, 0.08)" StrokeWidth="2" />
                     <RadzenCategoryAxis FormatString="{0:MMM dd}" />
                     <RadzenValueAxis />
                 </RadzenChart>
@@ -83,6 +83,30 @@
                 <div class="analytics-empty">No view data yet</div>
             }
         </div>
+
+        @* Step drop-off funnel *@
+        @if (summary.Funnel.Count > 0)
+        {
+            <div class="analytics-card">
+                <h3 class="analytics-card-title">Step Drop-off</h3>
+                <div class="funnel-chart">
+                    @{ var maxViews = summary.Funnel.Max(f => f.ViewCount); }
+                    @foreach (var step in summary.Funnel)
+                    {
+                        var widthPct = maxViews > 0 ? (double)step.ViewCount / maxViews * 100 : 0;
+                        var completionPct = step.ViewCount > 0 ? (double)step.CompletionCount / step.ViewCount * 100 : 0;
+                        <div class="funnel-row">
+                            <span class="funnel-label">Step @step.StepNumber</span>
+                            <div class="funnel-bar-track">
+                                <div class="funnel-bar" style="width:@(widthPct.ToString("F1"))%"></div>
+                            </div>
+                            <span class="funnel-value">@step.ViewCount</span>
+                            <span class="funnel-pct">@(completionPct.ToString("F0"))%</span>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
 
         <RadzenRow Gap="16px">
             @* Per-demo breakdown *@
@@ -212,12 +236,65 @@
 
     .analytics-card-title {
         font-size: 0.9375rem; font-weight: 600;
-        color: var(--nt-navy); margin: 0 0 16px;
+        color: var(--nt-text-primary); margin: 0 0 16px;
     }
 
     .analytics-empty {
         text-align: center; padding: 40px 16px;
-        color: var(--nt-text-faint); font-size: 0.875rem;
+        color: var(--nt-text-muted); font-size: 0.875rem;
+    }
+
+    .funnel-chart {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .funnel-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .funnel-label {
+        font-size: var(--nt-text-sm);
+        color: var(--nt-text-secondary);
+        font-weight: 500;
+        width: 60px;
+        flex-shrink: 0;
+    }
+
+    .funnel-bar-track {
+        flex: 1;
+        height: 28px;
+        background: var(--nt-surface-subtle);
+        border-radius: var(--nt-radius-sm);
+        overflow: hidden;
+    }
+
+    .funnel-bar {
+        height: 100%;
+        background: linear-gradient(90deg, var(--nt-accent), rgba(67, 97, 238, 0.6));
+        border-radius: var(--nt-radius-sm);
+        min-width: 4px;
+        transition: width 600ms cubic-bezier(0.1, 0.9, 0.2, 1);
+    }
+
+    .funnel-value {
+        font-size: var(--nt-text-sm);
+        font-weight: 600;
+        color: var(--nt-text-primary);
+        width: 48px;
+        text-align: right;
+        flex-shrink: 0;
+    }
+
+    .funnel-pct {
+        font-size: var(--nt-text-xs);
+        color: var(--nt-text-muted);
+        width: 36px;
+        text-align: right;
+        flex-shrink: 0;
     }
 </style>
 
