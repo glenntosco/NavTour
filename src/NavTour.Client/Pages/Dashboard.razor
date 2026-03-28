@@ -28,13 +28,13 @@ else
 {
     <div class="dash">
         @* Header *@
-        <div class="dash-header">
+        <div class="nt-page-header">
             <div>
-                <h1 class="dash-title">Product Demos</h1>
-                <p class="dash-subtitle">@demos.Count demo@(demos.Count != 1 ? "s" : "") in your workspace</p>
+                <h1 class="nt-page-title">Product Demos</h1>
+                <p class="nt-page-subtitle">@demos.Count demo@(demos.Count != 1 ? "s" : "") in your workspace</p>
             </div>
-            <button class="dash-create-btn" @onclick="CreateNewDemo">
-                <span class="dash-create-icon">+</span>
+            <button class="nt-btn-primary" @onclick="CreateNewDemo">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 Create Demo
             </button>
         </div>
@@ -55,16 +55,16 @@ else
         }
         else if (demos.Count == 0)
         {
-            <div class="dash-empty-state">
-                <div class="dash-empty-icon">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:#94A3B8">
+            <div class="nt-empty">
+                <div class="nt-empty-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
                     </svg>
                 </div>
                 <h3>No demos yet</h3>
                 <p>Create your first interactive demo to start converting prospects.</p>
-                <button class="dash-create-btn" @onclick="CreateNewDemo">
-                    <span class="dash-create-icon">+</span>
+                <button class="nt-btn-primary" @onclick="CreateNewDemo">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                     Create Demo
                 </button>
             </div>
@@ -86,7 +86,7 @@ else
                         <div class="dash-card-info">
                             <div class="dash-card-row">
                                 <span class="dash-card-name">@demo.Name</span>
-                                <span class="dash-badge @(demo.Status == DemoStatus.Published ? "dash-badge-live" : "dash-badge-draft")">
+                                <span class="nt-badge @(demo.Status == DemoStatus.Published ? "nt-badge-live" : "nt-badge-draft")">
                                     @(demo.Status == DemoStatus.Published ? "Live" : "Draft")
                                 </span>
                             </div>
@@ -129,62 +129,7 @@ else
     .dash {
         max-width: 960px;
         margin: 0 auto;
-        padding: 8px 0;
-        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    }
-
-    /* Header */
-    .dash-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 28px;
-    }
-
-    .dash-title {
-        font-size: 1.625rem;
-        font-weight: 700;
-        color: #0B1929;
-        margin: 0 0 2px;
-        letter-spacing: -0.02em;
-        line-height: 1.2;
-    }
-
-    .dash-subtitle {
-        font-size: 0.8125rem;
-        color: #64748B;
-        margin: 0;
-    }
-
-    .dash-create-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 9px 20px;
-        background: #0A5FAD;
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        font-size: 0.8125rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background 150ms, transform 100ms, box-shadow 200ms;
-        font-family: inherit;
-    }
-
-    .dash-create-btn:hover {
-        background: #084A8A;
-        box-shadow: 0 4px 12px rgba(10, 95, 173, 0.25);
-    }
-
-    .dash-create-btn:active {
-        transform: scale(0.98);
-    }
-
-    .dash-create-icon {
-        font-size: 1.125rem;
-        line-height: 1;
-        font-weight: 300;
+        padding: 4px 0 32px;
     }
 
     /* Search */
@@ -193,22 +138,19 @@ else
         align-items: center;
         gap: 10px;
         padding: 0 14px;
-        background: #fff;
-        border: 1px solid #E2E8F0;
-        border-radius: 8px;
+        background: var(--nt-surface);
+        border: 1px solid var(--nt-border);
+        border-radius: var(--nt-radius);
         margin-bottom: 24px;
         transition: border-color 150ms, box-shadow 150ms;
     }
 
     .dash-search:focus-within {
-        border-color: #0A5FAD;
-        box-shadow: 0 0 0 3px rgba(10, 95, 173, 0.08);
+        border-color: var(--nt-action);
+        box-shadow: 0 0 0 3px var(--nt-action-light);
     }
 
-    .dash-search-icon {
-        color: #94A3B8;
-        flex-shrink: 0;
-    }
+    .dash-search-icon { color: var(--nt-text-faint); flex-shrink: 0; }
 
     /* Grid */
     .dash-grid {
@@ -219,193 +161,96 @@ else
 
     /* Card */
     .dash-card {
-        background: #fff;
-        border: 1px solid #E2E8F0;
+        background: var(--nt-surface);
+        border: 1px solid var(--nt-border);
         border-radius: 10px;
         overflow: hidden;
         cursor: pointer;
-        transition: border-color 200ms, box-shadow 250ms cubic-bezier(0.1, 0.9, 0.2, 1),
-                    transform 250ms cubic-bezier(0.1, 0.9, 0.2, 1);
+        transition: border-color var(--nt-transition), box-shadow var(--nt-transition),
+                    transform var(--nt-transition);
     }
 
     .dash-card:hover {
-        border-color: #CBD5E1;
-        box-shadow: 0 8px 24px rgba(11, 25, 41, 0.08), 0 2px 8px rgba(11, 25, 41, 0.04);
+        border-color: var(--nt-border-hover);
+        box-shadow: var(--nt-shadow-lg);
         transform: translateY(-3px);
     }
 
     .dash-card-preview {
         height: 160px;
-        background: linear-gradient(145deg, #F8FAFC 0%, #EEF2F7 100%);
+        background: linear-gradient(145deg, var(--nt-surface-subtle) 0%, #EEF2F7 100%);
         display: flex;
         align-items: center;
         justify-content: center;
-        border-bottom: 1px solid #F1F5F9;
-        position: relative;
+        border-bottom: 1px solid var(--nt-surface-muted);
     }
 
     .dash-card-preview-inner {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 8px;
-        color: #94A3B8;
+        display: flex; flex-direction: column; align-items: center;
+        gap: 8px; color: var(--nt-text-faint);
     }
 
     .dash-card-preview-inner span {
-        font-size: 0.75rem;
-        font-weight: 500;
-        letter-spacing: 0.02em;
+        font-size: 0.75rem; font-weight: 500; letter-spacing: 0.02em;
     }
 
-    .dash-card-info {
-        padding: 16px 20px 20px;
-    }
+    .dash-card-info { padding: 16px 20px 20px; }
 
     .dash-card-row {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 6px;
+        display: flex; align-items: center; gap: 10px; margin-bottom: 6px;
     }
 
     .dash-card-name {
-        font-size: 0.9375rem;
-        font-weight: 600;
-        color: #0B1929;
-        letter-spacing: -0.01em;
-    }
-
-    .dash-badge {
-        font-size: 0.625rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        padding: 2px 8px;
-        border-radius: 10px;
-    }
-
-    .dash-badge-live {
-        background: #ECFDF5;
-        color: #059669;
-    }
-
-    .dash-badge-draft {
-        background: #F1F5F9;
-        color: #64748B;
+        font-size: 0.9375rem; font-weight: 600;
+        color: var(--nt-text-primary); letter-spacing: -0.01em;
     }
 
     .dash-card-meta {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 0.75rem;
-        color: #94A3B8;
-        margin-bottom: 14px;
+        display: flex; align-items: center; gap: 6px;
+        font-size: 0.75rem; color: var(--nt-text-faint); margin-bottom: 14px;
     }
 
     .dash-dot {
-        width: 3px;
-        height: 3px;
-        border-radius: 50%;
-        background: #CBD5E1;
+        width: 3px; height: 3px; border-radius: 50%; background: var(--nt-border-hover);
     }
 
-    .dash-card-actions {
-        display: flex;
-        gap: 8px;
-    }
+    .dash-card-actions { display: flex; gap: 8px; }
 
     .dash-action-btn {
-        padding: 6px 16px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: background 150ms, color 150ms;
-        font-family: inherit;
-        background: #F1F5F9;
-        color: #1E3A5F;
-        border: none;
+        padding: 6px 16px; font-size: 0.75rem; font-weight: 600;
+        border-radius: 6px; cursor: pointer; font-family: inherit;
+        transition: background 150ms;
+        background: var(--nt-surface-muted); color: var(--nt-navy); border: none;
     }
+    .dash-action-btn:hover { background: var(--nt-border); }
 
-    .dash-action-btn:hover {
-        background: #E2E8F0;
-    }
+    .dash-action-secondary { background: transparent; color: var(--nt-action); }
+    .dash-action-secondary:hover { background: var(--nt-accent-light); }
 
-    .dash-action-secondary {
-        background: transparent;
-        color: #0A5FAD;
-    }
-
-    .dash-action-secondary:hover {
-        background: #EEF2FF;
-    }
-
-    /* Empty states */
+    /* No-match empty */
     .dash-empty {
-        text-align: center;
-        padding: 48px 24px;
-        color: #64748B;
-        font-size: 0.875rem;
-    }
-
-    .dash-empty-state {
-        text-align: center;
-        padding: 80px 24px;
-    }
-
-    .dash-empty-icon {
-        margin-bottom: 20px;
-    }
-
-    .dash-empty-state h3 {
-        font-size: 1.125rem;
-        font-weight: 600;
-        color: #0B1929;
-        margin: 0 0 8px;
-    }
-
-    .dash-empty-state p {
-        font-size: 0.875rem;
-        color: #64748B;
-        margin: 0 0 24px;
-        max-width: 320px;
-        margin-left: auto;
-        margin-right: auto;
+        text-align: center; padding: 48px 24px;
+        color: var(--nt-text-muted); font-size: 0.875rem;
     }
 
     /* Tips card */
     .dash-tips {
-        display: flex;
-        gap: 14px;
-        align-items: flex-start;
-        margin-top: 28px;
-        padding: 16px 20px;
-        background: #F8FAFC;
-        border: 1px solid #E2E8F0;
-        border-radius: 10px;
+        display: flex; gap: 14px; align-items: flex-start;
+        margin-top: 28px; padding: 16px 20px;
+        background: var(--nt-surface-subtle);
+        border: 1px solid var(--nt-border); border-radius: 10px;
     }
 
-    .dash-tips-icon {
-        flex-shrink: 0;
-        color: #0A5FAD;
-        margin-top: 1px;
-    }
+    .dash-tips-icon { flex-shrink: 0; color: var(--nt-action); margin-top: 1px; }
 
     .dash-tips strong {
-        display: block;
-        font-size: 0.8125rem;
-        font-weight: 600;
-        color: #0B1929;
-        margin-bottom: 2px;
+        display: block; font-size: 0.8125rem; font-weight: 600;
+        color: var(--nt-text-primary); margin-bottom: 2px;
     }
 
     .dash-tips p {
-        font-size: 0.8125rem;
-        color: #64748B;
-        margin: 0;
-        line-height: 1.5;
+        font-size: 0.8125rem; color: var(--nt-text-muted);
+        margin: 0; line-height: 1.5;
     }
 </style>
 

@@ -7,21 +7,21 @@
 @inject DialogService Dialog
 
 <RadzenStack Gap="24px" Style="max-width:900px">
-    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
-        <RadzenStack Gap="2px">
-            <RadzenText TextStyle="TextStyle.H4" Style="margin:0;font-weight:700;color:#0B1929">Team</RadzenText>
-            <RadzenText TextStyle="TextStyle.Body2" Style="color:#64748B">
+    <div class="nt-page-header">
+        <div>
+            <h1 class="nt-page-title">Team</h1>
+            <p class="nt-page-subtitle">
                 @if (team != null)
                 {
                     @($"{team.SeatsUsed} of {(team.SeatsTotal == int.MaxValue ? "∞" : team.SeatsTotal.ToString())} seats used")
                 }
-            </RadzenText>
-        </RadzenStack>
+            </p>
+        </div>
         @if (isOwnerOrAdmin)
         {
-            <RadzenButton Text="Invite Member" Icon="person_add" ButtonStyle="ButtonStyle.Primary" Click="ShowInviteDialog" />
+            <RadzenButton Text="Invite Member" Icon="person_add" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" Click="ShowInviteDialog" />
         }
-    </RadzenStack>
+    </div>
 
     @if (team != null && team.SeatsUsed >= team.SeatsTotal && team.SeatsTotal != int.MaxValue)
     {
@@ -42,11 +42,11 @@
     else if (team != null)
     {
         <RadzenDataGrid Data="@team.Members" TItem="TeamMemberResponse" AllowSorting="true"
-                        Style="border:1px solid #E2E8F0;border-radius:8px;overflow:hidden">
+                        Style="border:1px solid var(--nt-border);border-radius:8px;overflow:hidden">
             <Columns>
                 <RadzenDataGridColumn TItem="TeamMemberResponse" Property="FullName" Title="Name" Width="200px">
                     <Template Context="member">
-                        <span style="font-weight:600;color:#0B1929">@(string.IsNullOrEmpty(member.FullName) ? "—" : member.FullName)</span>
+                        <span style="font-weight:600;color:var(--nt-text-primary)">@(string.IsNullOrEmpty(member.FullName) ? "—" : member.FullName)</span>
                     </Template>
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="TeamMemberResponse" Property="Email" Title="Email" />
@@ -103,9 +103,9 @@
             {
                 <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:16px;margin-bottom:16px">
                     <p style="margin:0 0 8px;color:#166534;font-weight:600">Member invited successfully!</p>
-                    <p style="margin:0 0 4px;font-size:0.875rem;color:#64748B">Temporary password:</p>
-                    <code style="display:block;background:#fff;padding:8px 12px;border-radius:4px;font-size:0.9375rem;color:#0B1929;border:1px solid #E2E8F0">@inviteResult.TempPassword</code>
-                    <p style="margin:8px 0 0;font-size:0.8125rem;color:#64748B">Share this password securely with the new team member.</p>
+                    <p style="margin:0 0 4px;font-size:0.875rem;color:var(--nt-text-secondary)">Temporary password:</p>
+                    <code style="display:block;background:#fff;padding:8px 12px;border-radius:4px;font-size:0.9375rem;color:var(--nt-text-primary);border:1px solid var(--nt-border)">@inviteResult.TempPassword</code>
+                    <p style="margin:8px 0 0;font-size:0.8125rem;color:var(--nt-text-secondary)">Share this password securely with the new team member.</p>
                 </div>
                 <RadzenButton Text="Done" ButtonStyle="ButtonStyle.Primary" Click="CloseInviteDialog" Style="width:100%" />
             }
@@ -144,7 +144,7 @@
     <div class="dialog-overlay" @onclick="CloseRoleDialog">
         <div class="dialog-card" @onclick:stopPropagation="true">
             <h3 class="dialog-title">Change Role</h3>
-            <p style="font-size:0.875rem;color:#64748B;margin:0 0 16px">Update role for <strong>@roleChangeMember?.Email</strong></p>
+            <p style="font-size:0.875rem;color:var(--nt-text-secondary);margin:0 0 16px">Update role for <strong>@roleChangeMember?.Email</strong></p>
             <RadzenFormField Text="New Role" Style="width:100%;margin-bottom:16px">
                 <RadzenDropDown @bind-Value="newRole" Data="@availableRoles" TextProperty="Text" ValueProperty="Value" Style="width:100%" />
             </RadzenFormField>
@@ -168,7 +168,7 @@
     .role-owner { background: #EDE9FE; color: #5B21B6; }
     .role-admin { background: #DBEAFE; color: #1E40AF; }
     .role-editor { background: #FEF3C7; color: #92400E; }
-    .role-viewer { background: #F1F5F9; color: #475569; }
+    .role-viewer { background: var(--nt-surface-subtle); color: var(--nt-neutral-600); }
 
     .status-badge {
         display: inline-block;
@@ -203,7 +203,7 @@
     .dialog-title {
         font-size: 1.125rem;
         font-weight: 700;
-        color: #0B1929;
+        color: var(--nt-text-primary);
         margin: 0 0 20px;
     }
 </style>

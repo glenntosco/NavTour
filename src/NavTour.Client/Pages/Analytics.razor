@@ -11,12 +11,12 @@
 @inject NavigationManager Nav
 
 <RadzenStack Gap="24px">
-    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
-        <RadzenStack Gap="2px">
-            <RadzenText TextStyle="TextStyle.H4" Style="margin:0;font-weight:700;color:#0B1929">Analytics</RadzenText>
-            <RadzenText TextStyle="TextStyle.Body2" Style="color:#64748B">Performance across all demos — last 30 days</RadzenText>
-        </RadzenStack>
-    </RadzenStack>
+    <div class="nt-page-header">
+        <div>
+            <h1 class="nt-page-title">Analytics</h1>
+            <p class="nt-page-subtitle">Performance across all demos — last 30 days</p>
+        </div>
+    </div>
 
     @if (loading)
     {
@@ -95,7 +95,7 @@
                             <Columns>
                                 <RadzenDataGridColumn TItem="DemoListItemResponse" Property="Name" Title="Demo">
                                     <Template Context="d">
-                                        <RadzenLink Path="@($"/demos/{d.Id}/analytics")" Style="font-weight:600;color:#0A5FAD">@d.Name</RadzenLink>
+                                        <RadzenLink Path="@($"/demos/{d.Id}/analytics")" Style="font-weight:600;color:var(--nt-accent)">@d.Name</RadzenLink>
                                     </Template>
                                 </RadzenDataGridColumn>
                                 <RadzenDataGridColumn TItem="DemoListItemResponse" Property="Status" Title="Status" Width="90px">
@@ -144,7 +144,7 @@
             <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center">
                 <RadzenStack Gap="2px">
                     <h3 class="analytics-card-title" style="margin:0">Leads Captured</h3>
-                    <span style="font-size:2rem;font-weight:700;color:#0B1929">@leadCount</span>
+                    <span style="font-size:2rem;font-weight:700;color:var(--nt-text-primary)">@leadCount</span>
                 </RadzenStack>
                 <RadzenButton Text="View All Leads" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
                     Click='() => Nav.NavigateTo("/leads")' />
@@ -175,60 +175,49 @@
 
 <style>
     .analytics-stat-card {
-        background: #fff;
-        border: 1px solid #E2E8F0;
-        border-radius: 8px;
+        background: var(--nt-surface);
+        border: 1px solid var(--nt-border);
+        border-radius: var(--nt-radius);
         padding: 20px 24px;
         display: flex;
         flex-direction: column;
         gap: 8px;
-        box-shadow: 0 1px 3px rgba(11, 25, 41, 0.08), 0 1px 2px rgba(11, 25, 41, 0.04);
+        box-shadow: var(--nt-shadow-sm);
     }
 
     .analytics-stat-icon {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 36px;
-        height: 36px;
-        border-radius: 8px;
-        font-size: 18px;
+        width: 36px; height: 36px;
+        border-radius: var(--nt-radius); font-size: 18px;
     }
 
     .analytics-stat-value {
-        font-size: 1.75rem;
-        font-weight: 700;
-        color: #0B1929;
-        line-height: 1.2;
-        letter-spacing: -0.02em;
+        font-size: 1.75rem; font-weight: 700;
+        color: var(--nt-text-primary); line-height: 1.2; letter-spacing: -0.02em;
     }
 
     .analytics-stat-label {
-        font-size: 0.8125rem;
-        color: #64748B;
-        font-weight: 500;
+        font-size: 0.8125rem; color: var(--nt-text-muted); font-weight: 500;
     }
 
     .analytics-card {
-        background: #fff;
-        border: 1px solid #E2E8F0;
-        border-radius: 8px;
+        background: var(--nt-surface);
+        border: 1px solid var(--nt-border);
+        border-radius: var(--nt-radius);
         padding: 24px;
-        box-shadow: 0 1px 3px rgba(11, 25, 41, 0.08), 0 1px 2px rgba(11, 25, 41, 0.04);
+        box-shadow: var(--nt-shadow-sm);
     }
 
     .analytics-card-title {
-        font-size: 0.9375rem;
-        font-weight: 600;
-        color: #1E3A5F;
-        margin: 0 0 16px;
+        font-size: 0.9375rem; font-weight: 600;
+        color: var(--nt-navy); margin: 0 0 16px;
     }
 
     .analytics-empty {
-        text-align: center;
-        padding: 40px 16px;
-        color: #94A3B8;
-        font-size: 0.875rem;
+        text-align: center; padding: 40px 16px;
+        color: var(--nt-text-faint); font-size: 0.875rem;
     }
 </style>
 

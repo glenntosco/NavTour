@@ -20,11 +20,11 @@
         <RadzenButton Text="Preview" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Click="OpenPreview" class="preview-btn" title="Open demo player in a new tab" />
         @if (demo?.Status == DemoStatus.Published)
         {
-            <button @onclick="UnpublishDemo" style="border-radius:8px;padding:6px 16px;font-weight:600;cursor:pointer;background:#059669;color:white;border:none;font-size:13px;line-height:1.4" title="Published — click to unpublish">Published</button>
+            <button @onclick="UnpublishDemo" style="border-radius:8px;padding:6px 16px;font-weight:600;cursor:pointer;background:var(--nt-success);color:white;border:none;font-size:13px;line-height:1.4" title="Published — click to unpublish">Published</button>
         }
         else
         {
-            <button @onclick="PublishDemo" style="border-radius:8px;padding:6px 16px;font-weight:600;cursor:pointer;background:#f1f5f9;color:#64748b;border:1px solid #e2e8f0;font-size:13px;line-height:1.4" title="Draft — click to publish">Draft</button>
+            <button @onclick="PublishDemo" style="border-radius:8px;padding:6px 16px;font-weight:600;cursor:pointer;background:var(--nt-surface-subtle);color:var(--nt-text-secondary);border:1px solid var(--nt-border);font-size:13px;line-height:1.4" title="Draft — click to publish">Draft</button>
         }
         <RadzenButton Text="Share" Icon="share" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Click="() => showSharePopover = !showSharePopover" Style="position:relative" title="Copy share link, WhatsApp, or embed code" />
         <RadzenButton Text="Settings" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Click='() => Nav.NavigateTo($"/demos/{DemoId}/settings")' title="Demo name, slug, lead capture, personalization" />
@@ -93,8 +93,8 @@
         {
             <div style="position:absolute;inset:0;z-index:100;background:rgba(255,255,255,0.9);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px">
                 <RadzenProgressBarCircular ShowValue="false" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.Large" />
-                <span style="font-size:16px;font-weight:600;color:#4361ee">@generatingStatus</span>
-                <span style="font-size:13px;color:#666">This may take 30-60 seconds</span>
+                <span style="font-size:16px;font-weight:600;color:var(--nt-action)">@generatingStatus</span>
+                <span style="font-size:13px;color:var(--nt-text-secondary)">This may take 30-60 seconds</span>
             </div>
         }
     </div>
@@ -105,20 +105,20 @@
 @if (showSharePopover)
 {
     <div style="position:fixed;inset:0;z-index:999" @onclick="() => showSharePopover = false"></div>
-    <div style="position:fixed;top:48px;right:180px;z-index:1000;background:white;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.18);padding:20px;width:420px;border:1px solid #e2e8f0">
+    <div style="position:fixed;top:48px;right:180px;z-index:1000;background:white;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.18);padding:20px;width:420px;border:1px solid var(--nt-border)">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-            <RadzenIcon Icon="share" Style="color:#4361ee" />
+            <RadzenIcon Icon="share" Style="color:var(--nt-accent)" />
             <RadzenText TextStyle="TextStyle.Subtitle1" class="rz-m-0" Style="font-weight:600">Share Demo</RadzenText>
             <div style="flex:1"></div>
             <button @onclick="() => showSharePopover = false"
-                style="background:none;border:none;font-size:18px;cursor:pointer;color:#999;padding:0 4px">&times;</button>
+                style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--nt-text-muted);padding:0 4px">&times;</button>
         </div>
 
         @if (demo?.Status == DemoStatus.Published)
         {
             <div style="display:flex;gap:8px;margin-bottom:12px">
                 <button @onclick="CopyShareLink"
-                    style="flex:1;padding:10px 16px;background:#4361ee;color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
+                    style="flex:1;padding:10px 16px;background:var(--nt-accent);color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
                     <RadzenIcon Icon="content_copy" Style="font-size:16px" /> @shareCopyLabel
                 </button>
                 <button @onclick="ShareWhatsApp"
@@ -127,10 +127,10 @@
                 </button>
             </div>
 
-            <pre style="background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;padding:12px;font-size:0.8rem;white-space:pre-wrap;word-break:break-all;margin:0 0 12px;color:#334155">@DemoUrl</pre>
+            <pre style="background:var(--nt-surface-subtle);border:1px solid var(--nt-border);border-radius:8px;padding:12px;font-size:0.8rem;white-space:pre-wrap;word-break:break-all;margin:0 0 12px;color:var(--nt-neutral-700)">@DemoUrl</pre>
 
-            <details style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
-                <summary style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:600;color:#334155;background:#f8fafc;user-select:none">Embed Code (iframe)</summary>
+            <details style="border:1px solid var(--nt-border);border-radius:8px;overflow:hidden">
+                <summary style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:600;color:var(--nt-neutral-700);background:#f8fafc;user-select:none">Embed Code (iframe)</summary>
                 <div style="padding:12px">
                     <div style="display:flex;gap:8px;margin-bottom:8px">
                         <RadzenFormField Text="Width" Style="flex:1">
@@ -140,9 +140,9 @@
                             <RadzenTextBox @bind-Value="embedHeight" Style="width:100%" />
                         </RadzenFormField>
                     </div>
-                    <pre style="background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;padding:12px;font-size:0.75rem;white-space:pre-wrap;word-break:break-all;margin:0 0 8px;color:#334155">@EmbedIframeCode</pre>
+                    <pre style="background:var(--nt-surface-subtle);border:1px solid var(--nt-border);border-radius:8px;padding:12px;font-size:0.75rem;white-space:pre-wrap;word-break:break-all;margin:0 0 8px;color:var(--nt-neutral-700)">@EmbedIframeCode</pre>
                     <button @onclick="CopyShareIframe"
-                        style="width:100%;padding:8px;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer">
+                        style="width:100%;padding:8px;background:var(--nt-surface-subtle);color:var(--nt-neutral-700);border:1px solid var(--nt-border);border-radius:8px;font-size:13px;font-weight:500;cursor:pointer">
                         @embedCopyLabel
                     </button>
                 </div>

@@ -9,34 +9,53 @@
 <RadzenDialog />
 <RadzenNotification />
 
-<RadzenStack Gap="16px">
-    <RadzenRow AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
-        <RadzenText TextStyle="TextStyle.H4">Captured Leads</RadzenText>
-        <RadzenButton Text="Export to Excel" Icon="download" ButtonStyle="ButtonStyle.Light"
+<RadzenStack Gap="24px">
+    <div class="nt-page-header">
+        <div>
+            <h1 class="nt-page-title">Leads</h1>
+            <p class="nt-page-subtitle">@(loading ? "" : $"{leads.Count} lead{(leads.Count != 1 ? "s" : "")} captured across all demos")</p>
+        </div>
+        <RadzenButton Text="Export" Icon="download" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
                       Click="@(() => Nav.NavigateTo("/api/v1/leads/export", forceLoad: true))" />
-    </RadzenRow>
+    </div>
 
     @if (loading)
     {
-        <RadzenProgressBarCircular ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+        <RadzenStack AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Style="min-height:200px">
+            <RadzenProgressBarCircular ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+        </RadzenStack>
+    }
+    else if (!leads.Any())
+    {
+        <div class="nt-empty">
+            <div class="nt-empty-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/>
+                </svg>
+            </div>
+            <h3>No leads yet</h3>
+            <p>Leads will appear here when viewers submit their info through your demos.</p>
+        </div>
     }
     else
     {
-        <RadzenDataGrid Data="@leads" TItem="LeadResponse" AllowSorting="true" AllowPaging="true" PageSize="25">
-            <Columns>
-                <RadzenDataGridColumn TItem="LeadResponse" Property="Email" Title="Email" />
-                <RadzenDataGridColumn TItem="LeadResponse" Property="Name" Title="Name" />
-                <RadzenDataGridColumn TItem="LeadResponse" Property="Company" Title="Company" />
-                <RadzenDataGridColumn TItem="LeadResponse" Property="DemoName" Title="Demo" />
-                <RadzenDataGridColumn TItem="LeadResponse" Property="CapturedAt" Title="Captured" FormatString="{0:g}" />
-                <RadzenDataGridColumn TItem="LeadResponse" Title="" Width="50px" Sortable="false" TextAlign="TextAlign.Center">
-                    <Template Context="lead">
-                        <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Text"
-                                      Size="ButtonSize.Small" Click="@(() => ConfirmDelete(lead))" />
-                    </Template>
-                </RadzenDataGridColumn>
-            </Columns>
-        </RadzenDataGrid>
+        <div class="nt-card" style="padding:0;overflow:hidden">
+            <RadzenDataGrid Data="@leads" TItem="LeadResponse" AllowSorting="true" AllowPaging="true" PageSize="25">
+                <Columns>
+                    <RadzenDataGridColumn TItem="LeadResponse" Property="Email" Title="Email" />
+                    <RadzenDataGridColumn TItem="LeadResponse" Property="Name" Title="Name" />
+                    <RadzenDataGridColumn TItem="LeadResponse" Property="Company" Title="Company" />
+                    <RadzenDataGridColumn TItem="LeadResponse" Property="DemoName" Title="Demo" />
+                    <RadzenDataGridColumn TItem="LeadResponse" Property="CapturedAt" Title="Captured" FormatString="{0:g}" />
+                    <RadzenDataGridColumn TItem="LeadResponse" Title="" Width="50px" Sortable="false" TextAlign="TextAlign.Center">
+                        <Template Context="lead">
+                            <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Text"
+                                          Size="ButtonSize.Small" Click="@(() => ConfirmDelete(lead))" />
+                        </Template>
+                    </RadzenDataGridColumn>
+                </Columns>
+            </RadzenDataGrid>
+        </div>
     }
 </RadzenStack>
 
