@@ -2,6 +2,7 @@
 @rendermode InteractiveServer
 @inject AuthService Auth
 @inject DemoApiService DemoApi
+@inject AnalyticsApiService AnalyticsApi
 @inject NavigationManager Nav
 @inject DialogService Dialog
 
@@ -30,13 +31,43 @@ else
         @* Header *@
         <div class="nt-page-header">
             <div>
-                <h1 class="nt-page-title">Product Demos</h1>
+                <h1 class="nt-page-title">@GetGreeting(), @GetFirstName() 👋</h1>
                 <p class="nt-page-subtitle">@demos.Count demo@(demos.Count != 1 ? "s" : "") in your workspace</p>
             </div>
+        </div>
+
+        @* KPI Stats Row *@
+        <div class="dash-kpi-row">
+            <div class="dash-kpi-card">
+                <div class="dash-kpi-value">@demos.Count</div>
+                <div class="dash-kpi-label">Demos</div>
+            </div>
+            <div class="dash-kpi-card">
+                <div class="dash-kpi-value">@FormatViews()</div>
+                <div class="dash-kpi-label">Views</div>
+            </div>
+            <div class="dash-kpi-card">
+                <div class="dash-kpi-value">@FormatCompletionRate()</div>
+                <div class="dash-kpi-label">Completion</div>
+            </div>
+            <div class="dash-kpi-card">
+                <div class="dash-kpi-value">@FormatAvgTime()</div>
+                <div class="dash-kpi-label">Avg Time</div>
+            </div>
+        </div>
+
+        @* Quick Actions *@
+        <div class="dash-actions">
             <button class="nt-btn-primary" @onclick="CreateNewDemo">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 Create Demo
             </button>
+            <a href="/get-started" class="dash-action-link">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                </svg>
+                Getting Started Guide
+            </a>
         </div>
 
         @* Search *@
@@ -71,6 +102,11 @@ else
         }
         else
         {
+            @* Section Header *@
+            <div class="dash-section-header">
+                <h2>Your Demos</h2>
+            </div>
+
             <div class="dash-grid">
                 @foreach (var demo in filteredDemos)
                 {
@@ -132,6 +168,73 @@ else
         padding: 4px 0 32px;
     }
 
+    /* KPI Stats Row */
+    .dash-kpi-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .dash-kpi-card {
+        background: var(--nt-surface);
+        border: 1px solid var(--nt-border);
+        border-radius: var(--nt-radius-md);
+        padding: 20px;
+    }
+
+    .dash-kpi-value {
+        font-size: var(--nt-text-2xl);
+        font-weight: var(--nt-weight-bold);
+        color: var(--nt-text-primary);
+        line-height: 1.2;
+    }
+
+    .dash-kpi-label {
+        font-size: var(--nt-text-sm);
+        color: var(--nt-text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-top: 4px;
+    }
+
+    @@media (max-width: 640px) {
+        .dash-kpi-row {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    /* Quick Actions */
+    .dash-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+
+    .dash-action-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: var(--nt-text-sm);
+        font-weight: var(--nt-weight-semibold);
+        color: var(--nt-text-secondary);
+        text-decoration: none;
+        transition: color var(--nt-duration-normal) var(--nt-ease);
+    }
+
+    .dash-action-link:hover {
+        color: var(--nt-accent);
+    }
+
+    /* Section Header */
+    .dash-section-header h2 {
+        font-size: var(--nt-text-lg);
+        font-weight: var(--nt-weight-semibold);
+        color: var(--nt-text-primary);
+        margin: 0 0 16px;
+    }
+
     /* Search */
     .dash-search {
         display: flex;
@@ -146,11 +249,11 @@ else
     }
 
     .dash-search:focus-within {
-        border-color: var(--nt-action);
-        box-shadow: 0 0 0 3px var(--nt-action-light);
+        border-color: var(--nt-accent);
+        box-shadow: 0 0 0 3px var(--nt-accent-light);
     }
 
-    .dash-search-icon { color: var(--nt-text-faint); flex-shrink: 0; }
+    .dash-search-icon { color: var(--nt-text-muted); flex-shrink: 0; }
 
     /* Grid */
     .dash-grid {
@@ -166,8 +269,9 @@ else
         border-radius: 10px;
         overflow: hidden;
         cursor: pointer;
-        transition: border-color var(--nt-transition), box-shadow var(--nt-transition),
-                    transform var(--nt-transition);
+        transition: border-color var(--nt-duration-normal) var(--nt-ease),
+                    box-shadow var(--nt-duration-normal) var(--nt-ease),
+                    transform var(--nt-duration-normal) var(--nt-ease);
     }
 
     .dash-card:hover {
@@ -178,16 +282,16 @@ else
 
     .dash-card-preview {
         height: 160px;
-        background: linear-gradient(145deg, var(--nt-surface-subtle) 0%, #EEF2F7 100%);
+        background: linear-gradient(145deg, var(--nt-surface-subtle) 0%, var(--nt-surface-secondary) 100%);
         display: flex;
         align-items: center;
         justify-content: center;
-        border-bottom: 1px solid var(--nt-surface-muted);
+        border-bottom: 1px solid var(--nt-surface-subtle);
     }
 
     .dash-card-preview-inner {
         display: flex; flex-direction: column; align-items: center;
-        gap: 8px; color: var(--nt-text-faint);
+        gap: 8px; color: var(--nt-text-muted);
     }
 
     .dash-card-preview-inner span {
@@ -207,7 +311,7 @@ else
 
     .dash-card-meta {
         display: flex; align-items: center; gap: 6px;
-        font-size: 0.75rem; color: var(--nt-text-faint); margin-bottom: 14px;
+        font-size: 0.75rem; color: var(--nt-text-muted); margin-bottom: 14px;
     }
 
     .dash-dot {
@@ -220,11 +324,11 @@ else
         padding: 6px 16px; font-size: 0.75rem; font-weight: 600;
         border-radius: 6px; cursor: pointer; font-family: inherit;
         transition: background 150ms;
-        background: var(--nt-surface-muted); color: var(--nt-navy); border: none;
+        background: var(--nt-surface-subtle); color: var(--nt-text-primary); border: none;
     }
     .dash-action-btn:hover { background: var(--nt-border); }
 
-    .dash-action-secondary { background: transparent; color: var(--nt-action); }
+    .dash-action-secondary { background: transparent; color: var(--nt-accent); }
     .dash-action-secondary:hover { background: var(--nt-accent-light); }
 
     /* No-match empty */
@@ -241,7 +345,7 @@ else
         border: 1px solid var(--nt-border); border-radius: 10px;
     }
 
-    .dash-tips-icon { flex-shrink: 0; color: var(--nt-action); margin-top: 1px; }
+    .dash-tips-icon { flex-shrink: 0; color: var(--nt-accent); margin-top: 1px; }
 
     .dash-tips strong {
         display: block; font-size: 0.8125rem; font-weight: 600;
@@ -257,6 +361,7 @@ else
 @code {
     private List<DemoListItemResponse> demos = [];
     private List<DemoListItemResponse> filteredDemos = [];
+    private AnalyticsSummaryResponse? summary;
     private bool loading = true;
     private string searchText = "";
 
@@ -267,12 +372,58 @@ else
             await Auth.TryRestoreAsync();
             if (Auth.IsAuthenticated)
             {
-                demos = await DemoApi.GetDemosAsync();
+                var demosTask = DemoApi.GetDemosAsync();
+                var summaryTask = SafeGetSummaryAsync();
+                await Task.WhenAll(demosTask, summaryTask);
+                demos = demosTask.Result;
+                summary = summaryTask.Result;
                 filteredDemos = demos;
             }
             loading = false;
             StateHasChanged();
         }
+    }
+
+    private async Task<AnalyticsSummaryResponse?> SafeGetSummaryAsync()
+    {
+        try { return await AnalyticsApi.GetGlobalSummaryAsync(); }
+        catch { return null; }
+    }
+
+    private string GetGreeting()
+    {
+        var hour = DateTime.Now.Hour;
+        return hour switch
+        {
+            >= 5 and < 12 => "Good morning",
+            >= 12 and < 17 => "Good afternoon",
+            >= 17 and < 21 => "Good evening",
+            _ => "Hello"
+        };
+    }
+
+    private string GetFirstName()
+    {
+        var email = Auth.UserEmail;
+        if (string.IsNullOrEmpty(email)) return "there";
+        var local = email.Split('@')[0];
+        if (string.IsNullOrEmpty(local)) return "there";
+        return char.ToUpper(local[0]) + local[1..];
+    }
+
+    private string FormatViews()
+        => summary is not null ? summary.TotalViews.ToString("N0") : "\u2014";
+
+    private string FormatCompletionRate()
+        => summary is not null ? $"{summary.CompletionRate * 100:0}%" : "\u2014";
+
+    private string FormatAvgTime()
+    {
+        if (summary is null) return "\u2014";
+        var totalSeconds = (int)summary.AvgTimeSeconds;
+        var minutes = totalSeconds / 60;
+        var seconds = totalSeconds % 60;
+        return minutes > 0 ? $"{minutes}m {seconds}s" : $"{seconds}s";
     }
 
     private void OnSearchChanged()
