@@ -110,15 +110,15 @@
 <style>
     .annotation-overlay.editable { cursor: move; pointer-events: all !important; }
     .annotation-overlay.editable:hover { outline: 2px dashed rgba(67,97,238,0.5); outline-offset: 2px; }
-    .annotation-overlay.dragging { outline: 2px solid #4361ee; outline-offset: 2px; opacity: 0.85; z-index: 100 !important; }
-    .annotation-overlay.resizing { outline: 2px solid #4361ee; outline-offset: 2px; z-index: 100 !important; }
+    .annotation-overlay.dragging { outline: 2px solid var(--nt-accent); outline-offset: 2px; opacity: 0.85; z-index: 100 !important; }
+    .annotation-overlay.resizing { outline: 2px solid var(--nt-accent); outline-offset: 2px; z-index: 100 !important; }
     .drag-capture-overlay { position: absolute; inset: 0; z-index: 9999; cursor: move; }
 
     .resize-handle {
         position: absolute; bottom: 0; right: 0;
         width: 12px; height: 12px;
         cursor: nwse-resize;
-        background: #4361ee;
+        background: var(--nt-accent);
         border-radius: 2px;
         opacity: 0;
         transition: opacity 0.15s;
@@ -132,14 +132,14 @@
         background: rgba(67,97,238,0.05);
         border-radius: 4px;
         display: flex; align-items: center; justify-content: center;
-        color: #4361ee; font-size: 11px; font-weight: 600;
+        color: var(--nt-accent); font-size: 11px; font-weight: 600;
     }
 
     .tooltip-arrow { position: absolute; width: 0; height: 0; }
-    .tooltip-arrow-top { top: -8px; left: 16px; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 8px solid var(--arrow-bg, #1a1a2e); }
-    .tooltip-arrow-bottom { bottom: -8px; left: 16px; border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 8px solid var(--arrow-bg, #1a1a2e); }
-    .tooltip-arrow-left { left: -8px; top: 12px; border-top: 8px solid transparent; border-bottom: 8px solid transparent; border-right: 8px solid var(--arrow-bg, #1a1a2e); }
-    .tooltip-arrow-right { right: -8px; top: 12px; border-top: 8px solid transparent; border-bottom: 8px solid transparent; border-left: 8px solid var(--arrow-bg, #1a1a2e); }
+    .tooltip-arrow-top { top: -8px; left: 16px; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 8px solid var(--arrow-bg, var(--nt-text-primary)); }
+    .tooltip-arrow-bottom { bottom: -8px; left: 16px; border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 8px solid var(--arrow-bg, var(--nt-text-primary)); }
+    .tooltip-arrow-left { left: -8px; top: 12px; border-top: 8px solid transparent; border-bottom: 8px solid transparent; border-right: 8px solid var(--arrow-bg, var(--nt-text-primary)); }
+    .tooltip-arrow-right { right: -8px; top: 12px; border-top: 8px solid transparent; border-bottom: 8px solid transparent; border-left: 8px solid var(--arrow-bg, var(--nt-text-primary)); }
 
     @@keyframes pulse { 0%,100% { opacity:1;transform:scale(1) } 50% { opacity:0.7;transform:scale(1.1) } }
     @@keyframes beacon-pulse { 0% { opacity:0.6;transform:translate(-50%,-50%) scale(1) } 100% { opacity:0;transform:translate(-50%,-50%) scale(2) } }

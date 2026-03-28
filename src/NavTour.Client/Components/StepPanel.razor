@@ -140,7 +140,7 @@
                             Style="width:100%;font-size:12px;margin-top:4px" Placeholder="Select voice"
                             Change="@((object v) => UpdateVoiceId(step, v?.ToString()))" />
                         <button onclick="voiceover.preview('@(step.VoiceoverText?.Replace("'", "\\'") ?? "")', '@(step.VoiceId ?? "21m00Tcm4TlvDq8ikWAM")')"
-                            style="background:none;border:1px solid #ddd;border-radius:4px;padding:4px 12px;cursor:pointer;font-size:12px;margin-top:4px">
+                            style="background:none;border:1px solid var(--nt-border);border-radius:4px;padding:4px 12px;cursor:pointer;font-size:12px;margin-top:4px">
                             &#9654; Preview
                         </button>
                     </div>
@@ -158,13 +158,13 @@
         display: flex; align-items: center; gap: 2px; z-index: 1;
     }
     .step-reorder {
-        background: none; border: none; color: #aaa; font-size: 10px;
+        background: none; border: none; color: var(--nt-text-muted); font-size: 10px;
         cursor: pointer; padding: 2px 4px; line-height: 1;
     }
-    .step-reorder:hover:not(:disabled) { color: #4361ee; }
-    .step-reorder:disabled { color: #ddd; cursor: default; }
+    .step-reorder:hover:not(:disabled) { color: var(--nt-accent); }
+    .step-reorder:disabled { color: var(--nt-border); cursor: default; }
     .step-delete-btn {
-        background: none; border: none; color: #aaa; font-size: 16px;
+        background: none; border: none; color: var(--nt-text-muted); font-size: 16px;
         cursor: pointer; padding: 0 4px; line-height: 1;
     }
     .step-delete-btn:hover { color: #ef4444; }
