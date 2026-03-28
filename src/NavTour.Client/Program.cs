@@ -21,6 +21,9 @@ builder.Services.AddScoped<ThemeApiService>();
 // Hub Services
 builder.Services.AddScoped<HubApiService>();
 
+// Showcase Services
+builder.Services.AddScoped<ShowcaseApiService>();
+
 // AI Services
 builder.Services.AddScoped<AiApiService>();
 

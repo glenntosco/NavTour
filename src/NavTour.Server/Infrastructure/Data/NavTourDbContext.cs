@@ -37,6 +37,9 @@ public class NavTourDbContext : IdentityDbContext<ApplicationUser, IdentityRole<
     public DbSet<HubCategory> HubCategories => Set<HubCategory>();
     public DbSet<HubItem> HubItems => Set<HubItem>();
     public DbSet<HubEvent> HubEvents => Set<HubEvent>();
+    public DbSet<Showcase> Showcases => Set<Showcase>();
+    public DbSet<ShowcaseSection> ShowcaseSections => Set<ShowcaseSection>();
+    public DbSet<ShowcaseItem> ShowcaseItems => Set<ShowcaseItem>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -195,6 +198,33 @@ public class NavTourDbContext : IdentityDbContext<ApplicationUser, IdentityRole<
         {
             e.HasIndex(he => he.HubId);
             e.HasIndex(he => he.CreatedAt);
+        });
+
+        // Showcase
+        builder.Entity<Showcase>(e =>
+        {
+            e.HasQueryFilter(s => s.TenantId == _tenantProvider.TenantId && !s.IsDeleted);
+            e.HasIndex(s => new { s.TenantId, s.Slug }).IsUnique();
+            e.Property(s => s.Name).HasMaxLength(200);
+            e.Property(s => s.Slug).HasMaxLength(100);
+            e.Property(s => s.Description).HasMaxLength(2000);
+            e.Property(s => s.LayoutTheme).HasMaxLength(20);
+        });
+
+        // ShowcaseSection
+        builder.Entity<ShowcaseSection>(e =>
+        {
+            e.HasQueryFilter(s => s.TenantId == _tenantProvider.TenantId && !s.IsDeleted);
+            e.HasOne<Showcase>().WithMany(s => s.Sections).HasForeignKey(s => s.ShowcaseId);
+            e.Property(s => s.Name).HasMaxLength(200);
+        });
+
+        // ShowcaseItem
+        builder.Entity<ShowcaseItem>(e =>
+        {
+            e.HasQueryFilter(i => i.TenantId == _tenantProvider.TenantId && !i.IsDeleted);
+            e.HasOne<ShowcaseSection>().WithMany(s => s.Items).HasForeignKey(i => i.SectionId);
+            e.Property(i => i.TitleOverride).HasMaxLength(200);
         });
 
         // CapturedResource — content-addressed, shared across tenants (no query filter)
