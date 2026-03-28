@@ -47,9 +47,7 @@ else
             <section class="te-editor">
                 @* ── Tab Bar ── *@
                 <div class="te-tabs">
-                    <button class="te-tab @(activeThemeTab == "tooltip" ? "active" : "")" @onclick='() => activeThemeTab = "tooltip"'>Tooltip Style</button>
-                    <button class="te-tab @(activeThemeTab == "cover" ? "active" : "")" @onclick='() => activeThemeTab = "cover"'>Cover Slide</button>
-                    <button class="te-tab @(activeThemeTab == "closing" ? "active" : "")" @onclick='() => activeThemeTab = "closing"'>Closing Slide</button>
+                    <button class="te-tab active">Theme Settings</button>
                 </div>
 
                 @* ── Tab 1: Tooltip Style ── *@
@@ -108,17 +106,7 @@ else
                     </div>
                 }
 
-                @* ── Tab 2: Cover Slide ── *@
-                @if (activeThemeTab == "cover")
-                {
-                    @SlideSettingsForm(editCoverSlide)
-                }
-
-                @* ── Tab 3: Closing Slide ── *@
-                @if (activeThemeTab == "closing")
-                {
-                    @SlideSettingsForm(editClosingSlide)
-                }
+                @* Cover/Closing slides are per-demo, configured in the Demo Editor *@
 
                 <div class="te-actions">
                     <button class="te-btn-save" @onclick="SaveTheme" disabled="@saving">@(saving ? "Saving..." : "Save Theme")</button>
@@ -130,8 +118,7 @@ else
                 <h3 class="te-section-title">Live Preview</h3>
 
                 @* ── Tooltip Preview ── *@
-                @if (activeThemeTab == "tooltip")
-                {
+                @{
                     <div class="te-preview-stage">
                         <div class="theme-preview" style="
                             --preview-brand: @editBrandColor;
@@ -155,21 +142,7 @@ else
                     </div>
                 }
 
-                @* ── Cover Slide Preview ── *@
-                @if (activeThemeTab == "cover")
-                {
-                    <div class="te-preview-stage">
-                        @SlidePreview(editCoverSlide, "Get Started")
-                    </div>
-                }
-
-                @* ── Closing Slide Preview ── *@
-                @if (activeThemeTab == "closing")
-                {
-                    <div class="te-preview-stage">
-                        @SlidePreview(editClosingSlide, "Learn More")
-                    </div>
-                }
+                @* Cover/Closing previews removed — per-demo settings *@
             </aside>
         }
         else
