@@ -101,6 +101,16 @@
             style="width:100%;accent-color:var(--nt-accent)" />
     </div>
 
+    @* Show Form (closing slide only) *@
+    @if (IsClosingSlide)
+    {
+        <div class="chapter-field">
+            <label>Show Lead Capture Form</label>
+            <div class="chapter-hint">Display the demo's configured form on this slide</div>
+            <RadzenSwitch @bind-Value="Settings.ShowForm" />
+        </div>
+    }
+
     @* Save *@
     <button class="chapter-save-btn" @onclick="HandleSave">Save Settings</button>
 </div>
@@ -197,6 +207,7 @@
 @code {
     [Parameter] public ChapterSettings Settings { get; set; } = new();
     [Parameter] public EventCallback<ChapterSettings> OnSave { get; set; }
+    [Parameter] public bool IsClosingSlide { get; set; }
 
     private static readonly object[] ctaActions =
     [

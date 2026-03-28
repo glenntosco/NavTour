@@ -39,8 +39,11 @@ else
                 @if (currentStep?.Type == StepType.CoverSlide || currentStep?.Type == StepType.ClosingSlide)
                 {
                     var chapterSettings = ParseChapterSettings(currentStep.ChapterSettings);
+                    var firstContentFrame = manifest?.Steps.FirstOrDefault(s => s.Type == StepType.Content && s.FrameId.HasValue);
+                    var bgFrameId = firstContentFrame?.FrameId ?? manifest?.Frames.FirstOrDefault()?.Id;
+                    var bgUrl = bgFrameId != null ? $"/api/v1/player/frames/{bgFrameId}/html" : null;
                     <CoverSlideRenderer Settings="chapterSettings"
-                        BackgroundImageUrl="@(currentFrame != null ? $"/api/v1/player/frames/{currentFrame.Id}/html" : null)"
+                        BackgroundImageUrl="@bgUrl"
                         TotalSteps="@(manifest?.Steps.Count ?? 0)"
                         IsClosing="@(currentStep.Type == StepType.ClosingSlide)"
                         OnCtaClick="HandleCoverCtaClick" />

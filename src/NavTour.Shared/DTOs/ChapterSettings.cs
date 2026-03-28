@@ -14,4 +14,5 @@ public class ChapterSettings
     public string BackgroundType { get; set; } = "frame";
     public string? BackgroundUrl { get; set; }
     public int BackdropOpacity { get; set; } = 60;
+    public bool ShowForm { get; set; }  // Show lead capture form on closing slide
 }

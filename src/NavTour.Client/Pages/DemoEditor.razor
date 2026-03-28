@@ -71,6 +71,7 @@
                 var chapterSettings = ParseChapterSettings(selectedStep.ChapterSettings);
                 <div style="width:1440px;height:900px;position:relative;background:var(--nt-neutral-950)">
                     <CoverSlideRenderer Settings="chapterSettings"
+                        BackgroundImageUrl="@GetFirstFrameUrl()"
                         TotalSteps="@steps.Count"
                         IsClosing="@(selectedStep.Type == StepType.ClosingSlide)" />
                 </div>
@@ -124,7 +125,8 @@
             </div>
             @if (editingChapterSettings != null)
             {
-                <ChapterSettingsPanel Settings="editingChapterSettings" OnSave="SaveChapterSettings" />
+                <ChapterSettingsPanel Settings="editingChapterSettings" OnSave="SaveChapterSettings"
+                    IsClosingSlide="@(editingChapterStep?.Type == StepType.ClosingSlide)" />
             }
         </div>
 
@@ -604,6 +606,12 @@ $@"<iframe
         steps = await DemoApi.GetStepsAsync(DemoId);
         StateHasChanged();
         Notification.Notify(NotificationSeverity.Success, "Closing slide added");
+    }
+
+    private string? GetFirstFrameUrl()
+    {
+        var firstContent = steps.FirstOrDefault(s => s.Type == StepType.Content && s.FrameId.HasValue);
+        return firstContent?.FrameId != null ? $"/api/v1/player/frames/{firstContent.FrameId}/html" : null;
     }
 
     private async Task SaveChapterSettings(NavTour.Shared.DTOs.ChapterSettings settings)
