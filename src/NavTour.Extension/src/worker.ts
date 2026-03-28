@@ -648,8 +648,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     case 'navtour:save-web-capture': {
       const tabId = sender.tab?.id;
       if (tabId && activeSessions.has(tabId)) {
-        captureTab(tabId)
-          .then(() => sendResponse({ success: true }))
+        const session = activeSessions.get(tabId)!;
+        const captureFn = session.mode === 'screenshot' ? captureScreenshot : captureTab;
+        captureFn(tabId)
+          .then(() => sendResponse({ success: true, frameCount: session.frameCount }))
           .catch((e) => sendResponse({ success: false, error: (e as Error).message }));
         return true;
       }
@@ -894,15 +896,20 @@ async function handlePopupStartScreenshot(msg: any): Promise<any> {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   if (!tab?.id) return { success: false, error: 'No active tab' };
 
-  // Screenshot mode: no content scripts or toolbar needed
+  // Screenshot mode: inject content scripts and toolbar just like HTML capture
+  await ensureContentScripts(tab.id);
+
   const session = await startSession(tab.id, {
     token: msg.token,
     demoId: msg.demoId,
     demoName: msg.demoName,
     frameCount: msg.frameCount || 0,
-    settings: {},
+    settings: { clickToCapture: true },
   });
   session.mode = 'screenshot';
+
+  // Inject floating toolbar at bottom (same as HTML capture)
+  setTimeout(() => injectToolbarInTab(tab.id!, session), 300);
 
   return { success: true, tabId: tab.id, ...session };
 }
