@@ -27,44 +27,47 @@
     else if (summary != null)
     {
         @* KPI stat cards *@
-        <RadzenRow Gap="16px">
-            <RadzenColumn SizeMD="3" Size="6">
-                <div class="analytics-stat-card">
-                    <span class="analytics-stat-icon" style="background:var(--nt-accent-light);color:var(--nt-accent)">
-                        <RadzenIcon Icon="visibility" />
-                    </span>
-                    <span class="analytics-stat-value">@summary.TotalViews</span>
-                    <span class="analytics-stat-label">Total Views</span>
+        <div class="analytics-kpi-grid">
+            <RadzenCard class="analytics-kpi-card">
+                <div class="kpi-icon-wrap kpi-icon-blue">
+                    <RadzenIcon Icon="visibility" />
                 </div>
-            </RadzenColumn>
-            <RadzenColumn SizeMD="3" Size="6">
-                <div class="analytics-stat-card">
-                    <span class="analytics-stat-icon" style="background:var(--nt-success-light, #E8F5E9);color:var(--nt-success)">
-                        <RadzenIcon Icon="check_circle" />
-                    </span>
-                    <span class="analytics-stat-value">@summary.Completions</span>
-                    <span class="analytics-stat-label">Completions</span>
+                <div class="kpi-content">
+                    <span class="kpi-value">@summary.TotalViews.ToString("N0")</span>
+                    <span class="kpi-label">Total Views</span>
                 </div>
-            </RadzenColumn>
-            <RadzenColumn SizeMD="3" Size="6">
-                <div class="analytics-stat-card">
-                    <span class="analytics-stat-icon" style="background:var(--nt-warning-light, #FFF4E5);color:var(--nt-warning, #F59E0B)">
-                        <RadzenIcon Icon="percent" />
-                    </span>
-                    <span class="analytics-stat-value">@summary.CompletionRate.ToString("F1")%</span>
-                    <span class="analytics-stat-label">Completion Rate</span>
+            </RadzenCard>
+
+            <RadzenCard class="analytics-kpi-card">
+                <div class="kpi-icon-wrap kpi-icon-green">
+                    <RadzenIcon Icon="check_circle" />
                 </div>
-            </RadzenColumn>
-            <RadzenColumn SizeMD="3" Size="6">
-                <div class="analytics-stat-card">
-                    <span class="analytics-stat-icon" style="background:var(--nt-surface-subtle);color:var(--nt-neutral-600)">
-                        <RadzenIcon Icon="schedule" />
-                    </span>
-                    <span class="analytics-stat-value">@TimeSpan.FromSeconds(summary.AvgTimeSeconds).ToString(@"m\:ss")</span>
-                    <span class="analytics-stat-label">Avg Time</span>
+                <div class="kpi-content">
+                    <span class="kpi-value">@summary.Completions.ToString("N0")</span>
+                    <span class="kpi-label">Completions</span>
                 </div>
-            </RadzenColumn>
-        </RadzenRow>
+            </RadzenCard>
+
+            <RadzenCard class="analytics-kpi-card">
+                <div class="kpi-icon-wrap kpi-icon-amber">
+                    <RadzenIcon Icon="percent" />
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-value">@(summary.CompletionRate.ToString("F1"))%</span>
+                    <span class="kpi-label">Completion Rate</span>
+                </div>
+            </RadzenCard>
+
+            <RadzenCard class="analytics-kpi-card">
+                <div class="kpi-icon-wrap kpi-icon-neutral">
+                    <RadzenIcon Icon="schedule" />
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-value">@TimeSpan.FromSeconds(summary.AvgTimeSeconds).ToString(@"m\:ss")</span>
+                    <span class="kpi-label">Avg Time</span>
+                </div>
+            </RadzenCard>
+        </div>
 
         @* Views over time chart *@
         <div class="analytics-card">
@@ -198,32 +201,85 @@
 </RadzenStack>
 
 <style>
-    .analytics-stat-card {
-        background: var(--nt-surface);
-        border: 1px solid var(--nt-border);
-        border-radius: var(--nt-radius);
-        padding: 20px 24px;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        box-shadow: var(--nt-shadow-sm);
+    .analytics-kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
     }
 
-    .analytics-stat-icon {
-        display: inline-flex;
+    .analytics-kpi-card {
+        display: flex !important;
+        align-items: center;
+        gap: 16px;
+        padding: 20px 24px !important;
+        border-radius: var(--nt-radius-md) !important;
+        border: 1px solid var(--nt-border) !important;
+        box-shadow: var(--nt-shadow-sm) !important;
+        background: var(--nt-surface) !important;
+        transition: box-shadow 200ms, transform 200ms;
+    }
+
+    .analytics-kpi-card:hover {
+        box-shadow: var(--nt-shadow-md) !important;
+        transform: translateY(-1px);
+    }
+
+    .kpi-icon-wrap {
+        display: flex;
         align-items: center;
         justify-content: center;
-        width: 36px; height: 36px;
-        border-radius: var(--nt-radius); font-size: 18px;
+        width: 48px; height: 48px;
+        border-radius: var(--nt-radius-md);
+        font-size: 24px;
+        flex-shrink: 0;
     }
 
-    .analytics-stat-value {
-        font-size: 1.75rem; font-weight: 700;
-        color: var(--nt-text-primary); line-height: 1.2; letter-spacing: -0.02em;
+    .kpi-icon-blue {
+        background: var(--nt-accent-light);
+        color: var(--nt-accent);
     }
 
-    .analytics-stat-label {
-        font-size: 0.8125rem; color: var(--nt-text-muted); font-weight: 500;
+    .kpi-icon-green {
+        background: var(--nt-success-light, #E8F5E9);
+        color: var(--nt-success);
+    }
+
+    .kpi-icon-amber {
+        background: var(--nt-warning-light, #FFF4E5);
+        color: var(--nt-warning, #F59E0B);
+    }
+
+    .kpi-icon-neutral {
+        background: var(--nt-surface-subtle);
+        color: var(--nt-neutral-600);
+    }
+
+    .kpi-content {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .kpi-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--nt-text-primary);
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+    }
+
+    .kpi-label {
+        font-size: var(--nt-text-sm);
+        font-weight: 500;
+        color: var(--nt-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    @@media (max-width: 768px) {
+        .analytics-kpi-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
     }
 
     .analytics-card {
@@ -235,8 +291,10 @@
     }
 
     .analytics-card-title {
-        font-size: 0.9375rem; font-weight: 600;
-        color: var(--nt-text-primary); margin: 0 0 16px;
+        font-size: 0.9375rem;
+        font-weight: 600;
+        color: var(--nt-text-primary);
+        margin: 0 0 16px;
     }
 
     .analytics-empty {
