@@ -36,6 +36,7 @@ public class NavTourDbContext : IdentityDbContext<ApplicationUser, IdentityRole<
     public DbSet<DemoHub> DemoHubs => Set<DemoHub>();
     public DbSet<HubCategory> HubCategories => Set<HubCategory>();
     public DbSet<HubItem> HubItems => Set<HubItem>();
+    public DbSet<HubEvent> HubEvents => Set<HubEvent>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -187,6 +188,13 @@ public class NavTourDbContext : IdentityDbContext<ApplicationUser, IdentityRole<
             e.Property(i => i.DescriptionOverride).HasMaxLength(2000);
             e.Property(i => i.ExternalUrl).HasMaxLength(2000);
             e.Property(i => i.ThumbnailOverride).HasMaxLength(2000);
+        });
+
+        // HubEvent — public/anonymous, scoped by HubId (no tenant filter)
+        builder.Entity<HubEvent>(e =>
+        {
+            e.HasIndex(he => he.HubId);
+            e.HasIndex(he => he.CreatedAt);
         });
 
         // CapturedResource — content-addressed, shared across tenants (no query filter)

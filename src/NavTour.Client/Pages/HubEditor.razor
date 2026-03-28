@@ -5,6 +5,8 @@
 @inject DemoApiService DemoApi
 @inject AuthService Auth
 @inject NavigationManager Nav
+@inject HttpClient Http
+@using NavTour.Shared.DTOs.Hub
 
 <PageTitle>Demo Hub — NavTour</PageTitle>
 
@@ -68,7 +70,7 @@ else
                 <button class="he-tab @(activeTab == "content" ? "active" : "")" @onclick='() => activeTab = "content"'>Content</button>
                 <button class="he-tab @(activeTab == "behavior" ? "active" : "")" @onclick='() => activeTab = "behavior"'>Behavior</button>
                 <button class="he-tab @(activeTab == "install" ? "active" : "")" @onclick='() => activeTab = "install"'>Install</button>
-                <button class="he-tab @(activeTab == "analytics" ? "active" : "")" @onclick='() => activeTab = "analytics"'>Analytics</button>
+                <button class="he-tab @(activeTab == "analytics" ? "active" : "")" @onclick="SelectAnalyticsTab">Analytics</button>
             </div>
 
             @* ── Tab Content ── *@
@@ -435,11 +437,101 @@ else
     </div>;
 
     RenderFragment AnalyticsTab() => @<div class="he-form">
-        <div class="he-analytics-placeholder">
-            <svg viewBox="0 0 24 24" width="48" height="48" fill="var(--nt-text-muted)"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
-            <h3>Hub Analytics</h3>
-            <p>Analytics tracking will be available once the hub is published and the widget SDK is installed.</p>
+        <div class="he-analytics-header">
+            <h3 class="he-analytics-title">Hub Analytics</h3>
+            <span class="he-analytics-range">Last 30 days</span>
         </div>
+        @if (analyticsLoading)
+        {
+            <div class="he-analytics-loading">
+                <RadzenProgressBarCircular ShowValue="false" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.Small" />
+                <span>Loading analytics...</span>
+            </div>
+        }
+        else if (hubAnalytics == null)
+        {
+            <div class="he-analytics-placeholder">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="var(--nt-text-muted)"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+                <h3>No data yet</h3>
+                <p>Analytics will appear once the hub is published and the widget SDK is installed on your site.</p>
+            </div>
+        }
+        else
+        {
+            @* KPI Cards *@
+            <div class="he-analytics-kpis">
+                <div class="analytics-stat-card">
+                    <span class="analytics-stat-icon" style="background:var(--nt-accent-light);color:var(--nt-accent)">
+                        <RadzenIcon Icon="open_in_new" />
+                    </span>
+                    <span class="analytics-stat-value">@hubAnalytics.HubOpens.ToString("N0")</span>
+                    <span class="analytics-stat-label">Hub Opens</span>
+                </div>
+                <div class="analytics-stat-card">
+                    <span class="analytics-stat-icon" style="background:rgba(16,185,129,0.1);color:#059669">
+                        <RadzenIcon Icon="people" />
+                    </span>
+                    <span class="analytics-stat-value">@hubAnalytics.UniqueVisitors.ToString("N0")</span>
+                    <span class="analytics-stat-label">Unique Visitors</span>
+                </div>
+                <div class="analytics-stat-card">
+                    <span class="analytics-stat-icon" style="background:rgba(245,158,11,0.1);color:#D97706">
+                        <RadzenIcon Icon="play_circle" />
+                    </span>
+                    <span class="analytics-stat-value">@hubAnalytics.DemoStarts.ToString("N0")</span>
+                    <span class="analytics-stat-label">Demo Starts</span>
+                </div>
+                <div class="analytics-stat-card">
+                    <span class="analytics-stat-icon" style="background:rgba(239,68,68,0.1);color:#DC2626">
+                        <RadzenIcon Icon="exit_to_app" />
+                    </span>
+                    <span class="analytics-stat-value">@hubAnalytics.BounceRate.ToString("F1")%</span>
+                    <span class="analytics-stat-label">Bounce Rate</span>
+                </div>
+            </div>
+
+            @* Top Searches *@
+            <div class="he-analytics-section">
+                <h4 class="he-analytics-section-title">Top Searches</h4>
+                @if (hubAnalytics.TopSearches.Count == 0)
+                {
+                    <p class="he-analytics-empty">No search data yet.</p>
+                }
+                else
+                {
+                    <div class="he-analytics-list">
+                        @foreach (var s in hubAnalytics.TopSearches)
+                        {
+                            <div class="he-analytics-row">
+                                <span class="he-analytics-row-label">@s.Query</span>
+                                <span class="he-analytics-row-count">@s.Count</span>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+
+            @* Top Demos *@
+            <div class="he-analytics-section">
+                <h4 class="he-analytics-section-title">Top Demos</h4>
+                @if (hubAnalytics.TopDemos.Count == 0)
+                {
+                    <p class="he-analytics-empty">No demo start data yet.</p>
+                }
+                else
+                {
+                    <div class="he-analytics-list">
+                        @foreach (var d in hubAnalytics.TopDemos)
+                        {
+                            <div class="he-analytics-row">
+                                <span class="he-analytics-row-label">@d.DemoName</span>
+                                <span class="he-analytics-row-count">@d.Count starts</span>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        }
     </div>;
 }
 
@@ -713,7 +805,57 @@ else
     }
     .he-domain-remove:hover { opacity: 1; }
 
-    /* ── Analytics Placeholder ── */
+    /* ── Analytics ── */
+    .he-analytics-header {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 20px;
+    }
+    .he-analytics-title {
+        margin: 0; font-size: var(--nt-text-lg); font-weight: var(--nt-weight-semibold);
+        color: var(--nt-text-primary);
+    }
+    .he-analytics-range {
+        font-size: var(--nt-text-xs); color: var(--nt-text-muted);
+        background: var(--nt-surface-subtle); padding: 4px 10px;
+        border-radius: 99px; border: 1px solid var(--nt-border);
+    }
+    .he-analytics-loading {
+        display: flex; align-items: center; gap: 10px;
+        padding: 32px 0; color: var(--nt-text-muted); font-size: var(--nt-text-sm);
+    }
+    .he-analytics-kpis {
+        display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+        margin-bottom: 24px;
+    }
+    .he-analytics-section {
+        margin-bottom: 24px;
+    }
+    .he-analytics-section-title {
+        margin: 0 0 10px; font-size: var(--nt-text-sm); font-weight: var(--nt-weight-semibold);
+        color: var(--nt-text-primary);
+    }
+    .he-analytics-list {
+        display: flex; flex-direction: column; gap: 4px;
+        border: 1px solid var(--nt-border); border-radius: var(--nt-radius);
+        overflow: hidden;
+    }
+    .he-analytics-row {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 8px 12px; background: var(--nt-surface);
+        font-size: var(--nt-text-sm);
+    }
+    .he-analytics-row:not(:last-child) {
+        border-bottom: 1px solid var(--nt-border);
+    }
+    .he-analytics-row-label { color: var(--nt-text-primary); }
+    .he-analytics-row-count {
+        font-weight: var(--nt-weight-semibold); color: var(--nt-text-muted);
+        font-size: var(--nt-text-xs);
+    }
+    .he-analytics-empty {
+        margin: 0; font-size: var(--nt-text-sm); color: var(--nt-text-muted);
+        padding: 16px 0;
+    }
     .he-analytics-placeholder {
         display: flex; flex-direction: column; align-items: center;
         justify-content: center; gap: 12px; padding: 64px 24px;
@@ -874,6 +1016,10 @@ else
     private Guid? selectedDemoId;
     private string newDomain = "";
 
+    // Analytics
+    private HubAnalyticsResponse? hubAnalytics;
+    private bool analyticsLoading;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender) return;
@@ -918,6 +1064,27 @@ else
     private void BackToList()
     {
         hub = null;
+        hubAnalytics = null;
+    }
+
+    private async Task SelectAnalyticsTab()
+    {
+        activeTab = "analytics";
+        if (hub != null && hubAnalytics == null && !analyticsLoading)
+        {
+            analyticsLoading = true;
+            StateHasChanged();
+            try
+            {
+                hubAnalytics = await Http.GetFromJsonAsync<HubAnalyticsResponse>($"api/v1/hubs/{hub.Id}/analytics");
+            }
+            catch { /* no data — leave null */ }
+            finally
+            {
+                analyticsLoading = false;
+                StateHasChanged();
+            }
+        }
     }
 
     private async Task SaveHub()

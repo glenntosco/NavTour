@@ -201,9 +201,26 @@
         }
     }
 
+    function trackEvent(type, data) {
+        if (!hubData) return;
+        var visitorId = localStorage.getItem('nt-hub-visitor') || generateVisitorId();
+
+        fetch(API_BASE + '/api/v1/hubs/public/' + hubData.slug + '/events', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ eventType: type, eventData: data ? JSON.stringify(data) : null, visitorId: visitorId })
+        }).catch(function() {}); // fire-and-forget
+    }
+
+    function generateVisitorId() {
+        var id = 'v_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
+        localStorage.setItem('nt-hub-visitor', id);
+        return id;
+    }
+
     function showDrawer() {
         if (!hubData) return;
-        if (drawer) { drawer.style.transform = 'translateX(0)'; isOpen = true; NavTourHub._emit('open'); return; }
+        if (drawer) { drawer.style.transform = 'translateX(0)'; isOpen = true; NavTourHub._emit('open'); trackEvent('open'); return; }
 
         var appearance = hubData.appearance || {};
         var behavior = hubData.behavior || {};
@@ -269,10 +286,17 @@
             searchInput.style.cssText = 'width:100%;padding:8px 12px;border:1px solid #E5E5E5;border-radius:6px;font-size:14px;outline:none;font-family:inherit;box-sizing:border-box;';
             searchInput.onfocus = function() { searchInput.style.borderColor = appearance.accentColor || '#4361ee'; };
             searchInput.onblur = function() { searchInput.style.borderColor = '#E5E5E5'; };
+            var searchDebounceTimer = null;
             searchInput.oninput = function() {
                 searchText = searchInput.value;
                 NavTourHub._emit('search', { query: searchText });
                 renderCards();
+                clearTimeout(searchDebounceTimer);
+                if (searchText) {
+                    searchDebounceTimer = setTimeout(function() {
+                        trackEvent('search', { query: searchText });
+                    }, 500);
+                }
             };
             searchWrap.appendChild(searchInput);
             drawer.appendChild(searchWrap);
@@ -294,7 +318,7 @@
                 tab.textContent = (cat.icon ? cat.icon + ' ' : '') + cat.name;
                 tab.className = 'nt-hub-tab';
                 tab.dataset.catId = cat.id;
-                tab.onclick = function() { activeCategory = cat.id; updateTabs(); renderCards(); };
+                tab.onclick = function() { activeCategory = cat.id; updateTabs(); renderCards(); trackEvent('categoryClick', { category: cat.name }); };
                 tabsWrap.appendChild(tab);
             });
 
@@ -354,6 +378,7 @@
 
         isOpen = true;
         NavTourHub._emit('open');
+        trackEvent('open');
         renderCards();
     }
 
@@ -482,6 +507,7 @@
         if (!container) return;
 
         NavTourHub._emit('demoStart', { slug: slug, name: name });
+        trackEvent('demoStart', { slug: slug, name: name });
 
         container.style.display = 'flex';
         container.style.gridTemplateColumns = '';
