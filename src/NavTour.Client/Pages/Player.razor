@@ -46,7 +46,8 @@ else
                         BackgroundImageUrl="@bgUrl"
                         TotalSteps="@(manifest?.Steps.Count ?? 0)"
                         IsClosing="@(currentStep.Type == StepType.ClosingSlide)"
-                        OnCtaClick="HandleCoverCtaClick" />
+                        OnCtaClick="HandleCoverCtaClick"
+                        OnButtonClick="HandleCoverButtonClick" />
                 }
                 else
                 {
@@ -529,6 +530,22 @@ else
         var settings = currentStep != null ? ParseChapterSettings(currentStep.ChapterSettings) : new NavTour.Shared.DTOs.ChapterSettings();
         if (settings.CtaAction == "url" && !string.IsNullOrEmpty(settings.CtaUrl))
             Nav.NavigateTo(settings.CtaUrl, true);
+        else
+            await NextStep();
+    }
+
+    private async Task HandleCoverButtonClick(NavTour.Shared.DTOs.ChapterButton btn)
+    {
+        if (btn.ActionType == "url" && !string.IsNullOrEmpty(btn.ActionUrl))
+            Nav.NavigateTo(btn.ActionUrl, true);
+        else if (btn.ActionType == "step" && btn.ActionStepNumber.HasValue)
+        {
+            currentStepIndex = Math.Min(btn.ActionStepNumber.Value - 1, (manifest?.Steps.Count ?? 1) - 1);
+            currentStepIndex = Math.Max(0, currentStepIndex);
+            stepStartTime = DateTime.UtcNow;
+            BufferEvent(EventType.StepViewed, currentStepIndex + 1, null);
+            StateHasChanged();
+        }
         else
             await NextStep();
     }

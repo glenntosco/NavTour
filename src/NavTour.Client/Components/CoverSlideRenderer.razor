@@ -123,16 +123,33 @@
         display: flex; align-items: center; gap: 48px;
     }
     .cs-split .cs-text {
-        flex: 1; max-width: 55%; text-align: left;
+        flex: 1; max-width: 50%; text-align: left;
         animation: cs-enter 600ms cubic-bezier(0.1, 0.9, 0.2, 1) both;
     }
     .cs-split .cs-preview {
         flex: 0 0 48%; max-width: 52%;
+        transform: perspective(1200px) rotateY(-5deg) translateX(-20px);
         animation: cs-preview-enter 700ms cubic-bezier(0.1, 0.9, 0.2, 1) 150ms both;
+        position: relative;
+    }
+    .cs-split .cs-preview::after {
+        content: ''; pointer-events: none;
+        position: absolute; inset: 0;
+        background: linear-gradient(to right, rgba(0,0,0,0.12) 0%, transparent 30%);
+        border-radius: inherit; z-index: 1;
     }
     .cs-reverse { flex-direction: row-reverse; }
     .cs-reverse .cs-text { text-align: right; }
     .cs-reverse .cs-buttons { justify-content: flex-end; }
+    .cs-reverse .cs-preview {
+        transform: perspective(1200px) rotateY(5deg) translateX(20px);
+    }
+    .cs-reverse .cs-preview::after {
+        background: linear-gradient(to left, rgba(0,0,0,0.12) 0%, transparent 30%);
+    }
+
+    /* Custom theme — colors applied via inline style */
+    .cs-custom { /* inherits base styles */ }
 
     /* ── Text elements ── */
     .cs-logo { height: 40px; width: auto; margin-bottom: 24px; object-fit: contain; }
