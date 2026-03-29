@@ -121,7 +121,7 @@
             var success = await FormApi.DeleteFormAsync(form.Id);
             if (success)
             {
-                forms.Remove(form);
+                forms = forms.Where(f => f.Id != form.Id).ToList();
                 Notification.Notify(NotificationSeverity.Success, "Form deleted");
                 StateHasChanged();
             }
