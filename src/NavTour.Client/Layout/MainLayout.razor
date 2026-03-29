@@ -59,6 +59,10 @@
                 <svg class="nav-icon" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                 <span>Integrations</span>
             </a>
+            <a href="/billing" class="nav-item @ActiveClass("/billing")" title="Billing">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
+                <span>Billing</span>
+            </a>
         </nav>
         <div class="sidebar-bottom">
             <div class="sidebar-ver">v@(AppVersion)</div>
@@ -247,6 +251,11 @@
 
     .content { flex:1; overflow-y:auto; }
     .content.padded { padding:24px; }
+
+    @@media (max-width: 768px) {
+        .sidebar { display: none; }
+        .main-area { margin-left: 0; }
+    }
 </style>
 
 @code {
@@ -318,6 +327,7 @@
         if (uri.Contains("/team", StringComparison.OrdinalIgnoreCase)) return "Team";
         if (uri.Contains("/settings", StringComparison.OrdinalIgnoreCase)) return "Settings";
         if (uri.Contains("/integrations", StringComparison.OrdinalIgnoreCase)) return "Integrations";
+        if (uri.Contains("/billing", StringComparison.OrdinalIgnoreCase)) return "Billing";
         if (uri.Contains("/demos/", StringComparison.OrdinalIgnoreCase) && uri.Contains("/edit", StringComparison.OrdinalIgnoreCase)) return "Product Demos / Edit Demo";
         if (uri.Contains("/demos/", StringComparison.OrdinalIgnoreCase) && uri.Contains("/analytics", StringComparison.OrdinalIgnoreCase)) return "Product Demos / Analytics";
         return "NavTour";

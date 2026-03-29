@@ -430,6 +430,24 @@ else
     .te-placeholder p {
         font-size: var(--nt-text-sm); color: var(--nt-text-muted); margin: 0;
     }
+
+    /* ── Responsive ── */
+    @@media (max-width: 768px) {
+        .te-shell { flex-direction: column; height: auto; }
+        .te-list {
+            width: 100%;
+            border-right: none;
+            border-bottom: 1px solid var(--nt-border);
+            max-height: 200px;
+        }
+        .te-list-items { max-height: 140px; }
+        .te-editor { padding: 16px; }
+        .te-preview {
+            width: 100%;
+            border-left: none;
+            border-top: 1px solid var(--nt-border);
+        }
+    }
 </style>
 
 @code {

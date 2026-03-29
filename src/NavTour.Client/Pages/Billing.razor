@@ -1,0 +1,408 @@
+@page "/billing"
+@rendermode InteractiveServer
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@inject AuthService Auth
+@inject NavigationManager Nav
+
+<PageTitle>Billing — NavTour</PageTitle>
+
+<div class="bl-page">
+    <div class="bl-header">
+        <h1 class="nt-page-title">Billing &amp; Plans</h1>
+        <p class="nt-page-subtitle">You are on the <strong>@currentPlan</strong> plan. Upgrade to unlock more seats and features.</p>
+    </div>
+
+    @* Monthly / Annual toggle *@
+    <div class="bl-toggle-row">
+        <span class="bl-toggle-label @(!annual ? "active" : "")">Monthly</span>
+        <button class="bl-toggle" @onclick="() => annual = !annual" title="Toggle billing period">
+            <span class="bl-toggle-thumb @(annual ? "right" : "")"></span>
+        </button>
+        <span class="bl-toggle-label @(annual ? "active" : "")">
+            Annual
+            <span class="bl-badge-save">Save 20%</span>
+        </span>
+    </div>
+
+    @* Pricing cards *@
+    <div class="bl-grid">
+
+        @* Starter *@
+        <div class="bl-card @(currentPlan == "Starter" ? "bl-card-current" : "")">
+            <div class="bl-card-header">
+                <span class="bl-plan-name">Starter</span>
+                @if (currentPlan == "Starter")
+                {
+                    <span class="bl-current-badge">Current Plan</span>
+                }
+            </div>
+            <div class="bl-price-row">
+                <span class="bl-price">$0</span>
+                <span class="bl-price-period">/ month</span>
+            </div>
+            <p class="bl-plan-desc">Everything you need to get started with interactive demos.</p>
+            <ul class="bl-features">
+                <li><span class="bl-check">✓</span> 1 seat included</li>
+                <li><span class="bl-check">✓</span> Up to 5 demos</li>
+                <li><span class="bl-check">✓</span> Basic analytics</li>
+                <li><span class="bl-check">✓</span> Chrome extension capture</li>
+                <li><span class="bl-check">✓</span> Share via link</li>
+                <li><span class="bl-check">✓</span> NavTour branding</li>
+            </ul>
+            <button class="bl-btn bl-btn-outline" disabled="@(currentPlan == "Starter")">
+                @(currentPlan == "Starter" ? "Current Plan" : "Downgrade")
+            </button>
+        </div>
+
+        @* Growth — Most Popular *@
+        <div class="bl-card bl-card-featured">
+            <div class="bl-popular-ribbon">Most Popular</div>
+            <div class="bl-card-header">
+                <span class="bl-plan-name">Growth</span>
+            </div>
+            <div class="bl-price-row">
+                @if (annual)
+                {
+                    <span class="bl-price">$280</span>
+                    <span class="bl-price-period">/ mo · billed annually</span>
+                }
+                else
+                {
+                    <span class="bl-price">$350</span>
+                    <span class="bl-price-period">/ month · per 5 seats</span>
+                }
+            </div>
+            <p class="bl-plan-desc">For growing teams that need advanced collaboration and analytics.</p>
+            <ul class="bl-features">
+                <li><span class="bl-check">✓</span> 5 seats included</li>
+                <li><span class="bl-check">✓</span> Unlimited demos</li>
+                <li><span class="bl-check">✓</span> Advanced analytics &amp; funnels</li>
+                <li><span class="bl-check">✓</span> TourHub &amp; Showcases</li>
+                <li><span class="bl-check">✓</span> Custom domain</li>
+                <li><span class="bl-check">✓</span> Remove NavTour branding</li>
+                <li><span class="bl-check">✓</span> Lead capture forms</li>
+                <li><span class="bl-check">✓</span> Priority support</li>
+            </ul>
+            <button class="bl-btn bl-btn-primary" @onclick='() => Nav.NavigateTo("mailto:sales@navtour.cloud")'>
+                Upgrade to Growth
+            </button>
+        </div>
+
+        @* Scale *@
+        <div class="bl-card @(currentPlan == "Scale" ? "bl-card-current" : "")">
+            <div class="bl-card-header">
+                <span class="bl-plan-name">Scale</span>
+                @if (currentPlan == "Scale")
+                {
+                    <span class="bl-current-badge">Current Plan</span>
+                }
+            </div>
+            <div class="bl-price-row">
+                @if (annual)
+                {
+                    <span class="bl-price">$29</span>
+                    <span class="bl-price-period">/ seat · billed annually</span>
+                }
+                else
+                {
+                    <span class="bl-price">$36</span>
+                    <span class="bl-price-period">/ seat · per month</span>
+                }
+            </div>
+            <p class="bl-plan-desc">Per-seat pricing for teams that need full flexibility and control.</p>
+            <ul class="bl-features">
+                <li><span class="bl-check">✓</span> Unlimited seats</li>
+                <li><span class="bl-check">✓</span> Unlimited demos</li>
+                <li><span class="bl-check">✓</span> All Growth features</li>
+                <li><span class="bl-check">✓</span> SSO / SAML</li>
+                <li><span class="bl-check">✓</span> Audit logs</li>
+                <li><span class="bl-check">✓</span> SLA guarantee</li>
+                <li><span class="bl-check">✓</span> Dedicated CSM</li>
+            </ul>
+            <button class="bl-btn bl-btn-outline" @onclick='() => Nav.NavigateTo("mailto:sales@navtour.cloud")'>
+                Upgrade to Scale
+            </button>
+        </div>
+    </div>
+
+    <p class="bl-enterprise-note">
+        Need more than 20 seats or custom security requirements?
+        <a href="mailto:sales@navtour.cloud" class="bl-enterprise-link">Contact our sales team</a>
+        for an enterprise quote.
+    </p>
+</div>
+
+<style>
+    .bl-page {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 4px 0 48px;
+    }
+
+    .bl-header {
+        margin-bottom: 32px;
+    }
+
+    /* Toggle */
+    .bl-toggle-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 40px;
+        justify-content: center;
+    }
+
+    .bl-toggle-label {
+        font-size: var(--nt-text-sm);
+        font-weight: var(--nt-weight-medium);
+        color: var(--nt-text-muted);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: color 150ms;
+    }
+    .bl-toggle-label.active {
+        color: var(--nt-text-primary);
+        font-weight: var(--nt-weight-semibold);
+    }
+
+    .bl-toggle {
+        position: relative;
+        width: 44px;
+        height: 24px;
+        border-radius: 99px;
+        background: var(--nt-accent);
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        transition: background 200ms;
+        flex-shrink: 0;
+    }
+
+    .bl-toggle-thumb {
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #fff;
+        transition: transform 200ms;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .bl-toggle-thumb.right {
+        transform: translateX(20px);
+    }
+
+    .bl-badge-save {
+        display: inline-block;
+        padding: 2px 7px;
+        background: rgba(16,185,129,0.12);
+        color: #059669;
+        border-radius: 99px;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+    }
+
+    /* Grid */
+    .bl-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        align-items: start;
+    }
+
+    /* Card */
+    .bl-card {
+        background: var(--nt-surface);
+        border: 1px solid var(--nt-border);
+        border-radius: var(--nt-radius-lg);
+        padding: 28px 24px 24px;
+        position: relative;
+        transition: box-shadow 200ms, border-color 200ms;
+    }
+
+    .bl-card:hover {
+        box-shadow: var(--nt-shadow-lg);
+        border-color: var(--nt-border-hover);
+    }
+
+    .bl-card-current {
+        border-color: var(--nt-accent);
+        background: var(--nt-accent-light);
+    }
+
+    .bl-card-featured {
+        border: 2px solid var(--nt-accent);
+        box-shadow: 0 4px 24px rgba(67,97,238,0.15);
+    }
+
+    .bl-popular-ribbon {
+        position: absolute;
+        top: -1px;
+        right: 20px;
+        background: var(--nt-accent);
+        color: #fff;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        padding: 4px 12px;
+        border-radius: 0 0 8px 8px;
+    }
+
+    .bl-card-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 16px;
+    }
+
+    .bl-plan-name {
+        font-size: 1.0625rem;
+        font-weight: 700;
+        color: var(--nt-text-primary);
+        letter-spacing: -0.01em;
+    }
+
+    .bl-current-badge {
+        font-size: 0.6875rem;
+        font-weight: 600;
+        color: var(--nt-accent);
+        background: var(--nt-accent-light);
+        padding: 2px 8px;
+        border-radius: 99px;
+        border: 1px solid var(--nt-accent);
+    }
+
+    .bl-price-row {
+        display: flex;
+        align-items: baseline;
+        gap: 4px;
+        margin-bottom: 10px;
+    }
+
+    .bl-price {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--nt-text-primary);
+        letter-spacing: -0.03em;
+        line-height: 1;
+    }
+
+    .bl-price-period {
+        font-size: 0.8125rem;
+        color: var(--nt-text-muted);
+        font-weight: 400;
+    }
+
+    .bl-plan-desc {
+        font-size: var(--nt-text-sm);
+        color: var(--nt-text-secondary);
+        margin: 0 0 20px;
+        line-height: 1.5;
+    }
+
+    .bl-features {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .bl-features li {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: var(--nt-text-sm);
+        color: var(--nt-text-secondary);
+    }
+
+    .bl-check {
+        color: var(--nt-accent);
+        font-weight: 700;
+        font-size: 0.875rem;
+        flex-shrink: 0;
+    }
+
+    /* Buttons */
+    .bl-btn {
+        width: 100%;
+        padding: 10px 20px;
+        border-radius: var(--nt-radius);
+        font-size: var(--nt-text-sm);
+        font-weight: 600;
+        font-family: var(--nt-font);
+        cursor: pointer;
+        transition: background 150ms, border-color 150ms, color 150ms;
+    }
+
+    .bl-btn:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+    }
+
+    .bl-btn-primary {
+        background: var(--nt-accent);
+        color: #fff;
+        border: none;
+    }
+    .bl-btn-primary:hover:not(:disabled) {
+        background: var(--nt-accent-hover);
+    }
+
+    .bl-btn-outline {
+        background: transparent;
+        color: var(--nt-text-primary);
+        border: 1px solid var(--nt-border);
+    }
+    .bl-btn-outline:hover:not(:disabled) {
+        border-color: var(--nt-accent);
+        color: var(--nt-accent);
+        background: var(--nt-accent-light);
+    }
+
+    /* Enterprise */
+    .bl-enterprise-note {
+        text-align: center;
+        margin-top: 36px;
+        font-size: var(--nt-text-sm);
+        color: var(--nt-text-muted);
+    }
+
+    .bl-enterprise-link {
+        color: var(--nt-accent);
+        font-weight: 600;
+        text-decoration: none;
+    }
+    .bl-enterprise-link:hover {
+        text-decoration: underline;
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .bl-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .bl-card-featured {
+            order: -1;
+        }
+    }
+</style>
+
+@code {
+    private bool annual;
+    private string currentPlan = "Starter";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        await Auth.TryRestoreAsync();
+        if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
+        StateHasChanged();
+    }
+}

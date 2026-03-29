@@ -512,35 +512,43 @@ else
         else
         {
             @* KPI Cards *@
-            <div class="he-analytics-kpis">
-                <div class="analytics-stat-card">
-                    <span class="analytics-stat-icon" style="background:var(--nt-accent-light);color:var(--nt-accent)">
-                        <RadzenIcon Icon="open_in_new" />
-                    </span>
-                    <span class="analytics-stat-value">@hubAnalytics.HubOpens.ToString("N0")</span>
-                    <span class="analytics-stat-label">Hub Opens</span>
-                </div>
-                <div class="analytics-stat-card">
-                    <span class="analytics-stat-icon" style="background:rgba(16,185,129,0.1);color:#059669">
+            <div class="he-analytics-grid">
+                <RadzenCard class="he-kpi-card">
+                    <div class="he-kpi-icon" style="background:var(--nt-accent-light);color:var(--nt-accent)">
+                        <RadzenIcon Icon="visibility" />
+                    </div>
+                    <div class="he-kpi-content">
+                        <span class="he-kpi-value">@hubAnalytics.HubOpens.ToString("N0")</span>
+                        <span class="he-kpi-label">Hub Opens</span>
+                    </div>
+                </RadzenCard>
+                <RadzenCard class="he-kpi-card">
+                    <div class="he-kpi-icon" style="background:rgba(16,185,129,0.1);color:#059669">
                         <RadzenIcon Icon="people" />
-                    </span>
-                    <span class="analytics-stat-value">@hubAnalytics.UniqueVisitors.ToString("N0")</span>
-                    <span class="analytics-stat-label">Unique Visitors</span>
-                </div>
-                <div class="analytics-stat-card">
-                    <span class="analytics-stat-icon" style="background:rgba(245,158,11,0.1);color:#D97706">
+                    </div>
+                    <div class="he-kpi-content">
+                        <span class="he-kpi-value">@hubAnalytics.UniqueVisitors.ToString("N0")</span>
+                        <span class="he-kpi-label">Unique Visitors</span>
+                    </div>
+                </RadzenCard>
+                <RadzenCard class="he-kpi-card">
+                    <div class="he-kpi-icon" style="background:rgba(245,158,11,0.1);color:#D97706">
                         <RadzenIcon Icon="play_circle" />
-                    </span>
-                    <span class="analytics-stat-value">@hubAnalytics.DemoStarts.ToString("N0")</span>
-                    <span class="analytics-stat-label">Demo Starts</span>
-                </div>
-                <div class="analytics-stat-card">
-                    <span class="analytics-stat-icon" style="background:rgba(239,68,68,0.1);color:#DC2626">
+                    </div>
+                    <div class="he-kpi-content">
+                        <span class="he-kpi-value">@hubAnalytics.DemoStarts.ToString("N0")</span>
+                        <span class="he-kpi-label">Demo Starts</span>
+                    </div>
+                </RadzenCard>
+                <RadzenCard class="he-kpi-card">
+                    <div class="he-kpi-icon" style="background:rgba(239,68,68,0.1);color:#DC2626">
                         <RadzenIcon Icon="exit_to_app" />
-                    </span>
-                    <span class="analytics-stat-value">@hubAnalytics.BounceRate.ToString("F1")%</span>
-                    <span class="analytics-stat-label">Bounce Rate</span>
-                </div>
+                    </div>
+                    <div class="he-kpi-content">
+                        <span class="he-kpi-value">@hubAnalytics.BounceRate.ToString("F1")%</span>
+                        <span class="he-kpi-label">Bounce Rate</span>
+                    </div>
+                </RadzenCard>
             </div>
 
             @* Top Searches *@
@@ -903,9 +911,43 @@ else
         display: flex; align-items: center; gap: 10px;
         padding: 32px 0; color: var(--nt-text-muted); font-size: var(--nt-text-sm);
     }
-    .he-analytics-kpis {
-        display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
-        margin-bottom: 24px;
+    .he-analytics-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+    .he-kpi-card {
+        display: flex !important;
+        align-items: center;
+        gap: 12px;
+        padding: 16px !important;
+    }
+    .he-kpi-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: var(--nt-radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        flex-shrink: 0;
+    }
+    .he-kpi-content {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+    .he-kpi-value {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--nt-text-primary);
+    }
+    .he-kpi-label {
+        font-size: 0.6875rem;
+        color: var(--nt-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
     }
     .he-analytics-section {
         margin-bottom: 24px;
@@ -1119,6 +1161,20 @@ else
         padding: 10px 14px; border-top: 1px solid var(--nt-border);
         font-size: 11px; font-weight: 600; color: var(--nt-text-muted);
         text-align: center;
+    }
+
+    /* ── Responsive ── */
+    @@media (max-width: 768px) {
+        .he-shell { flex-direction: column; }
+        .he-left { border-right: none; border-bottom: 1px solid var(--nt-border); }
+        .he-preview-pane {
+            width: 100%;
+            flex-shrink: 0;
+            border-top: 1px solid var(--nt-border);
+        }
+        .he-top-bar { flex-wrap: wrap; gap: 8px; }
+        .he-top-actions { flex-wrap: wrap; }
+        .he-analytics-grid { grid-template-columns: 1fr; }
     }
 </style>
 
