@@ -1,0 +1,149 @@
+@page "/integrations"
+@rendermode InteractiveServer
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@inject AuthService Auth
+@inject NavigationManager Nav
+
+<div class="int-page">
+    <div class="int-header">
+        <h1 class="nt-page-title">Integrations</h1>
+        <p class="nt-page-subtitle">Connect NavTour with your favorite tools to automate workflows and track engagement.</p>
+    </div>
+
+    <div class="int-grid">
+        @foreach (var item in _integrations)
+        {
+            <div class="int-card">
+                <div class="int-card-icon" style="background:@item.IconBg">
+                    @((MarkupString)item.IconSvg)
+                </div>
+                <div class="int-card-name">@item.Name</div>
+                <div class="int-card-desc">@item.Description</div>
+                <button class="int-card-btn" disabled title="Coming soon">Connect</button>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .int-page {
+        max-width: 960px;
+    }
+
+    .int-header {
+        margin-bottom: 32px;
+    }
+
+    .int-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+    }
+
+    @@media (max-width: 900px) {
+        .int-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @@media (max-width: 500px) {
+        .int-grid { grid-template-columns: 1fr; }
+    }
+
+    .int-card {
+        background: var(--nt-surface);
+        border: 1px solid var(--nt-border);
+        border-radius: var(--nt-radius-md);
+        padding: 24px 20px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        box-shadow: var(--nt-shadow-sm);
+        transition: box-shadow 150ms, border-color 150ms;
+    }
+
+    .int-card:hover {
+        box-shadow: var(--nt-shadow-md);
+        border-color: var(--nt-border-hover);
+    }
+
+    .int-card-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 4px;
+        flex-shrink: 0;
+    }
+
+    .int-card-icon svg {
+        width: 28px;
+        height: 28px;
+    }
+
+    .int-card-name {
+        font-size: var(--nt-text-base);
+        font-weight: 600;
+        color: var(--nt-text-primary);
+    }
+
+    .int-card-desc {
+        font-size: var(--nt-text-sm);
+        color: var(--nt-text-muted);
+        line-height: 1.5;
+        flex: 1;
+    }
+
+    .int-card-btn {
+        margin-top: 8px;
+        padding: 7px 18px;
+        border: 1px solid var(--nt-border);
+        border-radius: var(--nt-radius);
+        background: var(--nt-surface-subtle);
+        color: var(--nt-text-muted);
+        font-size: var(--nt-text-sm);
+        font-weight: 500;
+        cursor: not-allowed;
+        font-family: var(--nt-font);
+        opacity: 0.7;
+    }
+</style>
+
+@code {
+    private record Integration(string Name, string Description, string IconBg, string IconSvg);
+
+    private readonly List<Integration> _integrations = new()
+    {
+        new("HubSpot", "Sync leads and demo engagement to HubSpot CRM automatically.", "#FF7A59",
+            """<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18.164 7.931V5.781a1.69 1.69 0 0 0 .976-1.531V4.2a1.69 1.69 0 0 0-1.69-1.69h-.05a1.69 1.69 0 0 0-1.69 1.69v.05a1.69 1.69 0 0 0 .976 1.531v2.15a4.79 4.79 0 0 0-2.28 1.002L7.44 4.832a1.884 1.884 0 1 0-.9 1.228l6.747 4.851a4.823 4.823 0 0 0-.643 2.418 4.79 4.79 0 0 0 .79 2.667l-2.052 2.052a1.527 1.527 0 1 0 1.06 1.06l2.053-2.053a4.822 4.822 0 0 0 6.632-4.443 4.824 4.824 0 0 0-2.963-4.681zm-1.764 7.602a2.714 2.714 0 1 1 0-5.428 2.714 2.714 0 0 1 0 5.428z" fill="#fff"/></svg>"""),
+
+        new("Salesforce", "Push demo engagement data and leads directly into Salesforce.", "#00A1E0",
+            """<svg viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg"><path d="M10.005 5.06A3.87 3.87 0 0 1 12.815 4a3.9 3.9 0 0 1 3.33 1.865 2.895 2.895 0 0 1 1.29-.3 2.925 2.925 0 0 1 2.925 2.925 2.888 2.888 0 0 1-.315 1.305A2.595 2.595 0 0 1 21 12.09a2.595 2.595 0 0 1-2.595 2.595h-8.61A3.285 3.285 0 0 1 6.51 11.4a3.27 3.27 0 0 1 1.815-2.94 3.63 3.63 0 0 1 1.68-3.4z"/></svg>"""),
+
+        new("Slack", "Get real-time alerts in Slack when leads view or complete your demos.", "#4A154B",
+            """<svg viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg"><path d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zM6.313 15.165a2.527 2.527 0 0 1 2.521-2.52 2.527 2.527 0 0 1 2.521 2.52v6.313A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.522v-6.313zM8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zM8.834 6.313a2.528 2.528 0 0 1 2.521 2.521 2.528 2.528 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312zM18.956 8.834a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.522V8.834zM17.688 8.834a2.528 2.528 0 0 1-2.523 2.521 2.527 2.527 0 0 1-2.52-2.521V2.522A2.527 2.527 0 0 1 15.165 0a2.528 2.528 0 0 1 2.523 2.522v6.312zM15.165 18.956a2.528 2.528 0 0 1 2.523 2.522A2.528 2.528 0 0 1 15.165 24a2.527 2.527 0 0 1-2.52-2.522v-2.522h2.52zM15.165 17.688a2.527 2.527 0 0 1-2.52-2.523 2.526 2.526 0 0 1 2.52-2.52h6.313A2.527 2.527 0 0 1 24 15.165a2.528 2.528 0 0 1-2.522 2.523h-6.313z"/></svg>"""),
+
+        new("Zapier", "Automate workflows between NavTour and 5,000+ apps via Zapier.", "#FF4A00",
+            """<svg viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg"><path d="M12.003 0C5.376 0 0 5.376 0 12.003S5.376 24 12.003 24 24 18.624 24 12.003 18.624 0 12.003 0zm5.424 13.368H13.37l2.875 2.874a1.368 1.368 0 0 1-1.934 1.935l-2.874-2.875v4.056a1.365 1.365 0 1 1-2.73 0v-4.056l-2.874 2.875a1.368 1.368 0 0 1-1.935-1.935l2.875-2.874H6.573a1.365 1.365 0 1 1 0-2.73h4.057L7.754 7.764A1.368 1.368 0 0 1 9.689 5.83l2.874 2.874V4.648a1.365 1.365 0 0 1 2.73 0v4.057l2.874-2.875a1.368 1.368 0 0 1 1.935 1.935l-2.875 2.874h4.057a1.365 1.365 0 0 1-.002 2.73h.145z"/></svg>"""),
+
+        new("Google Analytics", "Track demo views and conversions inside Google Analytics 4.", "#E37400",
+            """<svg viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg"><path d="M22.4 22.4H16V8h6.4v14.4zm-8.8 0H8V1.6h5.6V22.4zM5.6 22.4H1.6A1.6 1.6 0 0 1 0 20.8v-4.4a1.6 1.6 0 0 1 1.6-1.6h4V22.4z"/></svg>"""),
+
+        new("Google Tag Manager", "Fire NavTour events via Google Tag Manager without code changes.", "#4285F4",
+            """<svg viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg"><path d="M12 0L1.6 6v12L12 24l10.4-6V6L12 0zm-1.2 17.28L5.52 12l1.56-1.56 3.72 3.72 6.12-6.12 1.56 1.56-7.68 7.68z"/></svg>"""),
+
+        new("Intercom", "Surface demo links in Intercom chats and trigger follow-ups.", "#286EFA",
+            """<svg viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg"><path d="M20 0H4C1.8 0 0 1.8 0 4v16c0 2.2 1.8 4 4 4h16c2.2 0 4-1.8 4-4V4c0-2.2-1.8-4-4-4zm-1.6 14.7c-1.7 1.7-3.9 2.6-6.4 2.6s-4.7-.9-6.4-2.6a.8.8 0 0 1 1.1-1.1c1.4 1.4 3.3 2.2 5.3 2.2s3.9-.8 5.3-2.2a.8.8 0 0 1 1.1 1.1zm.8-4.7a.8.8 0 0 1-.8-.8V7.8a.8.8 0 0 1 1.6 0v1.4a.8.8 0 0 1-.8.8zm-14.4 0a.8.8 0 0 1-.8-.8V7.8a.8.8 0 0 1 1.6 0v1.4a.8.8 0 0 1-.8.8z"/></svg>"""),
+
+        new("Marketo", "Sync lead capture data from demos into Marketo for nurture campaigns.", "#5C4EE5",
+            """<svg viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zM9.75 16.5V7.5L12 9.75l2.25-2.25v9l-2.25-2.25L9.75 16.5z"/></svg>"""),
+    };
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        await Auth.TryRestoreAsync();
+        if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
+    }
+}
