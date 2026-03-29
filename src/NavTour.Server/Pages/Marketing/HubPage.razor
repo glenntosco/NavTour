@@ -1,447 +1,181 @@
-@page "/showcase/{Slug}"
+@page "/tourhub-preview/{Slug}"
 @layout NavTour.Server.Components.Layout.BlankLayout
 @attribute [Microsoft.AspNetCore.Authorization.AllowAnonymous]
-@inject NavTour.Server.Services.HubService HubService
-@using NavTour.Shared.DTOs.Hub
-@using System.Text.Json
 
 <HeadContent>
-    <title>@(hub?.Name ?? "TourHub")</title>
-    <meta name="description" content="Explore interactive product demos" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <title>TourHub Preview</title>
+    <meta name="description" content="Preview of your TourHub in-app widget" />
     <style>
         body { margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
     </style>
 </HeadContent>
 
-@if (hub == null)
-{
-    <div class="showcase-loading">
-        <div class="showcase-spinner"></div>
+<div class="hp-preview">
+    <div class="hp-header">
+        <div class="hp-header-inner">
+            <h1 class="hp-title">TourHub Widget Preview</h1>
+            <p class="hp-desc">This is how your TourHub widget will appear when embedded in your product. Click the launcher button in the bottom-right corner to open it.</p>
+        </div>
     </div>
-}
-else
-{
-    @* ── Hero Header ── *@
-    <div class="showcase-header" style="background:@GetHeaderBg();color:@appearance.TextColor">
-        <div class="showcase-header-inner">
-            @if (appearance.DisplayType == "logo" && !string.IsNullOrEmpty(appearance.LogoUrl))
-            {
-                <img src="@appearance.LogoUrl" alt="Logo" class="showcase-logo" />
-            }
-            else
-            {
-                <h1 class="showcase-title" style="text-align:@appearance.Alignment">@(appearance.Title ?? hub.Name)</h1>
-            }
-            @if (!string.IsNullOrEmpty(appearance.Subtitle))
-            {
-                <p class="showcase-subtitle" style="text-align:@appearance.Alignment">@appearance.Subtitle</p>
-            }
 
-            @* Search *@
-            <div class="showcase-search">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                <input type="text" placeholder="@(behavior.SearchPlaceholder ?? "Search demos...")" class="showcase-search-input"
-                    value="@searchText" @oninput="OnSearch" />
+    <div class="hp-mock-app">
+        <div class="hp-mock-nav">
+            <span class="hp-mock-logo">Your Product</span>
+            <div class="hp-mock-nav-links">
+                <span>Dashboard</span>
+                <span>Settings</span>
+                <span>Users</span>
             </div>
         </div>
+        <div class="hp-mock-content">
+            <div class="hp-mock-card"></div>
+            <div class="hp-mock-card"></div>
+            <div class="hp-mock-card hp-mock-card-wide"></div>
+        </div>
+        <p class="hp-mock-hint">This is a simulated app interface. Your TourHub widget floats on top of your actual product.</p>
     </div>
 
-    @* ── Category Tabs ── *@
-    <div class="showcase-tabs-wrap">
-        <div class="showcase-tabs">
-            <button class="showcase-tab @(activeCategory == null ? "active" : "")" @onclick="() => activeCategory = null"
-                style="@(activeCategory == null ? $"background:{appearance.AccentColor ?? "#4361ee"};color:#fff" : "")">All</button>
-            @foreach (var cat in hub.Categories)
-            {
-                var catId = cat.Id;
-                <button class="showcase-tab @(activeCategory == catId ? "active" : "")"
-                    @onclick="() => activeCategory = catId"
-                    style="@(activeCategory == catId ? $"background:{appearance.AccentColor ?? "#4361ee"};color:#fff" : "")">
-                    @if (!string.IsNullOrEmpty(cat.Icon)) { <span>@cat.Icon</span> }
-                    @cat.Name
-                </button>
-            }
-        </div>
+    <div class="hp-install-info">
+        <h2>Install on your site</h2>
+        <p>Add this code to your website to embed the TourHub widget:</p>
+        <pre class="hp-code"><code>&lt;script src="@GetBaseUrl()/js/hub.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  NavTour.hub.init("@Slug");
+&lt;/script&gt;</code></pre>
     </div>
+</div>
 
-    @* ── Demo Cards Grid ── *@
-    <div class="showcase-body">
-        <div class="showcase-grid @(appearance.CardStyle == "list" ? "showcase-list" : "")">
-            @foreach (var item in GetFilteredItems())
-            {
-                <div class="showcase-card" @onclick="() => LaunchDemo(item)">
-                    @if (appearance.ShowThumbnails)
-                    {
-                        <div class="showcase-card-thumb" style="@GetThumbStyle(item)">
-                            @if (string.IsNullOrEmpty(item.ThumbnailOverride))
-                            {
-                                <div class="showcase-card-thumb-icon" style="color:@GetThumbColor(item)">
-                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
-                                    </svg>
-                                    <span class="showcase-card-thumb-label">@GetThumbInitial(item)</span>
-                                </div>
-                            }
-                            <div class="showcase-card-play">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
-                            </div>
-                        </div>
-                    }
-                    <div class="showcase-card-body">
-                        <h3 class="showcase-card-title">@(item.TitleOverride ?? item.DemoName ?? "Untitled")</h3>
-                        @if (appearance.ShowDescriptions && !string.IsNullOrEmpty(item.DescriptionOverride))
-                        {
-                            <p class="showcase-card-desc">@item.DescriptionOverride</p>
-                        }
-                        <div class="showcase-card-meta">
-                            @if (appearance.ShowStepCount && item.DemoStepCount > 0)
-                            {
-                                <span>@item.DemoStepCount steps</span>
-                            }
-                            @if (appearance.ShowDuration && item.DemoStepCount > 0)
-                            {
-                                <span>@(Math.Max(1, (int)Math.Round(item.DemoStepCount * 0.5))) min</span>
-                            }
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
-
-        @if (!GetFilteredItems().Any())
-        {
-            <div class="showcase-empty">
-                @if (!string.IsNullOrEmpty(searchText))
-                {
-                    <p>No demos found for "@searchText"</p>
-                }
-                else
-                {
-                    <p>No demos in this category</p>
-                }
-            </div>
-        }
-    </div>
-
-    @* ── Footer ── *@
-    <div class="showcase-footer">
-        <div class="showcase-footer-inner">
-            @if (appearance.FooterCta != null)
-            {
-                <a href="@appearance.FooterCta.Url" target="_blank" class="showcase-footer-cta"
-                    style="background:@(appearance.FooterCta.Color ?? "#4361ee")">@appearance.FooterCta.Text</a>
-            }
-            @if (appearance.PoweredBy != "hide")
-            {
-                @if (appearance.PoweredBy == "custom" && appearance.PoweredByText != null)
-                {
-                    <span class="showcase-powered">@appearance.PoweredByText</span>
-                }
-                else
-                {
-                    <a href="https://navtour.cloud" target="_blank" rel="noopener" class="showcase-powered-link">Powered by NavTour.cloud</a>
-                }
-            }
-        </div>
-    </div>
-
-    @* ── Demo Player Modal ── *@
-    @if (activeDemoSlug != null)
-    {
-        <div class="showcase-player-overlay" @onclick="CloseDemoPlayer">
-            <div class="showcase-player" @onclick:stopPropagation="true">
-                <div class="showcase-player-bar">
-                    <button class="showcase-player-back" @onclick="CloseDemoPlayer">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                        Back to demos
-                    </button>
-                </div>
-                <iframe src="/demo/@activeDemoSlug" class="showcase-player-frame"></iframe>
-            </div>
-        </div>
-    }
-}
+@* Load the actual hub.js widget — it creates the floating launcher *@
+<script src="/js/hub.js"></script>
+<script>
+    NavTour.hub.init("@Slug");
+</script>
 
 <style>
-    .showcase-loading {
-        display: flex; align-items: center; justify-content: center;
-        min-height: 60vh;
+    .hp-preview {
+        min-height: 100vh;
+        background: #F3F4F6;
     }
-    .showcase-spinner {
-        width: 32px; height: 32px; border: 3px solid #E5E5E5;
-        border-top-color: #4361ee; border-radius: 50%;
-        animation: showcase-spin 600ms linear infinite;
-    }
-    @@keyframes showcase-spin { to { transform: rotate(360deg); } }
 
-    /* ── Header ── */
-    .showcase-header {
-        padding: 64px 24px 48px;
-        text-align: center;
+    .hp-header {
+        background: #fff;
+        border-bottom: 1px solid #E5E7EB;
+        padding: 32px 24px;
     }
-    .showcase-header-inner {
-        max-width: 680px; margin: 0 auto;
+    .hp-header-inner {
+        max-width: 720px;
+        margin: 0 auto;
     }
-    .showcase-logo {
-        height: 48px; width: auto; margin-bottom: 16px;
+    .hp-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #111827;
+        margin: 0 0 8px;
     }
-    .showcase-title {
-        font-size: 2.5rem; font-weight: 700; margin: 0 0 12px;
-        line-height: 1.15; letter-spacing: -0.02em;
+    .hp-desc {
+        font-size: 0.9375rem;
+        color: #6B7280;
+        margin: 0;
+        line-height: 1.5;
     }
-    .showcase-subtitle {
-        font-size: 1.125rem; margin: 0 0 32px;
-        opacity: 0.8; line-height: 1.5;
-    }
-    .showcase-search {
-        display: flex; align-items: center; gap: 10px;
-        max-width: 480px; margin: 0 auto;
-        padding: 12px 16px; background: rgba(255,255,255,0.15);
-        border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);
-        backdrop-filter: blur(8px);
-    }
-    .showcase-search svg { opacity: 0.7; flex-shrink: 0; }
-    .showcase-search-input {
-        flex: 1; border: none; outline: none; background: none;
-        font-size: 1rem; color: inherit; font-family: inherit;
-    }
-    .showcase-search-input::placeholder { color: inherit; opacity: 0.5; }
 
-    /* ── Tabs ── */
-    .showcase-tabs-wrap {
-        background: #fff; border-bottom: 1px solid #E5E5E5;
-        position: sticky; top: 0; z-index: 10;
+    .hp-mock-app {
+        max-width: 960px;
+        margin: 32px auto;
+        background: #fff;
+        border-radius: 12px;
+        border: 1px solid #E5E7EB;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     }
-    .showcase-tabs {
-        display: flex; gap: 8px; padding: 16px 24px;
-        max-width: 1120px; margin: 0 auto;
-        overflow-x: auto;
+    .hp-mock-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 24px;
+        border-bottom: 1px solid #E5E7EB;
+        background: #FAFAFA;
     }
-    .showcase-tab {
-        padding: 8px 20px; border: none; border-radius: 24px;
-        font-size: 0.875rem; font-weight: 500;
-        background: #F5F5F5; color: #737373;
-        cursor: pointer; white-space: nowrap;
-        transition: all 150ms; font-family: inherit;
+    .hp-mock-logo {
+        font-weight: 700;
+        font-size: 0.875rem;
+        color: #374151;
     }
-    .showcase-tab:hover { background: #E5E5E5; color: #0A0A0A; }
-
-    /* ── Body / Grid ── */
-    .showcase-body {
-        max-width: 1120px; margin: 0 auto;
-        padding: 32px 24px 64px;
-    }
-    .showcase-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    .hp-mock-nav-links {
+        display: flex;
         gap: 24px;
+        font-size: 0.8125rem;
+        color: #9CA3AF;
     }
-    .showcase-list {
-        grid-template-columns: 1fr;
+    .hp-mock-content {
+        padding: 32px 24px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        min-height: 300px;
     }
-    .showcase-list .showcase-card {
-        display: flex; flex-direction: row;
+    .hp-mock-card {
+        background: #F9FAFB;
+        border: 1px solid #E5E7EB;
+        border-radius: 8px;
+        height: 120px;
     }
-    .showcase-list .showcase-card-thumb {
-        width: 200px; height: auto; flex-shrink: 0;
+    .hp-mock-card-wide {
+        grid-column: span 2;
+        height: 80px;
     }
-
-    /* ── Card ── */
-    .showcase-card {
-        background: #fff; border: 1px solid #E5E5E5;
-        border-radius: 12px; overflow: hidden; cursor: pointer;
-        transition: transform 250ms cubic-bezier(0.1,0.9,0.2,1), box-shadow 250ms, border-color 200ms;
-    }
-    .showcase-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 32px rgba(0,0,0,0.1);
-        border-color: #D4D4D4;
-    }
-    .showcase-card-thumb {
-        height: 160px;
-        background: linear-gradient(135deg, #F5F5F5 0%, #E8E8E8 100%);
-        display: flex; align-items: center; justify-content: center;
-        position: relative;
-    }
-    .showcase-card-thumb-icon {
-        display: flex; flex-direction: column; align-items: center; gap: 6px;
-        opacity: 0.6;
-    }
-    .showcase-card-thumb-label {
-        font-size: 1.25rem; font-weight: 700; letter-spacing: 0.02em;
-    }
-    .showcase-card-play {
-        width: 48px; height: 48px; border-radius: 50%;
-        background: rgba(0,0,0,0.5); display: flex;
-        align-items: center; justify-content: center;
-        opacity: 0; transition: opacity 200ms;
-    }
-    .showcase-card:hover .showcase-card-play { opacity: 1; }
-    .showcase-card-body { padding: 16px 20px 20px; }
-    .showcase-card-title {
-        font-size: 1rem; font-weight: 600; color: #0A0A0A;
-        margin: 0 0 6px; line-height: 1.3;
-    }
-    .showcase-card-desc {
-        font-size: 0.8125rem; color: #737373; margin: 0 0 10px;
-        line-height: 1.5; display: -webkit-box;
-        -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-    }
-    .showcase-card-meta {
-        display: flex; gap: 12px;
-        font-size: 0.75rem; color: #A3A3A3; font-weight: 500;
+    .hp-mock-hint {
+        text-align: center;
+        padding: 16px 24px;
+        font-size: 0.75rem;
+        color: #9CA3AF;
+        border-top: 1px solid #E5E7EB;
+        margin: 0;
     }
 
-    .showcase-empty {
-        text-align: center; padding: 64px 24px;
-        color: #A3A3A3; font-size: 1rem;
+    .hp-install-info {
+        max-width: 720px;
+        margin: 32px auto;
+        padding: 0 24px;
+    }
+    .hp-install-info h2 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #111827;
+        margin: 0 0 8px;
+    }
+    .hp-install-info p {
+        font-size: 0.875rem;
+        color: #6B7280;
+        margin: 0 0 16px;
+    }
+    .hp-code {
+        background: #1F2937;
+        color: #E5E7EB;
+        padding: 16px 20px;
+        border-radius: 8px;
+        font-size: 0.8125rem;
+        font-family: 'Cascadia Code', 'JetBrains Mono', monospace;
+        overflow-x: auto;
+        line-height: 1.6;
     }
 
-    /* ── Footer ── */
-    .showcase-footer {
-        border-top: 1px solid #E5E5E5; padding: 24px;
-    }
-    .showcase-footer-inner {
-        max-width: 1120px; margin: 0 auto;
-        display: flex; align-items: center; justify-content: space-between;
-    }
-    .showcase-footer-cta {
-        padding: 10px 24px; border-radius: 8px;
-        color: #fff; text-decoration: none;
-        font-size: 0.875rem; font-weight: 600;
-    }
-    .showcase-powered { font-size: 0.75rem; color: #A3A3A3; }
-    .showcase-powered-link {
-        font-size: 0.75rem; color: #A3A3A3; text-decoration: none;
-        transition: color 150ms;
-    }
-    .showcase-powered-link:hover { color: #737373; }
-
-    /* ── Player Modal ── */
-    .showcase-player-overlay {
-        position: fixed; inset: 0; z-index: 1000;
-        background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
-        display: flex; align-items: center; justify-content: center;
-        padding: 32px;
-    }
-    .showcase-player {
-        width: 100%; max-width: 1200px; height: 90vh;
-        background: #fff; border-radius: 12px;
-        overflow: hidden; display: flex; flex-direction: column;
-        box-shadow: 0 24px 64px rgba(0,0,0,0.2);
-    }
-    .showcase-player-bar {
-        padding: 12px 16px; border-bottom: 1px solid #E5E5E5;
-        flex-shrink: 0;
-    }
-    .showcase-player-back {
-        display: inline-flex; align-items: center; gap: 8px;
-        background: none; border: none; cursor: pointer;
-        font-size: 0.875rem; font-weight: 500; color: #0A0A0A;
-        font-family: inherit;
-    }
-    .showcase-player-back:hover { color: #4361ee; }
-    .showcase-player-frame {
-        flex: 1; border: none; width: 100%;
-    }
-
-    /* ── Responsive ── */
     @@media (max-width: 768px) {
-        .showcase-header { padding: 40px 16px 32px; }
-        .showcase-title { font-size: 1.75rem; }
-        .showcase-body { padding: 24px 16px 48px; }
-        .showcase-grid { grid-template-columns: 1fr; }
-        .showcase-player-overlay { padding: 0; }
-        .showcase-player { max-width: 100%; height: 100vh; border-radius: 0; }
-    }
-
-    @@media (prefers-reduced-motion: reduce) {
-        .showcase-card { transition: none; }
-        .showcase-spinner { animation: none; }
+        .hp-mock-content {
+            grid-template-columns: 1fr;
+        }
+        .hp-mock-card-wide {
+            grid-column: span 1;
+        }
     }
 </style>
 
 @code {
     [Parameter] public string Slug { get; set; } = "";
 
-    private HubResponse? hub;
-    private HubAppearanceSettings appearance = new();
-    private HubBehaviorSettings behavior = new();
-    private Guid? activeCategory;
-    private string searchText = "";
-    private string? activeDemoSlug;
-
-    protected override async Task OnInitializedAsync()
+    private string GetBaseUrl()
     {
-        try
-        {
-            hub = await HubService.GetBySlugAsync(Slug);
-            if (hub != null && !hub.IsPublished) hub = null;
-            if (hub != null)
-            {
-                appearance = hub.Appearance;
-                behavior = hub.Behavior;
-            }
-        }
-        catch { }
-    }
-
-    private void OnSearch(ChangeEventArgs e)
-    {
-        searchText = e.Value?.ToString() ?? "";
-    }
-
-    private IEnumerable<HubItemResponse> GetFilteredItems()
-    {
-        if (hub == null) return [];
-        var items = hub.Categories
-            .Where(c => activeCategory == null || c.Id == activeCategory)
-            .SelectMany(c => c.Items);
-
-        if (!string.IsNullOrWhiteSpace(searchText))
-        {
-            items = items.Where(i =>
-                (i.TitleOverride ?? i.DemoName ?? "").Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
-                (i.DescriptionOverride ?? "").Contains(searchText, StringComparison.OrdinalIgnoreCase));
-        }
-        return items;
-    }
-
-    private void LaunchDemo(HubItemResponse item)
-    {
-        if (item.ItemType == "link" && !string.IsNullOrEmpty(item.ExternalUrl)) return;
-        if (item.DemoSlug != null) activeDemoSlug = item.DemoSlug;
-    }
-
-    private void CloseDemoPlayer() => activeDemoSlug = null;
-
-    private static readonly string[] ThumbColors = ["#4361ee", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6", "#EC4899", "#06B6D4"];
-
-    private string GetThumbColor(HubItemResponse item)
-    {
-        var name = item.TitleOverride ?? item.DemoName ?? "D";
-        return ThumbColors[Math.Abs(name.GetHashCode()) % ThumbColors.Length];
-    }
-
-    private string GetThumbInitial(HubItemResponse item)
-    {
-        var name = item.TitleOverride ?? item.DemoName ?? "D";
-        return name.Length > 0 ? name[0].ToString().ToUpper() : "D";
-    }
-
-    private string GetThumbStyle(HubItemResponse item)
-    {
-        if (!string.IsNullOrEmpty(item.ThumbnailOverride))
-            return $"background-image:url({item.ThumbnailOverride});background-size:cover;background-position:center";
-        var color = GetThumbColor(item);
-        return $"background:linear-gradient(135deg, {color}22, {color}11)";
-    }
-
-    private string GetHeaderBg()
-    {
-        if (appearance.BackgroundType == "gradient")
-            return $"linear-gradient(135deg, {appearance.BackgroundColor1}, {appearance.BackgroundColor2 ?? appearance.BackgroundColor1})";
-        return appearance.BackgroundColor1;
+        // Return the production URL for the SDK script
+        return "https://navtour.cloud";
     }
 }
