@@ -28,6 +28,11 @@ public class ChapterSettings
 
     // Closing slide options
     public bool ShowForm { get; set; }                      // show lead capture form
+
+    // Chapter type
+    public string ChapterType { get; set; } = "default";   // default | form | embed | password
+    public string? EmbedUrl { get; set; }                   // URL for embed type (Calendly, etc.)
+    public string? Password { get; set; }                   // Password for password-gated type
 }
 
 public class ChapterButton

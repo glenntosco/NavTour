@@ -3,155 +3,201 @@
 <div class="chapter-panel">
     <h3 class="chapter-panel-title">Chapter Settings</h3>
 
-    @* Layout *@
+    @* Chapter Type *@
     <div class="ch-field">
-        <label>Layout</label>
+        <label>Chapter Type</label>
         <div class="seg-buttons">
-            <button class="seg-btn @(Settings.Layout == "left" ? "active" : "")" @onclick='() => Settings.Layout = "left"'>Left</button>
-            <button class="seg-btn @(Settings.Layout == "center" ? "active" : "")" @onclick='() => Settings.Layout = "center"'>Center</button>
-            <button class="seg-btn @(Settings.Layout == "right" ? "active" : "")" @onclick='() => Settings.Layout = "right"'>Right</button>
+            <button class="seg-btn @(GetChapterType() == "default" ? "active" : "")" @onclick='() => SetChapterType("default")'>Default</button>
+            <button class="seg-btn @(GetChapterType() == "form" ? "active" : "")" @onclick='() => SetChapterType("form")'>Form</button>
+            <button class="seg-btn @(GetChapterType() == "embed" ? "active" : "")" @onclick='() => SetChapterType("embed")'>Embed</button>
+            <button class="seg-btn @(GetChapterType() == "password" ? "active" : "")" @onclick='() => SetChapterType("password")'>Password</button>
         </div>
     </div>
 
-    @* Theme *@
-    <div class="ch-field">
-        <label>Theme</label>
-        <div class="seg-buttons">
-            <button class="seg-btn @(Settings.Theme == "dark" ? "active" : "")" @onclick='() => Settings.Theme = "dark"'>Dark</button>
-            <button class="seg-btn @(Settings.Theme == "light" ? "active" : "")" @onclick='() => Settings.Theme = "light"'>Light</button>
-            <button class="seg-btn @(Settings.Theme == "custom" ? "active" : "")" @onclick='() => Settings.Theme = "custom"'>Custom</button>
-        </div>
-    </div>
-
-    @if (Settings.Theme == "custom")
+    @* Layout — default only *@
+    @if (GetChapterType() == "default")
     {
         <div class="ch-field">
-            <label>Overlay Color</label>
-            <div class="ch-color-row">
-                <input type="color" @bind="Settings.CustomOverlayColor" class="ch-color" />
-                <input type="text" @bind="Settings.CustomOverlayColor" class="ch-color-hex" />
+            <label>Layout</label>
+            <div class="seg-buttons">
+                <button class="seg-btn @(Settings.Layout == "left" ? "active" : "")" @onclick='() => Settings.Layout = "left"'>Left</button>
+                <button class="seg-btn @(Settings.Layout == "center" ? "active" : "")" @onclick='() => Settings.Layout = "center"'>Center</button>
+                <button class="seg-btn @(Settings.Layout == "right" ? "active" : "")" @onclick='() => Settings.Layout = "right"'>Right</button>
             </div>
         </div>
+
+        @* Theme *@
         <div class="ch-field">
-            <label>Text Color</label>
-            <div class="ch-color-row">
-                <input type="color" @bind="Settings.CustomTextColor" class="ch-color" />
-                <input type="text" @bind="Settings.CustomTextColor" class="ch-color-hex" />
+            <label>Theme</label>
+            <div class="seg-buttons">
+                <button class="seg-btn @(Settings.Theme == "dark" ? "active" : "")" @onclick='() => Settings.Theme = "dark"'>Dark</button>
+                <button class="seg-btn @(Settings.Theme == "light" ? "active" : "")" @onclick='() => Settings.Theme = "light"'>Light</button>
+                <button class="seg-btn @(Settings.Theme == "custom" ? "active" : "")" @onclick='() => Settings.Theme = "custom"'>Custom</button>
+            </div>
+        </div>
+
+        @if (Settings.Theme == "custom")
+        {
+            <div class="ch-field">
+                <label>Overlay Color</label>
+                <div class="ch-color-row">
+                    <input type="color" @bind="Settings.CustomOverlayColor" class="ch-color" />
+                    <input type="text" @bind="Settings.CustomOverlayColor" class="ch-color-hex" />
+                </div>
+            </div>
+            <div class="ch-field">
+                <label>Text Color</label>
+                <div class="ch-color-row">
+                    <input type="color" @bind="Settings.CustomTextColor" class="ch-color" />
+                    <input type="text" @bind="Settings.CustomTextColor" class="ch-color-hex" />
+                </div>
+            </div>
+        }
+
+        @* Opacity and Blur *@
+        <div class="ch-field">
+            <label>Opacity and Blur: @Settings.BackdropOpacity</label>
+            <input type="range" min="0" max="100" @bind="Settings.BackdropOpacity" @bind:event="oninput"
+                style="width:100%;accent-color:var(--nt-accent)" />
+        </div>
+
+        @* Logo *@
+        <div class="ch-field">
+            <label>Logo</label>
+            <span class="ch-hint">Configured in Themes</span>
+            <div class="seg-buttons">
+                <button class="seg-btn @(!Settings.ShowLogo ? "active" : "")" @onclick="() => Settings.ShowLogo = false">Hide</button>
+                <button class="seg-btn @(Settings.ShowLogo ? "active" : "")" @onclick="() => Settings.ShowLogo = true">Show</button>
             </div>
         </div>
     }
 
-    @* Opacity and Blur *@
-    <div class="ch-field">
-        <label>Opacity and Blur: @Settings.BackdropOpacity</label>
-        <input type="range" min="0" max="100" @bind="Settings.BackdropOpacity" @bind:event="oninput"
-            style="width:100%;accent-color:var(--nt-accent)" />
-    </div>
-
-    @* Logo *@
-    <div class="ch-field">
-        <label>Logo</label>
-        <span class="ch-hint">Configured in Themes</span>
-        <div class="seg-buttons">
-            <button class="seg-btn @(!Settings.ShowLogo ? "active" : "")" @onclick="() => Settings.ShowLogo = false">Hide</button>
-            <button class="seg-btn @(Settings.ShowLogo ? "active" : "")" @onclick="() => Settings.ShowLogo = true">Show</button>
-        </div>
-    </div>
-
-    @* Title *@
+    @* Title — always shown *@
     <div class="ch-field">
         <label>Title</label>
         <RadzenTextBox @bind-Value="Settings.Title" Style="width:100%" />
     </div>
 
-    @* Description *@
-    <div class="ch-field">
-        <label>Description</label>
-        <RadzenTextArea @bind-Value="Settings.Description" Rows="3" Style="width:100%" />
-    </div>
-
-    @* Cover Image *@
-    <div class="ch-field">
-        <label>Cover Image</label>
-        <div class="seg-buttons">
-            <button class="seg-btn @(Settings.BackgroundType == "none" ? "active" : "")" @onclick='() => Settings.BackgroundType = "none"'>None</button>
-            <button class="seg-btn @(Settings.BackgroundType == "step" || Settings.BackgroundType == "frame" ? "active" : "")" @onclick='() => Settings.BackgroundType = "step"'>Step</button>
-            <button class="seg-btn @(Settings.BackgroundType == "custom" ? "active" : "")" @onclick='() => Settings.BackgroundType = "custom"'>Custom</button>
-        </div>
-    </div>
-
-    @if (Settings.BackgroundType == "step" || Settings.BackgroundType == "frame")
+    @* Description — always shown (except embed) *@
+    @if (GetChapterType() != "embed")
     {
         <div class="ch-field">
-            <label>Background Step</label>
-            <RadzenDropDown TValue="int?" @bind-Value="Settings.BackgroundStepNumber"
-                Data="@stepOptions" TextProperty="Text" ValueProperty="Value"
-                Placeholder="First content step" Style="width:100%" AllowClear="true" />
+            <label>Description</label>
+            <RadzenTextArea @bind-Value="Settings.Description" Rows="3" Style="width:100%" />
         </div>
     }
 
-    @if (Settings.BackgroundType == "custom")
+    @* Background / Cover Image — default only *@
+    @if (GetChapterType() == "default")
     {
         <div class="ch-field">
-            <label>Image URL</label>
-            <RadzenTextBox @bind-Value="Settings.BackgroundUrl" Placeholder="https://..." Style="width:100%" />
+            <label>Cover Image</label>
+            <div class="seg-buttons">
+                <button class="seg-btn @(Settings.BackgroundType == "none" ? "active" : "")" @onclick='() => Settings.BackgroundType = "none"'>None</button>
+                <button class="seg-btn @(Settings.BackgroundType == "step" || Settings.BackgroundType == "frame" ? "active" : "")" @onclick='() => Settings.BackgroundType = "step"'>Step</button>
+                <button class="seg-btn @(Settings.BackgroundType == "custom" ? "active" : "")" @onclick='() => Settings.BackgroundType = "custom"'>Custom</button>
+            </div>
         </div>
-    }
 
-    @* Browser Chrome *@
-    <div class="ch-field">
-        <label>Browser Frame</label>
-        <RadzenSwitch @bind-Value="Settings.ShowBrowserChrome" />
-    </div>
-
-    @* Buttons *@
-    <div class="ch-field">
-        <label>Buttons</label>
-        @if (Settings.Buttons == null) { Settings.Buttons = [new()]; }
-        @for (int i = 0; i < Settings.Buttons.Count; i++)
+        @if (Settings.BackgroundType == "step" || Settings.BackgroundType == "frame")
         {
-            var idx = i;
-            var btn = Settings.Buttons[idx];
-            <div class="ch-btn-card">
-                <div class="ch-btn-row">
-                    <input type="text" @bind="btn.Text" @bind:event="oninput" class="ch-btn-text" placeholder="Button text" />
-                    <input type="color" @bind="btn.Color" class="ch-color-sm" title="Button color" />
-                    @if (Settings.Buttons.Count > 1)
-                    {
-                        <button class="ch-btn-delete" @onclick="() => Settings.Buttons.RemoveAt(idx)" title="Remove">&times;</button>
-                    }
-                </div>
-                <div class="ch-btn-row">
-                    <div class="seg-buttons seg-sm">
-                        <button class="seg-btn @(btn.Style == "filled" ? "active" : "")" @onclick='() => btn.Style = "filled"'>Filled</button>
-                        <button class="seg-btn @(btn.Style == "outline" ? "active" : "")" @onclick='() => btn.Style = "outline"'>Outline</button>
-                        <button class="seg-btn @(btn.Style == "ghost" ? "active" : "")" @onclick='() => btn.Style = "ghost"'>Ghost</button>
-                    </div>
-                </div>
-                <div class="ch-btn-row">
-                    <label class="ch-mini-label">Link to:</label>
-                    <div class="seg-buttons seg-sm">
-                        <button class="seg-btn @(btn.ActionType == "step" ? "active" : "")" @onclick='() => btn.ActionType = "step"'>Steps</button>
-                        <button class="seg-btn @(btn.ActionType == "url" ? "active" : "")" @onclick='() => btn.ActionType = "url"'>URL</button>
-                    </div>
-                </div>
-                @if (btn.ActionType == "step")
-                {
-                    <RadzenDropDown TValue="int?" @bind-Value="btn.ActionStepNumber"
-                        Data="@stepOptions" TextProperty="Text" ValueProperty="Value"
-                        Placeholder="Next step" Style="width:100%;font-size:12px" AllowClear="true" />
-                }
-                else
-                {
-                    <RadzenTextBox @bind-Value="btn.ActionUrl" Placeholder="https://..." Style="width:100%;font-size:12px" />
-                }
+            <div class="ch-field">
+                <label>Background Step</label>
+                <RadzenDropDown TValue="int?" @bind-Value="Settings.BackgroundStepNumber"
+                    Data="@stepOptions" TextProperty="Text" ValueProperty="Value"
+                    Placeholder="First content step" Style="width:100%" AllowClear="true" />
             </div>
         }
-        <button class="ch-add-btn" @onclick="() => Settings.Buttons.Add(new ChapterButton())">+ Add Button</button>
-    </div>
 
-    @* Show Form (closing slide only) *@
-    @if (IsClosingSlide)
+        @if (Settings.BackgroundType == "custom")
+        {
+            <div class="ch-field">
+                <label>Image URL</label>
+                <RadzenTextBox @bind-Value="Settings.BackgroundUrl" Placeholder="https://..." Style="width:100%" />
+            </div>
+        }
+
+        @* Browser Chrome *@
+        <div class="ch-field">
+            <label>Browser Frame</label>
+            <RadzenSwitch @bind-Value="Settings.ShowBrowserChrome" />
+        </div>
+
+        @* Buttons *@
+        <div class="ch-field">
+            <label>Buttons</label>
+            @if (Settings.Buttons == null) { Settings.Buttons = [new()]; }
+            @for (int i = 0; i < Settings.Buttons.Count; i++)
+            {
+                var idx = i;
+                var btn = Settings.Buttons[idx];
+                <div class="ch-btn-card">
+                    <div class="ch-btn-row">
+                        <input type="text" @bind="btn.Text" @bind:event="oninput" class="ch-btn-text" placeholder="Button text" />
+                        <input type="color" @bind="btn.Color" class="ch-color-sm" title="Button color" />
+                        @if (Settings.Buttons.Count > 1)
+                        {
+                            <button class="ch-btn-delete" @onclick="() => Settings.Buttons.RemoveAt(idx)" title="Remove">&times;</button>
+                        }
+                    </div>
+                    <div class="ch-btn-row">
+                        <div class="seg-buttons seg-sm">
+                            <button class="seg-btn @(btn.Style == "filled" ? "active" : "")" @onclick='() => btn.Style = "filled"'>Filled</button>
+                            <button class="seg-btn @(btn.Style == "outline" ? "active" : "")" @onclick='() => btn.Style = "outline"'>Outline</button>
+                            <button class="seg-btn @(btn.Style == "ghost" ? "active" : "")" @onclick='() => btn.Style = "ghost"'>Ghost</button>
+                        </div>
+                    </div>
+                    <div class="ch-btn-row">
+                        <label class="ch-mini-label">Link to:</label>
+                        <div class="seg-buttons seg-sm">
+                            <button class="seg-btn @(btn.ActionType == "step" ? "active" : "")" @onclick='() => btn.ActionType = "step"'>Steps</button>
+                            <button class="seg-btn @(btn.ActionType == "url" ? "active" : "")" @onclick='() => btn.ActionType = "url"'>URL</button>
+                        </div>
+                    </div>
+                    @if (btn.ActionType == "step")
+                    {
+                        <RadzenDropDown TValue="int?" @bind-Value="btn.ActionStepNumber"
+                            Data="@stepOptions" TextProperty="Text" ValueProperty="Value"
+                            Placeholder="Next step" Style="width:100%;font-size:12px" AllowClear="true" />
+                    }
+                    else
+                    {
+                        <RadzenTextBox @bind-Value="btn.ActionUrl" Placeholder="https://..." Style="width:100%;font-size:12px" />
+                    }
+                </div>
+            }
+            <button class="ch-add-btn" @onclick="() => Settings.Buttons.Add(new ChapterButton())">+ Add Button</button>
+        </div>
+    }
+
+    @* Type-specific fields *@
+    @if (GetChapterType() == "embed")
+    {
+        <div class="ch-field">
+            <label>Embed URL</label>
+            <RadzenTextBox @bind-Value="Settings.EmbedUrl" Placeholder="https://calendly.com/..." Style="width:100%" />
+        </div>
+    }
+
+    @if (GetChapterType() == "password")
+    {
+        <div class="ch-field">
+            <label>Password</label>
+            <RadzenTextBox @bind-Value="Settings.Password" Placeholder="Enter password to gate this demo" Style="width:100%" />
+        </div>
+    }
+
+    @if (GetChapterType() == "form")
+    {
+        <div class="ch-field">
+            <label>Show Lead Capture Form</label>
+            <span class="ch-hint">Display the demo's configured form</span>
+            <RadzenSwitch @bind-Value="Settings.ShowForm" />
+        </div>
+    }
+
+    @* Show Form (closing slide + default type) *@
+    @if (IsClosingSlide && GetChapterType() == "default")
     {
         <div class="ch-field">
             <label>Show Lead Capture Form</label>
@@ -205,6 +251,9 @@
     private List<object> stepOptions => Enumerable.Range(1, Math.Max(1, TotalSteps))
         .Select(i => (object)new { Text = $"Step {i}", Value = (int?)i })
         .ToList();
+
+    private string GetChapterType() => Settings.ChapterType ?? "default";
+    private void SetChapterType(string type) => Settings.ChapterType = type;
 
     private async Task HandleSave() => await OnSave.InvokeAsync(Settings);
 }
