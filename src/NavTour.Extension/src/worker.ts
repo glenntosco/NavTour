@@ -908,8 +908,9 @@ async function handlePopupStartScreenshot(msg: any): Promise<any> {
   });
   session.mode = 'screenshot';
 
-  // Inject floating toolbar at bottom (same as HTML capture)
-  setTimeout(() => injectToolbarInTab(tab.id!, session), 300);
+  // Inject floating toolbar — use await + small delay to ensure content scripts are ready
+  await new Promise(resolve => setTimeout(resolve, 500));
+  injectToolbarInTab(tab.id, session);
 
   return { success: true, tabId: tab.id, ...session };
 }
