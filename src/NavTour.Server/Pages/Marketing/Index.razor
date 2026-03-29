@@ -1,6 +1,5 @@
 @page "/"
 @layout MarketingLayout
-@rendermode InteractiveServer
 
 <PageTitle>NavTour — Interactive Product Demos That Sell</PageTitle>
 <HeadContent>
@@ -18,764 +17,839 @@
     <link rel="alternate" hreflang="x-default" href="https://navtour.cloud/" />
 </HeadContent>
 
-@* ── 1. Hero — Centered, editorial, confident ── *@
-<section class="home-hero">
-    <div class="home-container">
-        <RadzenStack AlignItems="AlignItems.Center" Gap="0">
-            <span class="home-overline">Interactive Product Demos</span>
-            <h1 class="home-headline">Accelerate the buyer<br />journey with demos</h1>
-            <p class="home-subtitle">
-                From first touch on the website, to pre-call discovery and post-call follow up,
-                speed up every step of the buyer journey with NavTour's demo automation platform.
-            </p>
-            <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap" Class="rz-mt-10">
-                <a href="/product" class="home-btn home-btn-dark">Explore product <span class="home-arrow-down">&#8595;</span></a>
-                <a href="/contact" class="home-btn home-btn-outlined">Book a Demo</a>
-            </RadzenStack>
-
-            @* Product selector pills *@
-            <div class="home-product-pills">
-                <button class="home-pill @(_activeProduct == 0 ? "active" : "")" @onclick="() => _activeProduct = 0">
-                    <span class="home-dot home-dot-blue"></span> Interactive Demos
-                </button>
-                <button class="home-pill @(_activeProduct == 1 ? "active" : "")" @onclick="() => _activeProduct = 1">
-                    <span class="home-dot home-dot-teal"></span> Demo Hub
-                </button>
-                <button class="home-pill @(_activeProduct == 2 ? "active" : "")" @onclick="() => _activeProduct = 2">
-                    <span class="home-dot home-dot-orange"></span> Analytics
-                </button>
-            </div>
-
-            @* Live interactive demo embed *@
-            <div class="home-hero-screenshot" style="position: relative; width: 100%; max-width: 1000px; margin: 0 auto;">
-                <div style="position: relative; padding-bottom: 62.5%; height: 0; overflow: hidden;">
-                    <iframe
-                        src="/demo/navtour"
-                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; border-radius: 8px;"
-                        loading="lazy"
-                        title="NavTour Interactive Demo"
-                        allowfullscreen></iframe>
-                </div>
-            </div>
-        </RadzenStack>
-    </div>
-</section>
-
-@* ── 2. Trusted By (light gray bg) ── *@
-<section class="home-section home-section-gray">
-    <div class="home-container">
-        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap" Gap="1rem" Class="rz-mb-8">
-            <span class="home-section-label">Trusted by innovative teams</span>
-            <a href="/customers" class="home-link">Meet our customers <span>&rarr;</span></a>
-        </RadzenStack>
-        <div class="home-logos">
-            <span class="home-logo-placeholder">Acme Corp</span>
-            <span class="home-logo-placeholder">Beacon AI</span>
-            <span class="home-logo-placeholder">CloudStack</span>
-            <span class="home-logo-placeholder">DataPulse</span>
-            <span class="home-logo-placeholder">Elevate</span>
-            <span class="home-logo-placeholder">FinOps.io</span>
-        </div>
-    </div>
-</section>
-
-@* ── 3. Product Features — 3 vertical cards (white bg) ── *@
-<section class="home-section">
-    <div class="home-container">
-        @* Card 1: Interactive Demos *@
-        <div class="home-feature-card">
-            <RadzenRow Gap="2rem" Class="rz-align-items-center">
-                <RadzenColumn Size="12" SizeMD="5">
-                    <div class="home-feature-label"><span class="home-dot home-dot-blue"></span> Interactive Demos</div>
-                    <h2 class="home-feature-headline">Build interactive demos faster with AI Copilot</h2>
-                    <p class="home-feature-desc">
-                        Capture your product with our Chrome extension, then let AI generate guided tours
-                        with tooltips, hotspots, and branching logic. No coding required.
-                    </p>
-                    <a href="/product" class="home-link">Explore Interactive Demos <span>&rarr;</span></a>
-                </RadzenColumn>
-                <RadzenColumn Size="12" SizeMD="7">
-                    <div class="home-feature-image-placeholder">
-                        <span>Interactive Demos Preview</span>
-                    </div>
-                </RadzenColumn>
-            </RadzenRow>
-        </div>
-
-        @* Card 2: Demo Hub *@
-        <div class="home-feature-card">
-            <RadzenRow Gap="2rem" Class="rz-align-items-center">
-                <RadzenColumn Size="12" SizeMD="5">
-                    <div class="home-feature-label"><span class="home-dot home-dot-teal"></span> Demo Hub</div>
-                    <h2 class="home-feature-headline">Demo automation for live demos and pre &amp; post-call discovery</h2>
-                    <p class="home-feature-desc">
-                        A centralized library where prospects self-serve demos by persona, use case, or product line.
-                        Reduces sales friction and lets buyers explore on their own terms.
-                    </p>
-                    <a href="/product" class="home-link">Explore Demo Hub <span>&rarr;</span></a>
-                </RadzenColumn>
-                <RadzenColumn Size="12" SizeMD="7">
-                    <div class="home-feature-image-placeholder">
-                        <span>Demo Hub Preview</span>
-                    </div>
-                </RadzenColumn>
-            </RadzenRow>
-        </div>
-
-        @* Card 3: Analytics *@
-        <div class="home-feature-card">
-            <RadzenRow Gap="2rem" Class="rz-align-items-center">
-                <RadzenColumn Size="12" SizeMD="5">
-                    <div class="home-feature-label"><span class="home-dot home-dot-orange"></span> Analytics</div>
-                    <h2 class="home-feature-headline">Track engagement and feed intent data to your CRM</h2>
-                    <p class="home-feature-desc">
-                        Know who viewed your demos, how far they got, where they dropped off,
-                        and which features generated the most interest. Feed data directly into your CRM.
-                    </p>
-                    <a href="/product" class="home-link">Explore Analytics <span>&rarr;</span></a>
-                </RadzenColumn>
-                <RadzenColumn Size="12" SizeMD="7">
-                    <div class="home-feature-image-placeholder">
-                        <span>Analytics Preview</span>
-                    </div>
-                </RadzenColumn>
-            </RadzenRow>
-        </div>
-    </div>
-</section>
-
-@* ── 4. Buyer Journey (light gray bg) ── *@
-<section class="home-section home-section-gray">
-    <div class="home-container">
-        <h2 class="home-section-headline">Use demos at any point in the buyer journey.</h2>
-        <RadzenRow Gap="3rem" Class="rz-mt-10">
-            <RadzenColumn Size="12" SizeMD="5">
-                <div class="home-journey-image-placeholder">
-                    <span>Buyer Journey Visual</span>
-                </div>
-            </RadzenColumn>
-            <RadzenColumn Size="12" SizeMD="7">
-                <div class="home-journey-list">
-                    <div class="home-journey-item">
-                        <div class="home-journey-item-header">
-                            <span class="home-dot home-dot-blue"></span>
-                            <span class="home-journey-label">Retargeting campaigns</span>
-                        </div>
-                        <h3 class="home-journey-title">LinkedIn, Google, Reddit Ads</h3>
-                        <p class="home-journey-desc">Replace static landing pages with interactive demos that convert ad clicks into qualified pipeline.</p>
-                    </div>
-                    <div class="home-journey-item">
-                        <div class="home-journey-item-header">
-                            <span class="home-dot home-dot-teal"></span>
-                            <span class="home-journey-label">Website embed</span>
-                        </div>
-                        <h3 class="home-journey-title">Persona or use-case website embeds</h3>
-                        <p class="home-journey-desc">Let visitors explore your product on your homepage before they ever talk to sales.</p>
-                    </div>
-                    <div class="home-journey-item">
-                        <div class="home-journey-item-header">
-                            <span class="home-dot home-dot-orange"></span>
-                            <span class="home-journey-label">Pre-call discovery</span>
-                        </div>
-                        <h3 class="home-journey-title">Pre-live demo asset</h3>
-                        <p class="home-journey-desc">Send personalized demos before meetings so prospects arrive educated and ready to buy.</p>
-                    </div>
-                    <div class="home-journey-item">
-                        <div class="home-journey-item-header">
-                            <span class="home-dot home-dot-blue"></span>
-                            <span class="home-journey-label">Champion enablement</span>
-                        </div>
-                        <h3 class="home-journey-title">Post-call follow-up</h3>
-                        <p class="home-journey-desc">Reinforce your pitch with a shareable walkthrough champions can forward to decision makers.</p>
-                    </div>
-                    <div class="home-journey-item">
-                        <div class="home-journey-item-header">
-                            <span class="home-dot home-dot-teal"></span>
-                            <span class="home-journey-label">Upsell campaigns</span>
-                        </div>
-                        <h3 class="home-journey-title">Feature launches</h3>
-                        <p class="home-journey-desc">Show existing customers the features they haven't discovered yet to drive expansion revenue.</p>
-                    </div>
-                    <div class="home-journey-item">
-                        <div class="home-journey-item-header">
-                            <span class="home-dot home-dot-orange"></span>
-                            <span class="home-journey-label">Booth enablement</span>
-                        </div>
-                        <h3 class="home-journey-title">Conference demos</h3>
-                        <p class="home-journey-desc">Run polished, self-guided demos at trade shows without needing a live environment.</p>
-                    </div>
-                </div>
-            </RadzenColumn>
-        </RadzenRow>
-    </div>
-</section>
-
-@* ── 5. Social Proof / G2 (white bg) ── *@
-<section class="home-section">
-    <div class="home-container" style="text-align: center">
-        <div class="home-g2-stars">&#9733; &#9733; &#9733; &#9733; &#9733;</div>
-        <p class="home-g2-rating">4.8 stars &middot; 700+ reviews</p>
-        <h2 class="home-section-headline">Top-rated platform and customer service</h2>
-    </div>
-</section>
-
-@* ── 6. Impact Metrics (white bg) ── *@
-<section class="home-section" style="padding-bottom: 3rem">
-    <div class="home-container">
-        <h2 class="home-section-headline" style="margin-bottom: 3rem">Impact that's impossible to ignore.</h2>
-        <div class="home-metrics-row">
-            <div class="home-metric-card">
-                <span class="home-metric-value">$10M</span>
-                <span class="home-metric-label">ARR influenced</span>
-            </div>
-            <div class="home-metric-card">
-                <span class="home-metric-value">450%</span>
-                <span class="home-metric-label">increase in trial signups</span>
-            </div>
-            <div class="home-metric-card">
-                <span class="home-metric-value">1,000s</span>
-                <span class="home-metric-label">of high-intent leads</span>
-            </div>
-            <div class="home-metric-card">
-                <span class="home-metric-value">15%</span>
-                <span class="home-metric-label">of website leads</span>
-            </div>
-        </div>
-    </div>
-</section>
-
-@* ── 7. Customer Logos + Testimonial (light gray bg) ── *@
-<section class="home-section home-section-gray">
-    <div class="home-container">
-        <div class="home-logos rz-mb-10">
-            <span class="home-logo-placeholder">Acme Corp</span>
-            <span class="home-logo-placeholder">Beacon AI</span>
-            <span class="home-logo-placeholder">CloudStack</span>
-            <span class="home-logo-placeholder">DataPulse</span>
-            <span class="home-logo-placeholder">Elevate</span>
-        </div>
-        <blockquote class="home-testimonial">
-            <p>&ldquo;Since launching NavTour, it's been responsible for 15% of the leads on our website.&rdquo;</p>
-            <footer>
-                <strong>VP of Marketing</strong>
-                <span class="home-testimonial-company">Enterprise SaaS Company</span>
-            </footer>
-        </blockquote>
-    </div>
-</section>
-
-@* ── 8. Final CTA (white bg) ── *@
-<section class="home-section home-cta-section">
-    <div class="home-container" style="text-align: center">
-        <h2 class="home-headline" style="font-size: clamp(2rem, 4vw, 3.5rem); margin-bottom: 1rem">Turn demos into deals.</h2>
-        <p class="home-subtitle" style="margin-bottom: 2.5rem">
-            Join hundreds of teams using NavTour to accelerate their sales pipeline.
+@* ── 1. Hero ── *@
+<section class="nt-hero">
+    <div class="nt-container">
+        <span class="nt-badge">The #1 Demo Automation Platform</span>
+        <h1 class="nt-hero-h1">Exceptional product demos<br />in minutes, not days</h1>
+        <p class="nt-hero-sub">
+            Capture your product, build guided walkthroughs, and share interactive demos
+            that accelerate every stage of the buyer journey.
         </p>
-        <form class="home-cta-form" @onsubmit:preventDefault>
-            <input type="email" placeholder="Enter your work email" class="home-cta-input" @bind="_ctaEmail" />
-            <a href="/contact" class="home-btn home-btn-dark">Book a demo</a>
-        </form>
+        <div class="nt-hero-ctas">
+            <a href="/contact" class="nt-btn nt-btn-outline">Request a demo</a>
+            <a href="/register" class="nt-btn nt-btn-primary">Start for free <span class="nt-arrow">&rarr;</span></a>
+        </div>
+        <div class="nt-social-proof">
+            <span class="nt-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+            <span class="nt-proof-text">Rated #1 on G2</span>
+        </div>
+        <div class="nt-hero-demo">
+            <div class="nt-hero-demo-inner">
+                <iframe
+                    src="/demo/navtour"
+                    loading="lazy"
+                    title="NavTour Interactive Demo"
+                    allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+</section>
+
+@* ── 2. Trust Bar ── *@
+<section class="nt-trust">
+    <div class="nt-container">
+        <p class="nt-trust-label">Trusted by teams at</p>
+        <div class="nt-trust-logos">
+            <span>Acme Corp</span>
+            <span>Beacon AI</span>
+            <span>CloudStack</span>
+            <span>DataPulse</span>
+            <span>Elevate</span>
+            <span>FinOps.io</span>
+        </div>
+    </div>
+</section>
+
+@* ── 3. Feature Tabs ── *@
+<section class="nt-section">
+    <div class="nt-container">
+        <h2 class="nt-section-h2">Creating elegant product demos<br />doesn't have to be painful</h2>
+        <div class="nt-tabs">
+            <button class="nt-tab @(_activeFeatureTab == 0 ? "active" : "")" @onclick="() => _activeFeatureTab = 0">Screenshot &amp; Video</button>
+            <button class="nt-tab @(_activeFeatureTab == 1 ? "active" : "")" @onclick="() => _activeFeatureTab = 1">Guided HTML</button>
+            <button class="nt-tab @(_activeFeatureTab == 2 ? "active" : "")" @onclick="() => _activeFeatureTab = 2">Demo Hub</button>
+            <button class="nt-tab @(_activeFeatureTab == 3 ? "active" : "")" @onclick="() => _activeFeatureTab = 3">Analytics</button>
+        </div>
+        <div class="nt-tab-content">
+            @if (_activeFeatureTab == 0)
+            {
+                <div class="nt-tab-panel">
+                    <div class="nt-tab-text">
+                        <h3>Pixel-perfect captures in one click</h3>
+                        <p>Our Chrome extension captures any web application as a high-fidelity screenshot or video clip. No staging environments, no dev resources.</p>
+                        <ul class="nt-check-list">
+                            <li>Full-page and element-level captures</li>
+                            <li>Automatic asset optimization</li>
+                            <li>Video recording with annotations</li>
+                        </ul>
+                    </div>
+                    <div class="nt-tab-visual">
+                        <div class="nt-tab-placeholder">Screenshot &amp; Video</div>
+                    </div>
+                </div>
+            }
+            else if (_activeFeatureTab == 1)
+            {
+                <div class="nt-tab-panel">
+                    <div class="nt-tab-text">
+                        <h3>Interactive HTML walkthroughs</h3>
+                        <p>Capture your product as real HTML and CSS, then overlay guided tooltips, hotspots, and branching logic. Visitors click through your actual UI.</p>
+                        <ul class="nt-check-list">
+                            <li>Tooltips, modals, and hotspot annotations</li>
+                            <li>Branching paths based on user choice</li>
+                            <li>Personalization tokens like &#123;&#123;company&#125;&#125;</li>
+                        </ul>
+                    </div>
+                    <div class="nt-tab-visual">
+                        <div class="nt-tab-placeholder">Guided HTML</div>
+                    </div>
+                </div>
+            }
+            else if (_activeFeatureTab == 2)
+            {
+                <div class="nt-tab-panel">
+                    <div class="nt-tab-text">
+                        <h3>A centralized demo library</h3>
+                        <p>Organize demos by persona, use case, or product line. Let prospects self-serve the right demo at the right time without waiting for sales.</p>
+                        <ul class="nt-check-list">
+                            <li>Filterable demo collections</li>
+                            <li>Embeddable on your website</li>
+                            <li>Lead capture gates per demo</li>
+                        </ul>
+                    </div>
+                    <div class="nt-tab-visual">
+                        <div class="nt-tab-placeholder">Demo Hub</div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="nt-tab-panel">
+                    <div class="nt-tab-text">
+                        <h3>Know what moves the needle</h3>
+                        <p>Track who viewed your demos, how far they got, and which features generated the most interest. Feed intent data straight into your CRM.</p>
+                        <ul class="nt-check-list">
+                            <li>Viewer-level engagement analytics</li>
+                            <li>Drop-off and completion rates</li>
+                            <li>CRM and Slack integrations</li>
+                        </ul>
+                    </div>
+                    <div class="nt-tab-visual">
+                        <div class="nt-tab-placeholder">Analytics</div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+@* ── 4. Feature Cards (3-column) ── *@
+<section class="nt-section nt-section-alt">
+    <div class="nt-container">
+        <h2 class="nt-section-h2">Professional product demos, fast and easy</h2>
+        <div class="nt-cards-row">
+            <div class="nt-card">
+                <div class="nt-card-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+                </div>
+                <h3>Capture Anything</h3>
+                <p>Our Chrome extension captures any web app as HTML, CSS, screenshots, or video — no dev resources required.</p>
+            </div>
+            <div class="nt-card">
+                <div class="nt-card-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                </div>
+                <h3>Edit &amp; Personalize</h3>
+                <p>Edit text, blur sensitive data, add tooltips and hotspots. Personalize with dynamic tokens for each prospect.</p>
+            </div>
+            <div class="nt-card">
+                <div class="nt-card-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                </div>
+                <h3>Share &amp; Track</h3>
+                <p>Share via link, embed on your site, or use in ad campaigns. Track viewer engagement and feed data to your CRM.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+@* ── 5. Dark Section ── *@
+<section class="nt-dark">
+    <div class="nt-container">
+        <div class="nt-dark-grid">
+            <div class="nt-dark-text">
+                <h2>The fastest way to create interactive demos</h2>
+                <div class="nt-dark-features">
+                    <div class="nt-dark-feature">
+                        <h4>No-code builder</h4>
+                        <p>Point-and-click editor that anyone on your team can use. No engineering tickets, no staging environments.</p>
+                    </div>
+                    <div class="nt-dark-feature">
+                        <h4>AI-powered editing</h4>
+                        <p>Let AI generate step descriptions, suggest annotations, and optimize your demo flow for maximum engagement.</p>
+                    </div>
+                    <div class="nt-dark-feature">
+                        <h4>Instant personalization</h4>
+                        <p>Dynamic tokens replace company names, logos, and data so every prospect sees a demo built for them.</p>
+                    </div>
+                    <div class="nt-dark-feature">
+                        <h4>Embed anywhere</h4>
+                        <p>Drop demos into your website, knowledge base, sales emails, or ad landing pages with a single embed code.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="nt-dark-visual">
+                <div class="nt-dark-placeholder">Product Screenshot</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@* ── 6. Stats ── *@
+<section class="nt-section">
+    <div class="nt-container">
+        <div class="nt-stats-row">
+            <div class="nt-stat">
+                <span class="nt-stat-value">10x</span>
+                <span class="nt-stat-label">Faster demo creation</span>
+            </div>
+            <div class="nt-stat">
+                <span class="nt-stat-value">67%</span>
+                <span class="nt-stat-label">Higher engagement</span>
+            </div>
+            <div class="nt-stat">
+                <span class="nt-stat-value">3x</span>
+                <span class="nt-stat-label">More pipeline generated</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+@* ── 7. CTA Section ── *@
+<section class="nt-cta">
+    <div class="nt-container nt-cta-inner">
+        <h2>The fastest way to create<br />interactive product demos</h2>
+        <p>Join hundreds of teams using NavTour to turn demos into deals.</p>
+        <a href="/register" class="nt-btn nt-btn-white">Start for free <span class="nt-arrow">&rarr;</span></a>
     </div>
 </section>
 
 @code {
     private int _activeProduct = 0;
-    private string _ctaEmail = "";
+    private int _activeFeatureTab = 0;
 }
 
 <style>
-    /* ── Typography ── */
-    .home-headline,
-    .home-feature-headline,
-    .home-section-headline,
-    .home-metric-value {
-        font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
-        color: #0F172A;
-    }
-
-    /* ── Container ── */
-    .home-container {
-        max-width: 1200px;
+    /* ── Reset & Base ── */
+    .nt-container {
+        max-width: 1280px;
         margin: 0 auto;
         padding: 0 1.5rem;
     }
 
     /* ── Section Spacing ── */
-    .home-section {
-        padding: 6rem 0;
+    .nt-section {
+        padding: 96px 0;
     }
 
-    .home-section-gray {
-        background: #F8FAFC;
+    .nt-section-alt {
+        background: #F9FAFB;
     }
 
     /* ── Hero ── */
-    .home-hero {
-        padding: 6rem 0 4rem;
+    .nt-hero {
+        padding: 96px 0 64px;
+        text-align: center;
         background: #fff;
     }
 
-    .home-overline {
+    .nt-badge {
         display: inline-block;
-        font-family: 'Inter', sans-serif;
+        font-family: 'Segoe UI', system-ui, sans-serif;
         font-size: 0.875rem;
         font-weight: 600;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-        color: #64748B;
-        margin-bottom: 1.5rem;
+        color: #2563EB;
+        background: #EFF6FF;
+        padding: 6px 16px;
+        border-radius: 9999px;
+        margin-bottom: 24px;
+        letter-spacing: 0.01em;
     }
 
-    .home-headline {
-        font-size: clamp(2.5rem, 5.5vw, 4.5rem);
-        font-weight: 800;
-        line-height: 1.08;
+    .nt-hero-h1 {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: 48px;
+        font-weight: 700;
+        line-height: 1.1;
         letter-spacing: -0.025em;
-        text-align: center;
-        margin: 0 0 1.5rem;
-        color: #0F172A;
+        color: #111827;
+        margin: 0 0 20px;
     }
 
-    .home-subtitle {
-        font-family: 'Inter', sans-serif;
+    .nt-hero-sub {
+        font-family: 'Segoe UI', system-ui, sans-serif;
         font-size: 1.125rem;
-        line-height: 1.7;
-        color: #64748B;
-        text-align: center;
-        max-width: 640px;
-        margin: 0 auto;
+        line-height: 1.6;
+        color: #6B7280;
+        max-width: 600px;
+        margin: 0 auto 32px;
+    }
+
+    .nt-hero-ctas {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 32px;
     }
 
     /* ── Buttons ── */
-    .home-btn {
+    .nt-btn {
         display: inline-flex;
         align-items: center;
-        gap: 0.5rem;
-        font-family: 'Inter', sans-serif;
+        gap: 6px;
+        font-family: 'Segoe UI', system-ui, sans-serif;
         font-size: 1rem;
         font-weight: 600;
-        padding: 0.875rem 2rem;
+        padding: 12px 28px;
         border-radius: 8px;
         text-decoration: none;
-        transition: all 0.15s ease;
         cursor: pointer;
         border: none;
+        transition: background 200ms ease, box-shadow 200ms ease, transform 100ms ease;
     }
 
-    a.home-btn-dark,
-    .home-btn-dark {
-        background: #1E293B;
-        color: #fff !important;
+    .nt-btn:active {
+        transform: scale(0.98);
     }
 
-    a.home-btn-dark:hover,
-    .home-btn-dark:hover {
-        background: #0F172A;
-        color: #fff !important;
+    .nt-btn-primary {
+        background: #2563EB;
+        color: #fff;
+    }
+
+    .nt-btn-primary:hover {
+        background: #1D4ED8;
+        color: #fff;
         text-decoration: none;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
     }
 
-    .home-btn-outlined {
-        background: transparent;
-        color: #0F172A;
-        border: 1.5px solid #CBD5E1;
-    }
-
-    .home-btn-outlined:hover {
-        border-color: #94A3B8;
-        color: #0F172A;
-        text-decoration: none;
-    }
-
-    .home-arrow-down {
-        font-size: 1.1em;
-    }
-
-    /* ── Product Selector Pills ── */
-    .home-product-pills {
-        display: flex;
-        gap: 0.75rem;
-        margin-top: 3rem;
-        margin-bottom: 3rem;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    .home-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-family: 'Inter', sans-serif;
-        font-size: 0.9375rem;
-        font-weight: 600;
-        padding: 0.625rem 1.25rem;
-        border-radius: 999px;
-        border: 1.5px solid #E2E8F0;
+    .nt-btn-outline {
         background: #fff;
-        color: #475569;
-        cursor: pointer;
-        transition: all 0.15s ease;
+        color: #374151;
+        border: 1.5px solid #E5E7EB;
     }
 
-    .home-pill:hover {
-        border-color: #94A3B8;
+    .nt-btn-outline:hover {
+        border-color: #9CA3AF;
+        color: #111827;
+        text-decoration: none;
     }
 
-    .home-pill.active {
-        border-color: #1E293B;
-        color: #0F172A;
-        background: #F8FAFC;
+    .nt-btn-white {
+        background: #fff;
+        color: #1D4ED8;
     }
 
-    /* ── Colored Dots ── */
-    .home-dot {
-        display: inline-block;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        flex-shrink: 0;
+    .nt-btn-white:hover {
+        background: #F9FAFB;
+        color: #1D4ED8;
+        text-decoration: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
-    .home-dot-blue {
-        background: #3B82F6;
+    .nt-arrow {
+        font-size: 1.1em;
+        transition: transform 200ms ease;
     }
 
-    .home-dot-teal {
-        background: #14B8A6;
+    .nt-btn:hover .nt-arrow {
+        transform: translateX(2px);
     }
 
-    .home-dot-orange {
-        background: #F59E0B;
+    /* ── Social Proof ── */
+    .nt-social-proof {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 48px;
     }
 
-    /* ── Hero Screenshot ── */
-    .home-hero-screenshot {
-        width: 100%;
+    .nt-stars {
+        color: #F59E0B;
+        font-size: 1.125rem;
+        letter-spacing: 2px;
+    }
+
+    .nt-proof-text {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #6B7280;
+    }
+
+    /* ── Hero Demo ── */
+    .nt-hero-demo {
         max-width: 1000px;
         margin: 0 auto;
         border-radius: 12px;
-        box-shadow: 0 25px 60px rgba(15, 23, 42, 0.08), 0 4px 16px rgba(15, 23, 42, 0.04);
+        box-shadow: 0 20px 48px rgba(0, 0, 0, 0.08), 0 8px 16px rgba(0, 0, 0, 0.04);
         overflow: hidden;
-        border: 1px solid #E2E8F0;
+        border: 1px solid #E5E7EB;
     }
 
-    /* ── Trusted By ── */
-    .home-section-label {
-        font-family: 'Inter', sans-serif;
-        font-size: 0.9375rem;
+    .nt-hero-demo-inner {
+        position: relative;
+        padding-bottom: 62.5%;
+        height: 0;
+        overflow: hidden;
+    }
+
+    .nt-hero-demo-inner iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+
+    /* ── Trust Bar ── */
+    .nt-trust {
+        padding: 48px 0;
+        background: #F9FAFB;
+        text-align: center;
+    }
+
+    .nt-trust-label {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: 0.8125rem;
         font-weight: 600;
-        color: #64748B;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #9CA3AF;
+        margin: 0 0 20px;
     }
 
-    .home-link {
-        font-family: 'Inter', sans-serif;
-        font-size: 0.9375rem;
-        font-weight: 600;
-        color: #3B82F6;
-        text-decoration: none;
-    }
-
-    .home-link:hover {
-        text-decoration: underline;
-    }
-
-    .home-logos {
+    .nt-trust-logos {
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 3rem;
+        gap: 40px;
         flex-wrap: wrap;
     }
 
-    .home-logo-placeholder {
-        font-family: 'Inter', sans-serif;
-        font-size: 1rem;
+    .nt-trust-logos span {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: 0.9375rem;
         font-weight: 700;
-        color: #94A3B8;
+        color: #9CA3AF;
         letter-spacing: 0.02em;
         user-select: none;
     }
 
-    /* ── Feature Cards ── */
-    .home-feature-card {
-        padding: 3rem 0;
-        border-bottom: 1px solid #F1F5F9;
-    }
-
-    .home-feature-card:last-child {
-        border-bottom: none;
-    }
-
-    .home-feature-label {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-family: 'Inter', sans-serif;
-        font-size: 0.8125rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        color: #64748B;
-        margin-bottom: 1rem;
-    }
-
-    .home-feature-headline {
-        font-size: clamp(1.5rem, 2.5vw, 2rem);
-        font-weight: 700;
-        line-height: 1.2;
-        letter-spacing: -0.015em;
-        margin: 0 0 1rem;
-    }
-
-    .home-feature-desc {
-        font-family: 'Inter', sans-serif;
-        font-size: 1rem;
-        line-height: 1.7;
-        color: #64748B;
-        margin: 0 0 1.5rem;
-        max-width: 440px;
-    }
-
-    .home-feature-image-placeholder {
-        width: 100%;
-        aspect-ratio: 16 / 10;
-        background: #F8FAFC;
-        border: 1px solid #E2E8F0;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #94A3B8;
-        font-family: 'Inter', sans-serif;
-        font-size: 0.875rem;
-    }
-
     /* ── Section Headlines ── */
-    .home-section-headline {
-        font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+    .nt-section-h2 {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: 2.25rem;
         font-weight: 700;
         line-height: 1.15;
         letter-spacing: -0.02em;
+        color: #111827;
         text-align: center;
-        margin: 0;
-        color: #0F172A;
+        margin: 0 0 48px;
     }
 
-    /* ── Buyer Journey ── */
-    .home-journey-image-placeholder {
-        width: 100%;
-        aspect-ratio: 4 / 5;
-        background: #F1F5F9;
-        border: 1px solid #E2E8F0;
-        border-radius: 12px;
+    /* ── Feature Tabs ── */
+    .nt-tabs {
         display: flex;
-        align-items: center;
         justify-content: center;
-        color: #94A3B8;
-        font-family: 'Inter', sans-serif;
-        font-size: 0.875rem;
-        position: sticky;
-        top: 2rem;
+        gap: 4px;
+        margin-bottom: 48px;
+        flex-wrap: wrap;
     }
 
-    .home-journey-list {
+    .nt-tab {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: 0.9375rem;
+        font-weight: 600;
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: 1.5px solid transparent;
+        background: transparent;
+        color: #6B7280;
+        cursor: pointer;
+        transition: all 200ms ease;
+    }
+
+    .nt-tab:hover {
+        color: #374151;
+        background: #F9FAFB;
+    }
+
+    .nt-tab.active {
+        background: #EFF6FF;
+        color: #2563EB;
+        border-color: #DBEAFE;
+    }
+
+    .nt-tab-content {
+        max-width: 1080px;
+        margin: 0 auto;
+    }
+
+    .nt-tab-panel {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 48px;
+        align-items: center;
+    }
+
+    .nt-tab-text h3 {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #111827;
+        margin: 0 0 12px;
+        line-height: 1.2;
+    }
+
+    .nt-tab-text p {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #6B7280;
+        margin: 0 0 20px;
+        max-width: 480px;
+    }
+
+    .nt-check-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
         display: flex;
         flex-direction: column;
-        gap: 2rem;
+        gap: 10px;
     }
 
-    .home-journey-item {
-        padding: 1.5rem;
-        border-radius: 10px;
-        transition: background 0.15s ease;
-    }
-
-    .home-journey-item:hover {
-        background: #F1F5F9;
-    }
-
-    .home-journey-item-header {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .home-journey-label {
-        font-family: 'Inter', sans-serif;
-        font-size: 0.8125rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: #64748B;
-    }
-
-    .home-journey-title {
-        font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: #0F172A;
-        margin: 0 0 0.5rem;
-    }
-
-    .home-journey-desc {
-        font-family: 'Inter', sans-serif;
+    .nt-check-list li {
+        font-family: 'Segoe UI', system-ui, sans-serif;
         font-size: 0.9375rem;
-        line-height: 1.6;
-        color: #64748B;
-        margin: 0;
-    }
-
-    /* ── G2 / Social Proof ── */
-    .home-g2-stars {
-        font-size: 2rem;
-        color: #F59E0B;
-        letter-spacing: 0.1em;
-        margin-bottom: 0.5rem;
-    }
-
-    .home-g2-rating {
-        font-family: 'Inter', sans-serif;
-        font-size: 1rem;
-        font-weight: 600;
-        color: #64748B;
-        margin: 0 0 1.5rem;
-    }
-
-    /* ── Impact Metrics ── */
-    .home-metrics-row {
-        display: flex;
-        gap: 1.5rem;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: 1rem;
-    }
-
-    .home-metric-card {
-        flex: 1;
-        min-width: 220px;
-        background: #F8FAFC;
-        border: 1px solid #E2E8F0;
-        border-radius: 12px;
-        padding: 2.5rem 2rem;
-        text-align: center;
-        scroll-snap-align: start;
-    }
-
-    .home-metric-value {
-        display: block;
-        font-size: clamp(2rem, 3.5vw, 3rem);
-        font-weight: 800;
-        letter-spacing: -0.02em;
-        margin-bottom: 0.5rem;
-    }
-
-    .home-metric-label {
-        font-family: 'Inter', sans-serif;
-        font-size: 0.9375rem;
-        color: #64748B;
+        color: #374151;
+        padding-left: 24px;
+        position: relative;
         line-height: 1.5;
     }
 
-    /* ── Testimonial ── */
-    .home-testimonial {
-        max-width: 700px;
-        margin: 0 auto;
-        text-align: center;
-        border: none;
-        padding: 0;
+    .nt-check-list li::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 5px;
+        width: 14px;
+        height: 14px;
+        background: #2563EB;
+        border-radius: 50%;
+        background-image: url("data:image/svg+xml,%3Csvg width='8' height='6' viewBox='0 0 8 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 3L3 5L7 1' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: center;
     }
 
-    .home-testimonial p {
-        font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
-        font-size: clamp(1.25rem, 2vw, 1.5rem);
-        font-weight: 600;
-        line-height: 1.6;
-        color: #0F172A;
-        margin: 0 0 1.5rem;
-    }
-
-    .home-testimonial footer {
+    .nt-tab-visual {
         display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .nt-tab-placeholder {
+        width: 100%;
+        aspect-ratio: 16 / 10;
+        background: #F9FAFB;
+        border: 1px solid #E5E7EB;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #9CA3AF;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+
+    /* ── Feature Cards ── */
+    .nt-cards-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        max-width: 1080px;
+        margin: 0 auto;
+    }
+
+    .nt-card {
+        background: #fff;
+        border: 1px solid #E5E7EB;
+        border-radius: 12px;
+        padding: 32px;
+        transition: transform 200ms ease, box-shadow 200ms ease;
+    }
+
+    .nt-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    .nt-card-icon {
+        width: 44px;
+        height: 44px;
+        background: #EFF6FF;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .nt-card h3 {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #111827;
+        margin: 0 0 8px;
+    }
+
+    .nt-card p {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        color: #6B7280;
+        margin: 0;
+    }
+
+    /* ── Dark Section ── */
+    .nt-dark {
+        padding: 96px 0;
+        background: #1D2735;
+    }
+
+    .nt-dark-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 64px;
         align-items: center;
     }
 
-    .home-testimonial footer strong {
-        font-family: 'Inter', sans-serif;
-        font-size: 0.9375rem;
-        color: #0F172A;
+    .nt-dark-text h2 {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: 2.25rem;
+        font-weight: 700;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        color: #fff;
+        margin: 0 0 40px;
     }
 
-    .home-testimonial-company {
-        font-family: 'Inter', sans-serif;
-        font-size: 0.875rem;
-        color: #64748B;
-    }
-
-    /* ── Final CTA ── */
-    .home-cta-section {
-        padding: 6rem 0;
-    }
-
-    .home-cta-form {
+    .nt-dark-features {
         display: flex;
-        gap: 0.75rem;
-        justify-content: center;
-        flex-wrap: wrap;
-        max-width: 500px;
-        margin: 0 auto;
+        flex-direction: column;
+        gap: 28px;
     }
 
-    .home-cta-input {
-        flex: 1;
-        min-width: 240px;
-        font-family: 'Inter', sans-serif;
+    .nt-dark-feature h4 {
+        font-family: 'Segoe UI', system-ui, sans-serif;
         font-size: 1rem;
-        padding: 0.875rem 1.25rem;
-        border: 1.5px solid #CBD5E1;
-        border-radius: 8px;
-        background: #fff;
-        color: #0F172A;
-        outline: none;
-        transition: border-color 0.15s ease;
+        font-weight: 600;
+        color: #fff;
+        margin: 0 0 6px;
     }
 
-    .home-cta-input:focus {
-        border-color: #3B82F6;
+    .nt-dark-feature p {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        color: #9CA3AF;
+        margin: 0;
+        max-width: 480px;
     }
 
-    .home-cta-input::placeholder {
-        color: #94A3B8;
+    .nt-dark-visual {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .nt-dark-placeholder {
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255, 255, 255, 0.3);
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+
+    /* ── Stats ── */
+    .nt-stats-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 32px;
+        max-width: 900px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .nt-stat-value {
+        display: block;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: 3.5rem;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        color: #2563EB;
+        line-height: 1;
+        margin-bottom: 8px;
+    }
+
+    .nt-stat-label {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: 1rem;
+        color: #6B7280;
+    }
+
+    /* ── CTA Section ── */
+    .nt-cta {
+        padding: 96px 0;
+        background: linear-gradient(135deg, #1D4ED8, #3B82F6);
+    }
+
+    .nt-cta-inner {
+        text-align: center;
+    }
+
+    .nt-cta h2 {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        color: #fff;
+        margin: 0 0 16px;
+    }
+
+    .nt-cta p {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: 1.125rem;
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.8);
+        margin: 0 0 32px;
     }
 
     /* ── Responsive ── */
+    @@media (max-width: 1024px) {
+        .nt-dark-grid {
+            grid-template-columns: 1fr;
+            gap: 48px;
+        }
+
+        .nt-tab-panel {
+            grid-template-columns: 1fr;
+            gap: 32px;
+        }
+
+        .nt-cards-row {
+            grid-template-columns: 1fr;
+            max-width: 480px;
+        }
+
+        .nt-stats-row {
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+    }
+
     @@media (max-width: 768px) {
-        .home-hero {
-            padding: 4rem 0 2rem;
+        .nt-hero {
+            padding: 64px 0 48px;
         }
 
-        .home-section {
-            padding: 4rem 0;
+        .nt-hero-h1 {
+            font-size: 36px;
         }
 
-        .home-feature-card {
-            padding: 2rem 0;
+        .nt-hero-sub {
+            font-size: 1rem;
         }
 
-        .home-journey-image-placeholder {
-            position: static;
-            aspect-ratio: 16 / 9;
+        .nt-section {
+            padding: 64px 0;
         }
 
-        .home-metrics-row {
-            flex-wrap: nowrap;
+        .nt-section-h2 {
+            font-size: 1.75rem;
+            margin-bottom: 32px;
         }
 
-        .home-metric-card {
-            min-width: 200px;
+        .nt-trust-logos {
+            gap: 24px;
+        }
+
+        .nt-tabs {
+            gap: 4px;
+        }
+
+        .nt-tab {
+            font-size: 0.8125rem;
+            padding: 8px 14px;
+        }
+
+        .nt-dark {
+            padding: 64px 0;
+        }
+
+        .nt-dark-text h2 {
+            font-size: 1.75rem;
+        }
+
+        .nt-cta {
+            padding: 64px 0;
+        }
+
+        .nt-cta h2 {
+            font-size: 1.75rem;
+        }
+
+        .nt-stat-value {
+            font-size: 2.5rem;
+        }
+    }
+
+    @@media (max-width: 375px) {
+        .nt-hero-h1 {
+            font-size: 30px;
+        }
+
+        .nt-hero-ctas {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .nt-btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .nt-trust-logos {
+            gap: 16px;
+        }
+
+        .nt-trust-logos span {
+            font-size: 0.8125rem;
         }
     }
 </style>
