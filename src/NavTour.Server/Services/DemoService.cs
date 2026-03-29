@@ -39,6 +39,20 @@ public class DemoService : IDemoService
 
     public async Task<DemoResponse> CreateAsync(CreateDemoRequest request, Guid userId)
     {
+        // Enforce plan demo limits
+        var demoCount = await _db.Demos.CountAsync();
+        var tenant = await _db.Tenants.FirstOrDefaultAsync();
+        var plan = tenant?.Plan ?? "Starter";
+        var maxDemos = plan switch
+        {
+            "Starter" => 1,
+            "Growth" => 25,
+            "Scale" => int.MaxValue,
+            _ => 1
+        };
+        if (demoCount >= maxDemos)
+            throw new InvalidOperationException($"Your {plan} plan allows up to {maxDemos} demo{(maxDemos != 1 ? "s" : "")}. Upgrade to create more.");
+
         var slug = request.Name.ToLowerInvariant()
             .Replace(" ", "-")
             .Replace("--", "-");
