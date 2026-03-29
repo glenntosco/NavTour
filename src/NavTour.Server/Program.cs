@@ -100,6 +100,9 @@ builder.Services.AddCors(options =>
         policy.SetIsOriginAllowed(_ => true).AllowAnyMethod().AllowAnyHeader().AllowCredentials());
 });
 
+// Stripe Billing
+builder.Services.AddSingleton<StripeService>();
+
 // Auth Services
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
@@ -222,7 +225,7 @@ app.UseAuthorization();
 app.Use(async (context, next) =>
 {
     var path = context.Request.Path.Value?.ToLower() ?? "";
-    var protectedPaths = new[] { "/dashboard", "/analytics", "/leads", "/team", "/settings", "/demos/", "/hub" };
+    var protectedPaths = new[] { "/dashboard", "/analytics", "/leads", "/team", "/settings", "/demos/", "/hub", "/billing" };
     var isProtected = protectedPaths.Any(p => path.StartsWith(p));
 
     if (isProtected && context.User?.Identity?.IsAuthenticated != true)

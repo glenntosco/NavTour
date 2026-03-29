@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
     <UserSecretsId>f65659ec-2227-4769-aaeb-d13eae17d58d</UserSecretsId>
-    <Version>2.3.0</Version>
+    <Version>2.3.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,6 +27,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="*" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="*" />
     <PackageReference Include="Azure.Communication.Email" Version="*" />
+    <PackageReference Include="Stripe.net" Version="*" />
   </ItemGroup>
 
 </Project>

@@ -3,14 +3,36 @@
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
 @inject AuthService Auth
 @inject NavigationManager Nav
+@inject HttpClient Http
+@using System.Net.Http.Json
 
 <PageTitle>Billing — NavTour</PageTitle>
 
 <div class="bl-page">
     <div class="bl-header">
         <h1 class="nt-page-title">Billing &amp; Plans</h1>
-        <p class="nt-page-subtitle">You are on the <strong>@currentPlan</strong> plan. Upgrade to unlock more seats and features.</p>
+        @if (loading)
+        {
+            <p class="nt-page-subtitle">Loading billing info...</p>
+        }
+        else
+        {
+            <p class="nt-page-subtitle">You are on the <strong>@currentPlan</strong> plan. @(currentPlan == "Starter" ? "Upgrade to unlock more seats and features." : "")</p>
+            @if (currentPlan != "Starter" && billingStatus?.SubscriptionEndsAt != null)
+            {
+                <p class="bl-renewal">Next renewal: @billingStatus.SubscriptionEndsAt.Value.ToString("MMMM d, yyyy")</p>
+            }
+        }
     </div>
+
+    @if (currentPlan != "Starter")
+    {
+        <div class="bl-manage-row">
+            <button class="bl-btn bl-btn-outline bl-btn-manage" @onclick="ManageSubscription" disabled="@managingPortal">
+                @(managingPortal ? "Opening portal..." : "Manage Subscription")
+            </button>
+        </div>
+    }
 
     @* Monthly / Annual toggle *@
     <div class="bl-toggle-row">
@@ -55,16 +77,20 @@
         </div>
 
         @* Growth — Most Popular *@
-        <div class="bl-card bl-card-featured">
+        <div class="bl-card bl-card-featured @(currentPlan == "Growth" ? "bl-card-current" : "")">
             <div class="bl-popular-ribbon">Most Popular</div>
             <div class="bl-card-header">
                 <span class="bl-plan-name">Growth</span>
+                @if (currentPlan == "Growth")
+                {
+                    <span class="bl-current-badge">Current Plan</span>
+                }
             </div>
             <div class="bl-price-row">
                 @if (annual)
                 {
                     <span class="bl-price">$280</span>
-                    <span class="bl-price-period">/ mo · billed annually</span>
+                    <span class="bl-price-period">/ mo · billed annually ($3,360/yr)</span>
                 }
                 else
                 {
@@ -83,9 +109,18 @@
                 <li><span class="bl-check">✓</span> Lead capture forms</li>
                 <li><span class="bl-check">✓</span> Priority support</li>
             </ul>
-            <button class="bl-btn bl-btn-primary" @onclick='() => Nav.NavigateTo("mailto:sales@navtour.cloud")'>
-                Upgrade to Growth
-            </button>
+            @if (currentPlan == "Growth")
+            {
+                <button class="bl-btn bl-btn-outline" @onclick="ManageSubscription" disabled="@managingPortal">
+                    Manage Subscription
+                </button>
+            }
+            else
+            {
+                <button class="bl-btn bl-btn-primary" @onclick='() => Upgrade(annual ? "growth-annual" : "growth-monthly")' disabled="@upgrading">
+                    @(upgrading ? "Redirecting..." : "Upgrade to Growth")
+                </button>
+            }
         </div>
 
         @* Scale *@
@@ -100,16 +135,16 @@
             <div class="bl-price-row">
                 @if (annual)
                 {
-                    <span class="bl-price">$29</span>
-                    <span class="bl-price-period">/ seat · billed annually</span>
+                    <span class="bl-price">$799</span>
+                    <span class="bl-price-period">/ mo · billed annually ($9,588/yr)</span>
                 }
                 else
                 {
-                    <span class="bl-price">$36</span>
-                    <span class="bl-price-period">/ seat · per month</span>
+                    <span class="bl-price">$999</span>
+                    <span class="bl-price-period">/ month · unlimited seats</span>
                 }
             </div>
-            <p class="bl-plan-desc">Per-seat pricing for teams that need full flexibility and control.</p>
+            <p class="bl-plan-desc">Full flexibility and control for teams at scale.</p>
             <ul class="bl-features">
                 <li><span class="bl-check">✓</span> Unlimited seats</li>
                 <li><span class="bl-check">✓</span> Unlimited demos</li>
@@ -119,9 +154,18 @@
                 <li><span class="bl-check">✓</span> SLA guarantee</li>
                 <li><span class="bl-check">✓</span> Dedicated CSM</li>
             </ul>
-            <button class="bl-btn bl-btn-outline" @onclick='() => Nav.NavigateTo("mailto:sales@navtour.cloud")'>
-                Upgrade to Scale
-            </button>
+            @if (currentPlan == "Scale")
+            {
+                <button class="bl-btn bl-btn-outline" @onclick="ManageSubscription" disabled="@managingPortal">
+                    Manage Subscription
+                </button>
+            }
+            else
+            {
+                <button class="bl-btn bl-btn-outline" @onclick='() => Upgrade(annual ? "scale-annual" : "scale-monthly")' disabled="@upgrading">
+                    @(upgrading ? "Redirecting..." : "Upgrade to Scale")
+                </button>
+            }
         </div>
     </div>
 
@@ -141,6 +185,23 @@
 
     .bl-header {
         margin-bottom: 32px;
+    }
+
+    .bl-renewal {
+        font-size: var(--nt-text-sm);
+        color: var(--nt-text-muted);
+        margin-top: 4px;
+    }
+
+    .bl-manage-row {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 24px;
+    }
+
+    .bl-btn-manage {
+        width: auto;
+        padding: 10px 28px;
     }
 
     /* Toggle */
@@ -396,13 +457,85 @@
 
 @code {
     private bool annual;
+    private bool loading = true;
+    private bool upgrading;
+    private bool managingPortal;
     private string currentPlan = "Starter";
+    private BillingStatus? billingStatus;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender) return;
         await Auth.TryRestoreAsync();
         if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
+
+        try
+        {
+            billingStatus = await Http.GetFromJsonAsync<BillingStatus>("api/v1/billing/status");
+            if (billingStatus != null)
+                currentPlan = billingStatus.Plan ?? "Starter";
+        }
+        catch { }
+
+        loading = false;
         StateHasChanged();
     }
+
+    private async Task Upgrade(string planName)
+    {
+        upgrading = true;
+        StateHasChanged();
+
+        try
+        {
+            var priceId = planName switch
+            {
+                "growth-monthly" => "growth_monthly_price_id",
+                "growth-annual" => "growth_annual_price_id",
+                "scale-monthly" => "scale_monthly_price_id",
+                "scale-annual" => "scale_annual_price_id",
+                _ => null
+            };
+            if (priceId == null) return;
+
+            var response = await Http.PostAsJsonAsync("api/v1/billing/checkout", new { priceId });
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<CheckoutResult>();
+                if (result?.Url != null)
+                    Nav.NavigateTo(result.Url, true);
+            }
+        }
+        finally
+        {
+            upgrading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task ManageSubscription()
+    {
+        managingPortal = true;
+        StateHasChanged();
+
+        try
+        {
+            var response = await Http.PostAsync("api/v1/billing/portal", null);
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<PortalResult>();
+                if (result?.Url != null)
+                    Nav.NavigateTo(result.Url, true);
+            }
+        }
+        finally
+        {
+            managingPortal = false;
+            StateHasChanged();
+        }
+    }
+
+    private record BillingStatus(string Plan, string? StripeCustomerId, string? SubscriptionId, DateTime? SubscriptionEndsAt, int SeatCount, string PublishableKey);
+    private record CheckoutResult(string? Url);
+    private record PortalResult(string? Url);
 }
