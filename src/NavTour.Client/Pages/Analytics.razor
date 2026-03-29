@@ -72,6 +72,12 @@
         @* Views over time chart *@
         <div class="analytics-card">
             <h3 class="analytics-card-title">Views Over Time</h3>
+            <div class="analytics-source-filters">
+                <button class="analytics-source-pill @(sourceFilter == null ? "active" : "")" @onclick="() => sourceFilter = null">All</button>
+                <button class="analytics-source-pill @(sourceFilter == "embed" ? "active" : "")" @onclick='() => sourceFilter = "embed"'>Embed</button>
+                <button class="analytics-source-pill @(sourceFilter == "link" ? "active" : "")" @onclick='() => sourceFilter = "link"'>Share Link</button>
+                <button class="analytics-source-pill @(sourceFilter == "social" ? "active" : "")" @onclick='() => sourceFilter = "social"'>Social</button>
+            </div>
             @if (summary.ViewsOverTime.Count > 0)
             {
                 <RadzenChart Style="height:280px">
@@ -101,13 +107,28 @@
                         <div class="funnel-row">
                             <span class="funnel-label">Step @step.StepNumber</span>
                             <div class="funnel-bar-track">
-                                <div class="funnel-bar" style="width:@(widthPct.ToString("F1"))%"></div>
+                                <div class="funnel-bar" style="width:@(widthPct.ToString("F1"))%"
+                                     title="@step.ViewCount views, @step.CompletionCount completions, @(completionPct.ToString("F0"))% completion"></div>
                             </div>
                             <span class="funnel-value">@step.ViewCount</span>
                             <span class="funnel-pct">@(completionPct.ToString("F0"))%</span>
                         </div>
                     }
                 </div>
+                @if (summary.Funnel.Count > 1)
+                {
+                    var maxDrop = summary.Funnel.Skip(1)
+                        .Select((f, i) => new { Step = f.StepNumber, Drop = summary.Funnel[i].ViewCount - f.ViewCount })
+                        .OrderByDescending(x => x.Drop)
+                        .FirstOrDefault();
+                    @if (maxDrop != null && maxDrop.Drop > 0)
+                    {
+                        <div class="analytics-insight">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                            <span>Highest drop-off: Step @maxDrop.Step (lost @maxDrop.Drop viewers)</span>
+                        </div>
+                    }
+                }
             </div>
         }
 
@@ -354,6 +375,13 @@
         text-align: right;
         flex-shrink: 0;
     }
+
+    .analytics-source-filters { display: flex; gap: 6px; margin-bottom: 16px; }
+    .analytics-source-pill { padding: 4px 12px; border: 1px solid var(--nt-border); border-radius: 16px; background: var(--nt-surface); color: var(--nt-text-secondary); font-size: 12px; font-weight: 500; cursor: pointer; font-family: var(--nt-font); transition: all 150ms; }
+    .analytics-source-pill.active { background: var(--nt-accent); color: #fff; border-color: var(--nt-accent); }
+    .analytics-source-pill:hover:not(.active) { border-color: var(--nt-border-hover); }
+
+    .analytics-insight { display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: var(--nt-warning-light, #FFF4E5); border-radius: var(--nt-radius); color: var(--nt-warning, #F59E0B); font-size: 13px; font-weight: 500; margin-top: 12px; }
 </style>
 
 @code {
@@ -362,6 +390,7 @@
     private List<SessionListResponse> sessions = [];
     private int leadCount;
     private bool loading = true;
+    private string? sourceFilter;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

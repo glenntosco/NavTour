@@ -19,11 +19,15 @@
         var isFirst = step.Id == orderedSteps[0].Id;
         var isLast = step.Id == orderedSteps[^1].Id;
         var isChapter = step.Type == StepType.CoverSlide || step.Type == StepType.ClosingSlide;
-        <RadzenCard Style="@($"position:relative;padding:10px;cursor:pointer;{(isSelected ? "border:2px solid var(--rz-primary)" : "")}{(isChapter ? ";border-left:3px solid var(--nt-accent)" : "")}")"
-            @onclick="() => OnStepSelected.InvokeAsync(step.Id)">
+        var isBulkSelected = selectedStepIds.Contains(step.Id);
+        <RadzenCard Style="@($"position:relative;padding:10px;cursor:pointer;{(isSelected ? "border:2px solid var(--rz-primary)" : "")}{(isBulkSelected ? ";background:var(--nt-accent-light)" : "")}{(isChapter ? ";border-left:3px solid var(--nt-accent)" : "")}")"
+            @onclick="(e) => HandleStepClick(step.Id, e)">
             <div class="step-actions" @onclick:stopPropagation="true">
                 <button class="step-reorder" disabled="@isFirst" @onclick="() => MoveUp(step)" title="Move up">&#9650;</button>
                 <button class="step-reorder" disabled="@isLast" @onclick="() => MoveDown(step)" title="Move down">&#9660;</button>
+                <button class="step-action-btn" @onclick="() => OnDuplicateStep.InvokeAsync(step.Id)" title="Duplicate step">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                </button>
                 <button class="step-delete-btn" @onclick="() => ConfirmDelete(step.Id)" title="Delete step">&times;</button>
             </div>
             <RadzenStack Gap="4px">
@@ -162,6 +166,15 @@
         </RadzenCard>
     }
 
+    @if (selectedStepIds.Count > 0)
+    {
+        <div class="step-bulk-bar">
+            <span>@selectedStepIds.Count selected</span>
+            <button @onclick="BulkDeleteSelected">Delete Selected</button>
+            <button @onclick="ClearSelection">Cancel</button>
+        </div>
+    }
+
     <RadzenButton Text="+ Add Step" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Style="width:100%" Click="OnAddStep" title="Create a new step on the selected frame" />
 
     @if (!Steps.Any(s => s.Type == StepType.CoverSlide))
@@ -190,6 +203,13 @@
         cursor: pointer; padding: 0 4px; line-height: 1;
     }
     .step-delete-btn:hover { color: #ef4444; }
+    .step-action-btn {
+        background: none; border: none; color: var(--nt-text-muted);
+        cursor: pointer; padding: 2px 4px; line-height: 1; display: flex; align-items: center;
+    }
+    .step-action-btn:hover { color: var(--nt-accent); }
+    .step-bulk-bar { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--nt-accent-light); border-radius: var(--nt-radius); margin-top: 8px; font-size: 12px; }
+    .step-bulk-bar button { padding: 4px 12px; border: none; border-radius: var(--nt-radius); font-size: 11px; font-weight: 600; cursor: pointer; font-family: var(--nt-font); }
     .step-field {
         margin-top: 6px;
     }
@@ -215,8 +235,40 @@
     [Parameter] public EventCallback<StepResponse> OnStepSettingsChanged { get; set; }
     [Parameter] public EventCallback OnAddCoverSlide { get; set; }
     [Parameter] public EventCallback OnAddClosingSlide { get; set; }
+    [Parameter] public EventCallback<Guid> OnDuplicateStep { get; set; }
+    [Parameter] public EventCallback<List<Guid>> OnBulkDeleteSteps { get; set; }
 
+    private HashSet<Guid> selectedStepIds = new();
     private List<StepResponse> OrderedSteps => Steps.OrderBy(s => s.StepNumber).ToList();
+
+    private async Task HandleStepClick(Guid stepId, MouseEventArgs e)
+    {
+        if (e.ShiftKey)
+        {
+            if (!selectedStepIds.Remove(stepId)) selectedStepIds.Add(stepId);
+        }
+        else
+        {
+            selectedStepIds.Clear();
+            await OnStepSelected.InvokeAsync(stepId);
+        }
+    }
+
+    private async Task BulkDeleteSelected()
+    {
+        if (selectedStepIds.Count == 0) return;
+        var confirmed = await JS.InvokeAsync<bool>("confirm", $"Delete {selectedStepIds.Count} selected step(s)? Annotations will also be removed.");
+        if (confirmed)
+        {
+            await OnBulkDeleteSteps.InvokeAsync(selectedStepIds.ToList());
+            selectedStepIds.Clear();
+        }
+    }
+
+    private void ClearSelection()
+    {
+        selectedStepIds.Clear();
+    }
 
     private async Task MoveUp(StepResponse step)
     {
