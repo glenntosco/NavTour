@@ -41,6 +41,29 @@ else if (ShowcaseId == null)
             <button class="sc-btn-primary" @onclick="CreateShowcase">+ Create Showcase</button>
         </div>
 
+        <div class="sc-list-controls">
+            <div class="sc-list-tabs">
+                <button class="sc-list-tab @(activeListTab == "team" ? "active" : "")" @onclick='() => activeListTab = "team"'>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    Shared with Team
+                </button>
+                <button class="sc-list-tab @(activeListTab == "personal" ? "active" : "")" @onclick='() => activeListTab = "personal"'>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    Personal
+                </button>
+            </div>
+            <div class="sc-list-actions">
+                <button class="sc-filter-btn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                    Filters
+                </button>
+                <button class="sc-sort-btn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+                    Recently updated
+                </button>
+            </div>
+        </div>
+
         @if (showcases.Count > 0)
         {
             <div class="sc-table">
@@ -86,6 +109,18 @@ else if (ShowcaseId == null)
                                         <button class="sc-ctx-item" @onclick="() => { OpenEditor(sc.Id); showShareMenu = true; }">
                                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
                                             Share
+                                        </button>
+                                        <button class="sc-ctx-item" @onclick="() => { contextMenuId = null; }">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                                            Manage tags
+                                        </button>
+                                        <button class="sc-ctx-item" @onclick="() => { contextMenuId = null; }">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                                            Create TourHub
+                                        </button>
+                                        <button class="sc-ctx-item" @onclick="() => { contextMenuId = null; }">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+                                            Move to
                                         </button>
                                         <button class="sc-ctx-item" @onclick="() => DuplicateShowcase(sc)">
                                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
@@ -348,6 +383,16 @@ else if (showcase != null)
         min-height:44px; transition:background var(--nt-duration-fast) var(--nt-ease);
     }
     .sc-btn-primary:hover { background:var(--nt-accent-hover); }
+
+    /* ── List Controls (tabs + filter/sort) ── */
+    .sc-list-controls { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 20px; }
+    .sc-list-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--nt-border); }
+    .sc-list-tab { display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; border: none; background: none; color: var(--nt-text-secondary); font-size: var(--nt-text-sm); font-weight: 500; cursor: pointer; border-bottom: 2px solid transparent; transition: all 150ms; font-family: var(--nt-font); }
+    .sc-list-tab.active { color: var(--nt-text-primary); border-bottom-color: var(--nt-accent); }
+    .sc-list-tab:hover:not(.active) { color: var(--nt-text-primary); }
+    .sc-list-actions { display: flex; gap: 8px; padding-bottom: 2px; }
+    .sc-filter-btn, .sc-sort-btn { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border: 1px solid var(--nt-border); border-radius: var(--nt-radius); background: var(--nt-surface); color: var(--nt-text-secondary); font-size: var(--nt-text-sm); font-weight: 500; cursor: pointer; font-family: var(--nt-font); transition: all 150ms; }
+    .sc-filter-btn:hover, .sc-sort-btn:hover { border-color: var(--nt-border-hover); color: var(--nt-text-primary); }
 
     /* ── Table ── */
     .sc-table { border:1px solid var(--nt-border); border-radius:var(--nt-radius-lg); overflow:hidden; }
@@ -680,6 +725,7 @@ else if (showcase != null)
     private bool loading = true;
     private bool saving;
     private bool showWelcome = true;
+    private string activeListTab = "team"; // team | personal
     private bool showShareMenu;
     private bool linkCopied;
     private Guid? contextMenuId;
