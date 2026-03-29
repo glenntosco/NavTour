@@ -73,10 +73,12 @@
                 {
                     <div class="cs-chrome">
                         <div class="cs-chrome-bar">
-                            <span class="cs-dot cs-dot-red"></span>
-                            <span class="cs-dot cs-dot-yellow"></span>
-                            <span class="cs-dot cs-dot-green"></span>
                             <span class="cs-chrome-title">@Settings.Title</span>
+                            <div class="cs-win-btns">
+                                <span class="cs-win-btn">&#x2500;</span>
+                                <span class="cs-win-btn">&#x25A1;</span>
+                                <span class="cs-win-btn cs-win-close">&#x2715;</span>
+                            </div>
                         </div>
                         <iframe src="@BackgroundImageUrl" class="cs-preview-iframe"></iframe>
                     </div>
@@ -125,7 +127,7 @@
         animation: cs-enter 600ms cubic-bezier(0.1, 0.9, 0.2, 1) both;
     }
     .cs-split .cs-preview {
-        flex: 0 0 40%; max-width: 45%;
+        flex: 0 0 48%; max-width: 52%;
         animation: cs-preview-enter 700ms cubic-bezier(0.1, 0.9, 0.2, 1) 150ms both;
     }
     .cs-reverse { flex-direction: row-reverse; }
@@ -160,21 +162,26 @@
         background: #1a1a1a;
     }
     .cs-chrome-bar {
-        display: flex; align-items: center; gap: 8px;
-        padding: 10px 14px; background: #2a2a2a;
+        display: flex; align-items: center;
+        padding: 6px 8px 6px 14px; background: #2a2a2a;
     }
-    .cs-dot { width: 10px; height: 10px; border-radius: 50%; }
-    .cs-dot-red { background: #ff5f57; }
-    .cs-dot-yellow { background: #febc2e; }
-    .cs-dot-green { background: #28c840; }
     .cs-chrome-title {
         flex: 1; text-align: center; font-size: 11px;
         color: rgba(255,255,255,0.5); font-weight: 500;
         overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
+    .cs-win-btns { display: flex; gap: 0; margin-left: auto; }
+    .cs-win-btn {
+        display: flex; align-items: center; justify-content: center;
+        width: 32px; height: 28px; font-size: 11px;
+        color: rgba(255,255,255,0.6); cursor: default;
+        transition: background 100ms;
+    }
+    .cs-win-btn:hover { background: rgba(255,255,255,0.1); }
+    .cs-win-close:hover { background: #e81123; color: #fff; }
 
     .cs-preview-iframe {
-        width: 100%; height: 400px; border: none;
+        width: 100%; height: 520px; border: none;
         pointer-events: none; display: block;
     }
 
