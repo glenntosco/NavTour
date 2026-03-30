@@ -46,6 +46,7 @@ public class DemoService : IDemoService
         var maxDemos = plan switch
         {
             "Starter" => 1,
+            "Hobby" => 5,
             "Growth" => 25,
             "Scale" => int.MaxValue,
             _ => 1

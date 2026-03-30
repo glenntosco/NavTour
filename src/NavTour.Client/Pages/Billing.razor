@@ -76,6 +76,50 @@
             </button>
         </div>
 
+        @* Hobby *@
+        <div class="bl-card @(currentPlan == "Hobby" ? "bl-card-current" : "")">
+            <div class="bl-card-header">
+                <span class="bl-plan-name">Hobby</span>
+                @if (currentPlan == "Hobby")
+                {
+                    <span class="bl-current-badge">Current Plan</span>
+                }
+            </div>
+            <div class="bl-price-row">
+                @if (annual)
+                {
+                    <span class="bl-price">$36</span>
+                    <span class="bl-price-period">/ mo · billed annually ($432/yr)</span>
+                }
+                else
+                {
+                    <span class="bl-price">$45</span>
+                    <span class="bl-price-period">/ month</span>
+                }
+            </div>
+            <p class="bl-plan-desc">Perfect for solo creators building their demo library.</p>
+            <ul class="bl-features">
+                <li><span class="bl-check">✓</span> 1 seat</li>
+                <li><span class="bl-check">✓</span> 5 demo tours</li>
+                <li><span class="bl-check">✓</span> Lead capture forms</li>
+                <li><span class="bl-check">✓</span> Showcase collections</li>
+                <li><span class="bl-check">✓</span> Basic analytics</li>
+                <li><span class="bl-check">✓</span> Chrome extension capture</li>
+                <li><span class="bl-check">✓</span> Share via link</li>
+                <li><span class="bl-check">✓</span> NavTour branding</li>
+            </ul>
+            @if (currentPlan == "Hobby")
+            {
+                <button class="bl-btn bl-btn-outline" disabled>Current Plan</button>
+            }
+            else
+            {
+                <button class="bl-btn bl-btn-primary" @onclick='() => Upgrade(annual ? "hobby-annual" : "hobby-monthly")' disabled="@upgrading">
+                    @(upgrading ? "Processing..." : "Upgrade to Hobby")
+                </button>
+            }
+        </div>
+
         @* Growth — Most Popular *@
         <div class="bl-card bl-card-featured @(currentPlan == "Growth" ? "bl-card-current" : "")">
             <div class="bl-popular-ribbon">Most Popular</div>
@@ -269,7 +313,7 @@
     /* Grid */
     .bl-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         gap: 20px;
         align-items: start;
     }
@@ -444,6 +488,11 @@
     }
 
     /* Responsive */
+    @@media (max-width: 1100px) {
+        .bl-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
     @@media (max-width: 768px) {
         .bl-grid {
             grid-template-columns: 1fr;

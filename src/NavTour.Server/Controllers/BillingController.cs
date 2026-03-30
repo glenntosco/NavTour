@@ -77,6 +77,8 @@ public class BillingController : ControllerBase
         // Resolve price ID from plan name + interval
         var priceId = request.Plan switch
         {
+            "hobby-monthly" => _config["Stripe:HobbyMonthlyPriceId"],
+            "hobby-annual" => _config["Stripe:HobbyAnnualPriceId"],
             "growth-monthly" => _config["Stripe:GrowthMonthlyPriceId"],
             "growth-annual" => _config["Stripe:GrowthAnnualPriceId"],
             "scale-monthly" => _config["Stripe:ScaleMonthlyPriceId"],
@@ -171,12 +173,16 @@ public class BillingController : ControllerBase
                         tenant.SubscriptionEndsAt = subscription.Items?.Data?.FirstOrDefault()?.CurrentPeriodEnd;
 
                         // Determine plan from price
+                        var hobbyMonthly = _config["Stripe:HobbyMonthlyPriceId"];
+                        var hobbyAnnual = _config["Stripe:HobbyAnnualPriceId"];
                         var growthMonthly = _config["Stripe:GrowthMonthlyPriceId"];
                         var growthAnnual = _config["Stripe:GrowthAnnualPriceId"];
                         var scaleMonthly = _config["Stripe:ScaleMonthlyPriceId"];
                         var scaleAnnual = _config["Stripe:ScaleAnnualPriceId"];
 
-                        if (tenant.StripePriceId == growthMonthly || tenant.StripePriceId == growthAnnual)
+                        if (tenant.StripePriceId == hobbyMonthly || tenant.StripePriceId == hobbyAnnual)
+                            tenant.Plan = "Hobby";
+                        else if (tenant.StripePriceId == growthMonthly || tenant.StripePriceId == growthAnnual)
                             tenant.Plan = "Growth";
                         else if (tenant.StripePriceId == scaleMonthly || tenant.StripePriceId == scaleAnnual)
                             tenant.Plan = "Scale";
