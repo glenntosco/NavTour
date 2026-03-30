@@ -74,7 +74,17 @@ public class BillingController : ControllerBase
             await _db.SaveChangesAsync();
         }
 
-        var priceId = request.PriceId;
+        // Resolve price ID from plan name + interval
+        var priceId = request.Plan switch
+        {
+            "growth-monthly" => _config["Stripe:GrowthMonthlyPriceId"],
+            "growth-annual" => _config["Stripe:GrowthAnnualPriceId"],
+            "scale-monthly" => _config["Stripe:ScaleMonthlyPriceId"],
+            "scale-annual" => _config["Stripe:ScaleAnnualPriceId"],
+            _ => request.PriceId // fallback to raw price ID
+        };
+        if (string.IsNullOrEmpty(priceId)) return BadRequest("Invalid plan");
+
         var baseUrl = $"{Request.Scheme}://{Request.Host}";
 
         var checkoutUrl = await _stripe.CreateCheckoutSessionAsync(
@@ -205,4 +215,4 @@ public class BillingController : ControllerBase
     }
 }
 
-public record CheckoutRequest(string PriceId);
+public record CheckoutRequest(string? PriceId = null, string? Plan = null);

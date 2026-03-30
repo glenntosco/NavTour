@@ -488,17 +488,7 @@
 
         try
         {
-            var priceId = planName switch
-            {
-                "growth-monthly" => "growth_monthly_price_id",
-                "growth-annual" => "growth_annual_price_id",
-                "scale-monthly" => "scale_monthly_price_id",
-                "scale-annual" => "scale_annual_price_id",
-                _ => null
-            };
-            if (priceId == null) return;
-
-            var response = await Http.PostAsJsonAsync("api/v1/billing/checkout", new { priceId });
+            var response = await Http.PostAsJsonAsync("api/v1/billing/checkout", new { plan = planName });
             if (response.IsSuccessStatusCode)
             {
                 var result = await response.Content.ReadFromJsonAsync<CheckoutResult>();
