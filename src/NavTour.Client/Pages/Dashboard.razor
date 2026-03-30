@@ -1,8 +1,10 @@
 @page "/dashboard"
 @rendermode InteractiveServer
+@using NavTour.Shared.DTOs.Screenshots
 @inject AuthService Auth
 @inject DemoApiService DemoApi
 @inject AnalyticsApiService AnalyticsApi
+@inject ScreenshotApiService ScreenshotApi
 @inject NavigationManager Nav
 @inject DialogService Dialog
 
@@ -36,6 +38,20 @@ else
             </div>
         </div>
 
+        @* Content Type Tabs *@
+        <div class="dash-tabs">
+            <button class="dash-tab @(activeTab == "demos" ? "active" : "")"
+                    @onclick='() => SetTab("demos")'>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                Product Demos
+            </button>
+            <button class="dash-tab @(activeTab == "screenshots" ? "active" : "")"
+                    @onclick='() => SetTab("screenshots")'>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                Screenshots
+            </button>
+        </div>
+
         @* KPI Stats Row *@
         <div class="dash-kpi-row">
             <div class="dash-kpi-card">
@@ -58,105 +74,166 @@ else
 
         @* Quick Actions *@
         <div class="dash-actions">
-            <button class="nt-btn-primary" @onclick="CreateNewDemo">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                Create Demo
-            </button>
-            <a href="/get-started" class="dash-action-link">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-                </svg>
-                Getting Started Guide
-            </a>
-        </div>
-
-        @* Search *@
-        <div class="dash-search">
-            <svg class="dash-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            </svg>
-            <RadzenTextBox Placeholder="Search demos..." @bind-Value="searchText" Change="@OnSearchChanged" Style="flex:1;border:none;box-shadow:none;background:transparent;font-size:0.875rem" />
-        </div>
-
-        @if (filteredDemos.Count == 0 && demos.Count > 0)
-        {
-            <div class="dash-empty">
-                <p>No demos match "<strong>@searchText</strong>"</p>
-            </div>
-        }
-        else if (demos.Count == 0)
-        {
-            <div class="nt-empty">
-                <div class="nt-empty-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
-                    </svg>
-                </div>
-                <h3>No demos yet</h3>
-                <p>Create your first interactive demo to start converting prospects.</p>
+            @if (activeTab == "demos")
+            {
                 <button class="nt-btn-primary" @onclick="CreateNewDemo">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                     Create Demo
                 </button>
-            </div>
-        }
-        else
-        {
-            @* Section Header *@
-            <div class="dash-section-header">
-                <h2>Your Demos</h2>
-            </div>
-
-            <div class="dash-grid">
-                @foreach (var demo in filteredDemos)
-                {
-                    <div class="dash-card" @onclick='() => Nav.NavigateTo($"/demos/{demo.Id}/edit")'>
-                        <div class="dash-card-preview">
-                            <div class="dash-card-preview-inner">
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
-                                </svg>
-                                <span>@demo.FrameCount frames</span>
-                            </div>
-                        </div>
-                        <div class="dash-card-info">
-                            <div class="dash-card-row">
-                                <span class="dash-card-name">@demo.Name</span>
-                                <span class="nt-badge @(demo.Status == DemoStatus.Published ? "nt-badge-live" : "nt-badge-draft")">
-                                    @(demo.Status == DemoStatus.Published ? "Live" : "Draft")
-                                </span>
-                            </div>
-                            <div class="dash-card-meta">
-                                <span>@demo.FrameCount frames</span>
-                                <span class="dash-dot"></span>
-                                <span>@demo.ViewCount views</span>
-                                <span class="dash-dot"></span>
-                                <span>@demo.StepCount steps</span>
-                            </div>
-                            <div class="dash-card-actions" @onclick:stopPropagation="true">
-                                <button class="dash-action-btn" @onclick='() => Nav.NavigateTo($"/demos/{demo.Id}/edit")'>Edit</button>
-                                <button class="dash-action-btn dash-action-secondary" @onclick='() => Nav.NavigateTo($"/demos/{demo.Id}/analytics")'>Analytics</button>
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
-        }
-
-        @* Tips card *@
-        @if (demos.Count < 5)
-        {
-            <div class="dash-tips">
-                <div class="dash-tips-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+                <a href="/get-started" class="dash-action-link">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
                     </svg>
-                </div>
-                <div>
-                    <strong>Getting started</strong>
-                    <p>Install the Chrome extension to capture pages from your product, then build guided tours in the editor.</p>
-                </div>
+                    Getting Started Guide
+                </a>
+            }
+            else if (activeTab == "screenshots")
+            {
+                <button class="nt-btn-primary" @onclick="CreateNewScreenshot">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Create Screenshot
+                </button>
+            }
+        </div>
+
+        @if (activeTab == "demos")
+        {
+            @* Search *@
+            <div class="dash-search">
+                <svg class="dash-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <RadzenTextBox Placeholder="Search demos..." @bind-Value="searchText" Change="@OnSearchChanged" Style="flex:1;border:none;box-shadow:none;background:transparent;font-size:0.875rem" />
             </div>
+
+            @if (filteredDemos.Count == 0 && demos.Count > 0)
+            {
+                <div class="dash-empty">
+                    <p>No demos match "<strong>@searchText</strong>"</p>
+                </div>
+            }
+            else if (demos.Count == 0)
+            {
+                <div class="nt-empty">
+                    <div class="nt-empty-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+                        </svg>
+                    </div>
+                    <h3>No demos yet</h3>
+                    <p>Create your first interactive demo to start converting prospects.</p>
+                    <button class="nt-btn-primary" @onclick="CreateNewDemo">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Create Demo
+                    </button>
+                </div>
+            }
+            else
+            {
+                @* Section Header *@
+                <div class="dash-section-header">
+                    <h2>Your Demos</h2>
+                </div>
+
+                <div class="dash-grid">
+                    @foreach (var demo in filteredDemos)
+                    {
+                        <div class="dash-card" @onclick='() => Nav.NavigateTo($"/demos/{demo.Id}/edit")'>
+                            <div class="dash-card-preview">
+                                <div class="dash-card-preview-inner">
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+                                    </svg>
+                                    <span>@demo.FrameCount frames</span>
+                                </div>
+                            </div>
+                            <div class="dash-card-info">
+                                <div class="dash-card-row">
+                                    <span class="dash-card-name">@demo.Name</span>
+                                    <span class="nt-badge @(demo.Status == DemoStatus.Published ? "nt-badge-live" : "nt-badge-draft")">
+                                        @(demo.Status == DemoStatus.Published ? "Live" : "Draft")
+                                    </span>
+                                </div>
+                                <div class="dash-card-meta">
+                                    <span>@demo.FrameCount frames</span>
+                                    <span class="dash-dot"></span>
+                                    <span>@demo.ViewCount views</span>
+                                    <span class="dash-dot"></span>
+                                    <span>@demo.StepCount steps</span>
+                                </div>
+                                <div class="dash-card-actions" @onclick:stopPropagation="true">
+                                    <button class="dash-action-btn" @onclick='() => Nav.NavigateTo($"/demos/{demo.Id}/edit")'>Edit</button>
+                                    <button class="dash-action-btn dash-action-secondary" @onclick='() => Nav.NavigateTo($"/demos/{demo.Id}/analytics")'>Analytics</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+
+            @* Tips card *@
+            @if (demos.Count < 5)
+            {
+                <div class="dash-tips">
+                    <div class="dash-tips-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <strong>Getting started</strong>
+                        <p>Install the Chrome extension to capture pages from your product, then build guided tours in the editor.</p>
+                    </div>
+                </div>
+            }
+        }
+
+        @if (activeTab == "screenshots")
+        {
+            @if (screenshotsLoading)
+            {
+                <RadzenStack AlignItems="AlignItems.Center" Style="margin:60px auto">
+                    <RadzenProgressBarCircular ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+                </RadzenStack>
+            }
+            else if (!screenshots.Any())
+            {
+                <div class="dash-empty-state">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--rz-text-secondary-color)"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    <h3 class="dash-empty-title">Snap beautiful screenshots instantly</h3>
+                    <p class="dash-empty-subtitle">Create, annotate and share beautiful screenshots. Perfect for product updates or internal communication.</p>
+                    <button class="nt-btn-primary" @onclick="CreateNewScreenshot">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Create Screenshot
+                    </button>
+                </div>
+            }
+            else
+            {
+                <div class="demo-grid">
+                    @foreach (var ss in screenshots)
+                    {
+                        <div class="demo-card" @onclick='() => Nav.NavigateTo($"/screenshots/{ss.Id}/edit")'>
+                            <div class="demo-card-thumb">
+                                @if (ss.ThumbnailUrl != null && ss.ThumbnailUrl.StartsWith("data:"))
+                                {
+                                    <img src="@ss.ThumbnailUrl" alt="@ss.Name" style="width:100%;height:100%;object-fit:cover" />
+                                }
+                                else
+                                {
+                                    <div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--rz-text-secondary-color)">
+                                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                    </div>
+                                }
+                            </div>
+                            <div class="demo-card-body">
+                                <div class="demo-card-name">@ss.Name</div>
+                                <div class="demo-card-meta">@ss.SlideCount slide@(ss.SlideCount != 1 ? "s" : "") · @ss.CreatedAt.ToString("MMM d")</div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
         }
     </div>
 }
@@ -166,6 +243,93 @@ else
         max-width: 960px;
         margin: 0 auto;
         padding: 4px 0 32px;
+    }
+
+    /* Content Type Tabs */
+    .dash-tabs {
+        display: flex;
+        gap: 4px;
+        margin-bottom: 24px;
+        background: var(--rz-base-background-color);
+        border: 1px solid var(--rz-base-border-color);
+        border-radius: 8px;
+        padding: 4px;
+        width: fit-content;
+    }
+    .dash-tab {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 16px;
+        border: none;
+        background: transparent;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--rz-text-secondary-color);
+        cursor: pointer;
+        transition: all 0.15s;
+    }
+    .dash-tab.active {
+        background: white;
+        color: var(--rz-text-color);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .dash-tab:hover:not(.active) {
+        background: rgba(0,0,0,0.04);
+        color: var(--rz-text-color);
+    }
+
+    /* Screenshot cards */
+    .demo-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 20px;
+    }
+    .demo-card {
+        background: var(--nt-surface);
+        border: 1px solid var(--nt-border);
+        border-radius: 10px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: border-color var(--nt-duration-normal) var(--nt-ease),
+                    box-shadow var(--nt-duration-normal) var(--nt-ease),
+                    transform var(--nt-duration-normal) var(--nt-ease);
+    }
+    .demo-card:hover {
+        border-color: var(--nt-border-hover);
+        box-shadow: var(--nt-shadow-lg);
+        transform: translateY(-3px);
+    }
+    .demo-card-thumb {
+        height: 160px;
+        background: linear-gradient(145deg, var(--nt-surface-subtle) 0%, var(--nt-surface-secondary) 100%);
+        border-bottom: 1px solid var(--nt-surface-subtle);
+        overflow: hidden;
+    }
+    .demo-card-body { padding: 14px 16px 16px; }
+    .demo-card-name {
+        font-size: 0.9375rem; font-weight: 600;
+        color: var(--nt-text-primary); letter-spacing: -0.01em;
+        margin-bottom: 4px;
+    }
+    .demo-card-meta {
+        font-size: 0.75rem; color: var(--nt-text-muted);
+    }
+
+    /* Screenshot empty state */
+    .dash-empty-state {
+        display: flex; flex-direction: column; align-items: center;
+        text-align: center; padding: 72px 24px;
+        gap: 12px;
+    }
+    .dash-empty-title {
+        font-size: 1.125rem; font-weight: 600; color: var(--nt-text-primary);
+        margin: 4px 0 0;
+    }
+    .dash-empty-subtitle {
+        font-size: 0.875rem; color: var(--nt-text-muted);
+        max-width: 420px; line-height: 1.6; margin: 0 0 8px;
     }
 
     /* KPI Stats Row */
@@ -364,6 +528,28 @@ else
     private AnalyticsSummaryResponse? summary;
     private bool loading = true;
     private string searchText = "";
+    private string activeTab = "demos";
+    private List<ScreenshotListItemResponse> screenshots = [];
+    private bool screenshotsLoading = false;
+
+    private async Task SetTab(string tab)
+    {
+        activeTab = tab;
+        if (tab == "screenshots" && !screenshots.Any())
+        {
+            screenshotsLoading = true;
+            screenshots = await ScreenshotApi.GetAllAsync();
+            screenshotsLoading = false;
+        }
+    }
+
+    private async Task CreateNewScreenshot()
+    {
+        var result = await Dialog.OpenAsync<CreateScreenshotDialog>("New Screenshot",
+            options: new() { Width = "480px", CloseDialogOnOverlayClick = true });
+        if (result is Guid screenshotId)
+            Nav.NavigateTo($"/screenshots/{screenshotId}/edit");
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

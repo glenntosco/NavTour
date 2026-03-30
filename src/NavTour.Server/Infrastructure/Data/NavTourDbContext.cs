@@ -40,6 +40,8 @@ public class NavTourDbContext : IdentityDbContext<ApplicationUser, IdentityRole<
     public DbSet<Showcase> Showcases => Set<Showcase>();
     public DbSet<ShowcaseSection> ShowcaseSections => Set<ShowcaseSection>();
     public DbSet<ShowcaseItem> ShowcaseItems => Set<ShowcaseItem>();
+    public DbSet<Screenshot> Screenshots => Set<Screenshot>();
+    public DbSet<ScreenshotSlide> ScreenshotSlides => Set<ScreenshotSlide>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -225,6 +227,29 @@ public class NavTourDbContext : IdentityDbContext<ApplicationUser, IdentityRole<
             e.HasQueryFilter(i => i.TenantId == _tenantProvider.TenantId && !i.IsDeleted);
             e.HasOne<ShowcaseSection>().WithMany(s => s.Items).HasForeignKey(i => i.SectionId);
             e.Property(i => i.TitleOverride).HasMaxLength(200);
+        });
+
+        // Screenshot
+        builder.Entity<Screenshot>(b =>
+        {
+            b.HasQueryFilter(s => s.TenantId == _tenantProvider.TenantId && !s.IsDeleted);
+            b.HasIndex(s => new { s.TenantId, s.Slug }).IsUnique();
+            b.Property(s => s.Name).HasMaxLength(200);
+            b.Property(s => s.Slug).HasMaxLength(100);
+            b.Property(s => s.Description).HasMaxLength(2000);
+        });
+
+        // ScreenshotSlide
+        builder.Entity<ScreenshotSlide>(b =>
+        {
+            b.HasQueryFilter(s => s.TenantId == _tenantProvider.TenantId && !s.IsDeleted);
+            b.Property(s => s.Name).HasMaxLength(200);
+            b.Property(s => s.ImageData).HasColumnType("nvarchar(max)");
+            b.Property(s => s.AnnotationData).HasColumnType("nvarchar(max)");
+            b.HasOne(s => s.Screenshot)
+             .WithMany(sc => sc.Slides)
+             .HasForeignKey(s => s.ScreenshotId)
+             .OnDelete(DeleteBehavior.Cascade);
         });
 
         // CapturedResource — content-addressed, shared across tenants (no query filter)
