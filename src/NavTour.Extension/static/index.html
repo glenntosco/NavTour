@@ -35,16 +35,15 @@
           <div class="mode-card" data-mode="screenshot">
             <div class="mode-card-icon">
               <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="4" y="6" width="24" height="20" rx="3" />
-                <circle cx="16" cy="16" r="5" />
-                <circle cx="16" cy="16" r="2" />
-                <line x1="24" y1="10" x2="24" y2="10.01" stroke-width="3" />
+                <rect x="4" y="4" width="24" height="24" rx="3" />
+                <circle cx="11" cy="11" r="2" />
+                <polyline points="28 20 21 13 7 28" />
               </svg>
             </div>
             <div class="mode-card-content">
-              <h3>Screenshot</h3>
-              <p>Capture flat images of each screen. Fast, reliable, works everywhere.</p>
-              <span class="mode-best-for">Best for: tutorials, help docs, onboarding</span>
+              <h3>Screenshots</h3>
+              <p>Capture images and annotate them with shapes, text &amp; blur.</p>
+              <span class="mode-best-for">Best for: product updates, help docs, walkthroughs</span>
             </div>
           </div>
 
@@ -141,6 +140,27 @@
         </p>
 
         <button id="start-capture-btn" class="btn btn-primary">Start Capturing</button>
+      </div>
+
+      <!-- Screenshot Entity Select Screen -->
+      <div id="screen-screenshots" class="screen" hidden>
+        <div class="header">
+          <h2>Screenshots</h2>
+          <button id="logout-screenshots-btn" class="btn btn-link">Logout</button>
+        </div>
+        <div class="field">
+          <label for="screenshot-entity-select">Add to screenshot</label>
+          <select id="screenshot-entity-select">
+            <option value="">Loading...</option>
+          </select>
+        </div>
+        <div class="or-divider">or create new</div>
+        <div class="field">
+          <label for="new-screenshot-name">Screenshot name</label>
+          <input type="text" id="new-screenshot-name" placeholder="My Screenshot" />
+        </div>
+        <div id="screenshot-entity-error" class="error" hidden></div>
+        <button id="start-screenshot-capture-btn" class="btn btn-primary">Start Capturing</button>
       </div>
 
       <!-- Capture Active Screen (HTML mode) -->

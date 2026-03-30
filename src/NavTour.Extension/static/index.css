@@ -386,3 +386,33 @@ body.popup-body {
 .capture-actions .btn {
   flex: 1;
 }
+
+/* ── Or divider ─────────────────────────────────────────────── */
+
+.or-divider {
+  font-size: 11px;
+  color: var(--nt-text-muted);
+  text-align: center;
+  margin: 4px 0 14px;
+  position: relative;
+}
+
+.or-divider::before,
+.or-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 38%;
+  height: 1px;
+  background: var(--nt-border);
+}
+
+.or-divider::before { left: 0; }
+.or-divider::after { right: 0; }
+
+/* ── Video recording button state ───────────────────────────── */
+
+.btn-recording {
+  background: #ef4444 !important;
+  color: #fff !important;
+}
