@@ -4,6 +4,21 @@ All notable changes to NavTour are documented in this file.
 
 ---
 
+## [1.5.0] - 2026-03-30
+
+### Added
+- **Annotated Screenshots** — New content type alongside Product Demos. Create, annotate, and share beautiful screenshots for product updates or internal communication.
+  - Dashboard tab toggle between **Product Demos** and **Screenshots**
+  - Screenshot editor at `/screenshots/{id}/edit` with full-viewport canvas
+  - **Fabric.js canvas engine** — draw rectangles, arrows, highlighters, text overlays, and blur/redact regions directly on screenshots
+  - **5-tab toolbar** — Shapes (rectangle/arrow/highlighter), Text (font/size/color), Redact (blur intensity), Crop (aspect ratio presets), Alignment (contain/cover + position)
+  - Multi-slide support — upload multiple images per screenshot, switch between slides
+  - Undo/redo stack (50 states)
+  - Annotation data persisted as JSON per slide in the database
+  - REST API at `api/v1/screenshots` with full CRUD + publish/unpublish + slide management
+
+---
+
 ## [1.4.0] - 2026-03-24
 
 ### Added
