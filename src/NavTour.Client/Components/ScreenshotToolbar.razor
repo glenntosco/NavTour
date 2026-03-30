@@ -1,0 +1,210 @@
+@using NavTour.Shared.DTOs.Screenshots
+@inject IJSRuntime JS
+
+<div class="sc-toolbar">
+    @* Tab headers *@
+    <div class="sc-toolbar-tabs">
+        @foreach (var tab in new[] { "shapes", "text", "redact", "crop", "alignment" })
+        {
+            <button class="sc-toolbar-tab @(activeTab == tab ? "active" : "")"
+                    @onclick="() => SetTab(tab)">
+                @GetTabLabel(tab)
+            </button>
+        }
+    </div>
+
+    @* Tab content *@
+    <div class="sc-toolbar-content">
+        @if (activeTab == "shapes")
+        {
+            <div class="sc-tool-group">
+                <label class="sc-label">Shape</label>
+                <div class="sc-btn-row">
+                    @foreach (var shape in new[] { ("rectangle", "Rectangle"), ("arrow", "Arrow"), ("highlighter", "Highlighter") })
+                    {
+                        <button class="sc-tool-btn @(ActiveTool == shape.Item1 ? "active" : "")"
+                                @onclick="() => SetActiveTool(shape.Item1)">@shape.Item2</button>
+                    }
+                </div>
+            </div>
+            <div class="sc-tool-group">
+                <label class="sc-label">Fill Color</label>
+                <input type="color" class="sc-color" value="@fillColor"
+                       @oninput="async e => { fillColor = e.Value?.ToString() ?? fillColor; await UpdateShapeProps(); }" />
+            </div>
+            <div class="sc-tool-group">
+                <label class="sc-label">Line Color</label>
+                <input type="color" class="sc-color" value="@lineColor"
+                       @oninput="async e => { lineColor = e.Value?.ToString() ?? lineColor; await UpdateShapeProps(); }" />
+            </div>
+            <div class="sc-tool-group">
+                <label class="sc-label">Line Width: @lineWidth px</label>
+                <input type="range" min="1" max="10" @bind="lineWidth" @bind:event="oninput"
+                       @onchange="async _ => await UpdateShapeProps()" class="sc-range" />
+            </div>
+            <div class="sc-tool-group">
+                <label class="sc-label">Corner Radius: @cornerRadius</label>
+                <input type="range" min="0" max="20" @bind="cornerRadius" @bind:event="oninput"
+                       @onchange="async _ => await UpdateShapeProps()" class="sc-range" />
+            </div>
+        }
+        else if (activeTab == "text")
+        {
+            <div class="sc-tool-group">
+                <label class="sc-label">Font Color</label>
+                <input type="color" class="sc-color" value="@fontColor"
+                       @oninput="async e => { fontColor = e.Value?.ToString() ?? fontColor; await UpdateTextProps(); }" />
+            </div>
+            <div class="sc-tool-group">
+                <label class="sc-label">Font Family</label>
+                <select class="sc-select" @bind="fontFamily" @bind:after="UpdateTextProps">
+                    <option>Inter</option>
+                    <option>Arial</option>
+                    <option>Georgia</option>
+                    <option>Courier New</option>
+                </select>
+            </div>
+            <div class="sc-tool-group">
+                <label class="sc-label">Font Size</label>
+                <select class="sc-select" @bind="fontSize" @bind:after="UpdateTextProps">
+                    @foreach (var s in new[] { 12, 14, 16, 18, 20, 24, 28, 32, 40, 48 })
+                    {
+                        <option value="@s">@s</option>
+                    }
+                </select>
+            </div>
+            <div class="sc-tool-group">
+                <button class="sc-tool-btn @(ActiveTool == "text" ? "active" : "")"
+                        @onclick='() => SetActiveTool("text")'>Click to place text</button>
+            </div>
+        }
+        else if (activeTab == "redact")
+        {
+            <div class="sc-tool-group">
+                <button class="sc-tool-btn @(ActiveTool == "redact" ? "active" : "")"
+                        @onclick='() => SetActiveTool("redact")' style="width:100%">
+                    Draw to Redact
+                </button>
+            </div>
+            <div class="sc-tool-group">
+                <label class="sc-label">Blur Intensity: @blurIntensity</label>
+                <input type="range" min="0" max="100" @bind="blurIntensity" @bind:after="UpdateBlurIntensityAsync"
+                       class="sc-range" />
+            </div>
+            <p class="sc-hint">Click and drag over sensitive areas to redact them.</p>
+        }
+        else if (activeTab == "crop")
+        {
+            <div class="sc-tool-group">
+                <label class="sc-label">Aspect Ratio</label>
+                <div class="sc-btn-row" style="flex-wrap:wrap">
+                    @foreach (var ratio in new[] { "Free Form", "16:9", "4:3", "1:1", "9:16" })
+                    {
+                        <button class="sc-tool-btn @(cropRatio == ratio ? "active" : "")"
+                                @onclick="() => { cropRatio = ratio; }">@ratio</button>
+                    }
+                </div>
+            </div>
+            <p class="sc-hint">Use crop handles on the canvas to adjust the crop area.</p>
+        }
+        else if (activeTab == "alignment")
+        {
+            <div class="sc-tool-group">
+                <label class="sc-label">Fit Mode</label>
+                <div class="sc-btn-row">
+                    <button class="sc-tool-btn @(fitMode == "contain" ? "active" : "")"
+                            @onclick='() => SetFitMode("contain")'>Contain</button>
+                    <button class="sc-tool-btn @(fitMode == "cover" ? "active" : "")"
+                            @onclick='() => SetFitMode("cover")'>Cover</button>
+                </div>
+            </div>
+            <div class="sc-tool-group">
+                <label class="sc-label">Background</label>
+                <input type="color" class="sc-color" @bind="bgColor" />
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+.sc-toolbar { display: flex; flex-direction: column; height: 100%; background: var(--rz-base-background-color); border-left: 1px solid var(--rz-base-border-color); }
+.sc-toolbar-tabs { display: flex; flex-wrap: wrap; gap: 2px; padding: 8px; border-bottom: 1px solid var(--rz-base-border-color); }
+.sc-toolbar-tab { padding: 5px 10px; border: none; background: transparent; border-radius: 6px; font-size: 0.75rem; font-weight: 500; cursor: pointer; color: var(--rz-text-secondary-color); transition: all 0.15s; }
+.sc-toolbar-tab.active { background: var(--rz-primary); color: white; }
+.sc-toolbar-tab:hover:not(.active) { background: var(--rz-base-200); color: var(--rz-text-color); }
+.sc-toolbar-content { padding: 16px; overflow-y: auto; flex: 1; }
+.sc-tool-group { margin-bottom: 16px; }
+.sc-label { display: block; font-size: 0.75rem; font-weight: 600; color: var(--rz-text-secondary-color); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+.sc-btn-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.sc-tool-btn { padding: 6px 12px; border: 1px solid var(--rz-base-border-color); background: transparent; border-radius: 6px; font-size: 0.8rem; cursor: pointer; transition: all 0.15s; color: var(--rz-text-color); }
+.sc-tool-btn.active { background: var(--rz-primary); color: white; border-color: var(--rz-primary); }
+.sc-tool-btn:hover:not(.active) { background: var(--rz-base-200); }
+.sc-color { width: 40px; height: 32px; padding: 2px; border: 1px solid var(--rz-base-border-color); border-radius: 6px; cursor: pointer; }
+.sc-range { width: 100%; }
+.sc-select { width: 100%; padding: 6px 8px; border: 1px solid var(--rz-base-border-color); border-radius: 6px; background: var(--rz-base-background-color); font-size: 0.875rem; }
+.sc-hint { font-size: 0.75rem; color: var(--rz-text-secondary-color); line-height: 1.4; margin: 0; }
+</style>
+
+@code {
+    [Parameter] public string ActiveTool { get; set; } = "select";
+    [Parameter] public EventCallback<string> ActiveToolChanged { get; set; }
+
+    private string activeTab = "shapes";
+    private string fillColor = "transparent";
+    private string lineColor = "#4361ee";
+    private int lineWidth = 2;
+    private int cornerRadius = 0;
+    private string fontColor = "#000000";
+    private string fontFamily = "Inter";
+    private int fontSize = 18;
+    private int blurIntensity = 40;
+    private string cropRatio = "Free Form";
+    private string fitMode = "contain";
+    private string bgColor = "#ffffff";
+
+    private void SetTab(string tab) => activeTab = tab;
+
+    private string GetTabLabel(string tab) => tab switch
+    {
+        "shapes" => "Shapes",
+        "text" => "Text",
+        "redact" => "Redact",
+        "crop" => "Crop",
+        "alignment" => "Align",
+        _ => tab
+    };
+
+    private async Task SetActiveTool(string tool)
+    {
+        ActiveTool = tool;
+        await ActiveToolChanged.InvokeAsync(tool);
+        await JS.InvokeVoidAsync("screenshotCanvas.setTool", tool);
+    }
+
+    private async Task SetFitMode(string mode)
+    {
+        fitMode = mode;
+        await JS.InvokeVoidAsync("screenshotCanvas.setAlignment", mode, "center");
+    }
+
+    private async Task UpdateShapeProps()
+    {
+        await JS.InvokeVoidAsync("screenshotCanvas.setShapeProps", new
+        {
+            fillColor, lineColor, lineWidth, cornerRadius
+        });
+    }
+
+    private async Task UpdateTextProps()
+    {
+        await JS.InvokeVoidAsync("screenshotCanvas.setTextProps", new
+        {
+            fontFamily, fontSize, color = fontColor
+        });
+    }
+
+    private async Task UpdateBlurIntensityAsync()
+    {
+        await JS.InvokeVoidAsync("screenshotCanvas.setRedactBlurIntensity", blurIntensity);
+    }
+}

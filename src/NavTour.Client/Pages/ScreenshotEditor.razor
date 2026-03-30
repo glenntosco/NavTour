@@ -1,0 +1,240 @@
+@page "/screenshots/{ScreenshotId:guid}/edit"
+@rendermode InteractiveServer
+@implements IDisposable
+@using NavTour.Shared.DTOs.Screenshots
+@inject ScreenshotApiService ScreenshotApi
+@inject IJSRuntime JS
+@inject NavigationManager Nav
+@inject DialogService Dialog
+
+@if (loading)
+{
+    <RadzenStack AlignItems="AlignItems.Center" Style="margin:100px auto">
+        <RadzenProgressBarCircular ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+    </RadzenStack>
+}
+else if (screenshot == null)
+{
+    <RadzenStack AlignItems="AlignItems.Center" Style="margin:60px auto;text-align:center">
+        <p>Screenshot not found.</p>
+        <RadzenButton Text="Back to Dashboard" Click='() => Nav.NavigateTo("/dashboard")' />
+    </RadzenStack>
+}
+else
+{
+    <div class="sc-editor">
+        @* Top toolbar *@
+        <div class="sc-editor-top">
+            <button class="sc-back-btn" @onclick='() => Nav.NavigateTo("/dashboard")'>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            </button>
+            <input class="sc-name-input" @bind="screenshotName" @bind:event="oninput"
+                   @onblur="SaveNameAsync" placeholder="Untitled Screenshot" />
+            <div class="sc-editor-actions">
+                <button class="sc-icon-btn" @onclick="UndoAsync" title="Undo">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+                </button>
+                <button class="sc-icon-btn" @onclick="RedoAsync" title="Redo">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 14 20 9 15 4"/><path d="M4 20v-7a4 4 0 0 1 4-4h12"/></svg>
+                </button>
+                <button class="nt-btn-primary" @onclick="SaveAsync" disabled="@saving">
+                    @(saving ? "Saving..." : "Save")
+                </button>
+            </div>
+        </div>
+
+        @* Main layout *@
+        <div class="sc-editor-body">
+            @* Left: Slide strip *@
+            <div class="sc-editor-slides">
+                <ScreenshotSlideStrip Slides="slides"
+                                      SelectedSlideId="selectedSlide?.Id"
+                                      OnSelectSlide="LoadSlideAsync"
+                                      OnAddSlide="AddSlideAsync" />
+            </div>
+
+            @* Center: Canvas *@
+            <div class="sc-editor-canvas-area" id="canvas-container" @ref="canvasContainer">
+                @if (selectedSlide != null)
+                {
+                    <canvas id="sc-canvas"></canvas>
+                }
+                else
+                {
+                    <div class="sc-canvas-empty">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--rz-text-secondary-color)"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                        <p style="color:var(--rz-text-secondary-color);margin:16px 0">
+                            No slides yet. Add a slide to start annotating.
+                        </p>
+                        <button class="nt-btn-primary" @onclick="AddSlideAsync">Upload Image</button>
+                    </div>
+                }
+            </div>
+
+            @* Right: Toolbar *@
+            <div class="sc-editor-toolbar">
+                <ScreenshotToolbar @bind-ActiveTool="activeTool" />
+            </div>
+        </div>
+    </div>
+
+    @* Hidden file input for image upload *@
+    <InputFile id="slide-upload" OnChange="OnImageSelected" accept="image/*" style="display:none" />
+}
+
+<style>
+.sc-editor { display: flex; flex-direction: column; height: 100vh; overflow: hidden; background: var(--rz-base-background-color); }
+.sc-editor-top { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--rz-base-border-color); background: var(--rz-base-background-color); flex-shrink: 0; }
+.sc-back-btn { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border: 1px solid var(--rz-base-border-color); background: transparent; border-radius: 6px; cursor: pointer; color: var(--rz-text-color); }
+.sc-back-btn:hover { background: var(--rz-base-200); }
+.sc-name-input { flex: 1; border: none; background: transparent; font-size: 1rem; font-weight: 600; outline: none; color: var(--rz-text-color); max-width: 400px; }
+.sc-name-input:focus { border-bottom: 2px solid var(--rz-primary); }
+.sc-editor-actions { display: flex; gap: 8px; align-items: center; margin-left: auto; }
+.sc-icon-btn { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border: 1px solid var(--rz-base-border-color); background: transparent; border-radius: 6px; cursor: pointer; color: var(--rz-text-color); }
+.sc-icon-btn:hover { background: var(--rz-base-200); }
+.sc-editor-body { display: flex; flex: 1; overflow: hidden; }
+.sc-editor-slides { width: 110px; flex-shrink: 0; overflow-y: auto; }
+.sc-editor-canvas-area { flex: 1; display: flex; align-items: center; justify-content: center; background: #e8eaed; overflow: hidden; position: relative; }
+.sc-editor-toolbar { width: 220px; flex-shrink: 0; overflow-y: auto; }
+.sc-canvas-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
+#sc-canvas { max-width: 100%; max-height: 100%; }
+</style>
+
+@code {
+    [Parameter] public Guid ScreenshotId { get; set; }
+
+    private ScreenshotResponse? screenshot;
+    private List<ScreenshotSlideResponse> slides = [];
+    private ScreenshotSlideResponse? selectedSlide;
+    private string screenshotName = "";
+    private string activeTool = "select";
+    private bool loading = true;
+    private bool saving = false;
+    private ElementReference canvasContainer;
+    private DotNetObjectReference<ScreenshotEditor>? dotnetRef;
+
+    protected override async Task OnInitializedAsync()
+    {
+        screenshot = await ScreenshotApi.GetByIdAsync(ScreenshotId);
+        if (screenshot != null)
+        {
+            screenshotName = screenshot.Name;
+            slides = await ScreenshotApi.GetSlidesAsync(ScreenshotId);
+            if (slides.Count > 0) selectedSlide = slides[0];
+        }
+        loading = false;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Load Fabric.js from CDN if not already loaded
+            await JS.InvokeVoidAsync("eval", @"
+                if (!window.fabric) {
+                    var s = document.createElement('script');
+                    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js';
+                    s.onload = function() { window.fabricLoaded = true; };
+                    document.head.appendChild(s);
+                }
+            ");
+            // Wait for fabric to load
+            await Task.Delay(1500);
+            dotnetRef = DotNetObjectReference.Create(this);
+            if (selectedSlide != null)
+                await InitCanvasAsync();
+        }
+    }
+
+    private async Task InitCanvasAsync()
+    {
+        if (selectedSlide == null) return;
+        await JS.InvokeVoidAsync("screenshotCanvas.init", dotnetRef, "sc-canvas", selectedSlide.ImageData);
+        if (selectedSlide.AnnotationData != null)
+            await JS.InvokeVoidAsync("screenshotCanvas.loadAnnotations", selectedSlide.AnnotationData);
+    }
+
+    private async Task LoadSlideAsync(Guid slideId)
+    {
+        // Save current slide annotations first
+        if (selectedSlide != null)
+            await PersistCurrentSlideAsync();
+
+        selectedSlide = slides.FirstOrDefault(s => s.Id == slideId);
+        StateHasChanged();
+        await Task.Delay(50); // let canvas element render
+        if (selectedSlide != null)
+            await InitCanvasAsync();
+    }
+
+    private async Task PersistCurrentSlideAsync()
+    {
+        if (selectedSlide == null) return;
+        try
+        {
+            var json = await JS.InvokeAsync<string>("screenshotCanvas.getAnnotationsJson");
+            await ScreenshotApi.UpdateSlideAsync(selectedSlide.Id, new UpdateSlideRequest(null, json, null, null));
+            // Update local copy
+            var idx = slides.IndexOf(selectedSlide);
+            if (idx >= 0)
+                slides[idx] = selectedSlide with { AnnotationData = json };
+        }
+        catch { /* ignore JS errors during slide switch */ }
+    }
+
+    private async Task SaveAsync()
+    {
+        saving = true;
+        await PersistCurrentSlideAsync();
+        saving = false;
+        StateHasChanged();
+    }
+
+    private async Task SaveNameAsync()
+    {
+        if (!string.IsNullOrWhiteSpace(screenshotName) && screenshotName != screenshot?.Name)
+            await ScreenshotApi.UpdateAsync(ScreenshotId, new UpdateScreenshotRequest(screenshotName, null, null));
+    }
+
+    private async Task UndoAsync() =>
+        await JS.InvokeVoidAsync("screenshotCanvas.undo");
+
+    private async Task RedoAsync() =>
+        await JS.InvokeVoidAsync("screenshotCanvas.redo");
+
+    private async Task AddSlideAsync()
+    {
+        await JS.InvokeVoidAsync("eval", "document.getElementById('slide-upload').click()");
+    }
+
+    private async Task OnImageSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file == null) return;
+        // Save current slide first
+        if (selectedSlide != null) await PersistCurrentSlideAsync();
+        // Upload the new slide
+        using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024);
+        var newSlide = await ScreenshotApi.UploadSlideAsync(ScreenshotId, stream, file.Name, file.ContentType);
+        if (newSlide != null)
+        {
+            slides.Add(newSlide);
+            selectedSlide = newSlide;
+            StateHasChanged();
+            await Task.Delay(50);
+            await InitCanvasAsync();
+        }
+    }
+
+    [JSInvokable]
+    public void OnAnnotationChanged()
+    {
+        // Called from JS when user finishes drawing — could trigger auto-save debounce here
+    }
+
+    public void Dispose()
+    {
+        dotnetRef?.Dispose();
+        _ = JS.InvokeVoidAsync("screenshotCanvas.dispose");
+    }
+}

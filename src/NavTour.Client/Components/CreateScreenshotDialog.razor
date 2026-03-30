@@ -1,0 +1,30 @@
+@using NavTour.Shared.DTOs.Screenshots
+@inject ScreenshotApiService ScreenshotApi
+@inject DialogService Dialog
+@inject NavigationManager Nav
+
+<div style="padding: 8px">
+    <RadzenStack Gap="16px">
+        <RadzenFormField Text="Name" Style="width:100%">
+            <RadzenTextBox @bind-Value="name" Placeholder="My Screenshot" Style="width:100%" />
+        </RadzenFormField>
+        <RadzenStack Orientation="Orientation.Horizontal" Gap="8px" JustifyContent="JustifyContent.End">
+            <RadzenButton Text="Cancel" ButtonStyle="ButtonStyle.Light" Click="() => Dialog.Close(null)" />
+            <RadzenButton Text="Create" ButtonStyle="ButtonStyle.Primary" Click="CreateAsync" Disabled="@(string.IsNullOrWhiteSpace(name) || creating)" />
+        </RadzenStack>
+    </RadzenStack>
+</div>
+
+@code {
+    private string name = "Screenshot";
+    private bool creating = false;
+
+    private async Task CreateAsync()
+    {
+        if (string.IsNullOrWhiteSpace(name)) return;
+        creating = true;
+        var result = await ScreenshotApi.CreateAsync(new CreateScreenshotRequest(name, null));
+        creating = false;
+        Dialog.Close(result?.Id);
+    }
+}

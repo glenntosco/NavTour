@@ -312,11 +312,14 @@
     private string ActiveClass(string path) =>
         Nav.Uri.Contains(path, StringComparison.OrdinalIgnoreCase) ? "active" : "";
 
-    private bool IsEditorPage => Nav.Uri.Contains("/edit", StringComparison.OrdinalIgnoreCase);
+    private bool IsEditorPage =>
+        Nav.Uri.Contains("/edit", StringComparison.OrdinalIgnoreCase) ||
+        Nav.Uri.Contains("/screenshots/", StringComparison.OrdinalIgnoreCase);
 
     private string GetBreadcrumb()
     {
         var uri = Nav.Uri;
+        if (uri.Contains("/screenshots", StringComparison.OrdinalIgnoreCase)) return "Screenshots";
         if (uri.Contains("/showcases", StringComparison.OrdinalIgnoreCase)) return "Showcases";
         if (uri.Contains("/hub", StringComparison.OrdinalIgnoreCase)) return "TourHub";
         if (uri.Contains("/dashboard", StringComparison.OrdinalIgnoreCase)) return "Product Demos";

@@ -126,6 +126,9 @@ builder.Services.AddScoped<HubService>();
 // Showcase Services
 builder.Services.AddScoped<ShowcaseService>();
 
+// Screenshot Services
+builder.Services.AddScoped<ScreenshotService>();
+
 // Analytics Services
 builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 builder.Services.AddScoped<ILeadService, LeadService>();
@@ -170,6 +173,7 @@ builder.Services.AddScoped<FormApiService>();
 builder.Services.AddScoped<ThemeApiService>();
 builder.Services.AddScoped<HubApiService>();
 builder.Services.AddScoped<ShowcaseApiService>();
+builder.Services.AddScoped<ScreenshotApiService>();
 builder.Services.AddScoped<AiApiService>();
 
 var app = builder.Build();
