@@ -79,4 +79,10 @@ public class ScreenshotApiService(HttpClient http)
             new ReorderSlidesRequest(slideIds));
         return response.IsSuccessStatusCode;
     }
+
+    public async Task<ScreenshotResponse?> GetPublicBySlugAsync(string slug) =>
+        await http.GetFromJsonAsync<ScreenshotResponse>($"api/v1/screenshots/view/{slug}");
+
+    public async Task<List<ScreenshotSlideResponse>> GetPublicSlidesAsync(string slug) =>
+        await http.GetFromJsonAsync<List<ScreenshotSlideResponse>>($"api/v1/screenshots/view/{slug}/slides") ?? [];
 }

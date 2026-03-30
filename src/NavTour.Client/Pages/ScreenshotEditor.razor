@@ -2,6 +2,7 @@
 @rendermode InteractiveServer
 @implements IDisposable
 @using NavTour.Shared.DTOs.Screenshots
+@using NavTour.Shared.Enums
 @inject ScreenshotApiService ScreenshotApi
 @inject IJSRuntime JS
 @inject NavigationManager Nav
@@ -37,9 +38,46 @@ else
                 <button class="sc-icon-btn" @onclick="RedoAsync" title="Redo">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 14 20 9 15 4"/><path d="M4 20v-7a4 4 0 0 1 4-4h12"/></svg>
                 </button>
-                <button class="nt-btn-primary" @onclick="SaveAsync" disabled="@saving">
+                <button class="nt-btn-secondary" @onclick="SaveAsync" disabled="@saving">
                     @(saving ? "Saving..." : "Save")
                 </button>
+                <button class="@(isPublished ? "nt-btn-secondary" : "nt-btn-primary")" @onclick="TogglePublishAsync" disabled="@publishing">
+                    @if (publishing) { <span>...</span> }
+                    else if (isPublished) { <span>Unpublish</span> }
+                    else { <span>Publish</span> }
+                </button>
+                @if (isPublished)
+                {
+                    <div class="sc-share-wrap">
+                        <button class="nt-btn-primary sc-share-btn" @onclick="ToggleSharePopover">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                            Share
+                        </button>
+                        @if (showSharePopover)
+                        {
+                            <div class="sc-share-popover">
+                                <div class="sc-share-section">
+                                    <div class="sc-share-label">Public link</div>
+                                    <div class="sc-share-row">
+                                        <input class="sc-share-input" readonly value="@PublicUrl" />
+                                        <button class="sc-copy-btn" @onclick='() => CopyToClipboard(PublicUrl)'>
+                                            @(copiedLink ? "Copied!" : "Copy")
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="sc-share-section">
+                                    <div class="sc-share-label">Embed code</div>
+                                    <div class="sc-share-row">
+                                        <input class="sc-share-input" readonly value="@EmbedCode" />
+                                        <button class="sc-copy-btn" @onclick='() => CopyToClipboard(EmbedCode, isEmbed: true)'>
+                                            @(copiedEmbed ? "Copied!" : "Copy")
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
             </div>
         </div>
 
@@ -83,7 +121,7 @@ else
 }
 
 <style>
-.sc-editor { display: flex; flex-direction: column; height: 100vh; overflow: hidden; background: var(--rz-base-background-color); }
+.sc-editor { display: flex; flex-direction: column; height: 100%; min-height: 0; overflow: hidden; background: var(--rz-base-background-color); }
 .sc-editor-top { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--rz-base-border-color); background: var(--rz-base-background-color); flex-shrink: 0; }
 .sc-back-btn { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border: 1px solid var(--rz-base-border-color); background: transparent; border-radius: 6px; cursor: pointer; color: var(--rz-text-color); }
 .sc-back-btn:hover { background: var(--rz-base-200); }
@@ -92,12 +130,22 @@ else
 .sc-editor-actions { display: flex; gap: 8px; align-items: center; margin-left: auto; }
 .sc-icon-btn { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border: 1px solid var(--rz-base-border-color); background: transparent; border-radius: 6px; cursor: pointer; color: var(--rz-text-color); }
 .sc-icon-btn:hover { background: var(--rz-base-200); }
-.sc-editor-body { display: flex; flex: 1; overflow: hidden; }
-.sc-editor-slides { width: 110px; flex-shrink: 0; overflow-y: auto; }
-.sc-editor-canvas-area { flex: 1; display: flex; align-items: center; justify-content: center; background: #e8eaed; overflow: hidden; position: relative; }
-.sc-editor-toolbar { width: 220px; flex-shrink: 0; overflow-y: auto; }
+.sc-editor-body { display: flex; flex: 1; min-height: 0; overflow: hidden; }
+.sc-editor-slides { width: 160px; flex-shrink: 0; overflow-y: auto; }
+.sc-editor-canvas-area { flex: 1; min-width: 0; display: flex; align-items: center; justify-content: center; background: #e8eaed; overflow: hidden; position: relative; }
+.sc-editor-toolbar { width: 240px; flex-shrink: 0; overflow-y: auto; border-left: 1px solid var(--rz-base-border-color); }
 .sc-canvas-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
-#sc-canvas { max-width: 100%; max-height: 100%; }
+#sc-canvas { display: block; }
+.sc-share-wrap { position: relative; }
+.sc-share-btn { display: flex; align-items: center; gap: 6px; }
+.sc-share-popover { position: absolute; top: calc(100% + 8px); right: 0; background: var(--rz-base-background-color); border: 1px solid var(--rz-base-border-color); border-radius: 10px; padding: 16px; width: 340px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); z-index: 100; }
+.sc-share-section { margin-bottom: 14px; }
+.sc-share-section:last-child { margin-bottom: 0; }
+.sc-share-label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--rz-text-secondary-color); margin-bottom: 6px; }
+.sc-share-row { display: flex; gap: 6px; }
+.sc-share-input { flex: 1; min-width: 0; font-size: 0.78rem; padding: 6px 8px; border: 1px solid var(--rz-base-border-color); border-radius: 6px; background: var(--rz-base-100); color: var(--rz-text-color); outline: none; }
+.sc-copy-btn { flex-shrink: 0; padding: 6px 12px; font-size: 0.78rem; font-weight: 600; border-radius: 6px; border: 1px solid var(--rz-primary); background: transparent; color: var(--rz-primary); cursor: pointer; transition: background 0.15s; }
+.sc-copy-btn:hover { background: var(--rz-primary-light); }
 </style>
 
 @code {
@@ -110,8 +158,16 @@ else
     private string activeTool = "select";
     private bool loading = true;
     private bool saving = false;
+    private bool publishing = false;
+    private bool showSharePopover = false;
+    private bool copiedLink = false;
+    private bool copiedEmbed = false;
     private ElementReference canvasContainer;
     private DotNetObjectReference<ScreenshotEditor>? dotnetRef;
+
+    private bool isPublished => screenshot?.Status == DemoStatus.Published;
+    private string PublicUrl => $"https://navtour.cloud/s/{screenshot?.Slug}";
+    private string EmbedCode => $"<iframe src=\"{PublicUrl}\" width=\"800\" height=\"500\" frameborder=\"0\" allowfullscreen></iframe>";
 
     protected override async Task OnInitializedAsync()
     {
@@ -194,6 +250,34 @@ else
     {
         if (!string.IsNullOrWhiteSpace(screenshotName) && screenshotName != screenshot?.Name)
             await ScreenshotApi.UpdateAsync(ScreenshotId, new UpdateScreenshotRequest(screenshotName, null, null));
+    }
+
+    private async Task TogglePublishAsync()
+    {
+        if (screenshot == null) return;
+        publishing = true;
+        if (isPublished)
+            await ScreenshotApi.UnpublishAsync(ScreenshotId);
+        else
+            await ScreenshotApi.PublishAsync(ScreenshotId);
+        screenshot = await ScreenshotApi.GetByIdAsync(ScreenshotId);
+        showSharePopover = false;
+        publishing = false;
+        StateHasChanged();
+    }
+
+    private void ToggleSharePopover()
+    {
+        showSharePopover = !showSharePopover;
+        StateHasChanged();
+    }
+
+    private async Task CopyToClipboard(string text, bool isEmbed = false)
+    {
+        await JS.InvokeVoidAsync("navigator.clipboard.writeText", text);
+        if (isEmbed) { copiedEmbed = true; StateHasChanged(); await Task.Delay(1500); copiedEmbed = false; }
+        else { copiedLink = true; StateHasChanged(); await Task.Delay(1500); copiedLink = false; }
+        StateHasChanged();
     }
 
     private async Task UndoAsync() =>

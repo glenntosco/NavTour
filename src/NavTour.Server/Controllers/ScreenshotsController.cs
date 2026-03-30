@@ -4,6 +4,8 @@ using NavTour.Server.Services;
 using NavTour.Shared.DTOs.Screenshots;
 using System.Security.Claims;
 
+
+
 namespace NavTour.Server.Controllers;
 
 [ApiController]
@@ -87,5 +89,21 @@ public class ScreenshotsController(ScreenshotService screenshotService) : Contro
     {
         await screenshotService.ReorderSlidesAsync(id, request.SlideIds);
         return Ok();
+    }
+
+    [HttpGet("view/{slug}")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetPublicBySlug(string slug)
+    {
+        var result = await screenshotService.GetPublicBySlugAsync(slug);
+        return result == null ? NotFound() : Ok(result);
+    }
+
+    [HttpGet("view/{slug}/slides")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetPublicSlides(string slug)
+    {
+        var slides = await screenshotService.GetPublicSlidesAsync(slug);
+        return Ok(slides);
     }
 }

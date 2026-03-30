@@ -101,6 +101,24 @@ public class ScreenshotService(NavTourDbContext db)
             .ToListAsync();
     }
 
+    public async Task<List<ScreenshotSlideResponse>> GetPublicSlidesAsync(string slug)
+    {
+        var screenshot = await db.Screenshots
+            .IgnoreQueryFilters()
+            .Where(s => s.Slug == slug && s.Status == DemoStatus.Published && !s.IsDeleted)
+            .FirstOrDefaultAsync();
+        if (screenshot == null) return [];
+
+        return await db.ScreenshotSlides
+            .IgnoreQueryFilters()
+            .Where(sl => sl.ScreenshotId == screenshot.Id && !sl.IsDeleted)
+            .OrderBy(sl => sl.SequenceOrder)
+            .Select(sl => new ScreenshotSlideResponse(
+                sl.Id, sl.Name, sl.SequenceOrder, sl.ImageData,
+                sl.ThumbnailUrl, sl.AnnotationData, sl.CropData, sl.DisplaySettings))
+            .ToListAsync();
+    }
+
     public async Task<ScreenshotSlideResponse> AddSlideAsync(Guid screenshotId, IFormFile imageFile, string? name)
     {
         var maxOrder = await db.ScreenshotSlides
@@ -176,5 +194,24 @@ public class ScreenshotService(NavTourDbContext db)
         while (await db.Screenshots.AnyAsync(s => s.Slug == slug))
             slug = $"{baseSlug}-{counter++}";
         return slug;
+    }
+
+    public async Task<ScreenshotResponse?> GetPublicBySlugAsync(string slug)
+    {
+        var s = await db.Screenshots
+            .IgnoreQueryFilters()
+            .Include(s => s.Slides)
+            .Where(s => s.Slug == slug && s.Status == DemoStatus.Published && !s.IsDeleted)
+            .FirstOrDefaultAsync();
+        if (s == null) return null;
+
+        // Increment view count
+        s.ViewCount++;
+        await db.SaveChangesAsync();
+
+        return new ScreenshotResponse(s.Id, s.Name, s.Slug, s.Description, s.Status,
+            s.Settings, s.ViewCount,
+            s.Slides.Count(sl => !sl.IsDeleted),
+            s.CreatedAt);
     }
 }

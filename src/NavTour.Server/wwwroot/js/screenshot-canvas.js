@@ -26,7 +26,14 @@ window.screenshotCanvas = {
         dotnetRef = dotnetReference;
         if (canvas) { canvas.dispose(); canvas = null; }
 
+        // Size canvas to fill the container
+        const container = document.getElementById('canvas-container');
+        const w = container ? container.clientWidth : 900;
+        const h = container ? container.clientHeight : 600;
+
         canvas = new fabric.Canvas(canvasId, {
+            width: w,
+            height: h,
             selection: true,
             preserveObjectStacking: true
         });
@@ -268,5 +275,94 @@ window.screenshotCanvas = {
             window.screenshotCanvas._saveState();
             if (dotnetRef) dotnetRef.invokeMethodAsync('OnAnnotationChanged');
         }
+    }
+};
+
+// Read-only viewer — renders a slide with annotations, no editing
+window.screenshotViewer = {
+    _canvas: null,
+
+    render: function(canvasId, containerId, imageData, annotationData) {
+        if (this._canvas) { this._canvas.dispose(); this._canvas = null; }
+
+        const container = document.getElementById(containerId);
+        const w = container ? container.clientWidth : 900;
+        const h = container ? container.clientHeight : 600;
+
+        this._canvas = new fabric.Canvas(canvasId, {
+            width: w, height: h,
+            selection: false, interactive: false
+        });
+
+        const c = this._canvas;
+        const self = this;
+
+        if (imageData) {
+            fabric.Image.fromURL(imageData, function(img) {
+                const scale = Math.min(w / img.width, h / img.height);
+                c.setBackgroundImage(img, c.renderAll.bind(c), {
+                    scaleX: scale, scaleY: scale,
+                    left: (w - img.width * scale) / 2,
+                    top: (h - img.height * scale) / 2,
+                    originX: 'left', originY: 'top'
+                });
+                if (annotationData) self._loadAnnotations(c, annotationData);
+            });
+        } else if (annotationData) {
+            this._loadAnnotations(c, annotationData);
+        }
+    },
+
+    _loadAnnotations: function(c, json) {
+        if (!json || json === 'null') return;
+        try {
+            const annotations = JSON.parse(json);
+            annotations.forEach(function(a) {
+                let obj;
+                if (a.type === 'rectangle') {
+                    obj = new fabric.Rect({
+                        left: a.x, top: a.y, width: a.w, height: a.h,
+                        fill: a.fillColor || 'transparent',
+                        stroke: a.lineColor, strokeWidth: a.lineWidth,
+                        rx: a.cornerRadius || 0, ry: a.cornerRadius || 0,
+                        selectable: false, evented: false
+                    });
+                } else if (a.type === 'arrow') {
+                    obj = new fabric.Line([a.x1, a.y1, a.x2, a.y2], {
+                        stroke: a.lineColor, strokeWidth: a.lineWidth,
+                        selectable: false, evented: false
+                    });
+                } else if (a.type === 'highlighter') {
+                    const r = parseInt(a.color.slice(1,3),16);
+                    const g = parseInt(a.color.slice(3,5),16);
+                    const b = parseInt(a.color.slice(5,7),16);
+                    obj = new fabric.Rect({
+                        left: a.x, top: a.y, width: a.w, height: a.h,
+                        fill: `rgba(${r},${g},${b},${a.opacity||0.4})`,
+                        stroke: 'transparent', strokeWidth: 0,
+                        selectable: false, evented: false
+                    });
+                } else if (a.type === 'text') {
+                    obj = new fabric.IText(a.text, {
+                        left: a.x, top: a.y,
+                        fontFamily: a.fontFamily, fontSize: a.fontSize,
+                        fill: a.color,
+                        selectable: false, evented: false
+                    });
+                } else if (a.type === 'redact') {
+                    obj = new fabric.Rect({
+                        left: a.x, top: a.y, width: a.w, height: a.h,
+                        fill: 'rgba(0,0,0,0.5)', stroke: 'transparent',
+                        selectable: false, evented: false
+                    });
+                }
+                if (obj) c.add(obj);
+            });
+            c.renderAll();
+        } catch(e) { console.error('Failed to load viewer annotations', e); }
+    },
+
+    dispose: function() {
+        if (this._canvas) { this._canvas.dispose(); this._canvas = null; }
     }
 };

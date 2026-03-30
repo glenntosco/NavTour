@@ -99,7 +99,7 @@
                 }
             </div>
         </header>
-        <div class="content @(IsEditorPage ? "" : "padded")">
+        <div class="content @(IsEditorPage ? "editor-mode" : "padded")">
             @Body
         </div>
     </main>
@@ -249,8 +249,9 @@
         width:16px; height:16px; flex-shrink:0; fill:var(--nt-text-muted);
     }
 
-    .content { flex:1; overflow-y:auto; }
+    .content { flex:1; overflow-y:auto; min-height:0; }
     .content.padded { padding:24px; }
+    .content.editor-mode { overflow:hidden; }
 
     @@media (max-width: 768px) {
         .sidebar { display: none; }
