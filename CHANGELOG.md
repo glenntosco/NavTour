@@ -4,6 +4,18 @@ All notable changes to NavTour are documented in this file.
 
 ---
 
+## [1.5.1] - 2026-03-30
+
+### Fixed
+- **Dashboard "Create Screenshot" buttons** — `ScreenshotApiService` was missing from Blazor Client DI registration, causing both buttons (header and empty state) to throw on click.
+
+### Added
+- **Extension Screenshots mode** — New "Screenshots" mode card in the extension popup. Selecting it shows a screenshot entity picker (load existing or create new), then captures PNGs directly to `api/v1/screenshots/{id}/slides` instead of wrapping them as demo frames.
+  - "Done & Open Editor" opens the screenshot editor in a new tab after capture.
+  - Extension popup HTML rewritten to match the multi-screen layout (mode select → login → entity select → capture active).
+
+---
+
 ## [1.5.0] - 2026-03-30
 
 ### Added

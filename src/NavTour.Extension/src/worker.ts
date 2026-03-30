@@ -34,6 +34,8 @@ interface CaptureSession {
   token: string;
   demoId: string;
   demoName: string;
+  screenshotId?: string;
+  screenshotName?: string;
   frameCount: number;
   frames: FrameCapture[];
   settings: CaptureSettings;
@@ -242,6 +244,41 @@ async function uploadScreenshot(
   return res.json();
 }
 
+async function uploadSlideToScreenshot(
+  token: string,
+  screenshotId: string,
+  dataUrl: string,
+  name: string
+): Promise<any> {
+  // Convert base64 data URL to Blob
+  const [header, base64] = dataUrl.split(',');
+  const mime = header.match(/:(.*?);/)?.[1] || 'image/png';
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  const blob = new Blob([bytes], { type: mime });
+
+  const formData = new FormData();
+  formData.append('image', blob, `${name}.png`);
+  formData.append('name', name);
+
+  const res = await fetch(`${getApiUrl()}/screenshots/${screenshotId}/slides`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  });
+
+  if (!res.ok) {
+    throw new Error(`Slide upload failed ${res.status}: ${await res.text()}`);
+  }
+
+  return res.json();
+}
+
 async function uploadResource(
   token: string,
   url: string,
@@ -286,8 +323,13 @@ async function captureScreenshot(tabId: number): Promise<void> {
       throw new Error('Failed to capture visible tab');
     }
 
-    const name = `Screenshot ${session.frameCount + 1}`;
-    const frameResult = await uploadScreenshot(session.token, session.demoId, dataUrl, name);
+    const name = `Slide ${session.frameCount + 1}`;
+    let frameResult: any;
+    if (session.screenshotId) {
+      frameResult = await uploadSlideToScreenshot(session.token, session.screenshotId, dataUrl, name);
+    } else {
+      frameResult = await uploadScreenshot(session.token, session.demoId, dataUrl, name);
+    }
 
     session.frameCount++;
 
@@ -796,6 +838,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       return true;
     }
 
+    case 'navtour:popup:get-screenshots': {
+      handlePopupGetScreenshots(message.token)
+        .then((result) => sendResponse(result))
+        .catch((e) => sendResponse({ success: false, error: (e as Error).message }));
+      return true;
+    }
+
     // ── Panel message handlers ──────────────────────────────
 
     case 'navtour:panel-request-frames': {
@@ -871,6 +920,11 @@ async function handlePopupGetDemos(token: string): Promise<any> {
   return { success: true, demos };
 }
 
+async function handlePopupGetScreenshots(token: string): Promise<any> {
+  const screenshots = await apiCall('/screenshots', { token });
+  return { success: true, screenshots };
+}
+
 async function handlePopupStartCapture(msg: any): Promise<any> {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   if (!tab?.id) return { success: false, error: 'No active tab' };
@@ -896,17 +950,21 @@ async function handlePopupStartScreenshot(msg: any): Promise<any> {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   if (!tab?.id) return { success: false, error: 'No active tab' };
 
-  // Screenshot mode: inject content scripts and toolbar just like HTML capture
+  // Screenshot mode: inject content scripts and toolbar
   await ensureContentScripts(tab.id);
 
   const session = await startSession(tab.id, {
     token: msg.token,
-    demoId: msg.demoId,
-    demoName: msg.demoName,
+    demoId: msg.demoId || msg.screenshotId || '',
+    demoName: msg.demoName || msg.screenshotName || 'Screenshot',
     frameCount: msg.frameCount || 0,
-    settings: { clickToCapture: true },
+    settings: { clickToCapture: false },
   });
   session.mode = 'screenshot';
+  if (msg.screenshotId) {
+    session.screenshotId = msg.screenshotId;
+    session.screenshotName = msg.screenshotName;
+  }
 
   // Inject floating toolbar — use await + small delay to ensure content scripts are ready
   await new Promise(resolve => setTimeout(resolve, 500));

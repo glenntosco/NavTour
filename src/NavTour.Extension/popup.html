@@ -10,23 +10,52 @@
   <div class="container">
     <img src="icons/logo.webp" alt="NavTour" class="logo">
 
-    <!-- Login Screen -->
-    <div id="screen-login" class="screen">
-      <div class="field">
-        <label for="login-email">Email</label>
-        <input type="email" id="login-email" placeholder="you@company.com" autocomplete="email">
+    <!-- Mode Select Screen -->
+    <div id="screen-mode-select" class="screen">
+      <div class="mode-cards">
+        <button class="mode-card" data-mode="html">
+          <svg class="mode-card-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          <div class="mode-card-text">
+            <span class="mode-card-label">Product Demo</span>
+            <span class="mode-card-desc">Capture interactive walkthroughs</span>
+          </div>
+        </button>
+        <button class="mode-card" data-mode="screenshot">
+          <svg class="mode-card-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <div class="mode-card-text">
+            <span class="mode-card-label">Screenshots</span>
+            <span class="mode-card-desc">Capture &amp; annotate screenshots</span>
+          </div>
+        </button>
+        <button class="mode-card" data-mode="video">
+          <svg class="mode-card-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          <div class="mode-card-text">
+            <span class="mode-card-label">Video</span>
+            <span class="mode-card-desc">Record screen as video</span>
+          </div>
+        </button>
       </div>
-      <div class="field">
-        <label for="login-password">Password</label>
-        <input type="password" id="login-password" placeholder="Password" autocomplete="current-password">
-      </div>
-      <button id="btn-login" class="btn btn-primary">Sign In</button>
-      <div id="login-error" class="error" hidden></div>
-      <button id="btn-retry" class="btn btn-link login-retry">Try auto-login from browser session</button>
     </div>
 
-    <!-- Demo Select Screen -->
-    <div id="screen-select" class="screen" hidden>
+    <!-- Login Screen -->
+    <div id="screen-login" class="screen" hidden>
+      <form id="login-form">
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="you@company.com" autocomplete="email">
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Password" autocomplete="current-password">
+        </div>
+        <input type="hidden" id="server-url" value="https://navtour.cloud">
+        <div id="login-error" class="error" hidden></div>
+        <button type="submit" id="login-btn" class="btn btn-primary">Sign In</button>
+      </form>
+    </div>
+
+    <!-- Demo Select Screen (HTML / Video modes) -->
+    <div id="screen-demos" class="screen" hidden>
       <div class="field">
         <label for="demo-select">Select Demo</label>
         <select id="demo-select">
@@ -58,12 +87,37 @@
           </label>
         </div>
       </div>
-      <button id="btn-start" class="btn btn-primary">Start Capturing</button>
-      <button id="btn-logout" class="btn btn-link">Log out</button>
-      <div id="select-error" class="error" hidden></div>
+      <div class="smart-blur-row">
+        <input type="checkbox" id="smart-blur-toggle" class="toggle-input">
+        <label for="smart-blur-toggle" class="toggle-label">Smart Blur</label>
+      </div>
+      <div id="smart-blur-hint" class="hint" style="display:none">
+        Sensitive fields will be automatically blurred during capture.
+      </div>
+      <div id="demo-error" class="error" hidden></div>
+      <button id="start-capture-btn" class="btn btn-primary">Start Capturing</button>
+      <button id="logout-btn" class="btn btn-link">Log out</button>
     </div>
 
-    <!-- Capture Active Screen (status only — capture happens via page toolbar) -->
+    <!-- Screenshot Entity Select Screen -->
+    <div id="screen-screenshots" class="screen" hidden>
+      <div class="field">
+        <label for="screenshot-entity-select">Add to Screenshot</label>
+        <select id="screenshot-entity-select">
+          <option value="">— Choose a screenshot —</option>
+        </select>
+      </div>
+      <div class="divider">or</div>
+      <div class="field">
+        <label for="new-screenshot-name">Create New Screenshot</label>
+        <input type="text" id="new-screenshot-name" placeholder="My Screenshot">
+      </div>
+      <div id="screenshot-entity-error" class="error" hidden></div>
+      <button id="start-screenshot-capture-btn" class="btn btn-primary">Start Capturing</button>
+      <button id="logout-screenshots-btn" class="btn btn-link">Log out</button>
+    </div>
+
+    <!-- HTML Capture Active Screen -->
     <div id="screen-capture" class="screen" hidden>
       <div class="info">
         <span class="label">Demo:</span>
@@ -71,12 +125,42 @@
       </div>
       <div class="info">
         <span class="label">Frames captured:</span>
-        <span id="capture-frame-count" class="value">0</span>
+        <span id="frame-count" class="value">0</span>
       </div>
-      <div id="capture-status" class="status" hidden></div>
-      <button id="btn-finish" class="btn btn-primary">Finish &amp; Open Builder</button>
-      <button id="btn-back" class="btn btn-link">Stop &amp; back to demo list</button>
-      <button id="btn-logout-capture" class="btn btn-link" style="color:#f87171;margin-top:4px">Log out</button>
+      <button id="manual-capture-btn" class="btn btn-secondary">Capture Now</button>
+      <button id="finish-btn" class="btn btn-primary">Finish &amp; Open Builder</button>
+    </div>
+
+    <!-- Screenshot Capture Active Screen -->
+    <div id="screen-capture-screenshot" class="screen" hidden>
+      <div class="info">
+        <span class="label">Screenshot:</span>
+        <span id="capture-screenshot-demo-name" class="value"></span>
+      </div>
+      <div class="info">
+        <span class="label">Slides captured:</span>
+        <span id="screenshot-count" class="value">0</span>
+      </div>
+      <button id="take-screenshot-btn" class="btn btn-secondary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        Take Screenshot
+      </button>
+      <button id="screenshot-finish-btn" class="btn btn-primary">Done &amp; Open Editor</button>
+    </div>
+
+    <!-- Video Capture Active Screen -->
+    <div id="screen-capture-video" class="screen" hidden>
+      <div class="info">
+        <span class="label">Demo:</span>
+        <span id="capture-video-demo-name" class="value"></span>
+      </div>
+      <div id="video-indicator" class="video-indicator">
+        <span class="dot dot-idle"></span>
+        <span id="video-status-text" class="video-status">Ready</span>
+        <span id="video-duration" class="video-duration">0:00</span>
+      </div>
+      <button id="video-toggle-btn" class="btn btn-secondary">Start Recording</button>
+      <button id="video-finish-btn" class="btn btn-primary">Finish &amp; Download</button>
     </div>
   </div>
 

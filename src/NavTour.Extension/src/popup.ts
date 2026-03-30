@@ -10,12 +10,13 @@ const $ = (id: string) => document.getElementById(id)!;
 const screenModeSelect = $('screen-mode-select');
 const screenLogin = $('screen-login');
 const screenDemos = $('screen-demos');
+const screenScreenshots = $('screen-screenshots');
 const screenCapture = $('screen-capture');
 const screenCaptureScreenshot = $('screen-capture-screenshot');
 const screenCaptureVideo = $('screen-capture-video');
 
 const allScreens = [
-  screenModeSelect, screenLogin, screenDemos,
+  screenModeSelect, screenLogin, screenDemos, screenScreenshots,
   screenCapture, screenCaptureScreenshot, screenCaptureVideo,
 ];
 
@@ -45,6 +46,13 @@ const screenshotCount = $('screenshot-count');
 const takeScreenshotBtn = $('take-screenshot-btn') as HTMLButtonElement;
 const screenshotFinishBtn = $('screenshot-finish-btn') as HTMLButtonElement;
 
+// Screenshot entity select screen elements
+const screenshotEntitySelect = $('screenshot-entity-select') as HTMLSelectElement;
+const newScreenshotName = $('new-screenshot-name') as HTMLInputElement;
+const screenshotEntityError = $('screenshot-entity-error');
+const startScreenshotCaptureBtn = $('start-screenshot-capture-btn') as HTMLButtonElement;
+const logoutScreenshotsBtn = $('logout-screenshots-btn');
+
 // Video mode elements
 const captureVideoDemoName = $('capture-video-demo-name');
 const videoDuration = $('video-duration');
@@ -64,6 +72,8 @@ interface StoredSession {
   accessToken: string;
   demoId?: string;
   demoName?: string;
+  screenshotId?: string;
+  screenshotName?: string;
   frameCount?: number;
   tabId?: number;
 }
@@ -153,11 +163,16 @@ document.querySelectorAll('.mode-card').forEach((card) => {
 
     await saveMode(mode);
 
-    // Proceed to login or demo-select depending on auth state
+    // Proceed to login or appropriate select screen depending on auth state
     currentSession = await loadSession();
     if (currentSession?.accessToken) {
-      await loadDemos();
-      showScreen(screenDemos);
+      if (mode === 'screenshot') {
+        await loadScreenshots();
+        showScreen(screenScreenshots);
+      } else {
+        await loadDemos();
+        showScreen(screenDemos);
+      }
     } else {
       showScreen(screenLogin);
     }
@@ -189,8 +204,14 @@ loginForm.addEventListener('submit', async (e) => {
       accessToken: response.accessToken,
     };
     await saveSession(currentSession);
-    await loadDemos();
-    showScreen(screenDemos);
+    const mode = await getActiveMode();
+    if (mode === 'screenshot') {
+      await loadScreenshots();
+      showScreen(screenScreenshots);
+    } else {
+      await loadDemos();
+      showScreen(screenDemos);
+    }
   } catch (err: any) {
     showError(loginError, err.message || 'Login failed');
   } finally {
@@ -232,6 +253,104 @@ async function loadDemos(): Promise<void> {
     showError(demoError, err.message);
   }
 }
+
+// ── Screenshot entity list ───────────────────────────────────────────
+
+async function loadScreenshots(): Promise<void> {
+  if (!currentSession) return;
+
+  clearSelectOptions(screenshotEntitySelect);
+  addSelectOption(screenshotEntitySelect, '', 'Loading...');
+
+  try {
+    const response = await chrome.runtime.sendMessage({
+      kind: 'navtour:popup:get-screenshots',
+      token: currentSession.accessToken,
+    });
+
+    const screenshots = response?.screenshots || [];
+    clearSelectOptions(screenshotEntitySelect);
+    addSelectOption(screenshotEntitySelect, '', '-- Select a screenshot --');
+    for (const ss of screenshots) {
+      addSelectOption(
+        screenshotEntitySelect,
+        ss.id,
+        `${ss.name} (${ss.slideCount || 0} slides)`,
+        { name: ss.name, slideCount: String(ss.slideCount || 0) }
+      );
+    }
+  } catch (err: any) {
+    showError(screenshotEntityError, err.message || 'Failed to load screenshots');
+  }
+}
+
+startScreenshotCaptureBtn.addEventListener('click', async () => {
+  clearError(screenshotEntityError);
+
+  const selectedSs = screenshotEntitySelect.selectedOptions[0];
+  const newName = newScreenshotName.value.trim();
+
+  if (!selectedSs?.value && !newName) {
+    showError(screenshotEntityError, 'Select a screenshot or enter a name for a new one');
+    return;
+  }
+
+  startScreenshotCaptureBtn.disabled = true;
+  startScreenshotCaptureBtn.textContent = 'Starting...';
+
+  try {
+    let screenshotId = selectedSs?.value;
+    let screenshotName = selectedSs?.dataset?.name || newName;
+
+    // Create new screenshot entity if needed
+    if (!screenshotId && newName) {
+      const createResponse = await fetch(
+        `${currentSession!.serverUrl}/api/v1/screenshots`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${currentSession!.accessToken}`,
+          },
+          body: JSON.stringify({ name: newName }),
+        }
+      );
+      if (!createResponse.ok) throw new Error('Failed to create screenshot');
+      const created = await createResponse.json();
+      screenshotId = created.id;
+      screenshotName = newName;
+    }
+
+    const response = await chrome.runtime.sendMessage({
+      kind: 'navtour:popup:start-screenshot',
+      token: currentSession!.accessToken,
+      screenshotId,
+      screenshotName,
+      frameCount: 0,
+    });
+
+    currentSession!.screenshotId = screenshotId;
+    currentSession!.screenshotName = screenshotName;
+    currentSession!.frameCount = 0;
+    currentSession!.tabId = response?.tabId;
+    await saveSession(currentSession!);
+
+    captureScreenshotDemoName.textContent = screenshotName!;
+    screenshotCount.textContent = '0';
+    showScreen(screenCaptureScreenshot);
+  } catch (err: any) {
+    showError(screenshotEntityError, err.message);
+  } finally {
+    startScreenshotCaptureBtn.disabled = false;
+    startScreenshotCaptureBtn.textContent = 'Start Capturing';
+  }
+});
+
+logoutScreenshotsBtn.addEventListener('click', async () => {
+  await clearSessionStorage();
+  currentSession = null;
+  showModeSelect();
+});
 
 // ── Smart Blur toggle ───────────────────────────────────────────────
 if (smartBlurToggle) {
@@ -493,22 +612,31 @@ finishBtn.addEventListener('click', async () => {
 // ── Finish capture (Screenshot mode) ────────────────────────────────
 
 screenshotFinishBtn.addEventListener('click', async () => {
-  if (!currentSession?.tabId) return;
+  const screenshotId = currentSession?.screenshotId;
 
-  await chrome.runtime.sendMessage({
-    kind: 'navtour:popup:stop-capture',
-    tabId: currentSession.tabId,
-    demoId: currentSession.demoId,
-  });
+  if (currentSession?.tabId) {
+    await chrome.runtime.sendMessage({
+      kind: 'navtour:popup:stop-capture',
+      tabId: currentSession.tabId,
+    });
+  }
 
-  currentSession.demoId = undefined;
-  currentSession.demoName = undefined;
-  currentSession.frameCount = undefined;
-  currentSession.tabId = undefined;
-  await saveSession(currentSession);
+  if (currentSession) {
+    currentSession.screenshotId = undefined;
+    currentSession.screenshotName = undefined;
+    currentSession.frameCount = undefined;
+    currentSession.tabId = undefined;
+    await saveSession(currentSession);
+  }
 
-  await loadDemos();
-  showScreen(screenDemos);
+  // Open the screenshot editor in a new tab
+  if (screenshotId) {
+    const appUrl = currentSession?.serverUrl || 'https://navtour.cloud';
+    await chrome.tabs.create({ url: `${appUrl}/screenshots/${screenshotId}/edit` });
+  }
+
+  await loadScreenshots();
+  showScreen(screenScreenshots);
 });
 
 // ── Finish capture (Video mode) ─────────────────────────────────────
@@ -570,7 +698,8 @@ async function init(): Promise<void> {
     if (active) {
       // Show the appropriate capture screen based on active mode
       if (activeMode === 'screenshot') {
-        captureScreenshotDemoName.textContent = active.demoName;
+        captureScreenshotDemoName.textContent =
+          currentSession.screenshotName || active.demoName || '';
         screenshotCount.textContent = String(active.frameCount);
         showScreen(screenCaptureScreenshot);
       } else if (activeMode === 'video') {

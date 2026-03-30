@@ -193,3 +193,130 @@ body {
   font-size: 11px;
   text-align: center;
 }
+
+/* Mode Cards */
+.mode-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mode-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid #e0e4f0;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  width: 100%;
+  font-family: inherit;
+}
+
+.mode-card:hover {
+  border-color: #4361ee;
+  background: #f8f9ff;
+  box-shadow: 0 2px 6px rgba(67, 97, 238, 0.12);
+}
+
+.mode-card-icon {
+  color: #4361ee;
+  flex-shrink: 0;
+}
+
+.mode-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mode-card-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.mode-card-desc {
+  font-size: 11px;
+  color: #888;
+}
+
+/* Smart blur toggle */
+.smart-blur-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+}
+
+.toggle-input {
+  accent-color: #4361ee;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.toggle-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+}
+
+.hint {
+  font-size: 11px;
+  color: #666;
+  background: #f0f4ff;
+  border-radius: 4px;
+  padding: 6px 8px;
+  line-height: 1.5;
+}
+
+/* Video indicator */
+.video-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  background: #f8f9fc;
+  border-radius: 6px;
+  border: 1px solid #e8ecf4;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #e63946;
+  animation: pulse-dot 1.2s ease-in-out infinite;
+}
+
+.dot-idle {
+  background: #ccc;
+  animation: none;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.video-status {
+  font-size: 12px;
+  font-weight: 600;
+  color: #555;
+}
+
+.video-duration {
+  font-size: 12px;
+  color: #888;
+  margin-left: auto;
+}
+
+.btn-recording {
+  background: #e63946 !important;
+  color: #fff !important;
+}

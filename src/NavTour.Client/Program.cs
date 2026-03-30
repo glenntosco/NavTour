@@ -27,4 +27,7 @@ builder.Services.AddScoped<ShowcaseApiService>();
 // AI Services
 builder.Services.AddScoped<AiApiService>();
 
+// Screenshot Services
+builder.Services.AddScoped<ScreenshotApiService>();
+
 await builder.Build().RunAsync();
