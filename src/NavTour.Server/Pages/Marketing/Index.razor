@@ -7,7 +7,7 @@
     <meta property="og:title" content="NavTour — Let your product sell itself." />
     <meta property="og:description" content="Create no-code interactive walkthroughs of your software. Embed, share, and convert." />
     <meta property="og:url" content="https://navtour.cloud/" />
-    <meta property="og:image" content="https://navtour.cloud/images/product-form-builder.png" />
+    <meta property="og:image" content="https://navtour.cloud/images/screenshots/dark-editor.png" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="NavTour" />
@@ -18,838 +18,243 @@
 </HeadContent>
 
 @* ── 1. Hero ── *@
-<section class="nt-hero">
-    <div class="nt-container">
-        <span class="nt-badge">The #1 Demo Automation Platform</span>
-        <h1 class="nt-hero-h1">Exceptional product demos<br />in minutes, not days</h1>
-        <p class="nt-hero-sub">
-            Capture your product, build guided walkthroughs, and share interactive demos
-            that accelerate every stage of the buyer journey.
-        </p>
-        <div class="nt-hero-ctas">
-            <a href="/contact" class="nt-btn nt-btn-outline">Request a demo</a>
-            <a href="/register" class="nt-btn nt-btn-primary">Start for free <span class="nt-arrow">&rarr;</span></a>
-        </div>
-        <div class="nt-social-proof">
-            <span class="nt-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-            <span class="nt-proof-text">Rated #1 on G2</span>
-        </div>
-        <div class="nt-hero-demo">
-            <div class="nt-hero-demo-inner">
-                <iframe
-                    src="/demo/navtour"
-                    loading="lazy"
-                    title="NavTour Interactive Demo"
-                    allowfullscreen></iframe>
+<section class="mkt-section mkt-hero">
+    <div class="mkt-container">
+        <div class="mkt-hero-content">
+            <p class="mkt-eyebrow" style="text-transform:uppercase;letter-spacing:0.1em;color:var(--nt-accent)">Interactive Demo Platform</p>
+            <h1>Exceptional product demos<br />in minutes, not days</h1>
+            <p class="mkt-hero-sub">
+                Capture your product, build guided walkthroughs, and share interactive demos
+                that accelerate every stage of the buyer journey.
+            </p>
+            <div class="mkt-hero-actions">
+                <a href="/contact" class="mkt-btn mkt-btn-secondary mkt-btn-lg">Request a demo</a>
+                <a href="/register" class="mkt-btn mkt-btn-primary mkt-btn-lg">Start for free &rarr;</a>
             </div>
+        </div>
+        <div class="mkt-hero-demo">
+            <iframe
+                src="/demo/navtour"
+                loading="lazy"
+                title="NavTour Interactive Demo"
+                allowfullscreen></iframe>
         </div>
     </div>
 </section>
 
 @* ── 2. Trust Bar ── *@
-<section class="nt-trust">
-    <div class="nt-container">
-        <p class="nt-trust-label">Trusted by teams at</p>
-        <div class="nt-trust-logos">
-            <span>Acme Corp</span>
-            <span>Beacon AI</span>
-            <span>CloudStack</span>
-            <span>DataPulse</span>
-            <span>Elevate</span>
-            <span>FinOps.io</span>
-        </div>
+<div class="mkt-trust">
+    <p class="mkt-trust-label">Trusted by teams at</p>
+    <div class="mkt-trust-logos">
+        <span>P4 Software</span>
+        <span>Barrdega</span>
+        <span>OpenDocs</span>
+        <span>CifraHQ</span>
+        <span>Nerv Corp</span>
+        <span>Certifyd</span>
     </div>
-</section>
+</div>
 
 @* ── 3. Feature Tabs ── *@
-<section class="nt-section">
-    <div class="nt-container">
-        <h2 class="nt-section-h2">Creating elegant product demos<br />doesn't have to be painful</h2>
-        <div class="nt-tabs">
-            <button class="nt-tab @(_activeFeatureTab == 0 ? "active" : "")" @onclick="() => _activeFeatureTab = 0">Screenshot &amp; Video</button>
-            <button class="nt-tab @(_activeFeatureTab == 1 ? "active" : "")" @onclick="() => _activeFeatureTab = 1">Guided HTML</button>
-            <button class="nt-tab @(_activeFeatureTab == 2 ? "active" : "")" @onclick="() => _activeFeatureTab = 2">Demo Hub</button>
-            <button class="nt-tab @(_activeFeatureTab == 3 ? "active" : "")" @onclick="() => _activeFeatureTab = 3">Analytics</button>
+<section class="mkt-section reveal" id="features">
+    <div class="mkt-container">
+        <div class="mkt-section-heading">
+            <h2>Creating elegant product demos<br />doesn't have to be painful</h2>
         </div>
-        <div class="nt-tab-content">
-            @if (_activeFeatureTab == 0)
-            {
-                <div class="nt-tab-panel">
-                    <div class="nt-tab-text">
+        <div class="mkt-tabs" role="tablist">
+            <button class="mkt-tab active" role="tab" aria-selected="true" data-tab="0">Screenshot &amp; Video</button>
+            <button class="mkt-tab" role="tab" aria-selected="false" data-tab="1">Guided HTML</button>
+            <button class="mkt-tab" role="tab" aria-selected="false" data-tab="2">Demo Hub</button>
+            <button class="mkt-tab" role="tab" aria-selected="false" data-tab="3">Analytics</button>
+        </div>
+        <div class="mkt-tab-panels">
+            <div class="mkt-tab-panel active" data-panel="0">
+                <div class="mkt-step-row">
+                    <div class="mkt-step-row-content">
                         <h3>Pixel-perfect captures in one click</h3>
                         <p>Our Chrome extension captures any web application as a high-fidelity screenshot or video clip. No staging environments, no dev resources.</p>
-                        <ul class="nt-check-list">
+                        <ul class="mkt-benefits">
                             <li>Full-page and element-level captures</li>
                             <li>Automatic asset optimization</li>
                             <li>Video recording with annotations</li>
                         </ul>
                     </div>
-                    <div class="nt-tab-visual">
-                        <div class="nt-tab-placeholder">Screenshot &amp; Video</div>
+                    <div class="mkt-step-row-visual">
+                        <img src="/images/screenshots/tab-screenshot-video.png" alt="Screenshot and video capture" class="mkt-screenshot-img mkt-lightbox" />
                     </div>
                 </div>
-            }
-            else if (_activeFeatureTab == 1)
-            {
-                <div class="nt-tab-panel">
-                    <div class="nt-tab-text">
+            </div>
+            <div class="mkt-tab-panel" data-panel="1">
+                <div class="mkt-step-row">
+                    <div class="mkt-step-row-content">
                         <h3>Interactive HTML walkthroughs</h3>
                         <p>Capture your product as real HTML and CSS, then overlay guided tooltips, hotspots, and branching logic. Visitors click through your actual UI.</p>
-                        <ul class="nt-check-list">
+                        <ul class="mkt-benefits">
                             <li>Tooltips, modals, and hotspot annotations</li>
                             <li>Branching paths based on user choice</li>
                             <li>Personalization tokens like &#123;&#123;company&#125;&#125;</li>
                         </ul>
                     </div>
-                    <div class="nt-tab-visual">
-                        <div class="nt-tab-placeholder">Guided HTML</div>
+                    <div class="mkt-step-row-visual">
+                        <img src="/images/screenshots/tab-guided-html.png" alt="Guided HTML demo editor" class="mkt-screenshot-img mkt-lightbox" />
                     </div>
                 </div>
-            }
-            else if (_activeFeatureTab == 2)
-            {
-                <div class="nt-tab-panel">
-                    <div class="nt-tab-text">
+            </div>
+            <div class="mkt-tab-panel" data-panel="2">
+                <div class="mkt-step-row">
+                    <div class="mkt-step-row-content">
                         <h3>A centralized demo library</h3>
                         <p>Organize demos by persona, use case, or product line. Let prospects self-serve the right demo at the right time without waiting for sales.</p>
-                        <ul class="nt-check-list">
+                        <ul class="mkt-benefits">
                             <li>Filterable demo collections</li>
                             <li>Embeddable on your website</li>
                             <li>Lead capture gates per demo</li>
                         </ul>
                     </div>
-                    <div class="nt-tab-visual">
-                        <div class="nt-tab-placeholder">Demo Hub</div>
+                    <div class="mkt-step-row-visual">
+                        <img src="/images/screenshots/tab-demo-hub.png" alt="Demo Hub editor" class="mkt-screenshot-img mkt-lightbox" />
                     </div>
                 </div>
-            }
-            else
-            {
-                <div class="nt-tab-panel">
-                    <div class="nt-tab-text">
+            </div>
+            <div class="mkt-tab-panel" data-panel="3">
+                <div class="mkt-step-row">
+                    <div class="mkt-step-row-content">
                         <h3>Know what moves the needle</h3>
                         <p>Track who viewed your demos, how far they got, and which features generated the most interest. Feed intent data straight into your CRM.</p>
-                        <ul class="nt-check-list">
+                        <ul class="mkt-benefits">
                             <li>Viewer-level engagement analytics</li>
                             <li>Drop-off and completion rates</li>
                             <li>CRM and Slack integrations</li>
                         </ul>
                     </div>
-                    <div class="nt-tab-visual">
-                        <div class="nt-tab-placeholder">Analytics</div>
+                    <div class="mkt-step-row-visual">
+                        <img src="/images/screenshots/tab-analytics.png" alt="Analytics dashboard" class="mkt-screenshot-img mkt-lightbox" />
                     </div>
                 </div>
-            }
-        </div>
-    </div>
-</section>
-
-@* ── 4. Feature Cards (3-column) ── *@
-<section class="nt-section nt-section-alt">
-    <div class="nt-container">
-        <h2 class="nt-section-h2">Professional product demos, fast and easy</h2>
-        <div class="nt-cards-row">
-            <div class="nt-card">
-                <div class="nt-card-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-                </div>
-                <h3>Capture Anything</h3>
-                <p>Our Chrome extension captures any web app as HTML, CSS, screenshots, or video — no dev resources required.</p>
-            </div>
-            <div class="nt-card">
-                <div class="nt-card-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                </div>
-                <h3>Edit &amp; Personalize</h3>
-                <p>Edit text, blur sensitive data, add tooltips and hotspots. Personalize with dynamic tokens for each prospect.</p>
-            </div>
-            <div class="nt-card">
-                <div class="nt-card-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
-                </div>
-                <h3>Share &amp; Track</h3>
-                <p>Share via link, embed on your site, or use in ad campaigns. Track viewer engagement and feed data to your CRM.</p>
             </div>
         </div>
     </div>
 </section>
 
-@* ── 5. Dark Section ── *@
-<section class="nt-dark">
-    <div class="nt-container">
-        <div class="nt-dark-grid">
-            <div class="nt-dark-text">
-                <h2>The fastest way to create interactive demos</h2>
-                <div class="nt-dark-features">
-                    <div class="nt-dark-feature">
-                        <h4>No-code builder</h4>
-                        <p>Point-and-click editor that anyone on your team can use. No engineering tickets, no staging environments.</p>
+@* ── 4. How It Works ── *@
+<section class="mkt-section mkt-section-alt reveal">
+    <div class="mkt-container">
+        <div class="mkt-section-heading">
+            <p class="mkt-eyebrow">How it works</p>
+            <h2>From capture to conversion in three steps</h2>
+        </div>
+        <div class="mkt-step-row">
+            <div class="mkt-step-row-content">
+                <div class="mkt-step-label">01. Capture</div>
+                <h3>Browser capture that preserves the real product</h3>
+                <p>Our Chrome extension captures any web app as interactive HTML and CSS — not just a flat screenshot. No dev resources, no staging environment required.</p>
+                <ul class="mkt-benefits">
+                    <li>Click-to-capture with our Chrome extension</li>
+                    <li>HTML/CSS snapshots with full fidelity fixes</li>
+                    <li>Support for complex dashboards and SPAs</li>
+                </ul>
+            </div>
+            <div class="mkt-step-row-visual">
+                <img src="/images/screenshots/step-capture.png" alt="NavTour capture workflow" class="mkt-screenshot-img mkt-lightbox" />
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mkt-section reveal">
+    <div class="mkt-container">
+        <div class="mkt-step-row">
+            <div class="mkt-step-row-content">
+                <div class="mkt-step-label">02. Build</div>
+                <h3>Editor workflow for real guided demos</h3>
+                <p>Add tooltips, hotspots, navigation cards, and branching logic with a point-and-click editor. Publish when ready, keep drafts private until then.</p>
+                <ul class="mkt-benefits">
+                    <li>Annotations, hotspots, and step triggers</li>
+                    <li>Drawer-based editing for steps and annotations</li>
+                    <li>Navigation cards with back, next, and finish states</li>
+                </ul>
+            </div>
+            <div class="mkt-step-row-visual">
+                <img src="/images/screenshots/step-build.png" alt="NavTour demo editor" class="mkt-screenshot-img mkt-lightbox" />
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mkt-section mkt-section-alt reveal">
+    <div class="mkt-container">
+        <div class="mkt-step-row">
+            <div class="mkt-step-row-content">
+                <div class="mkt-step-label">03. Measure</div>
+                <h3>Analytics that show how people actually engage</h3>
+                <p>Track who viewed your demos, how far they got, and which steps drove the most interest. Feed engagement data directly into your CRM.</p>
+                <ul class="mkt-benefits">
+                    <li>Per-demo and global analytics pages</li>
+                    <li>Step-level completion and engagement data</li>
+                    <li>Lead capture visibility tied to demo activity</li>
+                </ul>
+            </div>
+            <div class="mkt-step-row-visual">
+                <img src="/images/screenshots/step-analytics.png" alt="NavTour analytics dashboard" class="mkt-screenshot-img mkt-lightbox" />
+            </div>
+        </div>
+    </div>
+</section>
+
+@* ── 5. Dark Feature Section ── *@
+<section class="mkt-section reveal" style="background:var(--neutral-950)">
+    <div class="mkt-container">
+        <div class="mkt-grid mkt-grid-2" style="align-items:center;gap:var(--space-16)">
+            <div>
+                <h2 style="color:white;font-size:var(--text-3xl);font-weight:var(--weight-bold)">Built for speed and simplicity</h2>
+                <div style="display:flex;flex-direction:column;gap:var(--space-8);margin-top:var(--space-8)">
+                    <div>
+                        <h4 style="color:white;font-weight:var(--weight-semibold);margin-bottom:var(--space-2)">No-code builder</h4>
+                        <p style="color:var(--neutral-400);margin:0">Point-and-click editor that anyone on your team can use. No engineering tickets, no staging environments.</p>
                     </div>
-                    <div class="nt-dark-feature">
-                        <h4>AI-powered editing</h4>
-                        <p>Let AI generate step descriptions, suggest annotations, and optimize your demo flow for maximum engagement.</p>
+                    <div>
+                        <h4 style="color:white;font-weight:var(--weight-semibold);margin-bottom:var(--space-2)">AI-powered editing</h4>
+                        <p style="color:var(--neutral-400);margin:0">Let AI generate step descriptions, suggest annotations, and optimize your demo flow for maximum engagement.</p>
                     </div>
-                    <div class="nt-dark-feature">
-                        <h4>Instant personalization</h4>
-                        <p>Dynamic tokens replace company names, logos, and data so every prospect sees a demo built for them.</p>
+                    <div>
+                        <h4 style="color:white;font-weight:var(--weight-semibold);margin-bottom:var(--space-2)">Instant personalization</h4>
+                        <p style="color:var(--neutral-400);margin:0">Dynamic tokens replace company names, logos, and data so every prospect sees a demo built for them.</p>
                     </div>
-                    <div class="nt-dark-feature">
-                        <h4>Embed anywhere</h4>
-                        <p>Drop demos into your website, knowledge base, sales emails, or ad landing pages with a single embed code.</p>
+                    <div>
+                        <h4 style="color:white;font-weight:var(--weight-semibold);margin-bottom:var(--space-2)">Embed anywhere</h4>
+                        <p style="color:var(--neutral-400);margin:0">Drop demos into your website, knowledge base, sales emails, or ad landing pages with a single embed code.</p>
                     </div>
                 </div>
             </div>
-            <div class="nt-dark-visual">
-                <div class="nt-dark-placeholder">Product Screenshot</div>
+            <div>
+                <img src="/images/screenshots/dark-editor.png" alt="NavTour demo editor" class="mkt-screenshot-img-dark" />
             </div>
         </div>
     </div>
 </section>
 
-@* ── 6. Stats ── *@
-<section class="nt-section">
-    <div class="nt-container">
-        <div class="nt-stats-row">
-            <div class="nt-stat">
-                <span class="nt-stat-value">10x</span>
-                <span class="nt-stat-label">Faster demo creation</span>
-            </div>
-            <div class="nt-stat">
-                <span class="nt-stat-value">67%</span>
-                <span class="nt-stat-label">Higher engagement</span>
-            </div>
-            <div class="nt-stat">
-                <span class="nt-stat-value">3x</span>
-                <span class="nt-stat-label">More pipeline generated</span>
-            </div>
-        </div>
-    </div>
-</section>
-
-@* ── 7. CTA Section ── *@
-<section class="nt-cta">
-    <div class="nt-container nt-cta-inner">
-        <h2>The fastest way to create<br />interactive product demos</h2>
-        <p>Join hundreds of teams using NavTour to turn demos into deals.</p>
-        <a href="/register" class="nt-btn nt-btn-white">Start for free <span class="nt-arrow">&rarr;</span></a>
-    </div>
-</section>
-
-@code {
-    private int _activeProduct = 0;
-    private int _activeFeatureTab = 0;
-}
-
-<style>
-    /* ── Reset & Base ── */
-    .nt-container {
-        max-width: 1280px;
-        margin: 0 auto;
-        padding: 0 1.5rem;
-    }
-
-    /* ── Section Spacing ── */
-    .nt-section {
-        padding: 96px 0;
-    }
-
-    .nt-section-alt {
-        background: #F9FAFB;
-    }
-
-    /* ── Hero ── */
-    .nt-hero {
-        padding: 96px 0 64px;
-        text-align: center;
-        background: #fff;
-    }
-
-    .nt-badge {
-        display: inline-block;
-        font-family: 'Segoe UI', system-ui, sans-serif;
-        font-size: 0.875rem;
-        font-weight: 600;
-        color: #2563EB;
-        background: #EFF6FF;
-        padding: 6px 16px;
-        border-radius: 9999px;
-        margin-bottom: 24px;
-        letter-spacing: 0.01em;
-    }
-
-    .nt-hero-h1 {
-        font-family: 'Segoe UI', system-ui, sans-serif;
-        font-size: 48px;
-        font-weight: 700;
-        line-height: 1.1;
-        letter-spacing: -0.025em;
-        color: #111827;
-        margin: 0 0 20px;
-    }
-
-    .nt-hero-sub {
-        font-family: 'Segoe UI', system-ui, sans-serif;
-        font-size: 1.125rem;
-        line-height: 1.6;
-        color: #6B7280;
-        max-width: 600px;
-        margin: 0 auto 32px;
-    }
-
-    .nt-hero-ctas {
-        display: flex;
-        gap: 12px;
-        justify-content: center;
-        flex-wrap: wrap;
-        margin-bottom: 32px;
-    }
-
-    /* ── Buttons ── */
-    .nt-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        font-family: 'Segoe UI', system-ui, sans-serif;
-        font-size: 1rem;
-        font-weight: 600;
-        padding: 12px 28px;
-        border-radius: 8px;
-        text-decoration: none;
-        cursor: pointer;
-        border: none;
-        transition: background 200ms ease, box-shadow 200ms ease, transform 100ms ease;
-    }
-
-    .nt-btn:active {
-        transform: scale(0.98);
-    }
-
-    .nt-btn-primary {
-        background: #2563EB;
-        color: #fff;
-    }
-
-    .nt-btn-primary:hover {
-        background: #1D4ED8;
-        color: #fff;
-        text-decoration: none;
-        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-    }
-
-    .nt-btn-outline {
-        background: #fff;
-        color: #374151;
-        border: 1.5px solid #E5E7EB;
-    }
-
-    .nt-btn-outline:hover {
-        border-color: #9CA3AF;
-        color: #111827;
-        text-decoration: none;
-    }
-
-    .nt-btn-white {
-        background: #fff;
-        color: #1D4ED8;
-    }
-
-    .nt-btn-white:hover {
-        background: #F9FAFB;
-        color: #1D4ED8;
-        text-decoration: none;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .nt-arrow {
-        font-size: 1.1em;
-        transition: transform 200ms ease;
-    }
-
-    .nt-btn:hover .nt-arrow {
-        transform: translateX(2px);
-    }
-
-    /* ── Social Proof ── */
-    .nt-social-proof {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        margin-bottom: 48px;
-    }
-
-    .nt-stars {
-        color: #F59E0B;
-        font-size: 1.125rem;
-        letter-spacing: 2px;
-    }
-
-    .nt-proof-text {
-        font-family: 'Segoe UI', system-ui, sans-serif;
-        font-size: 0.875rem;
-        font-weight: 600;
-        color: #6B7280;
-    }
-
-    /* ── Hero Demo ── */
-    .nt-hero-demo {
-        max-width: 1000px;
-        margin: 0 auto;
-        border-radius: 12px;
-        box-shadow: 0 20px 48px rgba(0, 0, 0, 0.08), 0 8px 16px rgba(0, 0, 0, 0.04);
-        overflow: hidden;
-        border: 1px solid #E5E7EB;
-    }
-
-    .nt-hero-demo-inner {
-        position: relative;
-        padding-bottom: 62.5%;
-        height: 0;
-        overflow: hidden;
-    }
-
-    .nt-hero-demo-inner iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border: none;
-    }
-
-    /* ── Trust Bar ── */
-    .nt-trust {
-        padding: 48px 0;
-        background: #F9FAFB;
-        text-align: center;
-    }
-
-    .nt-trust-label {
-        font-family: 'Segoe UI', system-ui, sans-serif;
-        font-size: 0.8125rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: #9CA3AF;
-        margin: 0 0 20px;
-    }
-
-    .nt-trust-logos {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 40px;
-        flex-wrap: wrap;
-    }
-
-    .nt-trust-logos span {
-        font-family: 'Segoe UI', system-ui, sans-serif;
-        font-size: 0.9375rem;
-        font-weight: 700;
-        color: #9CA3AF;
-        letter-spacing: 0.02em;
-        user-select: none;
-    }
-
-    /* ── Section Headlines ── */
-    .nt-section-h2 {
-        font-family: 'Segoe UI', system-ui, sans-serif;
-        font-size: 2.25rem;
-        font-weight: 700;
-        line-height: 1.15;
-        letter-spacing: -0.02em;
-        color: #111827;
-        text-align: center;
-        margin: 0 0 48px;
-    }
-
-    /* ── Feature Tabs ── */
-    .nt-tabs {
-        display: flex;
-        justify-content: center;
-        gap: 4px;
-        margin-bottom: 48px;
-        flex-wrap: wrap;
-    }
-
-    .nt-tab {
-        font-family: 'Segoe UI', system-ui, sans-serif;
-        font-size: 0.9375rem;
-        font-weight: 600;
-        padding: 10px 20px;
-        border-radius: 8px;
-        border: 1.5px solid transparent;
-        background: transparent;
-        color: #6B7280;
-        cursor: pointer;
-        transition: all 200ms ease;
-    }
-
-    .nt-tab:hover {
-        color: #374151;
-        background: #F9FAFB;
-    }
-
-    .nt-tab.active {
-        background: #EFF6FF;
-        color: #2563EB;
-        border-color: #DBEAFE;
-    }
-
-    .nt-tab-content {
-        max-width: 1080px;
-        margin: 0 auto;
-    }
-
-    .nt-tab-panel {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 48px;
-        align-items: center;
-    }
-
-    .nt-tab-text h3 {
-        font-family: 'Segoe UI', system-ui, sans-serif;
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #111827;
-        margin: 0 0 12px;
-        line-height: 1.2;
-    }
-
-    .nt-tab-text p {
-        font-family: 'Segoe UI', system-ui, sans-serif;
-        font-size: 1rem;
-        line-height: 1.6;
-        color: #6B7280;
-        margin: 0 0 20px;
-        max-width: 480px;
-    }
-
-    .nt-check-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .nt-check-list li {
-        font-family: 'Segoe UI', system-ui, sans-serif;
-        font-size: 0.9375rem;
-        color: #374151;
-        padding-left: 24px;
-        position: relative;
-        line-height: 1.5;
-    }
-
-    .nt-check-list li::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 5px;
-        width: 14px;
-        height: 14px;
-        background: #2563EB;
-        border-radius: 50%;
-        background-image: url("data:image/svg+xml,%3Csvg width='8' height='6' viewBox='0 0 8 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 3L3 5L7 1' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: center;
-    }
-
-    .nt-tab-visual {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .nt-tab-placeholder {
-        width: 100%;
-        aspect-ratio: 16 / 10;
-        background: #F9FAFB;
-        border: 1px solid #E5E7EB;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #9CA3AF;
-        font-family: 'Segoe UI', system-ui, sans-serif;
-        font-size: 0.875rem;
-        font-weight: 600;
-    }
-
-    /* ── Feature Cards ── */
-    .nt-cards-row {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 24px;
-        max-width: 1080px;
-        margin: 0 auto;
-    }
-
-    .nt-card {
-        background: #fff;
-        border: 1px solid #E5E7EB;
-        border-radius: 12px;
-        padding: 32px;
-        transition: transform 200ms ease, box-shadow 200ms ease;
-    }
-
-    .nt-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-    }
-
-    .nt-card-icon {
-        width: 44px;
-        height: 44px;
-        background: #EFF6FF;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 20px;
-    }
-
-    .nt-card h3 {
-        font-family: 'Segoe UI', system-ui, sans-serif;
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: #111827;
-        margin: 0 0 8px;
-    }
-
-    .nt-card p {
-        font-family: 'Segoe UI', system-ui, sans-serif;
-        font-size: 0.9375rem;
-        line-height: 1.6;
-        color: #6B7280;
-        margin: 0;
-    }
-
-    /* ── Dark Section ── */
-    .nt-dark {
-        padding: 96px 0;
-        background: #1D2735;
-    }
-
-    .nt-dark-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 64px;
-        align-items: center;
-    }
-
-    .nt-dark-text h2 {
-        font-family: 'Segoe UI', system-ui, sans-serif;
-        font-size: 2.25rem;
-        font-weight: 700;
-        line-height: 1.15;
-        letter-spacing: -0.02em;
-        color: #fff;
-        margin: 0 0 40px;
-    }
-
-    .nt-dark-features {
-        display: flex;
-        flex-direction: column;
-        gap: 28px;
-    }
-
-    .nt-dark-feature h4 {
-        font-family: 'Segoe UI', system-ui, sans-serif;
-        font-size: 1rem;
-        font-weight: 600;
-        color: #fff;
-        margin: 0 0 6px;
-    }
-
-    .nt-dark-feature p {
-        font-family: 'Segoe UI', system-ui, sans-serif;
-        font-size: 0.9375rem;
-        line-height: 1.6;
-        color: #9CA3AF;
-        margin: 0;
-        max-width: 480px;
-    }
-
-    .nt-dark-visual {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .nt-dark-placeholder {
-        width: 100%;
-        aspect-ratio: 4 / 3;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: rgba(255, 255, 255, 0.3);
-        font-family: 'Segoe UI', system-ui, sans-serif;
-        font-size: 0.875rem;
-        font-weight: 600;
-    }
-
-    /* ── Stats ── */
-    .nt-stats-row {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 32px;
-        max-width: 900px;
-        margin: 0 auto;
-        text-align: center;
-    }
-
-    .nt-stat-value {
-        display: block;
-        font-family: 'Segoe UI', system-ui, sans-serif;
-        font-size: 3.5rem;
-        font-weight: 700;
-        letter-spacing: -0.03em;
-        color: #2563EB;
-        line-height: 1;
-        margin-bottom: 8px;
-    }
-
-    .nt-stat-label {
-        font-family: 'Segoe UI', system-ui, sans-serif;
-        font-size: 1rem;
-        color: #6B7280;
-    }
-
-    /* ── CTA Section ── */
-    .nt-cta {
-        padding: 96px 0;
-        background: linear-gradient(135deg, #1D4ED8, #3B82F6);
-    }
-
-    .nt-cta-inner {
-        text-align: center;
-    }
-
-    .nt-cta h2 {
-        font-family: 'Segoe UI', system-ui, sans-serif;
-        font-size: 2.5rem;
-        font-weight: 700;
-        line-height: 1.15;
-        letter-spacing: -0.02em;
-        color: #fff;
-        margin: 0 0 16px;
-    }
-
-    .nt-cta p {
-        font-family: 'Segoe UI', system-ui, sans-serif;
-        font-size: 1.125rem;
-        line-height: 1.6;
-        color: rgba(255, 255, 255, 0.8);
-        margin: 0 0 32px;
-    }
-
-    /* ── Responsive ── */
-    @@media (max-width: 1024px) {
-        .nt-dark-grid {
-            grid-template-columns: 1fr;
-            gap: 48px;
-        }
-
-        .nt-tab-panel {
-            grid-template-columns: 1fr;
-            gap: 32px;
-        }
-
-        .nt-cards-row {
-            grid-template-columns: 1fr;
-            max-width: 480px;
-        }
-
-        .nt-stats-row {
-            grid-template-columns: 1fr;
-            gap: 40px;
-        }
-    }
-
-    @@media (max-width: 768px) {
-        .nt-hero {
-            padding: 64px 0 48px;
-        }
-
-        .nt-hero-h1 {
-            font-size: 36px;
-        }
-
-        .nt-hero-sub {
-            font-size: 1rem;
-        }
-
-        .nt-section {
-            padding: 64px 0;
-        }
-
-        .nt-section-h2 {
-            font-size: 1.75rem;
-            margin-bottom: 32px;
-        }
-
-        .nt-trust-logos {
-            gap: 24px;
-        }
-
-        .nt-tabs {
-            gap: 4px;
-        }
-
-        .nt-tab {
-            font-size: 0.8125rem;
-            padding: 8px 14px;
-        }
-
-        .nt-dark {
-            padding: 64px 0;
-        }
-
-        .nt-dark-text h2 {
-            font-size: 1.75rem;
-        }
-
-        .nt-cta {
-            padding: 64px 0;
-        }
-
-        .nt-cta h2 {
-            font-size: 1.75rem;
-        }
-
-        .nt-stat-value {
-            font-size: 2.5rem;
-        }
-    }
-
-    @@media (max-width: 375px) {
-        .nt-hero-h1 {
-            font-size: 30px;
-        }
-
-        .nt-hero-ctas {
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .nt-btn {
-            width: 100%;
-            justify-content: center;
-        }
-
-        .nt-trust-logos {
-            gap: 16px;
-        }
-
-        .nt-trust-logos span {
-            font-size: 0.8125rem;
-        }
-    }
-</style>
+@* ── 6. CTA ── *@
+<CtaSection Dark="true"
+            Title="Start building interactive demos today"
+            Subtitle="Create a free account. No credit card required."
+            CtaText="Start for free"
+            SecondaryCtaText="Request a demo"
+            SecondaryCtaUrl="/contact" />
+
+<script>
+(function () {
+    var tabs = document.querySelectorAll('.mkt-tab[data-tab]');
+    var panels = document.querySelectorAll('.mkt-tab-panel[data-panel]');
+    tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+            var idx = this.getAttribute('data-tab');
+            tabs.forEach(function (t) { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+            panels.forEach(function (p) { p.classList.remove('active'); });
+            this.classList.add('active');
+            this.setAttribute('aria-selected', 'true');
+            var target = document.querySelector('.mkt-tab-panel[data-panel="' + idx + '"]');
+            if (target) target.classList.add('active');
+        });
+    });
+}());
+</script>

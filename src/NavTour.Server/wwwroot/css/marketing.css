@@ -1738,3 +1738,101 @@
 .mkt-contact-detail-stack a {
     font-weight: var(--weight-medium);
 }
+
+/* ── Screenshot images ─────────────────────────────────────────────────── */
+.mkt-screenshot-img {
+    display: block;
+    width: 100%;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 8px 32px rgba(0,0,0,.12);
+}
+.mkt-screenshot-img-dark {
+    display: block;
+    width: 100%;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 16px 48px rgba(0,0,0,.4);
+}
+
+/* ── Hero demo iframe ──────────────────────────────────────────────────── */
+.mkt-hero-demo {
+    margin-top: var(--space-12);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 24px 64px rgba(11,25,41,0.18), 0 8px 24px rgba(11,25,41,0.08);
+    border: 1px solid var(--neutral-200);
+    position: relative;
+    padding-bottom: 60%;
+}
+.mkt-hero-demo iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* ── Trust bar ─────────────────────────────────────────────────────────── */
+.mkt-trust {
+    padding: var(--space-8) var(--space-6);
+    background: var(--surface-secondary);
+    border-top: 1px solid var(--neutral-100);
+    border-bottom: 1px solid var(--neutral-100);
+    text-align: center;
+}
+.mkt-trust-label {
+    font-size: var(--text-xs);
+    font-weight: var(--weight-semibold);
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: var(--space-4);
+}
+.mkt-trust-logos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-8);
+}
+.mkt-trust-logos span {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    color: var(--text-tertiary);
+    letter-spacing: 0.02em;
+}
+
+/* ── Tabs ──────────────────────────────────────────────────────────────── */
+.mkt-tabs {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    margin-bottom: var(--space-12);
+}
+.mkt-tab {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    padding: 10px 20px;
+    border-radius: var(--radius-md);
+    border: 1.5px solid transparent;
+    background: transparent;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    transition: color 150ms ease, background 150ms ease, border-color 150ms ease;
+}
+.mkt-tab:hover {
+    color: var(--text-secondary);
+    background: var(--surface-secondary);
+}
+.mkt-tab.active {
+    background: var(--nt-accent-light);
+    color: var(--nt-accent-dark);
+    border-color: rgba(59,130,246,0.2);
+}
+.mkt-tab-panels {}
+.mkt-tab-panel { display: none; }
+.mkt-tab-panel.active { display: block; }
+@media (max-width: 767px) {
+    .mkt-tab { font-size: var(--text-xs); padding: 8px 14px; }
+    .mkt-hero-demo { padding-bottom: 75%; }
+}
