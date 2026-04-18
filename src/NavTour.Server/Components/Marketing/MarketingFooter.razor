@@ -1,51 +1,68 @@
 @inject IStringLocalizer<NavTour.Server.SharedResources> L
 
-<footer class="mkt-footer">
-    <div class="mkt-container">
-        <div class="mkt-footer-grid" style="grid-template-columns:1.4fr 1fr 1fr 1fr">
-            <div class="mkt-footer-col">
-                <div style="margin-bottom:var(--space-4)">
-                    <a href="/" style="font-size:var(--text-xl);font-weight:var(--weight-bold);color:var(--text-primary);text-decoration:none">NavTour</a>
-                    <p style="font-size:var(--text-sm);color:var(--text-tertiary);margin-top:var(--space-2)">@L["footer_tagline"]</p>
-                </div>
-                <div class="mkt-contact-detail-stack" style="margin-top:var(--space-5)">
-                    <div>
-                        <div class="mkt-stage-card-label">Email</div>
-                        <a href="mailto:support@navtour.cloud">support@navtour.cloud</a>
-                    </div>
-                    <div>
-                        <div class="mkt-stage-card-label">Phone</div>
-                        <a href="tel:+5072096996">+507-209-6996</a>
-                    </div>
-                </div>
-            </div>
-            <div class="mkt-footer-col">
-                <h4>@L["footer_product"]</h4>
-                <a href="/product">@L["footer_features"]</a>
-                <a href="/product/ai">@L["footer_ai_platform"]</a>
-                <a href="/integrations">@L["footer_integrations"]</a>
-                <a href="/pricing">Pricing</a>
-                <a href="https://docs.navtour.cloud" target="_blank" rel="noopener noreferrer">@L["footer_api_docs"]</a>
-            </div>
-            <div class="mkt-footer-col">
-                <h4>@L["footer_resources"]</h4>
-                <a href="/blog">@L["footer_blog"]</a>
-                <a href="/support">@L["footer_help_center"]</a>
-                <a href="https://docs.navtour.cloud" target="_blank" rel="noopener noreferrer">@L["footer_api_docs"]</a>
-                <a href="/contact">@L["footer_contact"]</a>
-            </div>
-            <div class="mkt-footer-col">
-                <h4>@L["footer_company"]</h4>
-                <a href="/about">@L["footer_about"]</a>
-                <a href="/contact">@L["footer_contact"]</a>
-                <a href="/support">@L["footer_support"]</a>
-                <a href="/security">@L["footer_security"]</a>
-                <a href="/legal">@L["footer_legal"]</a>
-            </div>
+<footer class="nt-footer">
+    <div class="nt-footer-grid">
+        <div class="brand">
+            <div class="logo">{ navt<span class="accent">o</span>ur }</div>
+            <p>Interactive Product Demos in the Cloud. Capture your product, orchestrate guided tours, measure buyer intent &mdash; bilingual, compliant, Americas-native.</p>
+            <div class="parent">Part of the <b>P4 Software Cloud Suite</b> &middot; Grupo Barrdega</div>
         </div>
-        <div class="mkt-footer-bottom">
-            <p>@L["footer_copyright"] &middot; <a href="/privacy">@L["footer_privacy"]</a> &middot; <a href="/terms">@L["footer_terms"]</a> &middot; <a href="/cookies">Cookies</a> &middot; <a href="/legal">@L["footer_legal"]</a></p>
-            <p style="font-size:var(--text-xs);color:var(--neutral-400);margin-top:var(--space-2)">A P4 Software Product &middot; Grupo Barrdega</p>
+        <div>
+            <h5>@L["footer_product"]</h5>
+            <ul>
+                <li><a href="/product">Demo Editor</a></li>
+                <li><a href="/product">Demo Hubs</a></li>
+                <li><a href="/product">Showcases</a></li>
+                <li><a href="/product">Analytics</a></li>
+                <li><a href="https://chromewebstore.google.com/detail/opgaokkionehglmipncajghhlmohanoi" target="_blank" rel="noopener noreferrer">Chrome Extension</a></li>
+                <li><a href="/product/ai">AI Copilot <span style="color:var(--nt-orange);font-size:10px;margin-left:4px;letter-spacing:0.1em">&#9650; ANTHROPIC</span></a></li>
+            </ul>
+        </div>
+        <div>
+            <h5>@L["footer_resources"]</h5>
+            <ul>
+                <li><a href="/solutions/sales">@L["nav_sales"]</a></li>
+                <li><a href="/solutions/marketing">@L["nav_marketing"]</a></li>
+                <li><a href="/solutions/presales">@L["nav_presales"]</a></li>
+                <li><a href="/integrations">@L["footer_integrations"]</a></li>
+                <li><a href="https://docs.navtour.cloud" target="_blank" rel="noopener noreferrer">@L["footer_api_docs"]</a></li>
+            </ul>
+        </div>
+        <div>
+            <h5>@L["footer_company"]</h5>
+            <ul>
+                <li><a href="/about">@L["footer_about"]</a></li>
+                <li><a href="/pricing">Pricing</a></li>
+                <li><a href="/security">@L["footer_security"]</a></li>
+                <li><a href="/contact">@L["footer_contact"]</a></li>
+                <li><a href="/blog">@L["footer_blog"]</a></li>
+            </ul>
+        </div>
+        <div>
+            <h5>Legal &amp; Support</h5>
+            <ul>
+                <li><a href="/support">@L["footer_help_center"]</a></li>
+                <li><a href="/privacy">@L["footer_privacy"]</a></li>
+                <li><a href="/terms">@L["footer_terms"]</a></li>
+                <li><a href="/legal">@L["footer_legal"]</a></li>
+                <li><a href="/security">Security</a></li>
+            </ul>
         </div>
     </div>
+    <div class="nt-footer-bottom">
+        <div>@L["footer_copyright"] &middot; Grupo Barrdega &middot; Panama City</div>
+        <div>AI by Anthropic &middot; EN / ES</div>
+        <div class="social">
+            <a href="https://linkedin.com/company/navtour" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zM8 17V10H6v7h2zM7 8.7c.7 0 1.2-.5 1.2-1.2S7.7 6.3 7 6.3s-1.2.5-1.2 1.2.5 1.2 1.2 1.2zM18 17v-4c0-1.8-1-3-2.7-3-1 0-1.6.5-1.9 1V10h-2v7h2v-3.7c0-.7.5-1.3 1.3-1.3s1.3.6 1.3 1.3V17h2z"/></svg>
+            </a>
+            <a href="https://x.com/navtourcloud" aria-label="X / Twitter" target="_blank" rel="noopener noreferrer">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.2 3h3.3l-7.2 8.2L23 21h-6.6l-5.2-6.8L5.2 21H2l7.7-8.8L1.6 3h6.7l4.7 6.2L18.2 3zm-1.2 16h1.8L7.1 4.9H5.1L17 19z"/></svg>
+            </a>
+            <a href="https://github.com/navtour" aria-label="GitHub" target="_blank" rel="noopener noreferrer">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.3-3.4-1.3-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.7.4-1.1.7-1.4-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.5-1.3.1-2.7 0 0 .8-.3 2.7 1a9.5 9.5 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
+            </a>
+        </div>
+    </div>
+    <div class="nt-sunrise">GRUPO BARRDEGA &middot; 32 COUNTRIES &middot; ESTABLISHED 1990</div>
 </footer>

@@ -1,16 +1,14 @@
 @inherits LayoutComponentBase
 @inject NavigationManager Nav
 
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="_content/Radzen.Blazor/css/material-base.css" />
 <link rel="stylesheet" href="css/marketing.css" />
 
-<div class="mkt">
+<div class="mkt nt">
     <a href="#main-content" class="mkt-skip-link">Skip to content</a>
-    <div class="mkt-announcement-banner">
-        <a href="/product/ai">Introducing AI Copilot — build interactive demos 10x faster with AI <span>&rarr;</span></a>
+    <div class="nt-announce">
+        <span class="dot"></span>
+        <span>Now live &mdash; AI Copilot powered by <b style="color:#FBAD48;font-weight:600">Anthropic</b></span>
     </div>
     <MarketingHeader />
     <main id="main-content">
@@ -48,7 +46,6 @@
 </script>
 
 <script>
-    // Scroll reveal observer
     (function () {
         if (typeof IntersectionObserver === 'undefined') return;
         var observer = new IntersectionObserver(function (entries) {
@@ -72,7 +69,7 @@
             observe();
         }
 
-        // Nav scroll shadow
+        // Nav scroll shadow (legacy mkt-header)
         var header = document.querySelector('.mkt-header');
         if (header) {
             window.addEventListener('scroll', function () {
@@ -81,31 +78,26 @@
         }
     })();
 
-    // Lightbox — click-to-zoom for images
+    // Lightbox
     (function () {
         function init() {
-            document.querySelectorAll('.mkt-hero-image img, .mkt-lightbox').forEach(function (img) {
+            document.querySelectorAll('.mkt-hero-image img, .mkt-lightbox, .nt-lightbox').forEach(function (img) {
                 if (img.dataset.lightbox) return;
                 img.dataset.lightbox = '1';
                 img.style.cursor = 'zoom-in';
                 img.addEventListener('click', function () {
                     var overlay = document.createElement('div');
                     overlay.className = 'mkt-lightbox-overlay';
-
                     var zoomedImg = document.createElement('img');
                     zoomedImg.src = img.src;
                     zoomedImg.alt = img.alt || '';
-
                     var closeBtn = document.createElement('button');
                     closeBtn.className = 'mkt-lightbox-close';
                     closeBtn.textContent = '\u00D7';
-
                     overlay.appendChild(zoomedImg);
                     overlay.appendChild(closeBtn);
                     document.body.appendChild(overlay);
-
                     requestAnimationFrame(function () { overlay.classList.add('active'); });
-
                     function close() {
                         overlay.classList.remove('active');
                         setTimeout(function () { overlay.remove(); }, 200);

@@ -1,6 +1,6 @@
 {
   "name": "navtour-extension",
-  "version": "1.6.5",
+  "version": "1.6.6",
   "private": true,
   "scripts": {
     "prebuild": "node -e \"const fs=require('fs');const p=require('path');function mkd(d){fs.mkdirSync(d,{recursive:true})}function cpd(s,d){mkd(d);fs.readdirSync(s).forEach(f=>{const sp=p.join(s,f),dp=p.join(d,f);fs.statSync(sp).isDirectory()?cpd(sp,dp):fs.copyFileSync(sp,dp)})}mkd('dist/static/icons');mkd('dist/navtourjs');fs.copyFileSync('manifest.json','dist/manifest.json');cpd('static','dist/static');try{cpd('icons','dist/static/icons')}catch{}\"",

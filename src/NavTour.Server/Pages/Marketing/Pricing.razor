@@ -7,97 +7,191 @@
     <meta name="description" content="NavTour pricing starts at $0. Pro plans from $99/mo. Simple pricing, powerful demos. No credit card required." />
 </HeadContent>
 
-@* Hero *@
-<section class="mkt-section" style="padding-bottom:var(--space-8)">
-    <div class="mkt-container" style="max-width:620px">
-        <h1 class="text-center reveal">@L["pricing_title"]</h1>
-        <p class="text-center reveal" style="margin-top:var(--space-5)">@L["pricing_subtitle"]</p>
-        <p class="text-center reveal mkt-pricing-annual-note" style="margin-top:var(--space-3)">@L["pricing_annual_note"]</p>
+<section class="pricing-hero">
+    <div class="nt-issue-mark">VOL · XII · PRICING · 2026</div>
+    <h1>Pricing that scales<br />with your <em>demos</em>,<br />not your headcount.</h1>
+    <p class="lead">Start free, upgrade when you ship. Only creators and demos count &mdash; viewers are always unlimited. All plans bilingual EN/ES, SOC&nbsp;2 Type&nbsp;II, and Americas-native.</p>
+    <div class="nt-price-toggle" role="tablist" aria-label="Billing period">
+        <button class="active" data-bill="monthly" aria-selected="true">Monthly</button>
+        <button data-bill="annual" aria-selected="false">Annual <span class="save">&#8722;20%</span></button>
     </div>
 </section>
 
-@* Pricing Cards *@
-<section class="mkt-section" style="padding-top:0">
-    <div class="mkt-container">
-        <div class="mkt-grid mkt-grid-4 reveal-stagger">
-            <PricingCard Name="@L["pricing_free_name"].Value" Price="@L["pricing_free_price"].Value" Description="@L["pricing_free_desc"].Value"
-                Features="@FreeFeatures"
-                CtaText="@L["pricing_free_cta"].Value" />
-            <PricingCard Name="@L["pricing_starter_name"].Value" Price="@L["pricing_starter_price"].Value" Description="@L["pricing_starter_desc"].Value"
-                Features="@StarterFeatures"
-                CtaText="@L["pricing_starter_cta"].Value" />
-            <PricingCard Name="@L["pricing_growth_name"].Value" Price="@L["pricing_growth_price"].Value" Description="@L["pricing_growth_desc"].Value" Highlighted="true"
-                Features="@GrowthFeatures"
-                CtaText="@L["pricing_growth_cta"].Value" />
-            <PricingCard Name="@L["pricing_enterprise_name"].Value" Price="@L["pricing_enterprise_price"].Value" Description="@L["pricing_enterprise_desc"].Value"
-                Features="@EnterpriseFeatures"
-                CtaText="@L["pricing_enterprise_cta"].Value" CtaUrl="/contact" />
+<section class="nt-tiers">
+    <div class="nt-price-grid">
+        <div class="nt-tier">
+            <span class="cat">Starter</span>
+            <h3>@L["pricing_free_name"]</h3>
+            <div class="price" data-m="Free" data-a="Free">Free<span class="unit">&nbsp;forever</span></div>
+            <p class="desc">@L["pricing_free_desc"]</p>
+            <ul>
+                @foreach (var f in FreeFeatures) {
+                    <li>@f</li>
+                }
+            </ul>
+            <a href="/register" class="btn btn-outline">@L["pricing_free_cta"] &rarr;</a>
+        </div>
+        <div class="nt-tier">
+            <span class="cat">Individual</span>
+            <h3>@L["pricing_starter_name"]</h3>
+            <div class="price" data-m="$99" data-a="$79" data-m-prefix="" data-a-prefix="$99"><span class="old" data-old=""></span>$99<span class="unit">/ month</span></div>
+            <p class="desc">@L["pricing_starter_desc"]</p>
+            <ul>
+                @foreach (var f in StarterFeatures) {
+                    <li>@f</li>
+                }
+            </ul>
+            <a href="/register" class="btn btn-outline">@L["pricing_starter_cta"] &rarr;</a>
+        </div>
+        <div class="nt-tier featured">
+            <span class="tag">Most popular</span>
+            <span class="cat">Teams</span>
+            <h3>@L["pricing_growth_name"]</h3>
+            <div class="price" data-m="$299" data-a="$239" data-m-prefix="" data-a-prefix="$299"><span class="old" data-old=""></span>$299<span class="unit">/ month</span></div>
+            <p class="desc">@L["pricing_growth_desc"]</p>
+            <ul>
+                @foreach (var f in GrowthFeatures) {
+                    <li>@f</li>
+                }
+            </ul>
+            <a href="/register" class="btn btn-orange">@L["pricing_growth_cta"] &rarr;</a>
+        </div>
+        <div class="nt-tier">
+            <span class="cat">Enterprise</span>
+            <h3>@L["pricing_enterprise_name"]</h3>
+            <div class="price" data-m="Custom" data-a="Custom">Custom<span class="unit">&nbsp;pricing</span></div>
+            <p class="desc">@L["pricing_enterprise_desc"]</p>
+            <ul>
+                @foreach (var f in EnterpriseFeatures) {
+                    <li>@f</li>
+                }
+            </ul>
+            <a href="/contact" class="btn btn-outline">@L["pricing_enterprise_cta"]</a>
         </div>
     </div>
 </section>
 
-@* Feature Comparison Table *@
-<section class="mkt-section-alt">
-    <div class="mkt-container reveal">
-        <div class="mkt-section-heading">
-            <h2>@L["pricing_compare_title"]</h2>
-        </div>
-        <div style="overflow-x:auto">
-            <table class="mkt-table">
-                <thead>
-                    <tr>
-                        <th>@L["pricing_table_feature"]</th>
-                        <th>@L["pricing_free_name"]</th>
-                        <th>@L["pricing_starter_name"]</th>
-                        <th class="highlighted">@L["pricing_growth_name"]</th>
-                        <th>@L["pricing_enterprise_name"]</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var row in comparisonRows)
+<div class="nt-included">
+    <div class="lbl">On every plan</div>
+    <div class="items">
+        <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> SOC&nbsp;2 Type&nbsp;II</span>
+        <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Bilingual EN / ES</span>
+        <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Chrome capture extension</span>
+        <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Unlimited viewers</span>
+        <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> EN / ES / PT</span>
+        <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 99.9% uptime</span>
+    </div>
+</div>
+
+<section class="nt-compare-section">
+    <div class="nt-compare-head">
+        <span class="num"><b>&#167; 02</b>&nbsp;&nbsp;&middot;&nbsp;&nbsp;@L["pricing_compare_title"]</span>
+        <h2>Everything, side&#8209;by&#8209;side. <em>No surprises.</em></h2>
+    </div>
+    <div class="nt-compare-wrap">
+        <table class="nt-compare">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>@L["pricing_free_name"]<span class="tier-price">$0 / mo</span></th>
+                    <th>@L["pricing_starter_name"]<span class="tier-price">$99 / mo</span></th>
+                    <th class="featured-col">@L["pricing_growth_name"]<span class="tier-price">$299 / mo</span></th>
+                    <th>@L["pricing_enterprise_name"]<span class="tier-price">Custom</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var row in comparisonRows)
+                {
+                    if (row.IsCategory)
                     {
-                        if (row.IsCategory)
-                        {
-                            <tr class="mkt-table-category">
-                                <td colspan="5">@L[row.Feature]</td>
-                            </tr>
-                        }
-                        else
-                        {
-                            <tr>
-                                <td>@L[row.Feature]</td>
-                                <td>@((MarkupString)FormatCheck(row.Free))</td>
-                                <td>@((MarkupString)FormatCheck(row.Starter))</td>
-                                <td class="highlighted">@((MarkupString)FormatCheck(row.Growth))</td>
-                                <td>@((MarkupString)FormatCheck(row.Enterprise))</td>
-                            </tr>
-                        }
+                        <tr class="group-row"><td colspan="5">@L[row.Feature]</td></tr>
                     }
-                </tbody>
-            </table>
+                    else
+                    {
+                        <tr>
+                            <td>@L[row.Feature]</td>
+                            <td>@((MarkupString)FormatCheck(row.Free))</td>
+                            <td>@((MarkupString)FormatCheck(row.Starter))</td>
+                            <td class="featured-col">@((MarkupString)FormatCheck(row.Growth))</td>
+                            <td>@((MarkupString)FormatCheck(row.Enterprise))</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="nt-faq-section" id="faq">
+    <div class="nt-faq-head">
+        <span class="num"><b>&#167; 03</b>&nbsp;&nbsp;&middot;&nbsp;&nbsp;FAQ</span>
+        <h2>@L["pricing_faq_title"] <em>every week.</em></h2>
+    </div>
+    <div class="nt-faq-inner">
+        @foreach (var faq in faqKeys)
+        {
+            <details>
+                <summary>@L[faq.QKey]</summary>
+                <p>@L[faq.AKey]</p>
+            </details>
+        }
+    </div>
+</section>
+
+<section class="nt-cta">
+    <div class="nt-cta-wrap">
+        <div class="nt-cta-inner">
+            <div>
+                <h2>Still deciding? <em>Start free</em> &mdash; upgrade when you ship.</h2>
+                <p>Free forever, no credit card, 2&nbsp;min setup. Capture your first product flow with the Chrome extension and publish a live demo in an afternoon.</p>
+                <div class="nt-cta-actions">
+                    <a href="/register" class="btn btn-ink btn-lg">Start free &mdash; 2 min setup &rarr;</a>
+                    <a href="/contact" class="btn btn-outline btn-lg" style="border-color:var(--nt-ink);color:var(--nt-ink)">Book a walkthrough</a>
+                </div>
+            </div>
+            <div class="nt-cta-card">
+                <span class="eyebrow">For enterprise teams</span>
+                <h4>Need SSO, data residency, or a custom MSA?</h4>
+                <p>We run bilingual enterprise workshops with your RevOps and Security teams. SOC&nbsp;2 Type&nbsp;II, bilingual onboarding, dedicated CSM.</p>
+                <a href="/contact" class="link">Talk to sales <span>&rarr;</span></a>
+            </div>
         </div>
     </div>
 </section>
 
-@* FAQ *@
-<section class="mkt-section" id="faq">
-    <div class="mkt-container" style="max-width:720px">
-        <div class="mkt-section-heading reveal">
-            <h2>@L["pricing_faq_title"]</h2>
-        </div>
-        <div class="reveal">
-            @foreach (var faq in faqKeys)
-            {
-                <details class="mkt-faq">
-                    <summary>@L[faq.QKey]</summary>
-                    <p>@L[faq.AKey]</p>
-                </details>
+<script>
+(function () {
+    var billBtns = document.querySelectorAll('.nt-price-toggle button');
+    var prices = document.querySelectorAll('.nt-tier .price');
+
+    function setBill(mode) {
+        billBtns.forEach(function (b) {
+            var match = b.dataset.bill === mode;
+            b.classList.toggle('active', match);
+            b.setAttribute('aria-selected', match ? 'true' : 'false');
+        });
+        prices.forEach(function (p) {
+            var unit = p.querySelector('.unit');
+            var oldEl = p.querySelector('.old');
+            Array.from(p.childNodes).forEach(function (n) {
+                if (n.nodeType === 3) p.removeChild(n);
+            });
+            var value = mode === 'annual' ? p.dataset.a : p.dataset.m;
+            var showOld = (mode === 'annual' && p.dataset.aPrefix);
+            if (oldEl) {
+                if (showOld) { oldEl.textContent = p.dataset.aPrefix; oldEl.style.display = ''; }
+                else { oldEl.style.display = 'none'; }
             }
-        </div>
-    </div>
-</section>
+            p.insertBefore(document.createTextNode(value), unit);
+        });
+    }
 
-<CtaSection Dark="true" Title="@L["pricing_cta_title"].Value" Subtitle="@L["pricing_cta_subtitle"].Value" CtaText="@L["pricing_cta_text"].Value" />
+    billBtns.forEach(function (b) {
+        b.addEventListener('click', function () { setBill(b.dataset.bill); });
+    });
+    setBill('monthly');
+})();
+</script>
 
 @code {
     private List<string> FreeFeatures => new() { L["pricing_free_feat1"].Value, L["pricing_free_feat2"].Value, L["pricing_free_feat3"].Value, L["pricing_free_feat4"].Value, L["pricing_free_feat5"].Value, L["pricing_free_feat6"].Value };
@@ -110,8 +204,8 @@
 
     private string FormatCheck(string val) => val switch
     {
-        "yes" => "<span class='mkt-check'>&#10003;</span>",
-        "no" => "<span class='mkt-dash'>&mdash;</span>",
+        "yes" => "<span class='tick'>&#10003;</span>",
+        "no" => "<span class='dash'>&mdash;</span>",
         _ => val
     };
 
