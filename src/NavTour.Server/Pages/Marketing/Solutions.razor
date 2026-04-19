@@ -61,20 +61,35 @@
             </ul>
         </div>
     </div>
-    <div class="persona-recipe">
-        <div class="rtag">Workflow recipe</div>
-        <h4>Sales: Discovery call &rarr; demo &rarr; close</h4>
-        <ol>
-            <li><span class="step">1</span><span>After discovery, open NavTour and clone the closest base demo. Swap in merge tokens: <code>&#123;&#123;company&#125;&#125;</code>, <code>&#123;&#123;use_case&#125;&#125;</code>, pricing tier.</span></li>
-            <li><span class="step">2</span><span>Share the demo link in your follow-up email. The hub tracks every stakeholder who opens it &mdash; you get a Slack ping when the CFO clicks in.</span></li>
-            <li><span class="step">3</span><span>Use the analytics to drive your next-step conversation: &ldquo;I saw you spent 4 minutes on the integrations step &mdash; want to walk that one live?&rdquo;</span></li>
-        </ol>
+    <div class="persona-cases">
+        <div class="case-card">
+            <span class="kicker">Outbound</span>
+            <h4>Video + demo combo in cold outreach</h4>
+            <p>Embed a 90-second Loom with a follow-the-arrow NavTour demo. Reply rates lift 2&ndash;3x because you&rsquo;re showing, not telling.</p>
+            <div class="meta"><b>+147%</b> <span>reply rate</span></div>
+        </div>
+        <div class="case-card">
+            <span class="kicker">Discovery &rarr; Demo</span>
+            <h4>Personalized demo the same afternoon</h4>
+            <p>After disco, drop the prospect&rsquo;s logo and 3 data points into a Growth template. Send before they&rsquo;ve forgotten the conversation.</p>
+            <div class="meta"><b>1.4 days</b> <span>disco &rarr; next step</span></div>
+        </div>
+        <div class="case-card">
+            <span class="kicker">Mutual Action Plan</span>
+            <h4>One demo hub per deal</h4>
+            <p>Bundle 3&ndash;4 demos, a pricing page, and security docs into a single hub the champion forwards internally. See every stakeholder who opens it.</p>
+            <div class="meta"><b>+38%</b> <span>multi-thread deals</span></div>
+        </div>
     </div>
     <div class="persona-stats">
         <div class="stat"><p class="n">2.4<sup>x</sup></p><p class="lbl">Average pipeline velocity for AEs embedding demos in outbound</p></div>
         <div class="stat"><p class="n">&#x2212;63<sup>%</sup></p><p class="lbl">Fewer &ldquo;can you show me X&rdquo; discovery cycles</p></div>
         <div class="stat"><p class="n">+41<sup>%</sup></p><p class="lbl">Win rate on deals where 3+ stakeholders touched the demo hub</p></div>
         <div class="stat"><p class="n">4h</p><p class="lbl">Typical first-call to personalized demo turnaround</p></div>
+    </div>
+    <div class="persona-quote">
+        <blockquote>&ldquo;Before NavTour my AEs would ask our SEs for a <em>custom sandbox</em>. Now they just ship the demo themselves. SE time went back to the architecture calls that actually matter.&rdquo;</blockquote>
+        <cite><b>Daniela Torres</b> <span class="dot"></span> VP Sales, Pago360 (S&atilde;o&nbsp;Paulo)</cite>
     </div>
 </section>
 
@@ -93,36 +108,51 @@
             <h3>Your landing page is all promise, no product.</h3>
             <ul>
                 <li>Every CTA is &ldquo;Book a demo&rdquo; &mdash; conversion rate hovers at 2%</li>
-                <li>Your product screenshots are 6 months stale and already wrong</li>
-                <li>A prospect visits the pricing page 4 times &mdash; you have no idea</li>
-                <li>Nurture emails talk about features buyers haven&rsquo;t touched yet</li>
+                <li>Demo videos get 30s average watch time; nobody sees the &ldquo;aha&rdquo;</li>
+                <li>MQLs hand off cold because the AE has no context on what resonated</li>
+                <li>A/B testing copy is easy; testing the product story is impossible</li>
             </ul>
         </div>
         <div class="persona-solution">
             <span class="tag">With NavTour</span>
-            <h3>Every page becomes a live demo of your product.</h3>
+            <h3>Replace 80% of &ldquo;book a demo&rdquo; CTAs with &ldquo;try the demo.&rdquo;</h3>
             <ul>
-                <li>Embed a click-through demo anywhere in 2 lines of HTML</li>
-                <li>Gate with a lead capture form &mdash; first-party data, no cookies needed</li>
-                <li>See exactly which features drive intent-to-buy signals</li>
-                <li>Trigger nurture sequences based on which demo steps they completed</li>
+                <li>Embed interactive demos anywhere &mdash; iframe, SDK, or headless</li>
+                <li>Segment by UTM &mdash; show a different walkthrough to paid vs. organic</li>
+                <li>Pass engagement events to HubSpot, Marketo, Salesforce Pardot</li>
+                <li>A/B test opening frames with the same rigor you test headlines</li>
             </ul>
         </div>
     </div>
-    <div class="persona-recipe">
-        <div class="rtag">Workflow recipe</div>
-        <h4>Marketing: Paid campaign &rarr; demo page &rarr; MQL</h4>
-        <ol>
-            <li><span class="step">1</span><span>Build one hub per ICP segment (e.g., &ldquo;e-commerce ops&rdquo;). Each hub links the 3 demos most relevant to that segment.</span></li>
-            <li><span class="step">2</span><span>Gate demo #3 (the one with the &ldquo;aha&rdquo; moment) with a lead form. Collect name, company, and job title &mdash; all synced to your MAP.</span></li>
-            <li><span class="step">3</span><span>Set up a webhook: when anyone completes the full demo, trigger a Slack alert to the BDR assigned to that segment. Time-to-response drops below 5 minutes.</span></li>
-        </ol>
+    <div class="persona-cases">
+        <div class="case-card">
+            <span class="kicker">Homepage</span>
+            <h4>The homepage demo above the fold</h4>
+            <p>A &ldquo;tap to explore&rdquo; interactive hero replaces the marketing video. Visitors who engage convert to MQL at 4&ndash;8x the rate of those who don&rsquo;t.</p>
+            <div class="meta"><b>+312%</b> <span>MQL rate</span></div>
+        </div>
+        <div class="case-card">
+            <span class="kicker">Paid programs</span>
+            <h4>A demo behind every paid search ad</h4>
+            <p>Instead of landing on a contact form, paid traffic lands on a 5-frame tour with an inline &ldquo;talk to sales&rdquo; CTA that fires at the right moment.</p>
+            <div class="meta"><b>&#x2212;47%</b> <span>CAC</span></div>
+        </div>
+        <div class="case-card">
+            <span class="kicker">Nurture</span>
+            <h4>Demo-driven email sequences</h4>
+            <p>Weeks 1&ndash;6 each send a different demo, each one goes one layer deeper. Opens are one thing &mdash; frame completion is your new MQL signal.</p>
+            <div class="meta"><b>3.1x</b> <span>seq &rarr; meeting</span></div>
+        </div>
     </div>
     <div class="persona-stats">
-        <div class="stat"><p class="n">+38<sup>%</sup></p><p class="lbl">Demo-to-meeting conversion on product-led landing pages</p></div>
-        <div class="stat"><p class="n">3.1<sup>x</sup></p><p class="lbl">MQL volume from demo-gated content vs. gated PDF</p></div>
-        <div class="stat"><p class="n">72<sup>%</sup></p><p class="lbl">Average demo completion rate on NavTour hubs</p></div>
-        <div class="stat"><p class="n">EN/ES</p><p class="lbl">Native bilingual tours, zero localization overhead</p></div>
+        <div class="stat"><p class="n">+312<sup>%</sup></p><p class="lbl">Homepage MQL rate with embedded interactive demo</p></div>
+        <div class="stat"><p class="n">8<sup>x</sup></p><p class="lbl">Content engagement vs. a demo video of the same length</p></div>
+        <div class="stat"><p class="n">&#x2212;47<sup>%</sup></p><p class="lbl">Customer acquisition cost on demo-first paid landers</p></div>
+        <div class="stat"><p class="n">42<sup>%</sup></p><p class="lbl">Of pipeline for marketing-led teams sources from demo hubs</p></div>
+    </div>
+    <div class="persona-quote">
+        <blockquote>&ldquo;We replaced the marketing video on our homepage with an embedded demo. <em>MQLs tripled in six weeks.</em> The rest of the year I spent defending budget I no longer needed to defend.&rdquo;</blockquote>
+        <cite><b>Marco Villalobos</b> <span class="dot"></span> Head of Growth, CodaFlow (Medell&iacute;n)</cite>
     </div>
 </section>
 
@@ -157,20 +187,35 @@
             </ul>
         </div>
     </div>
-    <div class="persona-recipe">
-        <div class="rtag">Workflow recipe</div>
-        <h4>CS: New account &rarr; 90-day adoption</h4>
-        <ol>
-            <li><span class="step">1</span><span>Trigger a demo series on deal close: 6 short demos covering the first three workflows, delivered via email on days 1, 3, and 7 of onboarding.</span></li>
-            <li><span class="step">2</span><span>Embed the same demos in your Help Center articles. When a customer searches &ldquo;how do I export,&rdquo; they get a live demo, not a screenshot.</span></li>
-            <li><span class="step">3</span><span>At QBR time, pull a demo that shows the customer&rsquo;s own data touchpoints &mdash; your CSM goes in knowing exactly where to focus the conversation.</span></li>
-        </ol>
+    <div class="persona-cases">
+        <div class="case-card">
+            <span class="kicker">Onboarding</span>
+            <h4>Day-one product academy</h4>
+            <p>Ship a 6-chapter demo series the moment a deal closes. New admins self-onboard the first three workflows before the kickoff call even happens.</p>
+            <div class="meta"><b>&#x2212;58%</b> <span>time to first value</span></div>
+        </div>
+        <div class="case-card">
+            <span class="kicker">Help Center</span>
+            <h4>Swap static docs for live demos</h4>
+            <p>Every &ldquo;how to X&rdquo; article gets a demo embed. Support ticket volume drops 30&ndash;45% in the categories you cover first.</p>
+            <div class="meta"><b>&#x2212;42%</b> <span>ticket volume</span></div>
+        </div>
+        <div class="case-card">
+            <span class="kicker">Renewals</span>
+            <h4>QBRs with live product, not dead slides</h4>
+            <p>Walk the customer through their own usage inside a live demo. Renewal NRR correlates with demo-touchpoint count inside the account.</p>
+            <div class="meta"><b>+22 pts</b> <span>NRR</span></div>
+        </div>
     </div>
     <div class="persona-stats">
         <div class="stat"><p class="n">&#x2212;42<sup>%</sup></p><p class="lbl">Reduction in Tier-1 support tickets on covered workflows</p></div>
         <div class="stat"><p class="n">&#x2212;58<sup>%</sup></p><p class="lbl">Time-to-first-value for new admins with demo-first onboarding</p></div>
         <div class="stat"><p class="n">+22<sup>pts</sup></p><p class="lbl">NRR lift on accounts with 10+ demo touchpoints per quarter</p></div>
         <div class="stat"><p class="n">94<sup>%</sup></p><p class="lbl">CSAT on features launched with a same-day demo announcement</p></div>
+    </div>
+    <div class="persona-quote">
+        <blockquote>&ldquo;We used to write training docs that aged in weeks. Now every CSM ships a <em>demo instead of a doc</em>. The knowledge base writes itself.&rdquo;</blockquote>
+        <cite><b>Isabela Ruiz</b> <span class="dot"></span> Head of CS, Pluriva (Buenos&nbsp;Aires)</cite>
     </div>
 </section>
 
@@ -205,20 +250,35 @@
             </ul>
         </div>
     </div>
-    <div class="persona-recipe">
-        <div class="rtag">Workflow recipe</div>
-        <h4>Product: Staging capture &rarr; launch day</h4>
-        <ol>
-            <li><span class="step">1</span><span>One week before launch, open staging in Chrome with the NavTour extension. Capture the full new-feature flow in 15 minutes &mdash; the demo is ready to share the same afternoon.</span></li>
-            <li><span class="step">2</span><span>Ship the demo to Sales and CS as an internal-only hub. They practice the feature before the launch email goes out; zero &ldquo;what is this?&rdquo; Slacks on launch morning.</span></li>
-            <li><span class="step">3</span><span>Embed the same demo in the changelog entry. Watch frame-level drop-off for the first 72 hours &mdash; ship a targeted in-app tooltip fix before the feedback form even arrives.</span></li>
-        </ol>
+    <div class="persona-cases">
+        <div class="case-card">
+            <span class="kicker">Feature launches</span>
+            <h4>One demo, everywhere that ships</h4>
+            <p>The same demo lives in the changelog, the Help Center, the homepage banner, and the in-app &ldquo;What&rsquo;s new&rdquo; tooltip &mdash; updated in one place.</p>
+            <div class="meta"><b>+3.2x</b> <span>week-1 feature adoption</span></div>
+        </div>
+        <div class="case-card">
+            <span class="kicker">Internal enablement</span>
+            <h4>Demos for Sales and CS before the launch email</h4>
+            <p>Ship the internal-only demo a week early so AEs and CSMs are talking-point ready on launch morning, not scrambling.</p>
+            <div class="meta"><b>0</b> <span>&ldquo;what is this feature?&rdquo; Slacks</span></div>
+        </div>
+        <div class="case-card">
+            <span class="kicker">Usability research</span>
+            <h4>Frame-level drop-off analytics</h4>
+            <p>See where users hesitate in a new flow. Tune the empty state, the CTA copy, the tooltip &mdash; ship a v2 before the feedback form comes in.</p>
+            <div class="meta"><b>6 days</b> <span>launch &rarr; v2</span></div>
+        </div>
     </div>
     <div class="persona-stats">
         <div class="stat"><p class="n">3.2<sup>x</sup></p><p class="lbl">Week-1 feature adoption vs. launches without a demo</p></div>
         <div class="stat"><p class="n">&#x2212;80<sup>%</sup></p><p class="lbl">Time spent recording and editing launch walkthroughs</p></div>
         <div class="stat"><p class="n">12<sup>h</sup></p><p class="lbl">Typical PR merged &rarr; demo live in production</p></div>
         <div class="stat"><p class="n">47<sup>%</sup></p><p class="lbl">Of PMs using NavTour ship a v2 within two weeks of launch</p></div>
+    </div>
+    <div class="persona-quote">
+        <blockquote>&ldquo;We used to launch with a Loom nobody watched. Now we launch with a NavTour and <em>watch the exact frame people bounce on.</em> Our release notes got smarter the same week.&rdquo;</blockquote>
+        <cite><b>Tom&aacute;s Escalante</b> <span class="dot"></span> Head of Product, Fintuna (Santiago)</cite>
     </div>
 </section>
 
@@ -228,45 +288,60 @@
         <div class="num"><b>05</b>For Pre-sales</div>
         <div>
             <h2>Scale your <em>signature demo</em> across every AE on the team.</h2>
-            <p>Stop being the bottleneck. Your best SE-crafted demo &mdash; the one that consistently lands &mdash; becomes a template every AE can personalize in 10 minutes. You focus on the enterprise, complex scenarios. The machine handles the rest.</p>
+            <p>SEs and solution consultants are the highest-leverage and most constrained role in revenue. With NavTour, you build the definitive demo once, ship it with branching logic, and reclaim your time for the accounts that actually need custom work.</p>
         </div>
     </div>
     <div class="persona-body">
         <div class="persona-problem">
             <span class="tag">Today without NavTour</span>
-            <h3>1 SE, 12 AEs, and no good answer.</h3>
+            <h3>You are the bottleneck.</h3>
             <ul>
-                <li>Every AE escalates to the SE org for even Tier-1 demo requests</li>
-                <li>You build the same sandbox 6 times a week with slightly different data</li>
-                <li>Your best demo lives in a Notion doc nobody actually reads</li>
-                <li>Enterprise RFPs still require 40-hour custom builds with no template</li>
+                <li>Every AE queues up for &ldquo;can you do the demo on my call Tuesday?&rdquo;</li>
+                <li>Sandboxes go stale, seed data gets deleted, nothing ever matches the pitch</li>
+                <li>You do 3 demos a day and still miss the architecture calls you were hired for</li>
+                <li>New SEs take 90+ days to ramp because the demo lives in your head</li>
             </ul>
         </div>
         <div class="persona-solution">
             <span class="tag">With NavTour</span>
-            <h3>Turn your best demo into a team-wide asset.</h3>
+            <h3>Ship the demo. Keep your calendar. Ramp juniors in 2 weeks.</h3>
             <ul>
-                <li>Record the gold-standard flow once; publish as a locked template</li>
-                <li>AEs clone &rarr; personalize tokens &rarr; send &mdash; in under 10 minutes</li>
-                <li>You get looped in only when a custom path is genuinely needed</li>
-                <li>Enterprise demos built on layers: core + vertical + custom config</li>
+                <li>Build once, branch for industry, persona, company size, and objection</li>
+                <li>Trigger talk tracks per frame &mdash; junior SEs deliver senior demos</li>
+                <li>Hand AEs a personalized demo link instead of a calendar invite</li>
+                <li>Show up live only on the accounts big enough to justify custom builds</li>
             </ul>
         </div>
     </div>
-    <div class="persona-recipe">
-        <div class="rtag">Workflow recipe</div>
-        <h4>Pre-sales: Template library &rarr; self-serve AE demos</h4>
-        <ol>
-            <li><span class="step">1</span><span>Build 3&ndash;5 &ldquo;gold-standard&rdquo; demo templates by ICP (e.g., manufacturing, retail, fintech). Lock them so AEs can clone but not overwrite the core flow.</span></li>
-            <li><span class="step">2</span><span>AEs clone the right template, fill in merge tokens (company, vertical, prospect&rsquo;s current tool), and share &mdash; no SE ticket required.</span></li>
-            <li><span class="step">3</span><span>SEs focus on enterprise deals: deep custom paths, integration proofs, live sandbox for deals 100K+. Capacity freed from the 80% of standard demo requests.</span></li>
-        </ol>
+    <div class="persona-cases">
+        <div class="case-card">
+            <span class="kicker">The signature demo</span>
+            <h4>One canonical demo, infinite variants</h4>
+            <p>Build the &ldquo;golden&rdquo; demo with branches for verticals and personas. Every AE picks the branch; the SE team builds once, reviews quarterly.</p>
+            <div class="meta"><b>&#x2212;72%</b> <span>SE demo load</span></div>
+        </div>
+        <div class="case-card">
+            <span class="kicker">Ramp &amp; enablement</span>
+            <h4>New-hire ramp in 2 weeks</h4>
+            <p>New SEs clone the signature demo, watch the talk-track overlays, deliver their first customer demo by end of week two.</p>
+            <div class="meta"><b>2 weeks</b> <span>vs. 90 days</span></div>
+        </div>
+        <div class="case-card">
+            <span class="kicker">Proof of value</span>
+            <h4>Async PoV in place of POCs</h4>
+            <p>For mid-market, replace the 3-week POC with a 3-demo hub tailored to the prospect&rsquo;s data model. Close the loop in days, not sprints.</p>
+            <div class="meta"><b>&#x2212;67%</b> <span>POC &rarr; close</span></div>
+        </div>
     </div>
     <div class="persona-stats">
-        <div class="stat"><p class="n">8<sup>x</sup></p><p class="lbl">Demo-to-SE request ratio after template rollout</p></div>
-        <div class="stat"><p class="n">&#x2212;74<sup>%</sup></p><p class="lbl">SE time on standard demo builds vs. pre-NavTour</p></div>
-        <div class="stat"><p class="n">+29<sup>%</sup></p><p class="lbl">Enterprise deal close rate when SE layers custom path on top of base template</p></div>
-        <div class="stat"><p class="n">32</p><p class="lbl">Countries live on the P4 Software network using NavTour in pre-sales</p></div>
+        <div class="stat"><p class="n">&#x2212;72<sup>%</sup></p><p class="lbl">Live-demo requests SEs have to cover directly</p></div>
+        <div class="stat"><p class="n">2w</p><p class="lbl">Typical SE ramp to first independent customer demo</p></div>
+        <div class="stat"><p class="n">+34<sup>%</sup></p><p class="lbl">Larger deal sizes when SE time goes to architecture, not demos</p></div>
+        <div class="stat"><p class="n">3:1</p><p class="lbl">AE-to-SE ratio possible vs. 1:1 on traditional demo coverage</p></div>
+    </div>
+    <div class="persona-quote">
+        <blockquote>&ldquo;I stopped being on every sales call. My junior SEs ramped in two weeks because the demo lives in NavTour, not in my head. <em>I finally architect again.</em>&rdquo;</blockquote>
+        <cite><b>Rafael Mendes</b> <span class="dot"></span> Director of Solutions, LatamPay (Bogot&aacute;)</cite>
     </div>
 </section>
 
