@@ -58,8 +58,8 @@
             <ul>
                 <li><a href="#ai-draft">AI drafting</a></li>
                 <li><a href="#ai-review">AI review</a></li>
-                <li><a href="#ai-personalization">AI personalization</a></li>
-                <li><a href="#ai-privacy">Privacy &amp; data handling</a></li>
+                <li><a href="#brand-voice">Brand voice training</a></li>
+                <li><a href="#translation">Translation EN / ES / PT</a></li>
             </ul>
         </div>
 
@@ -109,6 +109,7 @@
                 <li><a href="#sso">SSO / SAML</a></li>
                 <li><a href="#audit">Audit logs</a></li>
                 <li><a href="#billing">Billing &amp; seats</a></li>
+                <li><a href="#security-compliance">Security &amp; compliance</a></li>
             </ul>
         </div>
 
@@ -251,20 +252,20 @@
             <p>Before publishing, run <em>AI Review</em> from the toolbar. The AI checks for: missing annotations on key interactive elements, copy that&rsquo;s too long for the tooltip format, personalization token typos, and broken branching paths.</p>
         </section>
 
-        <section id="ai-personalization">
-            <h2>AI personalization</h2>
-            <p>On Growth and Enterprise plans, AI can auto-fill personalization tokens based on a prospect&rsquo;s company domain. Pass a domain in the share URL (<code>?domain=acme.com</code>), and the AI looks up company name, size, and industry from our enrichment layer to pre-fill <code>&#123;&#123;company&#125;&#125;</code> and related tokens.</p>
+        <section id="brand-voice">
+            <h2>Brand voice training <small style="font-size:0.6em;font-weight:400;color:var(--nt-muted);vertical-align:middle">(Enterprise)</small></h2>
+            <p>Enterprise workspaces can train the AI Copilot on your brand voice by uploading approved copy samples, style guides, and terminology lists. Once trained, every AI draft &mdash; tooltip copy, modal headlines, CTA labels &mdash; reflects your tone without manual editing.</p>
+            <p>To enable: Settings &rarr; AI &rarr; Brand Voice &rarr; Upload samples. Training runs overnight; the model is scoped to your workspace and never shared.</p>
+            <div class="nt-docs-callout info">
+                <p><strong>Enterprise-only.</strong> Brand voice training is available on Enterprise plans. Growth plans get the default Claude Sonnet model with no workspace-specific tuning.</p>
+            </div>
         </section>
 
-        <section id="ai-privacy">
-            <h2>AI privacy &amp; data handling</h2>
-            <p>Frame content sent to AI drafting is processed by Anthropic&rsquo;s Claude API. NavTour enforces the following guarantees:</p>
-            <ul>
-                <li>Your captured frames are <strong>never used to train</strong> Anthropic models</li>
-                <li>Frames are sent over mTLS; encrypted at rest in Anthropic&rsquo;s processing environment</li>
-                <li>Processing logs are retained 30 days; workspace content logs are retained 7 days</li>
-                <li>Enterprise customers can opt out of AI features entirely via workspace settings</li>
-            </ul>
+        <section id="translation">
+            <h2>Translation &mdash; EN / ES / PT</h2>
+            <p>NavTour demos are bilingual-native. Every demo can be published in <strong>English</strong>, <strong>Spanish</strong>, and <strong>Portuguese</strong> from the same capture &mdash; no separate recording needed. The AI translates tooltip copy, modal text, and CTA labels; you review and approve each language before publishing.</p>
+            <p>To set languages: Demo Settings &rarr; Languages &rarr; toggle the languages to publish. Viewers see the demo in their browser&rsquo;s preferred language automatically, or you can force a language via the share URL parameter <code>?lang=es</code>.</p>
+            <p>All three languages are included on every paid plan. Free plans are English-only.</p>
         </section>
 
         <section id="share">
@@ -426,20 +427,27 @@ ntour export sessions demo-abc123     # CSV export</code></pre>
             <p>NavTour bills per <em>creator seat</em> &mdash; anyone who captures, edits, or publishes demos. Viewers (analytics-only) and demo viewers (public) are always unlimited and free. Mid-cycle upgrades are prorated. Downgrade at the end of any billing period.</p>
         </section>
 
+        <section id="security-compliance">
+            <h2>Security &amp; compliance</h2>
+            <p>NavTour is <strong>SOC&nbsp;2 Type&nbsp;II</strong> certified and <strong>ISO&nbsp;27001</strong> compliant. Data is hosted in AWS us-east-1 with a LATAM failover in sa-east-1 (S&atilde;o Paulo). All data at rest is AES-256 encrypted; in transit uses TLS 1.3.</p>
+            <p>Enterprise customers may request a Data Processing Agreement (DPA), a pre-filled Security Questionnaire from our security team, and access to the audit log export API.</p>
+            <p>For security questions or vulnerability disclosures: <a href="mailto:security@navtour.cloud">security@navtour.cloud</a>.</p>
+        </section>
+
         <section id="keyboard">
             <h2>Keyboard shortcuts</h2>
             <table>
-                <thead><tr><th>Shortcut</th><th>Action</th></tr></thead>
+                <thead><tr><th>Key</th><th>Action</th></tr></thead>
                 <tbody>
-                    <tr><td><kbd>Cmd+Shift+C</kbd></td><td>Capture page (extension)</td></tr>
-                    <tr><td><kbd>T</kbd></td><td>Add tooltip (editor)</td></tr>
-                    <tr><td><kbd>H</kbd></td><td>Add hotspot (editor)</td></tr>
-                    <tr><td><kbd>B</kbd></td><td>Add blur (editor)</td></tr>
-                    <tr><td><kbd>Cmd+Z</kbd></td><td>Undo</td></tr>
-                    <tr><td><kbd>Cmd+Y</kbd></td><td>Redo</td></tr>
-                    <tr><td><kbd>Space+drag</kbd></td><td>Pan canvas</td></tr>
-                    <tr><td><kbd>Esc</kbd></td><td>Deselect / close panel</td></tr>
-                    <tr><td><kbd>Cmd+P</kbd></td><td>Publish demo</td></tr>
+                    <tr><td><kbd>&#x2318;</kbd><kbd>K</kbd></td><td>Open command palette</td></tr>
+                    <tr><td><kbd>?</kbd></td><td>Show all shortcuts</td></tr>
+                    <tr><td><kbd>&#x2318;</kbd><kbd>S</kbd></td><td>Save demo</td></tr>
+                    <tr><td><kbd>&#x2318;</kbd><kbd>P</kbd></td><td>Preview demo</td></tr>
+                    <tr><td><kbd>&#x2318;</kbd><kbd>J</kbd></td><td>Open AI Copilot</td></tr>
+                    <tr><td><kbd>&#x2318;</kbd><kbd>G</kbd></td><td>Branch graph view</td></tr>
+                    <tr><td><kbd>&#x2318;</kbd><kbd>M</kbd></td><td>Merge adjacent frames</td></tr>
+                    <tr><td><kbd>S</kbd></td><td>Split current frame</td></tr>
+                    <tr><td><kbd>&#x2325;</kbd><kbd>&uarr;</kbd> / <kbd>&#x2325;</kbd><kbd>&darr;</kbd></td><td>Reorder frame</td></tr>
                 </tbody>
             </table>
         </section>
@@ -489,7 +497,8 @@ ntour export sessions demo-abc123     # CSV export</code></pre>
             <li><a href="#branching">Branching logic</a></li>
             <li><a href="#personalization">Personalization</a></li>
             <li><a href="#ai-draft">AI drafting</a></li>
-            <li><a href="#ai-privacy" class="sub">AI privacy</a></li>
+            <li><a href="#brand-voice" class="sub">Brand voice training</a></li>
+            <li><a href="#translation" class="sub">Translation</a></li>
             <li><a href="#share">Share links</a></li>
             <li><a href="#embed">Embed &amp; SDK</a></li>
             <li><a href="#hubs">Hubs &amp; showcases</a></li>
@@ -500,6 +509,7 @@ ntour export sessions demo-abc123     # CSV export</code></pre>
             <li><a href="#cli" class="sub">CLI</a></li>
             <li><a href="#roles">Roles</a></li>
             <li><a href="#sso">SSO / SAML</a></li>
+            <li><a href="#security-compliance">Security &amp; compliance</a></li>
             <li><a href="#glossary">Glossary</a></li>
         </ul>
     </nav>

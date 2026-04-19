@@ -540,6 +540,7 @@
   <data name="pricing_row_annotations" xml:space="preserve"><value>Anotaciones (tooltip, modal, hotspot)</value></data>
   <data name="pricing_row_embed" xml:space="preserve"><value>Opciones de embed</value></data>
   <data name="pricing_row_custom_domain" xml:space="preserve"><value>Dominio personalizado</value></data>
+  <data name="pricing_row_viewers" xml:space="preserve"><value>Espectadores</value></data>
   <data name="pricing_cat_ai" xml:space="preserve"><value>Funciones de IA</value></data>
   <data name="pricing_row_ai_copilot" xml:space="preserve"><value>Copiloto IA (generación de demos)</value></data>
   <data name="pricing_row_ai_copy" xml:space="preserve"><value>Edición de texto IA</value></data>
