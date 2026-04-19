@@ -1,93 +1,101 @@
 @page "/solutions/marketing"
 @layout MarketingLayout
-@inject IStringLocalizer<NavTour.Server.SharedResources> L
 
-<PageTitle>@L["sol_mkt_page_title"]</PageTitle>
+<PageTitle>NavTour for Marketing Teams &mdash; NavTour</PageTitle>
 <HeadContent>
-    <meta name="description" content="@L["sol_mkt_meta_desc"].Value" />
+    <meta name="description" content="NavTour helps marketing teams replace static product screenshots with interactive demos on the website, in campaigns, and across every buyer-facing asset." />
 </HeadContent>
 
-<HeroSection Eyebrow="@L["sol_mkt_eyebrow"].Value"
-             Title="@L["sol_mkt_hero_title"].Value"
-             Subtitle="@L["sol_mkt_hero_subtitle"].Value"
-             PrimaryCtaText="@L["sol_mkt_cta_primary"].Value"
-             SecondaryCtaText="@L["sol_mkt_cta_secondary"].Value"
-             SecondaryCtaUrl="/contact" />
-
-@* Pain Points *@
-<section class="mkt-section">
-    <div class="mkt-container reveal">
-        <div class="mkt-grid mkt-grid-3 reveal-stagger">
-            <div class="mkt-card">
-                <h3>@L["sol_mkt_pain1_title"]</h3>
-                <p>@L["sol_mkt_pain1_desc"]</p>
-            </div>
-            <div class="mkt-card">
-                <h3>@L["sol_mkt_pain2_title"]</h3>
-                <p>@L["sol_mkt_pain2_desc"]</p>
-            </div>
-            <div class="mkt-card">
-                <h3>@L["sol_mkt_pain3_title"]</h3>
-                <p>@L["sol_mkt_pain3_desc"]</p>
-            </div>
+<section class="nt-page-hero">
+    <div class="nt-container">
+        <span class="eyebrow">Solutions &middot; Marketing</span>
+        <h1>Replace the explainer video<br />with a demo that <em>actually converts.</em></h1>
+        <p class="lead">Embed a live NavTour on your homepage, in email campaigns, and on ad landing pages. Measurable intent from every visitor, zero engineering time.</p>
+        <div class="nt-hero-actions">
+            <a href="/register" class="btn btn-orange btn-lg">Start free &rarr;</a>
+            <a href="/solutions" class="btn btn-outline btn-lg">All use cases</a>
         </div>
     </div>
 </section>
 
-@* Solution Feature 1 *@
-<section class="mkt-section-alt">
-    <div class="mkt-container reveal">
-        <div class="mkt-grid mkt-grid-2" style="align-items:center;gap:var(--space-16)">
-            <div>
-                <p class="mkt-eyebrow">@L["sol_mkt_feat1_eyebrow"]</p>
-                <h2 style="margin-top:var(--space-2)">@L["sol_mkt_feat1_title"]</h2>
-                <p style="margin-top:var(--space-4)">@L["sol_mkt_feat1_desc"]</p>
+<section class="nt-frames-section">
+    <div class="nt-container">
+        <article class="nt-frame-row">
+            <div class="nt-frame-copy">
+                <div class="num">01<span class="slash">/</span><span class="lbl">Website hero</span></div>
+                <h3>Your homepage demo is live in<br /><em>an afternoon, not a sprint.</em></h3>
+                <p>Capture your product with the Chrome extension and embed the NavTour on your homepage. No video to re-record every release, no dev ticket to update the marketing site.</p>
+                <ul>
+                    <li><span class="chk">&#10003;</span>One-line embed script, works in any CMS</li>
+                    <li><span class="chk">&#10003;</span>Auto-updates when you republish the demo</li>
+                    <li><span class="chk">&#10003;</span>Demo Hub for multi-product or multi-persona pages</li>
+                </ul>
             </div>
-            <div class="mkt-placeholder mkt-placeholder-feature">@L["sol_mkt_feat1_placeholder"]</div>
-        </div>
-    </div>
-</section>
-
-@* Solution Feature 2 *@
-<section class="mkt-section">
-    <div class="mkt-container reveal">
-        <div class="mkt-grid mkt-grid-2" style="align-items:center;gap:var(--space-16)">
-            <div class="mkt-placeholder mkt-placeholder-feature">@L["sol_mkt_feat2_placeholder"]</div>
-            <div>
-                <p class="mkt-eyebrow">@L["sol_mkt_feat2_eyebrow"]</p>
-                <h2 style="margin-top:var(--space-2)">@L["sol_mkt_feat2_title"]</h2>
-                <p style="margin-top:var(--space-4)">@L["sol_mkt_feat2_desc"]</p>
+            <div class="nt-frame-visual">
+                <span class="nt-frame-cap">Website embed &middot; homepage hero</span>
+                <div class="nt-frame-img">
+                    <img src="/images/shots/hub.png" alt="NavTour demo hub embedded on a marketing site" class="nt-lightbox" />
+                </div>
+                <div class="anno tl">
+                    <div class="lbl">No video, no stale screenshots</div>
+                    <strong>Interactive from day one</strong>
+                    <p>Visitors click through the real product, not a recording that&rsquo;s two releases behind.</p>
+                </div>
             </div>
-        </div>
-    </div>
-</section>
+        </article>
 
-@* Solution Feature 3 *@
-<section class="mkt-section-alt">
-    <div class="mkt-container reveal">
-        <div class="mkt-grid mkt-grid-2" style="align-items:center;gap:var(--space-16)">
-            <div>
-                <p class="mkt-eyebrow">@L["sol_mkt_feat3_eyebrow"]</p>
-                <h2 style="margin-top:var(--space-2)">@L["sol_mkt_feat3_title"]</h2>
-                <p style="margin-top:var(--space-4)">@L["sol_mkt_feat3_desc"]</p>
+        <article class="nt-frame-row reverse">
+            <div class="nt-frame-copy">
+                <div class="num">02<span class="slash">/</span><span class="lbl">Campaigns</span></div>
+                <h3>Gated demos that <em>capture intent</em> inside any campaign.</h3>
+                <p>Gate any NavTour with a custom lead form — collect name, company, and role before the first step plays. All form data lands in HubSpot or Salesforce with the engagement timeline attached.</p>
+                <ul>
+                    <li><span class="chk">&#10003;</span>No-code lead capture form, fully branded</li>
+                    <li><span class="chk">&#10003;</span>Native HubSpot, Salesforce, and Marketo sync</li>
+                    <li><span class="chk">&#10003;</span>Completion events as campaign conversion goals</li>
+                </ul>
             </div>
-            <div class="mkt-placeholder mkt-placeholder-feature">@L["sol_mkt_feat3_placeholder"]</div>
-        </div>
+            <div class="nt-frame-visual">
+                <span class="nt-frame-cap">Lead form &middot; gated demo</span>
+                <div class="nt-frame-img">
+                    <img src="/images/shots/leads.png" alt="Lead capture form before a NavTour demo" class="nt-lightbox" />
+                </div>
+                <div class="anno br">
+                    <div class="lbl">Intent, not just vanity metrics</div>
+                    <strong>+38% demo-to-meeting conversion</strong>
+                    <p>Median lift when a NavTour replaces a static LP for product-led campaigns.</p>
+                </div>
+            </div>
+        </article>
+
+        <article class="nt-frame-row">
+            <div class="nt-frame-copy">
+                <div class="num">03<span class="slash">/</span><span class="lbl">Release content</span></div>
+                <h3>Ship a walkthrough with every release.<br /><em>Not a blog post &mdash; a demo.</em></h3>
+                <p>Record a NavTour of each new feature the day it ships. Embed it in the announcement email, release notes, and in-app notifications. Users feel the value, not just read about it.</p>
+                <ul>
+                    <li><span class="chk">&#10003;</span>From capture to published demo in under 15 minutes</li>
+                    <li><span class="chk">&#10003;</span>Bilingual EN/ES in one pass with AI translation</li>
+                    <li><span class="chk">&#10003;</span>Analytics on which features drive the most engagement</li>
+                </ul>
+            </div>
+            <div class="nt-frame-visual">
+                <span class="nt-frame-cap">Product release &middot; feature demo</span>
+                <div class="nt-frame-img">
+                    <img src="/images/shots/editor.png" alt="NavTour editor for release demo creation" class="nt-lightbox" />
+                </div>
+                <div class="anno tr">
+                    <div class="lbl">Release cadence</div>
+                    <strong>Feature content that ships with the feature</strong>
+                    <p>No more &ldquo;we&rsquo;ll do a video later&rdquo; that never happens.</p>
+                </div>
+            </div>
+        </article>
     </div>
 </section>
 
-@* Metrics *@
-<section class="mkt-section">
-    <div class="mkt-container text-center reveal">
-        <h2>@L["sol_mkt_metrics_title"]</h2>
-        <div class="mkt-grid mkt-grid-3" style="margin-top:var(--space-10)">
-            <MetricCard Value="3.2x" Label="@L["sol_mkt_metric1_label"].Value" Source="@L["sol_mkt_metric1_source"].Value" />
-            <MetricCard Value="47%" Label="@L["sol_mkt_metric2_label"].Value" />
-            <MetricCard Value="68%" Label="@L["sol_mkt_metric3_label"].Value" />
-        </div>
-    </div>
-</section>
-
-<CtaSection Dark="true"
-            Title="@L["sol_mkt_cta_title"].Value"
-            Subtitle="@L["sol_mkt_cta_subtitle"].Value" />
+<NtCTABand Headline="Embed your first interactive demo by end of day."
+           SubText="No engineering time, no design sprint. The Chrome extension captures your product in 2 minutes."
+           PrimaryLabel="Start free &rarr;"
+           SecondaryLabel="See all solutions"
+           SecondaryHref="/solutions" />

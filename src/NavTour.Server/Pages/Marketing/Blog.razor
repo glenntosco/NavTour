@@ -1,110 +1,104 @@
 @page "/blog"
 @layout MarketingLayout
-@inject IStringLocalizer<NavTour.Server.SharedResources> L
 
-<PageTitle>@L["blog_page_title"]</PageTitle>
+<PageTitle>Blog &mdash; NavTour</PageTitle>
 <HeadContent>
-    <meta name="description" content="@L["blog_meta_desc"].Value" />
+    <meta name="description" content="Product updates, sales and marketing insights, and engineering notes from the NavTour team." />
 </HeadContent>
 
-<section class="mkt-section" style="padding-bottom:var(--space-10)">
-    <div class="mkt-container" style="max-width:680px">
-        <h1 class="text-center">@L["blog_title"]</h1>
-        <p class="text-center" style="margin-top:var(--space-5)">@L["blog_subtitle"]</p>
+<section class="nt-page-hero">
+    <div class="nt-container">
+        <div class="nt-issue-mark">VOL &middot; XII &middot; BLOG &middot; 2026</div>
+        <h1>From the <em>NavTour</em> desk.</h1>
+        <p class="lead">Product updates, sales and marketing insights, and engineering notes from the team building interactive demos for the Americas.</p>
     </div>
 </section>
 
-<section style="padding:0 var(--space-6) var(--space-32)">
-    <div class="mkt-container">
-        @* Category filter bar *@
-        <div class="mkt-blog-categories reveal">
-            <a href="/blog" class="active">@L["blog_cat_all"]</a>
-            <a href="/blog">@L["blog_cat_product"]</a>
-            <a href="/blog">@L["blog_cat_sales"]</a>
-            <a href="/blog">@L["blog_cat_marketing"]</a>
-            <a href="/blog">@L["blog_cat_engineering"]</a>
-            <a href="/blog">@L["blog_cat_customers"]</a>
+<section class="nt-section">
+    <div class="nt-container">
+        @* Category filter — visual only, no routing yet *@
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:40px;padding-bottom:20px;border-bottom:1px solid var(--nt-rule)">
+            <span style="font-family:var(--nt-mono);font-size:0.82rem;letter-spacing:0.1em;text-transform:uppercase;padding:6px 16px;background:var(--nt-ink);color:var(--nt-bg);border-radius:999px;cursor:pointer">All</span>
+            <span style="font-family:var(--nt-mono);font-size:0.82rem;letter-spacing:0.1em;text-transform:uppercase;padding:6px 16px;border:1px solid var(--nt-rule);border-radius:999px;cursor:pointer;color:var(--nt-muted)">Product</span>
+            <span style="font-family:var(--nt-mono);font-size:0.82rem;letter-spacing:0.1em;text-transform:uppercase;padding:6px 16px;border:1px solid var(--nt-rule);border-radius:999px;cursor:pointer;color:var(--nt-muted)">Sales</span>
+            <span style="font-family:var(--nt-mono);font-size:0.82rem;letter-spacing:0.1em;text-transform:uppercase;padding:6px 16px;border:1px solid var(--nt-rule);border-radius:999px;cursor:pointer;color:var(--nt-muted)">Marketing</span>
+            <span style="font-family:var(--nt-mono);font-size:0.82rem;letter-spacing:0.1em;text-transform:uppercase;padding:6px 16px;border:1px solid var(--nt-rule);border-radius:999px;cursor:pointer;color:var(--nt-muted)">Engineering</span>
+            <span style="font-family:var(--nt-mono);font-size:0.82rem;letter-spacing:0.1em;text-transform:uppercase;padding:6px 16px;border:1px solid var(--nt-rule);border-radius:999px;cursor:pointer;color:var(--nt-muted)">Customers</span>
         </div>
 
-        @* Blog post grid *@
-        <div class="mkt-grid mkt-grid-2 reveal-stagger" style="gap:var(--space-8)">
-            @* Post 1 *@
-            <div class="mkt-blog-card">
-                <div class="mkt-blog-card-image">@L["blog_cat_product"]</div>
-                <div class="mkt-blog-card-body">
-                    <span class="mkt-blog-card-tag">@L["blog_cat_product"]</span>
-                    <h3 class="mkt-blog-card-title">@L["blog_post1_title"]</h3>
-                    <p class="mkt-blog-card-excerpt">@L["blog_post1_excerpt"]</p>
-                    <div class="mkt-blog-card-meta">
-                        <span>NavTour Team</span> &middot; <span>Mar 12, 2026</span> &middot; <a href="/blog" style="color:var(--nt-primary);font-weight:var(--weight-semibold)">@L["blog_read"] &rarr;</a>
-                    </div>
+        <div class="nt-blog-grid">
+            <div class="nt-blog-card">
+                <div class="nt-blog-thumb" style="background:var(--nt-bg-ink)">
+                    <span style="font-family:var(--nt-mono);font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--nt-orange)">Product</span>
+                </div>
+                <div class="nt-blog-body">
+                    <span class="eyebrow">Product &middot; Mar 12, 2026</span>
+                    <h3>AI Copilot ships: annotation drafting, demo review, and intent scoring</h3>
+                    <p>Three AI capabilities in one release — powered by Anthropic Claude with a zero-training policy on workspace content.</p>
+                    <div style="margin-top:16px;font-family:var(--nt-mono);font-size:0.82rem;color:var(--nt-muted)">NavTour Team &middot; 6 min read</div>
                 </div>
             </div>
-
-            @* Post 2 *@
-            <div class="mkt-blog-card">
-                <div class="mkt-blog-card-image">@L["blog_cat_sales"]</div>
-                <div class="mkt-blog-card-body">
-                    <span class="mkt-blog-card-tag">@L["blog_cat_sales"]</span>
-                    <h3 class="mkt-blog-card-title">@L["blog_post2_title"]</h3>
-                    <p class="mkt-blog-card-excerpt">@L["blog_post2_excerpt"]</p>
-                    <div class="mkt-blog-card-meta">
-                        <span>Sarah Chen</span> &middot; <span>Mar 8, 2026</span> &middot; <a href="/blog" style="color:var(--nt-primary);font-weight:var(--weight-semibold)">@L["blog_read"] &rarr;</a>
-                    </div>
+            <div class="nt-blog-card">
+                <div class="nt-blog-thumb" style="background:var(--nt-bg-ink)">
+                    <span style="font-family:var(--nt-mono);font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--nt-orange)">Sales</span>
+                </div>
+                <div class="nt-blog-body">
+                    <span class="eyebrow">Sales &middot; Mar 8, 2026</span>
+                    <h3>Why pre-call demos close 2.4&times; more meetings than cold calendar invites</h3>
+                    <p>Data from 500+ NavTour workspaces on what happens when you send a tour before the discovery call.</p>
+                    <div style="margin-top:16px;font-family:var(--nt-mono);font-size:0.82rem;color:var(--nt-muted)">Sarah Chen &middot; 8 min read</div>
                 </div>
             </div>
-
-            @* Post 3 *@
-            <div class="mkt-blog-card">
-                <div class="mkt-blog-card-image">@L["blog_cat_marketing"]</div>
-                <div class="mkt-blog-card-body">
-                    <span class="mkt-blog-card-tag">@L["blog_cat_marketing"]</span>
-                    <h3 class="mkt-blog-card-title">@L["blog_post3_title"]</h3>
-                    <p class="mkt-blog-card-excerpt">@L["blog_post3_excerpt"]</p>
-                    <div class="mkt-blog-card-meta">
-                        <span>NavTour Team</span> &middot; <span>Mar 1, 2026</span> &middot; <a href="/blog" style="color:var(--nt-primary);font-weight:var(--weight-semibold)">@L["blog_read"] &rarr;</a>
-                    </div>
+            <div class="nt-blog-card">
+                <div class="nt-blog-thumb" style="background:var(--nt-bg-ink)">
+                    <span style="font-family:var(--nt-mono);font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--nt-orange)">Marketing</span>
+                </div>
+                <div class="nt-blog-body">
+                    <span class="eyebrow">Marketing &middot; Mar 1, 2026</span>
+                    <h3>How to replace your homepage video with an interactive demo in an afternoon</h3>
+                    <p>Step-by-step: capture your product, build the tour, and embed it on your site — without touching the dev team.</p>
+                    <div style="margin-top:16px;font-family:var(--nt-mono);font-size:0.82rem;color:var(--nt-muted)">NavTour Team &middot; 5 min read</div>
                 </div>
             </div>
-
-            @* Post 4 *@
-            <div class="mkt-blog-card">
-                <div class="mkt-blog-card-image">@L["blog_cat_customers"]</div>
-                <div class="mkt-blog-card-body">
-                    <span class="mkt-blog-card-tag">@L["blog_cat_customers"]</span>
-                    <h3 class="mkt-blog-card-title">@L["blog_post4_title"]</h3>
-                    <p class="mkt-blog-card-excerpt">@L["blog_post4_excerpt"]</p>
-                    <div class="mkt-blog-card-meta">
-                        <span>Alex Rivera</span> &middot; <span>Feb 25, 2026</span> &middot; <a href="/blog" style="color:var(--nt-primary);font-weight:var(--weight-semibold)">@L["blog_read"] &rarr;</a>
-                    </div>
+            <div class="nt-blog-card">
+                <div class="nt-blog-thumb" style="background:var(--nt-bg-ink)">
+                    <span style="font-family:var(--nt-mono);font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--nt-orange)">Customers</span>
+                </div>
+                <div class="nt-blog-body">
+                    <span class="eyebrow">Customers &middot; Feb 25, 2026</span>
+                    <h3>How P4 Warehouse replaced four sales tools with one NavTour hub</h3>
+                    <p>The story behind María Velásquez&rsquo;s team cutting discovery call time by 40% in a single quarter.</p>
+                    <div style="margin-top:16px;font-family:var(--nt-mono);font-size:0.82rem;color:var(--nt-muted)">Alex Rivera &middot; 7 min read</div>
                 </div>
             </div>
-
-            @* Post 5 *@
-            <div class="mkt-blog-card">
-                <div class="mkt-blog-card-image">@L["blog_cat_engineering"]</div>
-                <div class="mkt-blog-card-body">
-                    <span class="mkt-blog-card-tag">@L["blog_cat_engineering"]</span>
-                    <h3 class="mkt-blog-card-title">@L["blog_post5_title"]</h3>
-                    <p class="mkt-blog-card-excerpt">@L["blog_post5_excerpt"]</p>
-                    <div class="mkt-blog-card-meta">
-                        <span>NavTour Engineering</span> &middot; <span>Feb 18, 2026</span> &middot; <a href="/blog" style="color:var(--nt-primary);font-weight:var(--weight-semibold)">@L["blog_read"] &rarr;</a>
-                    </div>
+            <div class="nt-blog-card">
+                <div class="nt-blog-thumb" style="background:var(--nt-bg-ink)">
+                    <span style="font-family:var(--nt-mono);font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--nt-orange)">Engineering</span>
+                </div>
+                <div class="nt-blog-body">
+                    <span class="eyebrow">Engineering &middot; Feb 18, 2026</span>
+                    <h3>How we capture complex SPA dashboards as fully interactive HTML/CSS snapshots</h3>
+                    <p>Under the hood: how the NavTour Chrome extension freezes a running web app into an offline, editable frame.</p>
+                    <div style="margin-top:16px;font-family:var(--nt-mono);font-size:0.82rem;color:var(--nt-muted)">NavTour Engineering &middot; 12 min read</div>
                 </div>
             </div>
-
-            @* Post 6 *@
-            <div class="mkt-blog-card">
-                <div class="mkt-blog-card-image">@L["blog_cat_sales"]</div>
-                <div class="mkt-blog-card-body">
-                    <span class="mkt-blog-card-tag">@L["blog_cat_sales"]</span>
-                    <h3 class="mkt-blog-card-title">@L["blog_post6_title"]</h3>
-                    <p class="mkt-blog-card-excerpt">@L["blog_post6_excerpt"]</p>
-                    <div class="mkt-blog-card-meta">
-                        <span>NavTour Team</span> &middot; <span>Feb 10, 2026</span> &middot; <a href="/blog" style="color:var(--nt-primary);font-weight:var(--weight-semibold)">@L["blog_read"] &rarr;</a>
-                    </div>
+            <div class="nt-blog-card">
+                <div class="nt-blog-thumb" style="background:var(--nt-bg-ink)">
+                    <span style="font-family:var(--nt-mono);font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--nt-orange)">Sales</span>
+                </div>
+                <div class="nt-blog-body">
+                    <span class="eyebrow">Sales &middot; Feb 10, 2026</span>
+                    <h3>The post-call follow-up your champion can actually forward upstairs</h3>
+                    <p>How to build a branded showcase that the buying committee can self-serve — without scheduling another meeting.</p>
+                    <div style="margin-top:16px;font-family:var(--nt-mono);font-size:0.82rem;color:var(--nt-muted)">NavTour Team &middot; 4 min read</div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<NtCTABand Headline="Ready to see these ideas in action?"
+           SubText="Start building interactive demos free. No credit card, 2 min setup."
+           PrimaryLabel="Start free &rarr;"
+           SecondaryLabel="Browse the docs"
+           SecondaryHref="/docs" />

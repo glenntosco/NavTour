@@ -1,71 +1,55 @@
 @page "/cookies"
 @layout MarketingLayout
 
-<PageTitle>Cookie Policy - NavTour</PageTitle>
+<PageTitle>Cookie Policy &mdash; NavTour</PageTitle>
 <HeadContent>
     <meta name="description" content="NavTour cookie policy describing the cookies and similar technologies used across the website and application." />
 </HeadContent>
 
-<section class="mkt-section">
-    <div class="mkt-container mkt-legal-shell">
-        <div class="reveal">
-            <p class="mkt-eyebrow">Cookies</p>
-            <h1>Cookie Policy</h1>
-            <p class="mkt-legal-meta">Effective date: March 24, 2026</p>
-        </div>
+<section class="nt-page-hero" style="padding-bottom:40px">
+    <div class="nt-container">
+        <span class="eyebrow">Cookie Policy</span>
+        <h1>Cookie Policy</h1>
+    </div>
+</section>
 
-        <div class="mkt-legal-prose reveal" style="margin-top:var(--space-12)">
-            <section>
+<section class="nt-section" style="padding-top:0">
+    <div class="nt-container">
+        <NtLegalShell Meta="Effective date: March 24, 2026"
+                      Sections='new() { ("covers","1. What this policy covers"), ("types","2. Types of cookies"), ("not-used","3. What we do not use"), ("browser","4. Browser controls"), ("related","5. Related technologies"), ("updates","6. Updates and contact") }'>
+            <section id="covers">
                 <h2>1. What this policy covers</h2>
-                <p>
-                    This Cookie Policy explains how NavTour uses cookies and similar technologies on the public website,
-                    authenticated application, and related product surfaces.
-                </p>
+                <p>This Cookie Policy explains how NavTour uses cookies and similar technologies on the public website, authenticated application, and related product surfaces.</p>
             </section>
 
-            <section>
+            <section id="types">
                 <h2>2. Types of cookies we may use</h2>
-                <ul class="mkt-legal-list">
+                <ul>
                     <li>Essential cookies used for sign-in, session continuity, security, and core application behavior.</li>
                     <li>Preference cookies used to remember language, interface, or product settings where applicable.</li>
                     <li>Operational measurement cookies or similar storage used to understand product reliability and service performance.</li>
                 </ul>
             </section>
 
-            <section>
+            <section id="not-used">
                 <h2>3. What we do not use by default</h2>
-                <p>
-                    NavTour does not present itself as an ad-tech or cross-site tracking platform. If additional analytics,
-                    advertising, or third-party marketing technologies are introduced later, this policy should be updated
-                    before they are used in production.
-                </p>
+                <p>NavTour does not present itself as an ad-tech or cross-site tracking platform. If additional analytics, advertising, or third-party marketing technologies are introduced later, this policy should be updated before they are used in production.</p>
             </section>
 
-            <section>
+            <section id="browser">
                 <h2>4. Browser controls</h2>
-                <p>
-                    Most browsers allow you to block or delete cookies. Disabling essential cookies may prevent sign-in
-                    or other key product features from working correctly.
-                </p>
+                <p>Most browsers allow you to block or delete cookies. Disabling essential cookies may prevent sign-in or other key product features from working correctly.</p>
             </section>
 
-            <section>
+            <section id="related">
                 <h2>5. Related technologies</h2>
-                <p>
-                    NavTour may use local storage, session storage, or similar browser mechanisms where needed to support
-                    authenticated sessions, product behavior, and user preferences. These technologies are treated in a
-                    similar way to cookies for policy purposes.
-                </p>
+                <p>NavTour may use local storage, session storage, or similar browser mechanisms where needed to support authenticated sessions, product behavior, and user preferences. These technologies are treated in a similar way to cookies for policy purposes.</p>
             </section>
 
-            <section>
+            <section id="updates">
                 <h2>6. Updates and contact</h2>
-                <p>
-                    We may update this policy as the product evolves. Questions about this policy or privacy practices can
-                    be sent to <a href="mailto:support@navtour.cloud">support@navtour.cloud</a> or by mail to Avenida de
-                    los Periodistas, PH Leaf Tower, Panama City, Panama.
-                </p>
+                <p>We may update this policy as the product evolves. Questions about this policy or privacy practices can be sent to <a href="mailto:support@navtour.cloud">support@navtour.cloud</a> or by mail to Avenida de los Periodistas, PH Leaf Tower, Panama City, Panama.</p>
             </section>
-        </div>
+        </NtLegalShell>
     </div>
 </section>

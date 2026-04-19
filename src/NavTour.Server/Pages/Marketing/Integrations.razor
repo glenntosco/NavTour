@@ -1,242 +1,145 @@
 @page "/integrations"
 @layout MarketingLayout
-@inject IStringLocalizer<NavTour.Server.SharedResources> L
 
-<PageTitle>@L["integ_page_title"]</PageTitle>
+<PageTitle>Integrations &mdash; NavTour</PageTitle>
 <HeadContent>
-    <meta name="description" content="@L["integ_meta_desc"].Value" />
+    <meta name="description" content="NavTour connects to HubSpot, Salesforce, Slack, Marketo, Zapier, and more. Pipe demo engagement data straight into your CRM and marketing stack." />
 </HeadContent>
 
-<HeroSection Eyebrow="@L["integ_eyebrow"].Value"
-             Title="@L["integ_hero_title"].Value"
-             Subtitle="@L["integ_hero_subtitle"].Value"
-             PrimaryCtaText="@L["integ_cta_primary"].Value"
-             SecondaryCtaText="@L["integ_cta_secondary"].Value"
-             SecondaryCtaUrl="/contact">
-    <div class="mkt-hero-proof">
-        <div class="mkt-hero-proof-item">@L["integ_stat1_title"]</div>
-        <div class="mkt-hero-proof-item">@L["integ_stat2_title"]</div>
-        <div class="mkt-hero-proof-item">@L["integ_stat3_title"]</div>
-    </div>
-</HeroSection>
-
-<section class="mkt-social-proof">
-    <div class="mkt-container">
-        <div class="mkt-grid mkt-grid-3 reveal-stagger">
-            <div class="mkt-card mkt-integ-summary-card">
-                <div class="mkt-integration-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-                    </svg>
-                </div>
-                <h3>@L["integ_stat1_title"]</h3>
-                <p>@L["integ_stat1_desc"]</p>
-            </div>
-            <div class="mkt-card mkt-integ-summary-card">
-                <div class="mkt-integration-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 12a9 9 0 1 1-6.219-8.56"/><path d="M9 12l2 2 4-4"/>
-                    </svg>
-                </div>
-                <h3>@L["integ_stat2_title"]</h3>
-                <p>@L["integ_stat2_desc"]</p>
-            </div>
-            <div class="mkt-card mkt-integ-summary-card">
-                <div class="mkt-integration-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
-                    </svg>
-                </div>
-                <h3>@L["integ_stat3_title"]</h3>
-                <p>@L["integ_stat3_desc"]</p>
-            </div>
+<section class="nt-page-hero">
+    <div class="nt-container">
+        <span class="eyebrow">Integrations</span>
+        <h1>Demo data, everywhere<br />your team <em>already works.</em></h1>
+        <p class="lead">NavTour pipes lead submissions, engagement timelines, and intent scores directly into HubSpot, Salesforce, Slack, and 50+ tools — no Zapier required for the core integrations.</p>
+        <div class="nt-hero-actions">
+            <a href="/register" class="btn btn-orange btn-lg">Start building free &rarr;</a>
+            <a href="/docs" class="btn btn-outline btn-lg">View API docs</a>
         </div>
     </div>
 </section>
 
-<section class="mkt-section">
-    <div class="mkt-container">
-        <div class="mkt-section-heading reveal">
-            <p class="mkt-eyebrow">@L["integ_flow_eyebrow"]</p>
-            <h2>@L["integ_flow_title"]</h2>
-            <p>@L["integ_flow_subtitle"]</p>
-        </div>
-        <div class="mkt-grid mkt-grid-2 reveal-stagger" style="align-items:start;gap:var(--space-12)">
-            <div class="mkt-stack-flow">
-                <div class="mkt-stack-node">
-                    <div class="mkt-stack-node-step">01</div>
-                    <div>
-                        <h3>@L["integ_flow_step1_title"]</h3>
-                        <p>@L["integ_flow_step1_desc"]</p>
-                    </div>
-                </div>
-                <div class="mkt-stack-flow-line"></div>
-                <div class="mkt-stack-node">
-                    <div class="mkt-stack-node-step">02</div>
-                    <div>
-                        <h3>@L["integ_flow_step2_title"]</h3>
-                        <p>@L["integ_flow_step2_desc"]</p>
-                    </div>
-                </div>
-                <div class="mkt-stack-flow-line"></div>
-                <div class="mkt-stack-node">
-                    <div class="mkt-stack-node-step">03</div>
-                    <div>
-                        <h3>@L["integ_flow_step3_title"]</h3>
-                        <p>@L["integ_flow_step3_desc"]</p>
-                    </div>
-                </div>
-                <div class="mkt-stack-flow-line"></div>
-                <div class="mkt-stack-node">
-                    <div class="mkt-stack-node-step">04</div>
-                    <div>
-                        <h3>@L["integ_flow_step4_title"]</h3>
-                        <p>@L["integ_flow_step4_desc"]</p>
-                    </div>
-                </div>
-            </div>
-            <div class="mkt-stage-card">
-                <div class="mkt-stage-card-header">
-                    <div>
-                        <div class="mkt-stage-card-label">@L["integ_flow_visual_label"]</div>
-                        <div class="mkt-stage-card-title">@L["integ_flow_visual_title"]</div>
-                    </div>
-                    <div class="mkt-stage-pill">@L["integ_flow_visual_pill"]</div>
-                </div>
-                <div class="mkt-result-grid">
-                    <div><strong>Lead</strong><span>@L["integ_flow_visual_box1"]</span></div>
-                    <div><strong>CRM</strong><span>@L["integ_flow_visual_box2"]</span></div>
-                    <div><strong>Alert</strong><span>@L["integ_flow_visual_box3"]</span></div>
-                    <div><strong>API</strong><span>@L["integ_flow_visual_box4"]</span></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-@foreach (var (category, index) in categories.Select((c, i) => (c, i)))
-{
-    <section class="@(index % 2 == 0 ? "mkt-section" : "mkt-section-alt")">
-        <div class="mkt-container">
-            <div class="mkt-section-heading reveal">
-                <p class="mkt-eyebrow">@L[category.LabelKey]</p>
-                <h2>@L[category.TitleKey]</h2>
-            </div>
-            <div class="mkt-grid mkt-grid-3 reveal-stagger">
-                @foreach (var integration in category.Items)
-                {
-                    <div class="mkt-card">
-                        <div class="mkt-integration-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                @((MarkupString)integration.IconPath)
-                            </svg>
-                        </div>
-                        <h3>@L[integration.NameKey]</h3>
-                        <p>@L[integration.DescKey]</p>
-                    </div>
-                }
-            </div>
-        </div>
-    </section>
-}
-
-@* API Section *@
-<section class="mkt-section-alt">
-    <div class="mkt-container reveal">
-        <div class="mkt-grid mkt-grid-2" style="align-items:center;gap:var(--space-16)">
+@* ── INTEGRATION CATEGORIES ── *@
+<section class="nt-section">
+    <div class="nt-container">
+        <div class="nt-section-head">
             <div>
-                <p class="mkt-eyebrow">@L["integ_api_eyebrow"]</p>
-                <h2 style="margin-top:var(--space-2)">@L["integ_api_title"]</h2>
-                <p style="margin-top:var(--space-4)">@L["integ_api_desc"]</p>
-                <a href="https://docs.navtour.cloud" target="_blank" rel="noopener noreferrer" class="mkt-btn mkt-btn-secondary" style="margin-top:var(--space-6)">@L["integ_api_link"] &rarr;</a>
+                <span class="num"><b>&sect; 02</b>&nbsp;&nbsp;&middot;&nbsp;&nbsp;Connections</span>
+                <h2>Four integration tiers, from<br /><em>no-code to full API.</em></h2>
             </div>
-            <div class="mkt-stage-card">
-                <div class="mkt-stage-card-header">
-                    <div>
-                        <div class="mkt-stage-card-label">@L["integ_api_visual_label"]</div>
-                        <div class="mkt-stage-card-title">@L["integ_api_visual_title"]</div>
-                    </div>
-                    <div class="mkt-stage-pill">REST</div>
+            <div class="aside">Native integrations for the tools your team already uses. Webhooks and REST API for everything else.</div>
+        </div>
+
+        <div class="nt-integ-grid">
+            <div class="nt-integ-card">
+                <div class="nt-integ-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                 </div>
-                <div class="mkt-code-window">
-                    <div class="mkt-code-window-bar">
-                        <span></span><span></span><span></span>
+                <h4>HubSpot</h4>
+                <p>Lead submissions and engagement scores sync to Contacts. Demo views add a Timeline event to every deal record.</p>
+                <span class="nt-integ-tag">Native · CRM</span>
+            </div>
+            <div class="nt-integ-card">
+                <div class="nt-integ-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                </div>
+                <h4>Salesforce</h4>
+                <p>Create or update Leads and Opportunities from demo events. Custom field mapping, no middleware required.</p>
+                <span class="nt-integ-tag">Native · CRM</span>
+            </div>
+            <div class="nt-integ-card">
+                <div class="nt-integ-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 10c-.83 0-1.5-.67-1.5-1.5v-5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5z"/><path d="M20.5 10H19V8.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/><path d="M9.5 14c.83 0 1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5S8 21.33 8 20.5v-5c0-.83.67-1.5 1.5-1.5z"/><path d="M3.5 14H5v1.5c0 .83-.67 1.5-1.5 1.5S2 16.33 2 15.5 2.67 14 3.5 14z"/></svg>
+                </div>
+                <h4>Slack</h4>
+                <p>Get notified when a high-intent lead re-opens your demo. Pipe lead form submissions to your #sales Slack channel.</p>
+                <span class="nt-integ-tag">Native · Alerts</span>
+            </div>
+            <div class="nt-integ-card">
+                <div class="nt-integ-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                </div>
+                <h4>Marketo</h4>
+                <p>Demo completions trigger Marketo campaigns. Lead scores update from engagement signals in real time.</p>
+                <span class="nt-integ-tag">Native · Marketing</span>
+            </div>
+            <div class="nt-integ-card">
+                <div class="nt-integ-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                </div>
+                <h4>Zapier</h4>
+                <p>Connect NavTour to 5,000+ apps via Zapier triggers. Any demo event becomes a Zap trigger — no code needed.</p>
+                <span class="nt-integ-tag">Zapier · Automation</span>
+            </div>
+            <div class="nt-integ-card">
+                <div class="nt-integ-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                </div>
+                <h4>Webhooks</h4>
+                <p>Subscribe to any NavTour event — lead submitted, step completed, demo finished — and receive a POST to any endpoint.</p>
+                <span class="nt-integ-tag">Developer · REST</span>
+            </div>
+            <div class="nt-integ-card">
+                <div class="nt-integ-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                </div>
+                <h4>Embed</h4>
+                <p>One script tag embeds any NavTour on any page. Responsive, lazy-loaded, and works inside iframes or shadow DOM.</p>
+                <span class="nt-integ-tag">No-code · Embed</span>
+            </div>
+            <div class="nt-integ-card">
+                <div class="nt-integ-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                </div>
+                <h4>Google Analytics</h4>
+                <p>Demo events fire as GA4 custom events. Step completions, CTA clicks, and lead submissions show up in your dashboards.</p>
+                <span class="nt-integ-tag">Analytics · GA4</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+@* ── API CODE WINDOW ── *@
+<section class="nt-section" style="background:var(--nt-bg-alt)">
+    <div class="nt-container">
+        <div class="nt-frames-section">
+            <div class="nt-container" style="padding:0">
+                <article class="nt-frame-row">
+                    <div class="nt-frame-copy">
+                        <span class="eyebrow">For developers</span>
+                        <h2>REST API &amp; JS SDK for<br /><em>custom integrations.</em></h2>
+                        <p>The NavTour REST API gives full programmatic access to demos, leads, and analytics. The JS SDK lets you embed NavTour with custom event handlers, conditional flows, and CRM prefill from URL parameters.</p>
+                        <ul>
+                            <li><span class="chk">&#10003;</span>Full REST API at <code style="font-family:var(--nt-mono);font-size:0.88em">/api/v1</code></li>
+                            <li><span class="chk">&#10003;</span>JS SDK for dynamic embed and prefill</li>
+                            <li><span class="chk">&#10003;</span>Webhook subscriptions for any demo event</li>
+                        </ul>
+                        <a href="/docs#api" class="link-more">Read the API docs <span class="ar">&rarr;</span></a>
                     </div>
-                    <pre class="mkt-code-block">POST /api/v1/demos/{id}/events
+                    <div class="nt-frame-visual">
+                        <span class="nt-frame-cap">REST API &middot; webhook payload</span>
+                        <div class="nt-code-win">
+                            <div class="nt-code-win-bar"><span></span><span></span><span></span></div>
+                            <pre style="margin:0;padding:20px 24px;font-family:var(--nt-mono);font-size:13px;line-height:1.7;color:#c5cdd8">POST /api/v1/demos/{id}/events
 {
-  "type": "lead_submitted",
-  "viewerId": "prospect_128",
-  "step": 7,
-  "score": 91
+  &quot;type&quot;: &quot;lead_submitted&quot;,
+  &quot;viewerId&quot;: &quot;prospect_128&quot;,
+  &quot;step&quot;: 7,
+  &quot;score&quot;: 91,
+  &quot;fields&quot;: {
+    &quot;name&quot;: &quot;María Velásquez&quot;,
+    &quot;company&quot;: &quot;P4 Warehouse&quot;
+  }
 }</pre>
-                </div>
-                <div class="mkt-badge-row">
-                    <span>@L["integ_api_badge1"]</span>
-                    <span>@L["integ_api_badge2"]</span>
-                    <span>@L["integ_api_badge3"]</span>
-                </div>
+                        </div>
+                    </div>
+                </article>
             </div>
         </div>
     </div>
 </section>
 
-<section class="mkt-section">
-    <div class="mkt-container">
-        <div class="mkt-section-heading reveal">
-            <p class="mkt-eyebrow">@L["integ_workflows_eyebrow"]</p>
-            <h2>@L["integ_workflows_title"]</h2>
-        </div>
-        <div class="mkt-grid mkt-grid-3 reveal-stagger">
-            <div class="mkt-card">
-                <h3>@L["integ_workflow1_title"]</h3>
-                <p>@L["integ_workflow1_desc"]</p>
-            </div>
-            <div class="mkt-card">
-                <h3>@L["integ_workflow2_title"]</h3>
-                <p>@L["integ_workflow2_desc"]</p>
-            </div>
-            <div class="mkt-card">
-                <h3>@L["integ_workflow3_title"]</h3>
-                <p>@L["integ_workflow3_desc"]</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<CtaSection Title="@L["integ_bottom_cta_title"].Value"
-            Subtitle="@L["integ_bottom_cta_subtitle"].Value"
-            CtaText="@L["integ_bottom_cta_text"].Value"
-            CtaUrl="/contact" />
-
-@code {
-    private record IntegrationItem(string NameKey, string DescKey, string IconPath);
-    private record IntegrationCategory(string LabelKey, string TitleKey, List<IntegrationItem> Items);
-
-    private readonly List<IntegrationCategory> categories = new()
-    {
-        new("integ_cat1_label", "integ_cat1_title", new()
-        {
-            new("integ_hubspot_name", "integ_hubspot_desc", "<circle cx='12' cy='12' r='10'/><circle cx='12' cy='12' r='6'/><circle cx='12' cy='12' r='2'/>"),
-            new("integ_salesforce_name", "integ_salesforce_desc", "<path d='M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2'/><circle cx='9' cy='7' r='4'/><path d='M23 21v-2a4 4 0 0 0-3-3.87'/><path d='M16 3.13a4 4 0 0 1 0 7.75'/>"),
-            new("integ_pipedrive_name", "integ_pipedrive_desc", "<line x1='18' y1='20' x2='18' y2='10'/><line x1='12' y1='20' x2='12' y2='4'/><line x1='6' y1='20' x2='6' y2='14'/>")
-        }),
-        new("integ_cat2_label", "integ_cat2_title", new()
-        {
-            new("integ_marketo_name", "integ_marketo_desc", "<path d='M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z'/><polyline points='22,6 12,13 2,6'/>"),
-            new("integ_mailchimp_name", "integ_mailchimp_desc", "<path d='M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z'/><polyline points='22,6 12,13 2,6'/>"),
-            new("integ_activecampaign_name", "integ_activecampaign_desc", "<polygon points='13 2 3 14 12 14 11 22 21 10 12 10 13 2'/>")
-        }),
-        new("integ_cat3_label", "integ_cat3_title", new()
-        {
-            new("integ_slack_name", "integ_slack_desc", "<path d='M14.5 10c-.83 0-1.5-.67-1.5-1.5v-5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5z'/><path d='M20.5 10H19V8.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z'/>"),
-            new("integ_zapier_name", "integ_zapier_desc", "<polygon points='13 2 3 14 12 14 11 22 21 10 12 10 13 2'/>"),
-            new("integ_webhooks_name", "integ_webhooks_desc", "<path d='M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71'/><path d='M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71'/>")
-        }),
-        new("integ_cat4_label", "integ_cat4_title", new()
-        {
-            new("integ_embed_name", "integ_embed_desc", "<polyline points='16 18 22 12 16 6'/><polyline points='8 6 2 12 8 18'/>"),
-            new("integ_ga_name", "integ_ga_desc", "<line x1='18' y1='20' x2='18' y2='10'/><line x1='12' y1='20' x2='12' y2='4'/><line x1='6' y1='20' x2='6' y2='14'/>"),
-            new("integ_segment_name", "integ_segment_desc", "<circle cx='12' cy='12' r='10'/><line x1='2' y1='12' x2='22' y2='12'/><path d='M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z'/>")
-        })
-    };
-}
+<NtCTABand Headline="Your CRM gets richer every time someone views a demo."
+           SubText="Native integrations for HubSpot, Salesforce, Slack, and Marketo. Free to start."
+           PrimaryLabel="Start free &rarr;"
+           SecondaryLabel="Talk to the team"
+           SecondaryHref="/contact" />

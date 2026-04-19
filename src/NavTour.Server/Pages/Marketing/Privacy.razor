@@ -2,30 +2,31 @@
 @layout MarketingLayout
 @inject IStringLocalizer<NavTour.Server.SharedResources> L
 
-<PageTitle>@L["privacy_page_title"]</PageTitle>
+<PageTitle>Privacy Policy &mdash; NavTour</PageTitle>
 <HeadContent>
     <meta name="description" content="@L["privacy_meta_desc"].Value" />
 </HeadContent>
 
-<section class="mkt-section">
-    <div class="mkt-container mkt-legal-shell">
-        <div class="reveal">
-            <p class="mkt-eyebrow">Privacy</p>
-            <h1>@L["privacy_heading"]</h1>
-            <p class="mkt-legal-meta">@L["privacy_last_updated"]</p>
-        </div>
+<section class="nt-page-hero" style="padding-bottom:40px">
+    <div class="nt-container">
+        <span class="eyebrow">Privacy Policy</span>
+        <h1>@L["privacy_heading"]</h1>
+    </div>
+</section>
 
-        <div class="mkt-legal-prose reveal" style="margin-top:var(--space-12)">
-
-            <section>
+<section class="nt-section" style="padding-top:0">
+    <div class="nt-container">
+        <NtLegalShell Meta="@L["privacy_last_updated"].Value"
+                      Sections='new() { ("s1","1. Introduction"), ("s2","2. Information we collect"), ("s3","3. How we use it"), ("s4","4. Sharing"), ("s5","5. Retention"), ("s6","6. Security"), ("s7","7. Your rights"), ("s8","8. International transfers"), ("s9","9. Changes"), ("contact","Contact") }'>
+            <section id="s1">
                 <h2>@L["privacy_s1_title"]</h2>
                 <p>@L["privacy_s1_body"]</p>
             </section>
 
-            <section>
+            <section id="s2">
                 <h2>@L["privacy_s2_title"]</h2>
                 <p>@L["privacy_s2_intro"]</p>
-                <ul class="mkt-legal-list">
+                <ul>
                     <li>@L["privacy_s2_item1"]</li>
                     <li>@L["privacy_s2_item2"]</li>
                     <li>@L["privacy_s2_item3"]</li>
@@ -33,35 +34,35 @@
                 </ul>
             </section>
 
-            <section>
+            <section id="s3">
                 <h2>@L["privacy_s3_title"]</h2>
                 <p>@L["privacy_s3_intro"]</p>
-                <ul class="mkt-legal-list">
+                <ul>
                     <li>@L["privacy_s3_item1"]</li>
                     <li>@L["privacy_s3_item2"]</li>
                     <li>@L["privacy_s3_item3"]</li>
                 </ul>
             </section>
 
-            <section>
+            <section id="s4">
                 <h2>@L["privacy_s4_title"]</h2>
                 <p>@L["privacy_s4_body"]</p>
             </section>
 
-            <section>
+            <section id="s5">
                 <h2>@L["privacy_s5_title"]</h2>
                 <p>@L["privacy_s5_body"]</p>
             </section>
 
-            <section>
+            <section id="s6">
                 <h2>@L["privacy_s6_title"]</h2>
                 <p>@L["privacy_s6_body"]</p>
             </section>
 
-            <section>
+            <section id="s7">
                 <h2>@L["privacy_s7_title"]</h2>
                 <p>@L["privacy_s7_intro"]</p>
-                <ul class="mkt-legal-list">
+                <ul>
                     <li>@L["privacy_s7_item1"]</li>
                     <li>@L["privacy_s7_item2"]</li>
                     <li>@L["privacy_s7_item3"]</li>
@@ -69,35 +70,35 @@
                 </ul>
             </section>
 
-            <section>
+            <section id="s8">
                 <h2>@L["privacy_s8_title"]</h2>
                 <p>@L["privacy_s8_body"]</p>
             </section>
 
-            <section>
+            <section id="s9">
                 <h2>@L["privacy_s9_title"]</h2>
                 <p>@L["privacy_s9_body"]</p>
             </section>
 
-            <section class="mkt-card">
-                <p class="mkt-eyebrow">Contact</p>
-                <h3>@L["privacy_contact_title"]</h3>
+            <section id="contact" style="padding:24px;background:var(--nt-bg-alt);border-radius:12px;border:1px solid var(--nt-rule)">
+                <span class="eyebrow">Contact</span>
+                <h3 style="margin-top:8px">@L["privacy_contact_title"]</h3>
                 <p>@L["privacy_contact_body"]</p>
-                <div class="mkt-contact-detail-stack" style="margin-top:var(--space-5)">
+                <div style="margin-top:20px;display:flex;flex-direction:column;gap:12px">
                     <div>
-                        <div class="mkt-stage-card-label">Email</div>
-                        <a href="mailto:support@navtour.cloud">support@navtour.cloud</a>
+                        <span style="font-family:var(--nt-mono);font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--nt-muted)">Email</span>
+                        <p style="margin:4px 0 0"><a href="mailto:support@navtour.cloud">support@navtour.cloud</a></p>
                     </div>
                     <div>
-                        <div class="mkt-stage-card-label">Phone</div>
-                        <a href="tel:+5072096996">+507-209-6996</a>
+                        <span style="font-family:var(--nt-mono);font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--nt-muted)">Phone</span>
+                        <p style="margin:4px 0 0"><a href="tel:+5072096996">+507-209-6996</a></p>
                     </div>
                     <div>
-                        <div class="mkt-stage-card-label">Mailing address</div>
-                        <p>Avenida de los Periodistas, PH Leaf Tower<br />Panama City, Panama</p>
+                        <span style="font-family:var(--nt-mono);font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--nt-muted)">Mailing address</span>
+                        <p style="margin:4px 0 0">Avenida de los Periodistas, PH Leaf Tower<br />Panama City, Panama</p>
                     </div>
                 </div>
             </section>
-        </div>
+        </NtLegalShell>
     </div>
 </section>

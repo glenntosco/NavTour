@@ -1,206 +1,105 @@
 @page "/security"
 @layout MarketingLayout
-@inject IStringLocalizer<NavTour.Server.SharedResources> L
 
-<PageTitle>@L["security_page_title"]</PageTitle>
+<PageTitle>Security &mdash; NavTour</PageTitle>
 <HeadContent>
-    <meta name="description" content="@L["security_meta_desc"].Value" />
+    <meta name="description" content="NavTour is SOC 2 Type II certified, hosted on Microsoft Azure, and built with TLS 1.2+ and AES-256 encryption. Full security posture and responsible disclosure." />
 </HeadContent>
 
-<section class="mkt-section" style="padding-bottom:var(--space-16)">
-    <div class="mkt-container" style="max-width:680px">
-        <p class="mkt-eyebrow text-center" style="text-transform:uppercase;letter-spacing:0.1em;color:var(--nt-accent)">@L["security_eyebrow"]</p>
-        <h1 class="text-center">@L["security_title"]</h1>
-        <p class="text-center" style="margin-top:var(--space-5)">@L["security_subtitle"]</p>
-        <div class="mkt-hero-proof" style="justify-content:center;margin-top:var(--space-8)">
-            <div class="mkt-hero-proof-item">@L["security_badge_soc2"]</div>
-            <div class="mkt-hero-proof-item">@L["security_badge_encryption"]</div>
-            <div class="mkt-hero-proof-item">@L["security_badge_azure"]</div>
+<section class="nt-page-hero">
+    <div class="nt-container">
+        <span class="eyebrow">Security</span>
+        <h1>Enterprise-grade security,<br /><em>Americas-native compliance.</em></h1>
+        <p class="lead">SOC 2 Type II certified, hosted on Microsoft Azure, bilingual EN/ES security operations. Built for the compliance requirements of enterprise buyers in Latin America.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:32px">
+            <span style="display:inline-flex;align-items:center;gap:8px;font-family:var(--nt-mono);font-size:0.82rem;letter-spacing:0.08em;text-transform:uppercase;padding:8px 16px;background:var(--nt-bg-alt);border:1px solid var(--nt-rule);border-radius:999px">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                SOC 2 Type II
+            </span>
+            <span style="display:inline-flex;align-items:center;gap:8px;font-family:var(--nt-mono);font-size:0.82rem;letter-spacing:0.08em;text-transform:uppercase;padding:8px 16px;background:var(--nt-bg-alt);border:1px solid var(--nt-rule);border-radius:999px">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                AES-256 at rest · TLS 1.2+ in transit
+            </span>
+            <span style="display:inline-flex;align-items:center;gap:8px;font-family:var(--nt-mono);font-size:0.82rem;letter-spacing:0.08em;text-transform:uppercase;padding:8px 16px;background:var(--nt-bg-alt);border:1px solid var(--nt-rule);border-radius:999px">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                Microsoft Azure
+            </span>
+            <span style="display:inline-flex;align-items:center;gap:8px;font-family:var(--nt-mono);font-size:0.82rem;letter-spacing:0.08em;text-transform:uppercase;padding:8px 16px;background:var(--nt-bg-alt);border:1px solid var(--nt-rule);border-radius:999px">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                99.9% uptime SLA
+            </span>
         </div>
     </div>
 </section>
 
-@* Trust Badges *@
-<section class="mkt-social-proof">
-    <div class="mkt-container">
-        <div class="mkt-trust-badges">
-            <div class="mkt-trust-badge">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                @L["security_badge_soc2"]
+<section class="nt-section" style="background:var(--nt-bg-alt)">
+    <div class="nt-container">
+        <span class="eyebrow">Security principles</span>
+        <div class="nt-card-grid" style="margin-top:32px">
+            <div class="nt-card">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--nt-orange)" stroke-width="2" style="margin-bottom:12px"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <h3>Secure by default</h3>
+                <p>All data encrypted in transit (TLS 1.2+) and at rest (AES-256). Authentication uses short-lived JWT tokens. No plaintext secrets in transit or storage.</p>
             </div>
-            <div class="mkt-trust-badge">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                @L["security_badge_uptime"]
+            <div class="nt-card">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--nt-orange)" stroke-width="2" style="margin-bottom:12px"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <h3>Access controls</h3>
+                <p>Role-based access control per workspace. SSO via SAML 2.0 and Azure AD on Enterprise plans. Multi-tenant isolation with row-level tenant scoping on all data.</p>
             </div>
-            <div class="mkt-trust-badge">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                @L["security_badge_encryption"]
+            <div class="nt-card">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--nt-orange)" stroke-width="2" style="margin-bottom:12px"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                <h3>Monitoring and audit</h3>
+                <p>All API actions are logged with actor, timestamp, and resource ID. Audit logs are available to Enterprise plan admins. Azure Monitor for infrastructure alerts.</p>
             </div>
-            <div class="mkt-trust-badge">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                @L["security_badge_gdpr"]
-            </div>
-            <div class="mkt-trust-badge">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                @L["security_badge_azure"]
-            </div>
-        </div>
-    </div>
-</section>
-
-@* Security Principles *@
-<section class="mkt-section">
-    <div class="mkt-container">
-        <div class="mkt-section-heading reveal">
-            <p class="mkt-eyebrow">@L["security_principles_eyebrow"]</p>
-            <h2>@L["security_principles_title"]</h2>
-            <p>@L["security_principles_subtitle"]</p>
-        </div>
-        <div class="mkt-grid mkt-grid-4 reveal-stagger">
-            <div class="mkt-card">
-                <div class="mkt-integration-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                </div>
-                <h3>@L["security_principle1_title"]</h3>
-                <p>@L["security_principle1_desc"]</p>
-            </div>
-            <div class="mkt-card">
-                <div class="mkt-integration-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                </div>
-                <h3>@L["security_principle2_title"]</h3>
-                <p>@L["security_principle2_desc"]</p>
-            </div>
-            <div class="mkt-card">
-                <div class="mkt-integration-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-                </div>
-                <h3>@L["security_principle3_title"]</h3>
-                <p>@L["security_principle3_desc"]</p>
-            </div>
-            <div class="mkt-card">
-                <div class="mkt-integration-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                </div>
-                <h3>@L["security_principle4_title"]</h3>
-                <p>@L["security_principle4_desc"]</p>
+            <div class="nt-card">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--nt-orange)" stroke-width="2" style="margin-bottom:12px"><polyline points="20 6 9 17 4 12"/></svg>
+                <h3>Compliance verified</h3>
+                <p>SOC 2 Type II attestation maintained on an annual cycle. Supporting documentation available to Enterprise customers under NDA on request.</p>
             </div>
         </div>
     </div>
 </section>
 
-@* Data Security *@
-<section class="mkt-section">
-    <div class="mkt-container reveal" style="max-width:720px">
-        <h2>@L["security_data_title"]</h2>
-        <p style="margin-top:var(--space-5)">@L["security_data_p1"]</p>
-        <p style="margin-top:var(--space-4)">@L["security_data_p2"]</p>
+<section class="nt-section">
+    <div class="nt-container" style="max-width:740px">
+        <NtLegalShell Meta="Last reviewed: April 2026"
+                      Sections='new() { ("data","Data security"), ("infra","Infrastructure"), ("compliance","Compliance"), ("privacy","Privacy and AI"), ("disclosure","Responsible disclosure") }'>
+            <section id="data">
+                <h2>Data security</h2>
+                <p>All customer data is encrypted at rest using AES-256 and in transit using TLS 1.2 or higher. Backups are encrypted and stored in geographically separate Azure regions. Access to production data is limited to a small set of authenticated engineers and is logged.</p>
+                <p>Demo content (captured HTML/CSS frames, annotations, and analytics) is stored in Azure SQL with row-level tenant isolation. No customer workspace data is accessible to other tenants.</p>
+            </section>
+
+            <section id="infra">
+                <h2>Infrastructure</h2>
+                <p>NavTour is hosted on Microsoft Azure in the East US and Brazil South regions. We use Azure App Service, Azure SQL, Azure Blob Storage, and Azure CDN. Uptime is monitored with a 99.9% SLA target.</p>
+                <p>Deployments are automated through GitHub Actions with required pull request review. Infrastructure changes go through a change management process with rollback procedures.</p>
+            </section>
+
+            <section id="compliance">
+                <h2>Compliance</h2>
+                <p>NavTour maintains SOC 2 Type II attestation covering Security, Availability, and Confidentiality trust service categories. The audit is conducted annually by an independent third-party auditor.</p>
+                <p>Enterprise customers can request a copy of the SOC 2 report under NDA. Contact <a href="mailto:enterprise@navtour.cloud">enterprise@navtour.cloud</a> to request the report.</p>
+            </section>
+
+            <section id="privacy">
+                <h2>Privacy and AI</h2>
+                <p>NavTour does not sell customer or visitor data to third parties. For AI features powered by Anthropic Claude, demo content is sent to Claude only for in-session inference. Your workspace content is never used to train AI models. All AI prompts and outputs are deleted after 30 days.</p>
+                <p>See our <a href="/privacy">Privacy Policy</a> for full details on data collection, retention, and your rights as a data subject.</p>
+            </section>
+
+            <section id="disclosure">
+                <h2>Responsible disclosure</h2>
+                <p>If you discover a security vulnerability in NavTour, please report it to <a href="mailto:security@navtour.cloud">security@navtour.cloud</a>. We ask that you give us reasonable time to investigate and address the issue before public disclosure.</p>
+                <p>We will acknowledge reports within 2 business days, provide regular status updates, and credit reporters in our security acknowledgements where appropriate. We do not pursue legal action against researchers acting in good faith.</p>
+            </section>
+        </NtLegalShell>
     </div>
 </section>
 
-@* Security Checklist *@
-<section class="mkt-section-alt">
-    <div class="mkt-container">
-        <div class="mkt-grid mkt-grid-2 reveal-stagger" style="align-items:start;gap:var(--space-12)">
-            <div>
-                <p class="mkt-eyebrow">@L["security_checklist_eyebrow"]</p>
-                <h2>@L["security_checklist_title"]</h2>
-                <p style="margin-top:var(--space-4)">@L["security_checklist_subtitle"]</p>
-                <ul class="mkt-benefits">
-                    <li>@L["security_check1"]</li>
-                    <li>@L["security_check2"]</li>
-                    <li>@L["security_check3"]</li>
-                    <li>@L["security_check4"]</li>
-                    <li>@L["security_check5"]</li>
-                </ul>
-            </div>
-            <div class="mkt-stage-card">
-                <div class="mkt-stage-card-header">
-                    <div>
-                        <div class="mkt-stage-card-label">@L["security_ops_label"]</div>
-                        <div class="mkt-stage-card-title">@L["security_ops_title"]</div>
-                    </div>
-                    <div class="mkt-stage-pill">@L["security_ops_pill"]</div>
-                </div>
-                <div class="mkt-stack-flow">
-                    <div class="mkt-stack-node">
-                        <div class="mkt-stack-node-step">01</div>
-                        <div>
-                            <h3>@L["security_ops_step1_title"]</h3>
-                            <p>@L["security_ops_step1_desc"]</p>
-                        </div>
-                    </div>
-                    <div class="mkt-stack-flow-line"></div>
-                    <div class="mkt-stack-node">
-                        <div class="mkt-stack-node-step">02</div>
-                        <div>
-                            <h3>@L["security_ops_step2_title"]</h3>
-                            <p>@L["security_ops_step2_desc"]</p>
-                        </div>
-                    </div>
-                    <div class="mkt-stack-flow-line"></div>
-                    <div class="mkt-stack-node">
-                        <div class="mkt-stack-node-step">03</div>
-                        <div>
-                            <h3>@L["security_ops_step3_title"]</h3>
-                            <p>@L["security_ops_step3_desc"]</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-@* Infrastructure *@
-<section class="mkt-section-alt">
-    <div class="mkt-container reveal" style="max-width:720px">
-        <h2>@L["security_infra_title"]</h2>
-        <p style="margin-top:var(--space-5)">@L["security_infra_p1"]</p>
-        <p style="margin-top:var(--space-4)">@L["security_infra_p2"]</p>
-    </div>
-</section>
-
-@* Compliance *@
-<section class="mkt-section">
-    <div class="mkt-container reveal" style="max-width:720px">
-        <h2>@L["security_compliance_title"]</h2>
-        <p style="margin-top:var(--space-5)">@L["security_compliance_p1"]</p>
-        <p style="margin-top:var(--space-4)">@L["security_compliance_p2"]</p>
-    </div>
-</section>
-
-@* Privacy *@
-<section class="mkt-section-alt">
-    <div class="mkt-container reveal" style="max-width:720px">
-        <h2>@L["security_privacy_title"]</h2>
-        <p style="margin-top:var(--space-5)">@L["security_privacy_p1"]</p>
-        <p style="margin-top:var(--space-4)">@L["security_privacy_p2"]</p>
-    </div>
-</section>
-
-@* Responsible Disclosure *@
-<section class="mkt-section">
-    <div class="mkt-container reveal">
-        <div class="mkt-grid mkt-grid-2" style="align-items:start;gap:var(--space-12)">
-            <div>
-                <h2>@L["security_disclosure_title"]</h2>
-                <p style="margin-top:var(--space-5)">@L["security_disclosure_p1"]</p>
-                <p style="margin-top:var(--space-4)">@L["security_disclosure_p2"]</p>
-            </div>
-            <div class="mkt-card">
-                <p class="mkt-eyebrow">@L["security_contact_eyebrow"]</p>
-                <h3>@L["security_contact_title"]</h3>
-                <p style="margin-top:var(--space-3)">@L["security_contact_desc"]</p>
-                <div class="mkt-badge-row" style="margin-top:var(--space-6)">
-                    <span>@L["security_contact_badge1"]</span>
-                    <span>@L["security_contact_badge2"]</span>
-                    <span>@L["security_contact_badge3"]</span>
-                </div>
-                <a href="/contact" class="mkt-btn mkt-btn-primary" style="margin-top:var(--space-6)">@L["security_cta_button"]</a>
-            </div>
-        </div>
-    </div>
-</section>
-
-<CtaSection Title="@L["security_cta_title"].Value" Subtitle="@L["security_cta_subtitle"].Value" CtaText="@L["security_cta_button"].Value" CtaUrl="/contact" />
+<NtCTABand Headline="Enterprise security that passes procurement review."
+           SubText="SOC 2 Type II report available under NDA. SSO, data residency, and custom DPA available on Enterprise plans."
+           PrimaryLabel="Talk to the enterprise team &rarr;"
+           PrimaryHref="/contact"
+           SecondaryLabel="View pricing"
+           SecondaryHref="/pricing" />

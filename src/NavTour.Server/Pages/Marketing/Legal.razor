@@ -1,77 +1,63 @@
 @page "/legal"
 @layout MarketingLayout
 
-<PageTitle>Legal - NavTour</PageTitle>
+<PageTitle>Legal &mdash; NavTour</PageTitle>
 <HeadContent>
     <meta name="description" content="Legal information for NavTour, including privacy, terms, cookies, security, and company contact details." />
 </HeadContent>
 
-<section class="mkt-section" style="padding-bottom:var(--space-16)">
-    <div class="mkt-container mkt-legal-shell">
-        <p class="mkt-eyebrow">Legal</p>
-        <h1>Policies and company information</h1>
-        <p class="mkt-legal-meta">Last updated: March 24, 2026</p>
-        <p style="margin-top:var(--space-5)">
-            This page collects the public legal and privacy information for NavTour. It is intended to give customers,
-            prospects, and procurement teams one place to review our baseline policies and contact details.
-        </p>
+<section class="nt-page-hero" style="padding-bottom:40px">
+    <div class="nt-container">
+        <span class="eyebrow">Legal</span>
+        <h1>Policies &amp; company information</h1>
     </div>
 </section>
 
-<section class="mkt-social-proof">
-    <div class="mkt-container">
-        <div class="mkt-grid mkt-grid-3 reveal-stagger">
-            <a class="mkt-card mkt-link-card" href="/privacy">
-                <p class="mkt-eyebrow">Privacy</p>
-                <h3>Privacy Policy</h3>
-                <p>How we collect, use, store, and handle personal data across the website, application, and extension.</p>
-            </a>
-            <a class="mkt-card mkt-link-card" href="/terms">
-                <p class="mkt-eyebrow">Terms</p>
-                <h3>Terms of Service</h3>
-                <p>The conditions that govern access to the NavTour website, product, accounts, and acceptable use.</p>
-            </a>
-            <a class="mkt-card mkt-link-card" href="/cookies">
-                <p class="mkt-eyebrow">Cookies</p>
-                <h3>Cookie Policy</h3>
-                <p>What cookies and similar technologies we use, why we use them, and how visitors can manage them.</p>
-            </a>
-        </div>
-    </div>
-</section>
+<section class="nt-section" style="padding-top:0">
+    <div class="nt-container">
+        <NtLegalShell Meta="Last updated: March 24, 2026"
+                      Sections='new() { ("overview","Overview"), ("privacy","Privacy policy"), ("terms","Terms of use"), ("cookies","Cookie policy"), ("security","Security"), ("company","Company") }'>
+            <section id="overview">
+                <h2>Overview</h2>
+                <p>This page collects the public legal and privacy information for NavTour. It is intended to give customers, prospects, and procurement teams one place to review our baseline policies and contact details.</p>
+            </section>
 
-<section class="mkt-section">
-    <div class="mkt-container">
-        <div class="mkt-grid mkt-grid-2 reveal-stagger" style="align-items:start;gap:var(--space-12)">
-            <div class="mkt-card">
-                <p class="mkt-eyebrow">Company</p>
-                <h2 style="margin-top:var(--space-2)">NavTour contact details</h2>
-                <div class="mkt-contact-detail-stack" style="margin-top:var(--space-6)">
-                    <div>
-                        <div class="mkt-stage-card-label">Address</div>
-                        <p>Avenida de los Periodistas, PH Leaf Tower<br />Panama City, Panama</p>
-                    </div>
-                    <div>
-                        <div class="mkt-stage-card-label">Phone</div>
-                        <p><a href="tel:+5072096996">+507-209-6996</a></p>
-                    </div>
-                    <div>
-                        <div class="mkt-stage-card-label">Email</div>
-                        <p><a href="mailto:support@navtour.cloud">support@navtour.cloud</a></p>
-                    </div>
-                </div>
-            </div>
+            <section id="privacy">
+                <h2>Privacy policy</h2>
+                <p>Our privacy policy describes what data we collect, how we use it, how long we keep it, and your rights as a data subject. NavTour does not sell personal data to third parties.</p>
+                <p><a href="/privacy">Read the full privacy policy &rarr;</a></p>
+            </section>
 
-            <div class="mkt-card">
-                <p class="mkt-eyebrow">Related</p>
-                <h2 style="margin-top:var(--space-2)">Trust and support</h2>
-                <ul class="mkt-legal-list" style="margin-top:var(--space-6)">
-                    <li><a href="/security">Security overview</a></li>
-                    <li><a href="/support">Support center</a></li>
-                    <li><a href="/contact">General contact</a></li>
-                    <li><a href="https://docs.navtour.cloud" target="_blank" rel="noopener noreferrer">Documentation</a></li>
+            <section id="terms">
+                <h2>Terms of use</h2>
+                <p>Our terms of use govern access to and use of the NavTour website, hosted application, browser extension, APIs, and related services.</p>
+                <p><a href="/terms">Read the full terms of use &rarr;</a></p>
+            </section>
+
+            <section id="cookies">
+                <h2>Cookie policy</h2>
+                <p>Our cookie policy describes the cookies and similar browser technologies we use across the website and application — what they do and how to control them.</p>
+                <p><a href="/cookies">Read the full cookie policy &rarr;</a></p>
+            </section>
+
+            <section id="security">
+                <h2>Security</h2>
+                <p>NavTour is SOC 2 Type II certified, hosted on Microsoft Azure, and uses TLS 1.2+ in transit and AES-256 at rest. For our full security posture, responsible disclosure policy, and compliance information, see the security page.</p>
+                <p><a href="/security">Read the security overview &rarr;</a></p>
+            </section>
+
+            <section id="company">
+                <h2>Company information</h2>
+                <p>NavTour is a product of Grupo Barrdega, S.A., a company incorporated under the laws of the Republic of Panama.</p>
+                <ul>
+                    <li><strong>Legal name:</strong> Grupo Barrdega, S.A.</li>
+                    <li><strong>Jurisdiction:</strong> Republic of Panama</li>
+                    <li><strong>Registered address:</strong> Avenida de los Periodistas, PH Leaf Tower, Panama City, Panama</li>
+                    <li><strong>General contact:</strong> <a href="mailto:hello@navtour.cloud">hello@navtour.cloud</a></li>
+                    <li><strong>Legal and privacy contact:</strong> <a href="mailto:support@navtour.cloud">support@navtour.cloud</a></li>
+                    <li><strong>Phone:</strong> <a href="tel:+5072096996">+507-209-6996</a></li>
                 </ul>
-            </div>
-        </div>
+            </section>
+        </NtLegalShell>
     </div>
 </section>

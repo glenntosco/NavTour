@@ -1,79 +1,88 @@
 @page "/use-cases"
 @layout MarketingLayout
-@inject IStringLocalizer<NavTour.Server.SharedResources> L
 
-<PageTitle>@L["usecases_page_title"]</PageTitle>
+<PageTitle>Use Cases &mdash; NavTour</PageTitle>
 <HeadContent>
-    <meta name="description" content="@L["usecases_meta_desc"]" />
+    <meta name="description" content="From pre-call prep to customer onboarding, NavTour sits at every stage of the buyer journey where showing beats telling." />
 </HeadContent>
 
-<HeroSection Eyebrow="@L["usecases_eyebrow"]"
-             Title="@L["usecases_title"]"
-             Subtitle="@L["usecases_subtitle"]"
-             PrimaryCtaUrl="/register"
-             PrimaryCtaText="@L["usecases_hero_cta"]"
-             SecondaryCtaUrl="/contact"
-             SecondaryCtaText="@L["usecases_hero_cta_secondary"]" />
-
-@* Use Case Cards *@
-<section class="mkt-section">
-    <div class="mkt-container">
-        <div class="mkt-grid mkt-grid-3 reveal-stagger">
-            <a href="/solutions/marketing" class="mkt-card" style="text-decoration:none;color:inherit">
-                <h3>@L["usecases_card1_title"]</h3>
-                <p>@L["usecases_card1_desc"]</p>
-            </a>
-            <a href="/solutions/sales" class="mkt-card" style="text-decoration:none;color:inherit">
-                <h3>@L["usecases_card2_title"]</h3>
-                <p>@L["usecases_card2_desc"]</p>
-            </a>
-            <a href="/solutions/presales" class="mkt-card" style="text-decoration:none;color:inherit">
-                <h3>@L["usecases_card3_title"]</h3>
-                <p>@L["usecases_card3_desc"]</p>
-            </a>
-            <a href="/solutions/customer-success" class="mkt-card" style="text-decoration:none;color:inherit">
-                <h3>@L["usecases_card4_title"]</h3>
-                <p>@L["usecases_card4_desc"]</p>
-            </a>
-            <a href="/product" class="mkt-card" style="text-decoration:none;color:inherit">
-                <h3>@L["usecases_card5_title"]</h3>
-                <p>@L["usecases_card5_desc"]</p>
-            </a>
-            <a href="/product/ai" class="mkt-card" style="text-decoration:none;color:inherit">
-                <h3>@L["usecases_card6_title"]</h3>
-                <p>@L["usecases_card6_desc"]</p>
-            </a>
+<section class="nt-page-hero">
+    <div class="nt-container">
+        <span class="eyebrow">Use cases</span>
+        <h1>Built for every motion<br />a buyer runs through.</h1>
+        <p class="lead">From the first ad click to the renewal conversation, NavTour sits at every point where showing beats telling.</p>
+        <div class="nt-hero-actions">
+            <a href="/register" class="btn btn-orange btn-lg">Start building free &rarr;</a>
+            <a href="/solutions" class="btn btn-outline btn-lg">See by team</a>
         </div>
     </div>
 </section>
 
-@* How Teams Use NavTour *@
-<section class="mkt-section-alt">
-    <div class="mkt-container" style="max-width:780px">
-        <div class="mkt-section-heading reveal">
-            <h2>@L["usecases_how_heading"]</h2>
-        </div>
-
-        <div class="reveal" style="margin-top:var(--space-12)">
-            <h3>@L["usecases_how1_title"]</h3>
-            <p style="margin-top:var(--space-3)">@L["usecases_how1_desc"]</p>
-        </div>
-
-        <div class="reveal" style="margin-top:var(--space-12)">
-            <h3>@L["usecases_how2_title"]</h3>
-            <p style="margin-top:var(--space-3)">@L["usecases_how2_desc"]</p>
-        </div>
-
-        <div class="reveal" style="margin-top:var(--space-12)">
-            <h3>@L["usecases_how3_title"]</h3>
-            <p style="margin-top:var(--space-3)">@L["usecases_how3_desc"]</p>
+<section class="nt-usecases">
+    <div class="nt-container">
+        <div class="nt-usecase-list">
+            <div class="nt-uc">
+                <div class="n">/01</div>
+                <h4>Pre-call discovery</h4>
+                <p class="desc">Send a branded walkthrough before the meeting so you spend calls on fit, not feature tours. Buyers self-qualify and arrive with real questions.</p>
+                <div class="tags"><span>Sales</span><span>SDR</span></div>
+                <a href="/solutions/sales" class="arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+            </div>
+            <div class="nt-uc">
+                <div class="n">/02</div>
+                <h4>Website hero demos</h4>
+                <p class="desc">Replace the marketing video with a clickable live demo. Visitors interact with the real product UI. Measurable intent from day one.</p>
+                <div class="tags"><span>Marketing</span><span>Growth</span></div>
+                <a href="/solutions/marketing" class="arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+            </div>
+            <div class="nt-uc">
+                <div class="n">/03</div>
+                <h4>Ad &amp; outbound landing</h4>
+                <p class="desc">Drop a demo inside paid-traffic LPs and lift conversion rates without touching your stack or filing a dev ticket.</p>
+                <div class="tags"><span>Paid</span><span>Outbound</span></div>
+                <a href="/solutions/marketing" class="arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+            </div>
+            <div class="nt-uc">
+                <div class="n">/04</div>
+                <h4>Post-call follow-up</h4>
+                <p class="desc">Share a personalized showcase your champion can forward to the CFO, IT, or legal without scheduling another meeting.</p>
+                <div class="tags"><span>AE</span><span>Expansion</span></div>
+                <a href="/solutions/sales" class="arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+            </div>
+            <div class="nt-uc">
+                <div class="n">/05</div>
+                <h4>Customer onboarding</h4>
+                <p class="desc">A self-serve tour library that replaces the "10 enablement calls" playbook. Customers complete onboarding at their own pace.</p>
+                <div class="tags"><span>CS</span><span>Enablement</span></div>
+                <a href="/solutions/customer-success" class="arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+            </div>
+            <div class="nt-uc">
+                <div class="n">/06</div>
+                <h4>Pre-sales demo library</h4>
+                <p class="desc">SEs build once. AEs personalize and deploy. Every buyer gets a polished, accurate demo without bottlenecking the SE team.</p>
+                <div class="tags"><span>Pre-sales</span><span>SE</span></div>
+                <a href="/solutions/presales" class="arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+            </div>
+            <div class="nt-uc">
+                <div class="n">/07</div>
+                <h4>Product-release highlights</h4>
+                <p class="desc">Ship a walkthrough with every release so users feel the value — not just read about it in a release note that gets skipped.</p>
+                <div class="tags"><span>Product</span><span>PMM</span></div>
+                <a href="/product" class="arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+            </div>
+            <div class="nt-uc">
+                <div class="n">/08</div>
+                <h4>Renewal &amp; expansion</h4>
+                <p class="desc">A personalized NavTour for each renewal conversation — highlights the workflows the customer uses and the features they haven&rsquo;t tried yet.</p>
+                <div class="tags"><span>CS</span><span>Account Management</span></div>
+                <a href="/solutions/customer-success" class="arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+            </div>
         </div>
     </div>
 </section>
 
-<CtaSection Dark="true"
-            Title="@L["usecases_cta_title"]"
-            Subtitle="@L["usecases_cta_subtitle"]"
-            CtaText="@L["usecases_cta_text"]"
-            SecondaryCtaText="@L["usecases_cta_secondary"]"
-            SecondaryCtaUrl="/contact" />
+<NtCTABand Headline="Pick your use case and ship your first demo today."
+           SubText="Free to start. The Chrome extension captures your product in 2 minutes."
+           PrimaryLabel="Start building free &rarr;"
+           SecondaryLabel="Book a walkthrough"
+           SecondaryHref="/contact" />

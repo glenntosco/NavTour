@@ -1,74 +1,114 @@
 @page "/about"
 @layout MarketingLayout
-@inject IStringLocalizer<NavTour.Server.SharedResources> L
 
-<PageTitle>@L["about_page_title"]</PageTitle>
+<PageTitle>About &mdash; NavTour</PageTitle>
 <HeadContent>
-    <meta name="description" content="@L["about_meta_desc"]" />
+    <meta name="description" content="NavTour is an interactive demo platform built by Grupo Barrdega — a product-engineering team from Panama City with 30+ years across the Americas." />
 </HeadContent>
 
-<HeroSection Eyebrow="@L["about_eyebrow"]"
-             Title="@L["about_title"]"
-             Subtitle="@L["about_subtitle"]"
-             PrimaryCtaUrl="/register"
-             PrimaryCtaText="@L["about_hero_cta"]"
-             SecondaryCtaUrl="/contact"
-             SecondaryCtaText="@L["about_hero_cta_secondary"]" />
-
-@* Mission *@
-<section class="mkt-section">
-    <div class="mkt-container" style="max-width:680px">
-        <div class="reveal">
-            <h2>@L["about_mission_heading"]</h2>
-            <p style="margin-top:var(--space-4)">@L["about_mission_p1"]</p>
-            <p style="margin-top:var(--space-3)">@L["about_mission_p2"]</p>
+<section class="nt-page-hero">
+    <div class="nt-container">
+        <span class="eyebrow">About NavTour</span>
+        <h1>Built by a team that<br />knows enterprise sales <em>pain-first.</em></h1>
+        <p class="lead">NavTour is a product of Grupo Barrdega — a product-engineering organization headquartered in Panama City, operating in 32 countries since 1990. We built NavTour because we needed it ourselves.</p>
+        <div class="nt-hero-actions">
+            <a href="/register" class="btn btn-orange btn-lg">Start building free &rarr;</a>
+            <a href="/contact" class="btn btn-outline btn-lg">Get in touch</a>
         </div>
     </div>
 </section>
 
-@* Values *@
-<section class="mkt-section-alt">
-    <div class="mkt-container">
-        <div class="mkt-grid mkt-grid-3 reveal-stagger">
-            <div class="mkt-card">
-                <h3>@L["about_value1_title"]</h3>
-                <p>@L["about_value1_desc"]</p>
+@* ── MISSION ── *@
+<section class="nt-section">
+    <div class="nt-container" style="max-width:740px">
+        <span class="eyebrow">Mission</span>
+        <h2 style="margin-top:16px">Demos shouldn&rsquo;t be a dark art.</h2>
+        <p style="margin-top:20px;font-size:1.08rem;line-height:1.75">
+            Every revenue team we worked with had the same problem: great software, mediocre demos.
+            Sales reps were building screen recordings by hand, sending decks that expired, and showing
+            buyers a script instead of a product. NavTour replaces all of that with one system —
+            capture, build, share, measure — that takes under two minutes to ship.
+        </p>
+        <p style="margin-top:16px;font-size:1.08rem;line-height:1.75">
+            We&rsquo;re Americas-native, bilingual EN/ES by default, and built for the way enterprise
+            deals actually work in Latin America — champions who forward links to five stakeholders,
+            buying committees that can&rsquo;t get on a Zoom, and IT departments that require SOC&nbsp;2
+            before they&rsquo;ll even look at a vendor demo.
+        </p>
+    </div>
+</section>
+
+@* ── VALUES ── *@
+<section class="nt-section" style="background:var(--nt-bg-alt)">
+    <div class="nt-container">
+        <span class="eyebrow">How we work</span>
+        <div class="nt-card-grid" style="margin-top:32px">
+            <div class="nt-card">
+                <h3>Ship it live, not in staging</h3>
+                <p>Every feature we show in NavTour exists in the deployed product. No mockups, no &ldquo;coming soon&rdquo; banners on live demo pages. We eat our own cooking.</p>
             </div>
-            <div class="mkt-card">
-                <h3>@L["about_value2_title"]</h3>
-                <p>@L["about_value2_desc"]</p>
+            <div class="nt-card">
+                <h3>Americas-native, not Americas-adapted</h3>
+                <p>Bilingual EN/ES is first-class, not an afterthought. Our support team speaks Spanish, our product defaults to the right timezone, and our compliance is SOC&nbsp;2 — not just &ldquo;GDPR-ish.&rdquo;</p>
             </div>
-            <div class="mkt-card">
-                <h3>@L["about_value3_title"]</h3>
-                <p>@L["about_value3_desc"]</p>
+            <div class="nt-card">
+                <h3>Revenue engineering, not just SaaS</h3>
+                <p>We built NavTour while running our own pre-sales and customer success motions. Every feature exists because we needed it — not because a product manager estimated market size.</p>
             </div>
         </div>
     </div>
 </section>
 
-@* By the Numbers *@
-<section class="mkt-section">
-    <div class="mkt-container text-center reveal">
-        <div class="mkt-grid mkt-grid-4">
-            <MetricCard Value="@L["about_metric1_value"]" Label="@L["about_metric1_label"]" />
-            <MetricCard Value="@L["about_metric2_value"]" Label="@L["about_metric2_label"]" />
-            <MetricCard Value="@L["about_metric3_value"]" Label="@L["about_metric3_label"]" />
-            <MetricCard Value="@L["about_metric4_value"]" Label="@L["about_metric4_label"]" />
+@* ── STATS ── *@
+<div class="nt-results">
+    <div class="nt-container">
+        <div class="nt-stats">
+            <div class="nt-stat">
+                <div class="lbl">Founded</div>
+                <div class="n">1990</div>
+                <p>Grupo Barrdega established in Panama City. Part of the P4 Software Cloud Suite.</p>
+            </div>
+            <div class="nt-stat">
+                <div class="lbl">Countries</div>
+                <div class="n">32</div>
+                <p>NavTour deployed across 32 countries, primarily Americas and Ibero-America.</p>
+            </div>
+            <div class="nt-stat">
+                <div class="lbl">Customers</div>
+                <div class="n">500<span class="sym">+</span></div>
+                <p>Revenue teams using NavTour to run their demo motions every week.</p>
+            </div>
+            <div class="nt-stat">
+                <div class="lbl">Setup time</div>
+                <div class="n">2<span class="sym">min</span></div>
+                <p>From account creation to first published demo. No dev ticket, no staging environment.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* ── P4 SUITE ── *@
+<section class="nt-section" style="background:var(--nt-bg-alt)">
+    <div class="nt-container" style="max-width:740px">
+        <span class="eyebrow">Part of the P4 Software Cloud Suite</span>
+        <h2 style="margin-top:16px">Built for the way enterprise software sells in the Americas.</h2>
+        <p style="margin-top:20px;line-height:1.75">
+            NavTour is one product in the P4 Software Cloud Suite — a collection of operational and revenue tools
+            built for enterprise teams across Latin America. Our other products include P4 Warehouse (WMS),
+            P4 Customs (import/export compliance), and CifraHQ (financial operations).
+            NavTour connects natively to all of them.
+        </p>
+        <div style="margin-top:32px;display:flex;gap:24px;flex-wrap:wrap">
+            <img src="/images/brand/p4warehouse-full.png" alt="P4 Warehouse" style="height:32px;opacity:0.7" />
+            <img src="/images/brand/p4customs-full.png" alt="P4 Customs" style="height:32px;opacity:0.7" />
+            <img src="/images/brand/cifrahq-full.png" alt="CifraHQ" style="height:32px;opacity:0.7" />
+            <img src="/images/brand/navtour-full.png" alt="NavTour" style="height:32px;opacity:0.7" />
         </div>
     </div>
 </section>
 
-@* Team *@
-<section class="mkt-section-alt">
-    <div class="mkt-container" style="max-width:680px">
-        <div class="reveal">
-            <h2>@L["about_team_heading"]</h2>
-            <p style="margin-top:var(--space-4)">@L["about_team_desc"]</p>
-        </div>
-    </div>
-</section>
-
-<CtaSection Title="@L["about_cta_title"]"
-            Subtitle="@L["about_cta_subtitle"]"
-            CtaText="@L["about_cta_button"]"
-            CtaUrl="#" />
+<NtCTABand Headline="Built by practitioners, for practitioners."
+           SubText="Join 500+ revenue teams using NavTour to turn buyer curiosity into closed deals."
+           PrimaryLabel="Start free &rarr;"
+           SecondaryLabel="Get in touch"
+           SecondaryHref="/contact" />

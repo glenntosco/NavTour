@@ -1,0 +1,30 @@
+@* Shared warm-editorial CTA band — used on every page *@
+<section class="nt-cta">
+    <div class="nt-cta-wrap">
+        <div class="nt-cta-inner">
+            <div>
+                <h2>@Headline</h2>
+                <p>@SubText</p>
+                <div class="nt-cta-actions">
+                    <a href="@PrimaryHref" class="btn btn-ink btn-lg">@PrimaryLabel</a>
+                    <a href="@SecondaryHref" class="btn btn-outline btn-lg" style="border-color:var(--nt-ink);color:var(--nt-ink)">@SecondaryLabel</a>
+                </div>
+            </div>
+            <div class="nt-cta-card">
+                <span class="eyebrow">For enterprise teams</span>
+                <h4>Need SSO, data residency, or a custom MSA?</h4>
+                <p>Our enterprise team works with P4 Software, Barrdega, and 40+ customers across 32 countries. We&rsquo;ll scope a pilot that fits your compliance needs.</p>
+                <a href="/contact" class="link">Talk to the team <span>&rarr;</span></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+@code {
+    [Parameter] public string Headline { get; set; } = "Ready to put your product <em>on tour?</em>";
+    [Parameter] public string SubText { get; set; } = "Join 500+ revenue teams across the Americas using NavTour to turn buyer curiosity into closed deals.";
+    [Parameter] public string PrimaryLabel { get; set; } = "Start free — 2 min setup →";
+    [Parameter] public string PrimaryHref { get; set; } = "/register";
+    [Parameter] public string SecondaryLabel { get; set; } = "Book a walkthrough";
+    [Parameter] public string SecondaryHref { get; set; } = "/contact";
+}

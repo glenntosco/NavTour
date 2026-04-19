@@ -1,194 +1,158 @@
 @page "/product/ai"
 @layout MarketingLayout
-@inject IStringLocalizer<NavTour.Server.SharedResources> L
 
-<PageTitle>AI Features — NavTour</PageTitle>
+<PageTitle>AI Copilot &mdash; NavTour</PageTitle>
 <HeadContent>
-    <meta name="description" content="NavTour AI builds, edits, and optimizes your interactive demos. Auto-generation, smart editing, personalization at scale, intent scoring, and more." />
+    <meta name="description" content="NavTour AI Copilot drafts annotations, rewrites copy, reviews demos for quality, and scores buyer intent — all powered by Anthropic Claude." />
 </HeadContent>
 
-<HeroSection
-    Eyebrow="@L["ai_eyebrow"].Value"
-    Title="@L["ai_title"].Value"
-    Subtitle="@L["ai_subtitle"].Value"
-    PrimaryCtaText="@L["ai_cta_primary"].Value"
-    SecondaryCtaText="@L["ai_cta_secondary"].Value"
-    SecondaryCtaUrl="/contact" />
+@* ── HERO ── *@
+<section class="nt-page-hero">
+    <div class="nt-container">
+        <span class="eyebrow">AI Copilot</span>
+        <h1>Your demo team,<br /><em>augmented by Claude.</em></h1>
+        <p class="lead">NavTour AI drafts annotation copy, rewrites tooltip text, reviews demos for quality, and scores buyer intent — all powered by Anthropic Claude with a zero-training policy on your workspace content.</p>
+        <div class="nt-hero-actions">
+            <a href="/register" class="btn btn-orange btn-lg">Start building free &rarr;</a>
+            <a href="/contact" class="btn btn-outline btn-lg">Talk to the team</a>
+        </div>
+    </div>
+</section>
 
-@* Capability 01 — AI Copilot *@
-<section class="mkt-section reveal">
-    <div class="mkt-container">
-        <div class="mkt-step-row">
-            <div class="mkt-step-row-content">
-                <div class="mkt-step-label">@L["ai_cap1_label"]</div>
-                <h3>@L["ai_cap1_title"]</h3>
-                <p>@L["ai_cap1_desc"]</p>
-            </div>
-            <div class="mkt-step-row-visual">
-                <div class="mkt-placeholder mkt-placeholder-feature">AI Copilot — Capture to Demo Flow</div>
+@* ── AI PRIVACY CALLOUT ── *@
+<section class="nt-section">
+    <div class="nt-container">
+        <div class="nt-callout">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <div>
+                <strong>AI by Anthropic Claude &middot; No training on your content &middot; Data retained 30 days</strong>
+                <p>NavTour sends demo content to Claude only for in-session inference. Your workspace content is never used to train AI models. All prompts and outputs are deleted after 30 days.</p>
             </div>
         </div>
     </div>
 </section>
 
-@* Capability 02 — AI Smart Editor *@
-<section class="mkt-section-alt reveal">
-    <div class="mkt-container">
-        <div class="mkt-step-row">
-            <div class="mkt-step-row-content">
-                <div class="mkt-step-label">@L["ai_cap2_label"]</div>
-                <h3>@L["ai_cap2_title"]</h3>
-                <p>@L["ai_cap2_desc"]</p>
+@* ── CAPABILITY FRAMES ── *@
+<section class="nt-frames-section">
+    <div class="nt-container">
+        <div class="nt-section-head">
+            <div>
+                <span class="num"><b>&sect; 02</b>&nbsp;&nbsp;&middot;&nbsp;&nbsp;Capabilities</span>
+                <h2>Three things AI does so<br /><em>you don&rsquo;t have to.</em></h2>
             </div>
-            <div class="mkt-step-row-visual">
-                <div class="mkt-placeholder mkt-placeholder-feature">Before/After Natural Language Edit</div>
-            </div>
+            <div class="aside">AI handles the tedious layer — drafting, reviewing, and scoring. You keep the creative and strategic judgment.</div>
         </div>
+
+        <article class="nt-frame-row">
+            <div class="nt-frame-copy">
+                <div class="num">01<span class="slash">/</span><span class="lbl">Draft</span></div>
+                <h3>Annotation copy in one click, not one hour.</h3>
+                <p>Point at any element on a captured frame and ask AI to write the tooltip. Claude reads the surrounding UI context and generates a concise, on-brand annotation that you can edit or accept as-is.</p>
+                <ul>
+                    <li><span class="chk">&#10003;</span>Headline + body generated from screen context</li>
+                    <li><span class="chk">&#10003;</span>EN/ES bilingual output in one pass</li>
+                    <li><span class="chk">&#10003;</span>Tone adapts to your brand voice settings</li>
+                </ul>
+            </div>
+            <div class="nt-frame-visual">
+                <span class="nt-frame-cap">AI Copilot &middot; annotation draft</span>
+                <div class="nt-frame-img">
+                    <img src="/images/shots/editor.png" alt="AI drafting annotation copy in the editor" class="nt-lightbox" />
+                </div>
+                <div class="anno tl">
+                    <div class="lbl">Powered by Claude</div>
+                    <strong>Context-aware drafting</strong>
+                    <p>AI reads the surrounding UI to write copy that fits — not generic filler.</p>
+                </div>
+            </div>
+        </article>
+
+        <article class="nt-frame-row reverse">
+            <div class="nt-frame-copy">
+                <div class="num">02<span class="slash">/</span><span class="lbl">Review</span></div>
+                <h3>AI flags weak demos <em>before</em> they leave the editor.</h3>
+                <p>Before you publish, the AI Reviewer scans your demo for common failure patterns: steps that are too long, missing CTAs, confusing branch logic, and copy that reads like a feature list instead of a benefit.</p>
+                <ul>
+                    <li><span class="chk">&#10003;</span>Quality score with actionable improvement notes</li>
+                    <li><span class="chk">&#10003;</span>Step-level feedback, not just global suggestions</li>
+                    <li><span class="chk">&#10003;</span>One-click rewrites for flagged annotations</li>
+                </ul>
+            </div>
+            <div class="nt-frame-visual">
+                <span class="nt-frame-cap">AI Reviewer &middot; quality scan</span>
+                <div class="nt-frame-img">
+                    <img src="/images/shots/player-step1.png" alt="AI review scorecard for a demo" class="nt-lightbox" />
+                </div>
+                <div class="anno br">
+                    <div class="lbl">Before you publish</div>
+                    <strong>Catch weak steps early</strong>
+                    <p>The review runs in seconds. Most demos ship cleaner on the first pass.</p>
+                </div>
+            </div>
+        </article>
+
+        <article class="nt-frame-row">
+            <div class="nt-frame-copy">
+                <div class="num">03<span class="slash">/</span><span class="lbl">Score</span></div>
+                <h3>Intent signals that tell reps <em>who to call next.</em></h3>
+                <p>AI watches demo engagement patterns — time on step, replay loops, CTA clicks — and surfaces an intent score for each lead. Pipe the score into HubSpot or Salesforce so reps act on signal, not intuition.</p>
+                <ul>
+                    <li><span class="chk">&#10003;</span>Per-viewer intent score in the analytics dashboard</li>
+                    <li><span class="chk">&#10003;</span>CRM field sync for lead scoring workflows</li>
+                    <li><span class="chk">&#10003;</span>Slack alert when a high-intent lead re-views the demo</li>
+                </ul>
+            </div>
+            <div class="nt-frame-visual">
+                <span class="nt-frame-cap">Analytics &middot; intent scoring</span>
+                <div class="nt-frame-img">
+                    <img src="/images/shots/analytics.png" alt="Intent score dashboard" class="nt-lightbox" />
+                </div>
+                <div class="anno tr">
+                    <div class="lbl">Signal, not noise</div>
+                    <strong>Act on intent, not vanity</strong>
+                    <p>Reps see who is ready for a call — not just who opened the link.</p>
+                </div>
+            </div>
+        </article>
     </div>
 </section>
 
-@* Capability 03 — AI Personalization *@
-<section class="mkt-section reveal">
-    <div class="mkt-container">
-        <div class="mkt-step-row">
-            <div class="mkt-step-row-content">
-                <div class="mkt-step-label">@L["ai_cap3_label"]</div>
-                <h3>@L["ai_cap3_title"]</h3>
-                <p>@L["ai_cap3_desc"]</p>
+@* ── COMPETITOR TABLE ── *@
+<section class="nt-section" style="background:var(--nt-bg-alt)">
+    <div class="nt-container">
+        <div class="nt-section-head">
+            <div>
+                <span class="num"><b>&sect; 03</b>&nbsp;&nbsp;&middot;&nbsp;&nbsp;Comparison</span>
+                <h2>How NavTour AI compares.</h2>
             </div>
-            <div class="mkt-step-row-visual">
-                <div class="mkt-placeholder mkt-placeholder-feature">Bulk Demo Generation Interface</div>
-            </div>
-        </div>
-    </div>
-</section>
-
-@* Capability 04 — AI Analytics & Intent *@
-<section class="mkt-section-alt reveal">
-    <div class="mkt-container">
-        <div class="mkt-step-row">
-            <div class="mkt-step-row-content">
-                <div class="mkt-step-label">@L["ai_cap4_label"]</div>
-                <h3>@L["ai_cap4_title"]</h3>
-                <p>@L["ai_cap4_desc"]</p>
-            </div>
-            <div class="mkt-step-row-visual">
-                <div class="mkt-placeholder mkt-placeholder-feature">Intent Score Dashboard + CRM Sync</div>
-            </div>
-        </div>
-    </div>
-</section>
-
-@* Capability 05 — AI Demo Review *@
-<section class="mkt-section reveal">
-    <div class="mkt-container">
-        <div class="mkt-step-row">
-            <div class="mkt-step-row-content">
-                <div class="mkt-step-label">@L["ai_cap5_label"]</div>
-                <h3>@L["ai_cap5_title"]</h3>
-                <p>@L["ai_cap5_desc"]</p>
-            </div>
-            <div class="mkt-step-row-visual">
-                <div class="mkt-placeholder mkt-placeholder-feature">Demo Optimization Scorecard</div>
-            </div>
-        </div>
-    </div>
-</section>
-
-@* Capability 06 — AI Branching Logic *@
-<section class="mkt-section-alt reveal">
-    <div class="mkt-container">
-        <div class="mkt-step-row">
-            <div class="mkt-step-row-content">
-                <div class="mkt-step-label">@L["ai_cap6_label"]</div>
-                <h3>@L["ai_cap6_title"]</h3>
-                <p>@L["ai_cap6_desc"]</p>
-            </div>
-            <div class="mkt-step-row-visual">
-                <div class="mkt-placeholder mkt-placeholder-feature">Auto-Generated Branching Flow</div>
-            </div>
-        </div>
-    </div>
-</section>
-
-@* Capability 07 — AI Brand Voice *@
-<section class="mkt-section reveal">
-    <div class="mkt-container">
-        <div class="mkt-step-row">
-            <div class="mkt-step-row-content">
-                <div class="mkt-step-label">@L["ai_cap7_label"]</div>
-                <h3>@L["ai_cap7_title"]</h3>
-                <p>@L["ai_cap7_desc"]</p>
-            </div>
-            <div class="mkt-step-row-visual">
-                <div class="mkt-placeholder mkt-placeholder-feature">Brand Voice Settings Panel</div>
-            </div>
-        </div>
-    </div>
-</section>
-
-@* Competitor Comparison Table *@
-<section class="mkt-section-alt">
-    <div class="mkt-container reveal">
-        <div class="mkt-section-heading">
-            <h2>@L["ai_compare_title"]</h2>
-            <p>@L["ai_compare_subtitle"]</p>
         </div>
         <div style="overflow-x:auto">
-            <table class="mkt-table">
+            <table class="nt-compare">
                 <thead>
                     <tr>
-                        <th>@L["ai_compare_feature"]</th>
-                        <th class="highlighted">NavTour</th>
+                        <th>Feature</th>
+                        <th style="color:var(--nt-orange);font-weight:700">NavTour</th>
                         <th>Navattic</th>
                         <th>Storylane</th>
-                        <th>Walnut</th>
                         <th>Supademo</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var row in rows)
-                    {
-                        <tr>
-                            <td>@L[row.FeatureKey]</td>
-                            <td class="highlighted">@((MarkupString)Check(row.NavTour))</td>
-                            <td>@((MarkupString)Check(row.Navattic))</td>
-                            <td>@((MarkupString)Check(row.Storylane))</td>
-                            <td>@((MarkupString)Check(row.Walnut))</td>
-                            <td>@((MarkupString)Check(row.Supademo))</td>
-                        </tr>
-                    }
+                    <tr><td>AI annotation drafting</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td></tr>
+                    <tr><td>AI copy editing (natural language)</td><td>&#10003;</td><td>&#10003;</td><td>&mdash;</td><td>&mdash;</td></tr>
+                    <tr><td>AI demo quality review</td><td>&#10003;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
+                    <tr><td>AI intent scoring</td><td>&#10003;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
+                    <tr><td>AI branching logic generation</td><td>&#10003;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
+                    <tr><td>Zero-training policy</td><td>&#10003;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
+                    <tr><td>Bilingual AI output (EN/ES)</td><td>&#10003;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
                 </tbody>
             </table>
         </div>
     </div>
 </section>
 
-<CtaSection Dark="true"
-    Title="@L["ai_bottom_cta_title"].Value"
-    Subtitle="@L["ai_bottom_cta_subtitle"].Value"
-    CtaText="@L["ai_bottom_cta_text"].Value"
-    SecondaryCtaText="@L["ai_bottom_cta_secondary"].Value"
-    SecondaryCtaUrl="/contact" />
-
-@code {
-    private record CompRow(string FeatureKey, string NavTour, string Navattic, string Storylane, string Walnut, string Supademo);
-
-    private string Check(string val) => val == "yes"
-        ? "<span class='mkt-check'>&#10003;</span>"
-        : "<span class='mkt-dash'>&mdash;</span>";
-
-    private readonly List<CompRow> rows = new()
-    {
-        new("ai_row_generation",       "yes", "yes", "yes", "no",  "yes"),
-        new("ai_row_copy_editing",     "yes", "yes", "no",  "no",  "no"),
-        new("ai_row_smart_editing",    "yes", "no",  "no",  "no",  "no"),
-        new("ai_row_personalization",  "yes", "no",  "yes", "yes", "no"),
-        new("ai_row_intent",          "yes", "no",  "no",  "no",  "no"),
-        new("ai_row_review",          "yes", "no",  "no",  "no",  "no"),
-        new("ai_row_branching",       "yes", "no",  "no",  "no",  "no"),
-        new("ai_row_brand_voice",     "yes", "no",  "no",  "no",  "no"),
-        new("ai_row_nl_editing",      "yes", "no",  "no",  "no",  "no"),
-        new("ai_row_bulk",            "yes", "no",  "no",  "no",  "no"),
-    };
-}
+<NtCTABand Headline="AI that ships, not AI that&rsquo;s on the roadmap."
+           SubText="Every AI feature listed here is live. No waitlist, no add-on tier &mdash; included from Starter up."
+           PrimaryLabel="Start free &rarr;"
+           SecondaryLabel="Book a walkthrough"
+           SecondaryHref="/contact" />

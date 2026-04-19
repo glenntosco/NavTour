@@ -1,137 +1,129 @@
 @page "/customers"
 @layout MarketingLayout
-@inject IStringLocalizer<NavTour.Server.SharedResources> L
 
-<PageTitle>@L["customers_page_title"]</PageTitle>
+<PageTitle>Customers &mdash; NavTour</PageTitle>
 <HeadContent>
-    <meta name="description" content="@L["customers_meta_desc"].Value" />
+    <meta name="description" content="500+ revenue teams across the Americas use NavTour to turn buyer curiosity into closed deals. Read how P4 Warehouse, Barrdega, and CifraHQ run their demo motions." />
 </HeadContent>
 
-<section class="mkt-section" style="padding-bottom:var(--space-16)">
-    <div class="mkt-container" style="max-width:680px">
-        <p class="mkt-eyebrow text-center" style="text-transform:uppercase;letter-spacing:0.1em;color:var(--nt-accent)">@L["customers_eyebrow"]</p>
-        <h1 class="text-center">@L["customers_title"]</h1>
-        <p class="text-center" style="margin-top:var(--space-5)">@L["customers_subtitle"]</p>
-    </div>
-</section>
-
-@* Logo Wall *@
-<section class="mkt-social-proof">
-    <div class="mkt-container text-center">
-        <div class="mkt-eyebrow" style="margin-bottom:var(--space-6)">@L["customers_logo_saas"]</div>
-        <LogoGrid Companies='new() { "Apex Financial", "Meridian Health", "CloudScale", "TerraLogic", "Pinnacle SaaS", "Vantage CRM", "Horizon Ops", "NovaBridge" }' Columns="8" />
-
-        <div class="mkt-eyebrow" style="margin-top:var(--space-12);margin-bottom:var(--space-6)">@L["customers_logo_finhealth"]</div>
-        <LogoGrid Companies='new() { "FinVault", "CareConnect", "LendFlow", "MedTrack", "PaySync", "HealthGrid", "WealthPilot", "InsureLink" }' Columns="8" />
-    </div>
-</section>
-
-@* Case Study 1 — CloudScale *@
-<section class="mkt-section">
-    <div class="mkt-container reveal">
-        <div class="mkt-card" style="padding:var(--space-10)">
-            <div style="display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-6)">
-                <h2 style="margin:0">CloudScale</h2>
-                <span class="mkt-blog-card-tag">@L["customers_cs1_tag"]</span>
-            </div>
-            <div class="mkt-grid mkt-grid-2" style="gap:var(--space-10);align-items:start">
-                <div>
-                    <h4 style="margin-bottom:var(--space-2)">@L["customers_challenge"]</h4>
-                    <p style="font-size:var(--text-base)">@L["customers_cs1_challenge"]</p>
-                    <h4 style="margin-top:var(--space-6);margin-bottom:var(--space-2)">@L["customers_solution"]</h4>
-                    <p style="font-size:var(--text-base)">@L["customers_cs1_solution"]</p>
-                    <h4 style="margin-top:var(--space-6);margin-bottom:var(--space-2)">@L["customers_result"]</h4>
-                    <p style="font-size:var(--text-base)">@L["customers_cs1_result"]</p>
-                </div>
-                <div style="display:flex;align-items:center;justify-content:center">
-                    <div style="text-align:center">
-                        <div class="mkt-metric-card-value" style="font-size:var(--text-6xl)">40%</div>
-                        <div class="mkt-metric-card-label" style="margin-top:var(--space-3)">@L["customers_cs1_metric"]</div>
-                    </div>
-                </div>
-            </div>
+<section class="nt-page-hero">
+    <div class="nt-container">
+        <span class="eyebrow">Customers</span>
+        <h1>500+ teams running demos<br />that <em>actually close deals.</em></h1>
+        <p class="lead">From Panama City to Buenos Aires, revenue teams across 32 countries use NavTour to replace the "can you send a deck?" with an interactive product experience.</p>
+        <div class="nt-hero-actions">
+            <a href="/register" class="btn btn-orange btn-lg">Start free &rarr;</a>
+            <a href="/contact" class="btn btn-outline btn-lg">Talk to the team</a>
         </div>
     </div>
 </section>
 
-@* Testimonial 1 *@
-<section class="mkt-section-alt" style="padding:var(--space-16) var(--space-6)">
-    <div class="mkt-container reveal" style="max-width:720px">
-        <TestimonialCard
-            Quote="@L["customers_testimonial1_quote"].Value"
-            Name="Alex Rivera"
-            Title="@L["customers_testimonial1_title"].Value"
-            Company="TerraLogic"
-            Featured="true" />
+@* ── STATS ── *@
+<div class="nt-results">
+    <div class="nt-container">
+        <div class="nt-stats">
+            <div class="nt-stat">
+                <div class="lbl">Teams using NavTour</div>
+                <div class="n">500<span class="sym">+</span></div>
+                <p>Revenue teams across sales, marketing, pre-sales, and customer success.</p>
+            </div>
+            <div class="nt-stat">
+                <div class="lbl">Countries</div>
+                <div class="n">32</div>
+                <p>Americas-native, bilingual EN/ES, deployed across 32 countries.</p>
+            </div>
+            <div class="nt-stat">
+                <div class="lbl">Demo-to-opp lift</div>
+                <div class="n">+47<span class="sym">%</span></div>
+                <p>Median lift in demo-to-opportunity conversion. Medians, not best case.</p>
+            </div>
+            <div class="nt-stat">
+                <div class="lbl">Time saved</div>
+                <div class="n">6<span class="sym">h</span></div>
+                <p>Per rep, per week &mdash; pre-call discovery and post-call follow-ups, automated.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* ── CASE STUDY 1 ── *@
+<section class="nt-frames-section">
+    <div class="nt-container">
+        <article class="nt-frame-row">
+            <div class="nt-frame-copy">
+                <span class="eyebrow">Case study &middot; P4 Warehouse</span>
+                <h3>From &ldquo;can you send a recording?&rdquo;<br />to <em>self-serve demo hubs.</em></h3>
+                <p>P4 Warehouse&rsquo;s pre-sales team was spending 3 hours per deal building custom screen recordings for each ops persona. NavTour replaced the recordings with a self-serve hub — one per vertical, always current.</p>
+                <div style="margin-top:24px;padding:20px 24px;background:var(--nt-bg-alt);border-radius:12px;border-left:3px solid var(--nt-orange)">
+                    <blockquote style="margin:0;font-style:italic;color:var(--nt-ink);font-size:1.05rem;line-height:1.6">
+                        &ldquo;NavTour replaced four tools in our sales stack &mdash; and our SDRs finally stopped asking marketing for &lsquo;the updated demo link.&rsquo; It just lives in the hub, always fresh, always branded.&rdquo;
+                    </blockquote>
+                    <cite style="display:block;margin-top:12px;font-style:normal;font-size:0.88rem;font-family:var(--nt-mono);letter-spacing:0.04em;color:var(--nt-muted)">
+                        <b style="color:var(--nt-ink)">Mar&iacute;a Vel&aacute;squez</b> &middot; VP Revenue Ops, P4 Warehouse &middot; Panama City
+                    </cite>
+                </div>
+                <div style="margin-top:20px;display:flex;gap:40px">
+                    <div><div style="font-size:2rem;font-family:var(--nt-display);font-weight:700;color:var(--nt-ink)">2.4&times;</div><div style="font-size:0.82rem;font-family:var(--nt-mono);letter-spacing:0.1em;text-transform:uppercase;color:var(--nt-muted)">Demo-to-meeting rate</div></div>
+                    <div><div style="font-size:2rem;font-family:var(--nt-display);font-weight:700;color:var(--nt-ink)">40%</div><div style="font-size:0.82rem;font-family:var(--nt-mono);letter-spacing:0.1em;text-transform:uppercase;color:var(--nt-muted)">Less time on discovery calls</div></div>
+                </div>
+            </div>
+            <div class="nt-frame-visual">
+                <span class="nt-frame-cap">P4 Warehouse &middot; demo hub</span>
+                <div class="nt-frame-img">
+                    <img src="/images/shots/hub.png" alt="P4 Warehouse demo hub" class="nt-lightbox" />
+                </div>
+            </div>
+        </article>
+
+        <article class="nt-frame-row reverse">
+            <div class="nt-frame-copy">
+                <span class="eyebrow">Case study &middot; CifraHQ</span>
+                <h3>Onboarding that doesn&rsquo;t need<br /><em>a CSM in the room.</em></h3>
+                <p>CifraHQ&rsquo;s customer success team was running 8-session onboarding sprints for every new customer. After building a NavTour library for each workflow module, they cut their onboarding call load by 60% in the first quarter.</p>
+                <div style="margin-top:24px;padding:20px 24px;background:var(--nt-bg-alt);border-radius:12px;border-left:3px solid var(--nt-orange)">
+                    <blockquote style="margin:0;font-style:italic;color:var(--nt-ink);font-size:1.05rem;line-height:1.6">
+                        &ldquo;Our customers complete onboarding at midnight if that&rsquo;s when they have time. The tour library means we spend CSM time on strategy, not feature walkthroughs.&rdquo;
+                    </blockquote>
+                    <cite style="display:block;margin-top:12px;font-style:normal;font-size:0.88rem;font-family:var(--nt-mono);letter-spacing:0.04em;color:var(--nt-muted)">
+                        <b style="color:var(--nt-ink)">Roberto Cifuentes</b> &middot; Head of Customer Success, CifraHQ &middot; Bogot&aacute;
+                    </cite>
+                </div>
+                <div style="margin-top:20px;display:flex;gap:40px">
+                    <div><div style="font-size:2rem;font-family:var(--nt-display);font-weight:700;color:var(--nt-ink)">60%</div><div style="font-size:0.82rem;font-family:var(--nt-mono);letter-spacing:0.1em;text-transform:uppercase;color:var(--nt-muted)">Fewer onboarding calls</div></div>
+                    <div><div style="font-size:2rem;font-family:var(--nt-display);font-weight:700;color:var(--nt-ink)">72%</div><div style="font-size:0.82rem;font-family:var(--nt-mono);letter-spacing:0.1em;text-transform:uppercase;color:var(--nt-muted)">Step completion rate</div></div>
+                </div>
+            </div>
+            <div class="nt-frame-visual">
+                <span class="nt-frame-cap">CifraHQ &middot; onboarding library</span>
+                <div class="nt-frame-img">
+                    <img src="/images/shots/player-step1.png" alt="CifraHQ self-serve onboarding tour" class="nt-lightbox" />
+                </div>
+            </div>
+        </article>
     </div>
 </section>
 
-@* Case Study 2 — Meridian Health *@
-<section class="mkt-section">
-    <div class="mkt-container reveal">
-        <div class="mkt-card" style="padding:var(--space-10)">
-            <div style="display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-6)">
-                <h2 style="margin:0">Meridian Health</h2>
-                <span class="mkt-blog-card-tag">@L["customers_cs2_tag"]</span>
-            </div>
-            <div class="mkt-grid mkt-grid-2" style="gap:var(--space-10);align-items:start">
-                <div>
-                    <h4 style="margin-bottom:var(--space-2)">@L["customers_challenge"]</h4>
-                    <p style="font-size:var(--text-base)">@L["customers_cs2_challenge"]</p>
-                    <h4 style="margin-top:var(--space-6);margin-bottom:var(--space-2)">@L["customers_solution"]</h4>
-                    <p style="font-size:var(--text-base)">@L["customers_cs2_solution"]</p>
-                    <h4 style="margin-top:var(--space-6);margin-bottom:var(--space-2)">@L["customers_result"]</h4>
-                    <p style="font-size:var(--text-base)">@L["customers_cs2_result"]</p>
-                </div>
-                <div style="display:flex;align-items:center;justify-content:center">
-                    <div style="text-align:center">
-                        <div class="mkt-metric-card-value" style="font-size:var(--text-6xl)">@L["customers_cs2_metric_value"]</div>
-                        <div class="mkt-metric-card-label" style="margin-top:var(--space-3)">@L["customers_cs2_metric"]</div>
-                    </div>
-                </div>
-            </div>
+@* ── LOGO WALL ── *@
+<section class="nt-section" style="background:var(--nt-bg-alt)">
+    <div class="nt-container" style="text-align:center">
+        <span class="eyebrow" style="display:block;margin-bottom:32px">Trusted by revenue teams at</span>
+        <div style="display:flex;flex-wrap:wrap;gap:16px 40px;justify-content:center;align-items:center;opacity:0.7">
+            <span style="font-family:var(--nt-mono);font-size:0.88rem;letter-spacing:0.12em;text-transform:uppercase;font-weight:600">P4 Software</span>
+            <span style="font-family:var(--nt-mono);font-size:0.88rem;letter-spacing:0.12em;text-transform:uppercase;font-weight:600">Barrdega</span>
+            <span style="font-family:var(--nt-mono);font-size:0.88rem;letter-spacing:0.12em;text-transform:uppercase;font-weight:600">CifraHQ</span>
+            <span style="font-family:var(--nt-mono);font-size:0.88rem;letter-spacing:0.12em;text-transform:uppercase;font-weight:600">P4 Warehouse</span>
+            <span style="font-family:var(--nt-mono);font-size:0.88rem;letter-spacing:0.12em;text-transform:uppercase;font-weight:600">OpenDocs</span>
+            <span style="font-family:var(--nt-mono);font-size:0.88rem;letter-spacing:0.12em;text-transform:uppercase;font-weight:600">Nerv Corp</span>
+            <span style="font-family:var(--nt-mono);font-size:0.88rem;letter-spacing:0.12em;text-transform:uppercase;font-weight:600">Certifyd</span>
+            <span style="font-family:var(--nt-mono);font-size:0.88rem;letter-spacing:0.12em;text-transform:uppercase;font-weight:600">ActivoHQ</span>
+            <span style="font-family:var(--nt-mono);font-size:0.88rem;letter-spacing:0.12em;text-transform:uppercase;font-weight:600">LogisticaHQ</span>
+            <span style="font-family:var(--nt-mono);font-size:0.88rem;letter-spacing:0.12em;text-transform:uppercase;font-weight:600">FacturaHQ</span>
         </div>
     </div>
 </section>
 
-@* Testimonial 2 *@
-<section class="mkt-section-alt" style="padding:var(--space-16) var(--space-6)">
-    <div class="mkt-container reveal" style="max-width:720px">
-        <TestimonialCard
-            Quote="@L["customers_testimonial2_quote"].Value"
-            Name="Priya Sharma"
-            Title="@L["customers_testimonial2_title"].Value"
-            Company="Pinnacle SaaS"
-            Featured="true" />
-    </div>
-</section>
-
-@* Case Study 3 — FinVault *@
-<section class="mkt-section">
-    <div class="mkt-container reveal">
-        <div class="mkt-card" style="padding:var(--space-10)">
-            <div style="display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-6)">
-                <h2 style="margin:0">FinVault</h2>
-                <span class="mkt-blog-card-tag">@L["customers_cs3_tag"]</span>
-            </div>
-            <div class="mkt-grid mkt-grid-2" style="gap:var(--space-10);align-items:start">
-                <div>
-                    <h4 style="margin-bottom:var(--space-2)">@L["customers_challenge"]</h4>
-                    <p style="font-size:var(--text-base)">@L["customers_cs3_challenge"]</p>
-                    <h4 style="margin-top:var(--space-6);margin-bottom:var(--space-2)">@L["customers_solution"]</h4>
-                    <p style="font-size:var(--text-base)">@L["customers_cs3_solution"]</p>
-                    <h4 style="margin-top:var(--space-6);margin-bottom:var(--space-2)">@L["customers_result"]</h4>
-                    <p style="font-size:var(--text-base)">@L["customers_cs3_result"]</p>
-                </div>
-                <div style="display:flex;align-items:center;justify-content:center">
-                    <div style="text-align:center">
-                        <div class="mkt-metric-card-value" style="font-size:var(--text-6xl)">52%</div>
-                        <div class="mkt-metric-card-label" style="margin-top:var(--space-3)">@L["customers_cs3_metric"]</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<CtaSection Title="@L["customers_cta_title"].Value" Subtitle="@L["customers_cta_subtitle"].Value" />
+<NtCTABand Headline="Join 500+ teams running demos that close deals."
+           SubText="Free to start, 2 min setup, no credit card. Your first demo can be live before end of day."
+           PrimaryLabel="Start free &rarr;"
+           SecondaryLabel="Talk to the team"
+           SecondaryHref="/contact" />

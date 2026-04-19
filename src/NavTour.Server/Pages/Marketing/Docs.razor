@@ -1,0 +1,545 @@
+@page "/docs"
+@layout MarketingLayout
+
+<PageTitle>Documentation — NavTour User Manual</PageTitle>
+<HeadContent>
+    <meta name="description" content="Complete NavTour documentation: Chrome extension, demo editor, AI Copilot, analytics, integrations, REST API, admin, and security guides." />
+    <link rel="canonical" href="https://navtour.cloud/docs" />
+    <style>
+        .nt-docs-wrap { padding-top: 24px; }
+        .docs-main section { padding-top: 3em; margin-top: 1em; border-top: 1px solid var(--nt-rule-soft); scroll-margin-top: 72px; }
+        .docs-main section:first-of-type { padding-top: 0; margin-top: 0; border-top: 0; }
+    </style>
+</HeadContent>
+
+<div class="nt-docs-wrap">
+    @* ── LEFT TOC ── *@
+    <aside class="nt-docs-toc" aria-label="Documentation navigation">
+        <div class="nt-docs-search" id="docs-search-wrap">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input id="docs-search" type="text" placeholder="Search docs…" aria-label="Search documentation" />
+            <span class="kbd">&#x2318;K</span>
+        </div>
+
+        <div class="nt-docs-nav-group">
+            <h6>Getting Started</h6>
+            <ul>
+                <li><a href="#introduction">Introduction</a></li>
+                <li><a href="#quickstart">Quickstart — 5 minutes</a></li>
+                <li><a href="#concepts">Core concepts</a></li>
+                <li><a href="#accounts">Accounts &amp; workspaces</a></li>
+            </ul>
+        </div>
+
+        <div class="nt-docs-nav-group">
+            <h6>Capture</h6>
+            <ul>
+                <li><a href="#extension">Chrome extension</a></li>
+                <li><a href="#capture-modes">Capture modes</a></li>
+                <li><a href="#frames">Frames &amp; screenshots</a></li>
+                <li><a href="#selectors">Selectors &amp; drift</a></li>
+            </ul>
+        </div>
+
+        <div class="nt-docs-nav-group">
+            <h6>Editor</h6>
+            <ul>
+                <li><a href="#editor">Editor overview</a></li>
+                <li><a href="#hotspots">Hotspots &amp; tooltips</a></li>
+                <li><a href="#text-edit">Text &amp; image edits</a></li>
+                <li><a href="#branching">Branching logic</a></li>
+                <li><a href="#personalization">Personalization tokens</a></li>
+                <li><a href="#themes">Themes &amp; branding</a></li>
+            </ul>
+        </div>
+
+        <div class="nt-docs-nav-group">
+            <h6>AI Copilot</h6>
+            <ul>
+                <li><a href="#ai-draft">AI drafting</a></li>
+                <li><a href="#ai-review">AI review</a></li>
+                <li><a href="#ai-personalization">AI personalization</a></li>
+                <li><a href="#ai-privacy">Privacy &amp; data handling</a></li>
+            </ul>
+        </div>
+
+        <div class="nt-docs-nav-group">
+            <h6>Publishing</h6>
+            <ul>
+                <li><a href="#share">Share links</a></li>
+                <li><a href="#embed">Embed iframe &amp; SDK</a></li>
+                <li><a href="#hubs">Demo hubs &amp; showcases</a></li>
+                <li><a href="#domain">Custom domains</a></li>
+            </ul>
+        </div>
+
+        <div class="nt-docs-nav-group">
+            <h6>Analytics</h6>
+            <ul>
+                <li><a href="#events">Events &amp; metrics</a></li>
+                <li><a href="#intent">Intent scoring</a></li>
+                <li><a href="#exports">CSV exports</a></li>
+            </ul>
+        </div>
+
+        <div class="nt-docs-nav-group">
+            <h6>Integrations</h6>
+            <ul>
+                <li><a href="#crm">CRM (Salesforce, HubSpot)</a></li>
+                <li><a href="#slack">Slack</a></li>
+                <li><a href="#webhooks">Webhooks</a></li>
+                <li><a href="#zapier">Zapier &amp; Make</a></li>
+            </ul>
+        </div>
+
+        <div class="nt-docs-nav-group">
+            <h6>Developer</h6>
+            <ul>
+                <li><a href="#api">REST API reference</a></li>
+                <li><a href="#sdk">JavaScript SDK</a></li>
+                <li><a href="#cli">CLI (ntour)</a></li>
+                <li><a href="#auth">Authentication</a></li>
+            </ul>
+        </div>
+
+        <div class="nt-docs-nav-group">
+            <h6>Admin</h6>
+            <ul>
+                <li><a href="#roles">Roles &amp; permissions</a></li>
+                <li><a href="#sso">SSO / SAML</a></li>
+                <li><a href="#audit">Audit logs</a></li>
+                <li><a href="#billing">Billing &amp; seats</a></li>
+            </ul>
+        </div>
+
+        <div class="nt-docs-nav-group">
+            <h6>Reference</h6>
+            <ul>
+                <li><a href="#keyboard">Keyboard shortcuts</a></li>
+                <li><a href="#troubleshooting">Troubleshooting</a></li>
+                <li><a href="#glossary">Glossary</a></li>
+            </ul>
+        </div>
+    </aside>
+
+    @* ── CONTENT ── *@
+    <main class="nt-docs-content docs-main" id="docs-content">
+        <h1>NavTour User Manual</h1>
+        <p style="color:var(--nt-muted);font-size:15px;margin-bottom:2em;">Last updated April 2026 &middot; Version 2.4 &middot; <a href="/contact">Request changes</a></p>
+
+        <section id="introduction">
+            <h2>Introduction</h2>
+            <p>This manual is written for everyone who will touch NavTour: the AE who drops demos into outbound sequences, the PM who captures launch flows from staging, the admin who configures SSO, and the developer who wires our REST API into a self-hosted workflow. Every chapter is cross-linked and every code sample is copy-pastable.</p>
+            <div class="nt-docs-callout">
+                <p><strong>New to NavTour?</strong> Start with <a href="#quickstart">Quickstart</a> &mdash; you&rsquo;ll have a live demo published in under 5 minutes before reading anything else.</p>
+            </div>
+        </section>
+
+        <section id="quickstart">
+            <h2>Quickstart &mdash; 5 minutes</h2>
+            <p>The fastest path from zero to a published interactive demo:</p>
+            <ol class="nt-docs-steps">
+                <li><p><strong>Install the extension.</strong> Go to <a href="https://chromewebstore.google.com/detail/opgaokkionehglmipncajghhlmohanoi" target="_blank" rel="noopener noreferrer">Chrome Web Store &rarr; NavTour</a> and click Add to Chrome. The NavTour icon appears in your toolbar.</p></li>
+                <li><p><strong>Open your product.</strong> Navigate to the page or flow you want to capture. Log in as a demo user (not your production account).</p></li>
+                <li><p><strong>Click Capture.</strong> Press the NavTour icon and choose <em>Capture this page</em>. Navigate through the flow, pressing <kbd>Cmd/Ctrl+Shift+C</kbd> to capture each step. Press <em>Done</em> when finished.</p></li>
+                <li><p><strong>Add a tooltip.</strong> In the editor, click any element and choose <em>Add tooltip</em>. Type the annotation text. Drag the tooltip handle to reposition.</p></li>
+                <li><p><strong>Publish.</strong> Click <em>Publish</em> in the top-right. Copy the share link and paste it anywhere &mdash; email, Notion, Slack, LinkedIn.</p></li>
+            </ol>
+            <div class="nt-docs-callout info">
+                <p><strong>2-minute setup guarantee.</strong> If you spend more than 2 minutes on steps 1&ndash;3, something went wrong. Check that you&rsquo;re on a Chromium-based browser (Chrome, Edge, Brave, Arc) and that the extension has permission for your product&rsquo;s domain.</p>
+            </div>
+        </section>
+
+        <section id="concepts">
+            <h2>Core concepts</h2>
+            <p><strong>Demo</strong> — a sequence of captured frames with guided annotations. The top-level entity in NavTour.</p>
+            <p><strong>Frame</strong> — a single HTML/CSS snapshot of a page state. Frames are replayable and editable. A demo typically has 5&ndash;25 frames.</p>
+            <p><strong>Step</strong> — an annotation layer on top of a frame: tooltip, hotspot, modal, spotlight, blur, or CTA button.</p>
+            <p><strong>Hub</strong> — a curated collection of demos, published as a standalone page with its own URL and branding.</p>
+            <p><strong>Showcase</strong> — a single demo sent via a personalized share link, trackable per-recipient.</p>
+            <p><strong>Workspace</strong> — a shared environment for a team: all demos, hubs, and analytics live inside a workspace. One workspace per subscription.</p>
+        </section>
+
+        <section id="accounts">
+            <h2>Accounts &amp; workspaces</h2>
+            <p>Each NavTour account belongs to exactly one workspace. Workspaces are isolated: demos, frames, analytics, and integrations are never shared across workspaces.</p>
+            <p>Roles within a workspace: <strong>Owner</strong> (full access, billing), <strong>Admin</strong> (all ops except billing), <strong>Editor</strong> (create/edit demos, no admin), <strong>Viewer</strong> (read-only, no publishing). See <a href="#roles">Roles &amp; permissions</a>.</p>
+        </section>
+
+        <section id="extension">
+            <h2>Chrome extension</h2>
+            <p>The NavTour Chrome extension is a Manifest V3 extension that captures page state as a complete HTML/CSS bundle &mdash; not a flat screenshot. This means the captured frame is interactive: you can click, hover, and scroll inside it, and you can still edit text and swap images later in the editor.</p>
+            <h3>Permissions requested</h3>
+            <p>The extension requests <code>activeTab</code>, <code>scripting</code>, and <code>storage</code>. It does <strong>not</strong> request history, bookmarks, or persistent background access. All captured content is sent directly to your NavTour workspace over HTTPS &mdash; nothing is stored locally beyond session state.</p>
+            <h3>Keyboard shortcut</h3>
+            <p>Default capture shortcut: <kbd>Cmd+Shift+C</kbd> (Mac) / <kbd>Ctrl+Shift+C</kbd> (Windows/Linux). Configurable in Chrome&rsquo;s extension shortcuts page (<code>chrome://extensions/shortcuts</code>).</p>
+        </section>
+
+        <section id="capture-modes">
+            <h2>Capture modes</h2>
+            <p>NavTour supports three capture modes:</p>
+            <table>
+                <thead><tr><th>Mode</th><th>Best for</th><th>Notes</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Full page</strong></td><td>Most demos</td><td>Captures the entire viewport + below-fold scroll</td></tr>
+                    <tr><td><strong>Element</strong></td><td>Modals, drawers, tooltips</td><td>Clip a single component; useful for pop-up states</td></tr>
+                    <tr><td><strong>Scroll sequence</strong></td><td>Long dashboards</td><td>Auto-advance captures frames as you scroll</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="frames">
+            <h2>Frames &amp; screenshots</h2>
+            <p>Each captured frame is stored as compressed HTML/CSS with inlined assets. Average frame size is 180&nbsp;KB. The editor renders frames in a sandboxed iframe: JavaScript from the original page is stripped, but CSS and layout are pixel-perfect.</p>
+            <p>You can reorder frames by drag-and-drop in the editor sidebar. You can delete, duplicate, or replace a frame without affecting the rest of the demo.</p>
+        </section>
+
+        <section id="selectors">
+            <h2>Selectors &amp; drift</h2>
+            <p>Hotspots and tooltips are anchored to a CSS selector path, not a pixel coordinate. If the page UI updates and the selector path breaks, NavTour shows a <strong>Drift alert</strong> in the editor &mdash; click to re-anchor the annotation to the correct element in the new capture.</p>
+        </section>
+
+        <section id="editor">
+            <h2>Editor overview</h2>
+            <p>The NavTour editor is a split-pane interface: frame list on the left, canvas in the center, properties panel on the right. All edits are non-destructive and versioned &mdash; you can roll back any frame to its original capture.</p>
+            <p>Keyboard shortcuts in the editor: <kbd>Cmd+Z</kbd> undo, <kbd>Cmd+Y</kbd> redo, <kbd>T</kbd> add tooltip, <kbd>H</kbd> add hotspot, <kbd>B</kbd> add blur, <kbd>Esc</kbd> deselect, <kbd>Space+drag</kbd> pan.</p>
+        </section>
+
+        <section id="hotspots">
+            <h2>Hotspots &amp; tooltips</h2>
+            <p>A <strong>hotspot</strong> is a pulsing orange dot anchored to an element. Clicking it advances the demo to the next step. A <strong>tooltip</strong> is a text card that appears on hover or click, with configurable position (top, right, bottom, left) and action buttons.</p>
+            <p>Tooltip variants: <em>Standard</em> (floating card), <em>Modal</em> (centered overlay with backdrop), <em>Spotlight</em> (dims everything except the target element), <em>Banner</em> (top or bottom strip).</p>
+        </section>
+
+        <section id="text-edit">
+            <h2>Text &amp; image edits</h2>
+            <p>Double-click any text node in the canvas to edit it inline. Swap images by clicking the image and selecting <em>Replace</em> &mdash; upload a file or paste a URL. Text and image edits are stored as overlays on top of the original frame capture and do not affect the source HTML.</p>
+        </section>
+
+        <section id="branching">
+            <h2>Branching logic</h2>
+            <p>Add a <strong>Branch</strong> step to send viewers down different paths based on a button click. Common patterns: persona selector (AE view vs. CFO view), feature toggle (show feature A vs. feature B), language selector.</p>
+            <p>Each branch is a separate sequence of frames. Analytics tracks completion rates per branch. You can set a default path for viewers who don&rsquo;t interact with the branch selector.</p>
+        </section>
+
+        <section id="personalization">
+            <h2>Personalization tokens</h2>
+            <p>Use double-brace tokens anywhere in text or image alt-text: <code>&#123;&#123;company&#125;&#125;</code>, <code>&#123;&#123;first_name&#125;&#125;</code>, <code>&#123;&#123;use_case&#125;&#125;</code>. Tokens are resolved at share time:</p>
+            <ul>
+                <li><strong>Via URL params:</strong> <code>?company=Acme&first_name=Ana</code></li>
+                <li><strong>Via API:</strong> Pass values in the <code>POST /v1/demos/:id/share</code> payload</li>
+                <li><strong>Via Hub form:</strong> Lead capture fields can map to tokens automatically</li>
+            </ul>
+        </section>
+
+        <section id="themes">
+            <h2>Themes &amp; branding</h2>
+            <p>Apply a <strong>Theme</strong> to set global colors, fonts, tooltip radius, and button styles across all demos in a workspace. Themes are stored as a JSON spec and can be exported/imported. Enterprise workspaces can set a default theme that all new demos inherit.</p>
+        </section>
+
+        <section id="ai-draft">
+            <h2>AI drafting</h2>
+            <p>NavTour AI Copilot is powered by <strong>Anthropic Claude</strong>. It reads your captured frames and suggests tooltip copy, headline text, and CTA labels.</p>
+            <div class="nt-docs-callout">
+                <p><strong>AI by Anthropic Claude.</strong> No training on your workspace content. Captured frames are processed in-context only. Data is retained for 30 days for debugging; you can request immediate deletion via <a href="/contact">Privacy request</a>.</p>
+            </div>
+            <p>To use AI drafting: select a frame, open the tooltip panel, and click <em>Draft with AI</em>. The AI generates 3 variants; you pick one and edit. All AI output is editable &mdash; it&rsquo;s a starting point, not a final answer.</p>
+        </section>
+
+        <section id="ai-review">
+            <h2>AI review</h2>
+            <p>Before publishing, run <em>AI Review</em> from the toolbar. The AI checks for: missing annotations on key interactive elements, copy that&rsquo;s too long for the tooltip format, personalization token typos, and broken branching paths.</p>
+        </section>
+
+        <section id="ai-personalization">
+            <h2>AI personalization</h2>
+            <p>On Growth and Enterprise plans, AI can auto-fill personalization tokens based on a prospect&rsquo;s company domain. Pass a domain in the share URL (<code>?domain=acme.com</code>), and the AI looks up company name, size, and industry from our enrichment layer to pre-fill <code>&#123;&#123;company&#125;&#125;</code> and related tokens.</p>
+        </section>
+
+        <section id="ai-privacy">
+            <h2>AI privacy &amp; data handling</h2>
+            <p>Frame content sent to AI drafting is processed by Anthropic&rsquo;s Claude API. NavTour enforces the following guarantees:</p>
+            <ul>
+                <li>Your captured frames are <strong>never used to train</strong> Anthropic models</li>
+                <li>Frames are sent over mTLS; encrypted at rest in Anthropic&rsquo;s processing environment</li>
+                <li>Processing logs are retained 30 days; workspace content logs are retained 7 days</li>
+                <li>Enterprise customers can opt out of AI features entirely via workspace settings</li>
+            </ul>
+        </section>
+
+        <section id="share">
+            <h2>Share links</h2>
+            <p>Every published demo gets a unique share link: <code>https://navtour.cloud/s/{slug}</code>. Links are permanent by default; you can revoke or reset them from the demo settings.</p>
+            <p>Tracking is opt-in per-link. When tracking is on, NavTour logs viewer identity (if known from CRM sync or lead form), per-step engagement, and completion events.</p>
+        </section>
+
+        <section id="embed">
+            <h2>Embed iframe &amp; SDK</h2>
+            <p>Embed a demo anywhere that allows HTML:</p>
+            <pre><code>&lt;iframe
+  src="https://navtour.cloud/e/{demo-id}"
+  width="100%"
+  height="600"
+  frameborder="0"
+  allow="fullscreen"
+  title="NavTour demo"
+&gt;&lt;/iframe&gt;</code></pre>
+            <p>For programmatic control (auto-advance, listen for completion events), use the JavaScript SDK:</p>
+            <pre><code>import NavTour from '@@navtour/sdk';
+const nt = new NavTour({ demoId: 'demo-abc123' });
+nt.on('complete', (e) =&gt; trackConversion(e.viewerId));</code></pre>
+        </section>
+
+        <section id="hubs">
+            <h2>Demo hubs &amp; showcases</h2>
+            <p>A <strong>Hub</strong> is a branded collection of demos at its own URL (<code>navtour.cloud/hub/{slug}</code>). Hubs support: filtering by tag or persona, optional lead gate (email required to enter), custom logo and color scheme.</p>
+            <p>A <strong>Showcase</strong> is a single-link bundle: one or more demos + optional files (PDF, pricing sheet) sent to a specific prospect. Showcases track per-recipient engagement.</p>
+        </section>
+
+        <section id="domain">
+            <h2>Custom domains</h2>
+            <p>Growth and Enterprise plans can host hubs and share links on your own domain (e.g., <code>demos.acme.com</code>). Set up a CNAME record pointing to <code>custom.navtour.cloud</code>, then add the domain in workspace settings &rarr; Publishing.</p>
+        </section>
+
+        <section id="events">
+            <h2>Events &amp; metrics</h2>
+            <p>NavTour logs the following events per demo session: <code>view_started</code>, <code>frame_viewed</code>, <code>step_completed</code>, <code>branch_chosen</code>, <code>cta_clicked</code>, <code>form_submitted</code>, <code>view_ended</code>. Events are available in the Analytics dashboard, CSV export, and webhook payloads.</p>
+        </section>
+
+        <section id="intent">
+            <h2>Intent scoring</h2>
+            <p>NavTour scores demo sessions 0&ndash;100 based on: time spent per frame, number of revisits, CTA clicks, form submissions, and branch depth. Scores above 70 trigger configurable Slack/email alerts.</p>
+        </section>
+
+        <section id="exports">
+            <h2>CSV exports</h2>
+            <p>Export all session data from Analytics &rarr; Export. Columns: session_id, demo_id, viewer_email (if known), started_at, ended_at, frames_viewed, steps_completed, intent_score, country, device_type. Data is available for the last 12 months on paid plans.</p>
+        </section>
+
+        <section id="crm">
+            <h2>CRM — Salesforce &amp; HubSpot</h2>
+            <p>NavTour syncs demo engagement as activity records on the Contact or Lead. Configure in Settings &rarr; Integrations &rarr; CRM. Sync fields: demo name, completion %, intent score, CTA clicked, timestamp.</p>
+            <p>Salesforce requires OAuth + the NavTour managed package (free on AppExchange). HubSpot uses OAuth only &mdash; no package required.</p>
+        </section>
+
+        <section id="slack">
+            <h2>Slack</h2>
+            <p>Post intent alerts to any channel. Configure triggers: demo viewed (any), demo completed, intent score above threshold, CTA clicked. Message includes: viewer identity (if known), demo name, intent score, and a direct link to the analytics view.</p>
+        </section>
+
+        <section id="webhooks">
+            <h2>Webhooks</h2>
+            <p>NavTour sends HTTPS POST requests to your endpoint on each event. Payload is JSON (see <a href="#api">REST API</a> for schema). Webhooks are signed with HMAC-SHA256; verify the <code>X-NavTour-Signature</code> header.</p>
+            <pre><code>POST https://your-endpoint.com/navtour-hook
+X-NavTour-Signature: sha256=abc123...
+Content-Type: application/json
+
+{
+  "event": "step_completed",
+  "demo_id": "demo-abc123",
+  "session_id": "sess-xyz",
+  "step": 3,
+  "intent_score": 72,
+  "timestamp": "2026-04-18T14:32:00Z"
+}</code></pre>
+        </section>
+
+        <section id="zapier">
+            <h2>Zapier &amp; Make</h2>
+            <p>NavTour has a native Zapier integration (search "NavTour" in the Zap editor). Triggers available: Demo Completed, Intent Alert, Lead Captured. Actions available: Create Demo from Template, Update Personalization Token.</p>
+            <p>Make (formerly Integromat) uses the REST API module. Authentication: API key in the <code>Authorization: Bearer</code> header.</p>
+        </section>
+
+        <section id="api">
+            <h2>REST API reference</h2>
+            <p>Base URL: <code>https://navtour.cloud/api/v1/</code>. All endpoints require <code>Authorization: Bearer {api_key}</code>. Rate limit: 1,000 req/min on Growth, 10,000 req/min on Enterprise.</p>
+            <table>
+                <thead><tr><th>Method</th><th>Path</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td><code>GET</code></td><td><code>/demos</code></td><td>List all demos in workspace</td></tr>
+                    <tr><td><code>POST</code></td><td><code>/demos</code></td><td>Create demo from template</td></tr>
+                    <tr><td><code>GET</code></td><td><code>/demos/:id/sessions</code></td><td>List sessions for a demo</td></tr>
+                    <tr><td><code>POST</code></td><td><code>/demos/:id/share</code></td><td>Generate a personalized share link</td></tr>
+                    <tr><td><code>GET</code></td><td><code>/hubs</code></td><td>List all hubs</td></tr>
+                    <tr><td><code>POST</code></td><td><code>/leads</code></td><td>Create a lead record</td></tr>
+                </tbody>
+            </table>
+            <p>Full OpenAPI spec available at <code>/api/v1/openapi.json</code>.</p>
+        </section>
+
+        <section id="sdk">
+            <h2>JavaScript SDK</h2>
+            <p>Install: <code>npm install @@navtour/sdk</code>. The SDK wraps the embed iframe and exposes an event API.</p>
+            <pre><code>import NavTour from '@@navtour/sdk';
+
+const nt = new NavTour({
+  demoId: 'demo-abc123',
+  container: '#demo-container',
+  tokens: { company: 'Acme', first_name: 'Ana' }
+});
+
+nt.on('step_completed', (e) => console.log('Step', e.step));
+nt.on('complete', () => document.querySelector('#cta').style.display = 'block');</code></pre>
+        </section>
+
+        <section id="cli">
+            <h2>CLI (ntour)</h2>
+            <p>Install: <code>npm install -g @@navtour/cli</code>. Authenticate: <code>ntour auth login</code>.</p>
+            <pre><code>ntour demos list                      # list all demos
+ntour demos publish demo-abc123       # publish a draft demo
+ntour share create demo-abc123 \
+  --company Acme --first-name Ana     # personalized share link
+ntour export sessions demo-abc123     # CSV export</code></pre>
+        </section>
+
+        <section id="auth">
+            <h2>Authentication</h2>
+            <p>NavTour uses API keys for server-side integrations and OAuth 2.0 for user-facing integrations (CRM, Zapier). API keys are workspace-scoped and rotatable from Settings &rarr; Developer.</p>
+            <p>Player access (public demos) uses a separate API key type with read-only scope. Never expose workspace API keys client-side.</p>
+        </section>
+
+        <section id="roles">
+            <h2>Roles &amp; permissions</h2>
+            <table>
+                <thead><tr><th>Role</th><th>Create/edit demos</th><th>Publish</th><th>Analytics</th><th>Admin settings</th><th>Billing</th></tr></thead>
+                <tbody>
+                    <tr><td>Owner</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td></tr>
+                    <tr><td>Admin</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td><td>&mdash;</td></tr>
+                    <tr><td>Editor</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td><td>&mdash;</td><td>&mdash;</td></tr>
+                    <tr><td>Viewer</td><td>&mdash;</td><td>&mdash;</td><td>&#10003;</td><td>&mdash;</td><td>&mdash;</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="sso">
+            <h2>SSO / SAML</h2>
+            <p>Enterprise workspaces support SAML 2.0 SSO with any compatible IdP (Okta, Azure AD, Google Workspace, OneLogin). Configure in Settings &rarr; Security &rarr; SSO. Entity ID: <code>https://navtour.cloud/saml/metadata</code>. ACS URL: <code>https://navtour.cloud/saml/acs</code>.</p>
+        </section>
+
+        <section id="audit">
+            <h2>Audit logs</h2>
+            <p>Growth and Enterprise plans get a 90-day audit log of all workspace events: logins, demo creates/deletes, settings changes, API key rotations, and export requests. Export as CSV from Settings &rarr; Security &rarr; Audit Log.</p>
+        </section>
+
+        <section id="billing">
+            <h2>Billing &amp; seats</h2>
+            <p>NavTour bills per <em>creator seat</em> &mdash; anyone who captures, edits, or publishes demos. Viewers (analytics-only) and demo viewers (public) are always unlimited and free. Mid-cycle upgrades are prorated. Downgrade at the end of any billing period.</p>
+        </section>
+
+        <section id="keyboard">
+            <h2>Keyboard shortcuts</h2>
+            <table>
+                <thead><tr><th>Shortcut</th><th>Action</th></tr></thead>
+                <tbody>
+                    <tr><td><kbd>Cmd+Shift+C</kbd></td><td>Capture page (extension)</td></tr>
+                    <tr><td><kbd>T</kbd></td><td>Add tooltip (editor)</td></tr>
+                    <tr><td><kbd>H</kbd></td><td>Add hotspot (editor)</td></tr>
+                    <tr><td><kbd>B</kbd></td><td>Add blur (editor)</td></tr>
+                    <tr><td><kbd>Cmd+Z</kbd></td><td>Undo</td></tr>
+                    <tr><td><kbd>Cmd+Y</kbd></td><td>Redo</td></tr>
+                    <tr><td><kbd>Space+drag</kbd></td><td>Pan canvas</td></tr>
+                    <tr><td><kbd>Esc</kbd></td><td>Deselect / close panel</td></tr>
+                    <tr><td><kbd>Cmd+P</kbd></td><td>Publish demo</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="troubleshooting">
+            <h2>Troubleshooting</h2>
+            <h3>Extension not capturing</h3>
+            <p>Check that the extension is enabled for the domain under <em>Site access</em> in the extension popup. Some enterprise SSO portals block extension scripting &mdash; capture on a demo/staging environment instead.</p>
+            <h3>Fonts look wrong in capture</h3>
+            <p>NavTour resets some CSS variables to prevent style bleed. If brand fonts are missing, add them to the workspace font allowlist in Settings &rarr; Editor &rarr; Fonts.</p>
+            <h3>Share link not working</h3>
+            <p>Check that the demo is Published (not Draft) and that the link hasn&rsquo;t been revoked. If the demo uses a custom domain, verify the CNAME is propagated.</p>
+        </section>
+
+        <section id="glossary">
+            <h2>Glossary</h2>
+            <table>
+                <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+                <tbody>
+                    <tr><td>Demo</td><td>A sequence of captured frames with guided annotations</td></tr>
+                    <tr><td>Frame</td><td>A single HTML/CSS snapshot of a page state</td></tr>
+                    <tr><td>Step</td><td>An annotation layer on a frame: tooltip, hotspot, modal, etc.</td></tr>
+                    <tr><td>Hub</td><td>A curated, branded collection of demos at its own URL</td></tr>
+                    <tr><td>Showcase</td><td>A personalized demo sent to a specific recipient</td></tr>
+                    <tr><td>Token</td><td>A merge variable in double braces, e.g. &#123;&#123;company&#125;&#125;</td></tr>
+                    <tr><td>Drift</td><td>A selector mismatch when a UI element moves or is renamed after capture</td></tr>
+                    <tr><td>Intent score</td><td>0&ndash;100 engagement score per demo session</td></tr>
+                    <tr><td>Workspace</td><td>A shared team environment; one per NavTour subscription</td></tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    @* ── RIGHT ON-PAGE NAV ── *@
+    <nav class="nt-docs-right" aria-label="On this page" id="docs-onpage">
+        <h6>On this page</h6>
+        <ul id="docs-right-list">
+            <li><a href="#introduction">Introduction</a></li>
+            <li><a href="#quickstart">Quickstart</a></li>
+            <li><a href="#concepts">Core concepts</a></li>
+            <li><a href="#accounts">Accounts</a></li>
+            <li><a href="#extension">Chrome extension</a></li>
+            <li><a href="#capture-modes">Capture modes</a></li>
+            <li><a href="#frames">Frames</a></li>
+            <li><a href="#editor">Editor overview</a></li>
+            <li><a href="#hotspots">Hotspots &amp; tooltips</a></li>
+            <li><a href="#branching">Branching logic</a></li>
+            <li><a href="#personalization">Personalization</a></li>
+            <li><a href="#ai-draft">AI drafting</a></li>
+            <li><a href="#ai-privacy" class="sub">AI privacy</a></li>
+            <li><a href="#share">Share links</a></li>
+            <li><a href="#embed">Embed &amp; SDK</a></li>
+            <li><a href="#hubs">Hubs &amp; showcases</a></li>
+            <li><a href="#events">Events &amp; metrics</a></li>
+            <li><a href="#webhooks">Webhooks</a></li>
+            <li><a href="#api">REST API</a></li>
+            <li><a href="#sdk" class="sub">JS SDK</a></li>
+            <li><a href="#cli" class="sub">CLI</a></li>
+            <li><a href="#roles">Roles</a></li>
+            <li><a href="#sso">SSO / SAML</a></li>
+            <li><a href="#glossary">Glossary</a></li>
+        </ul>
+    </nav>
+</div>
+
+<script>
+(function() {
+    // ⌘K search
+    var input = document.getElementById('docs-search');
+    document.addEventListener('keydown', function(e) {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); input.focus(); }
+        if (e.key === 'Escape' && document.activeElement === input) { input.value = ''; filterTOC(''); input.blur(); }
+    });
+    input.addEventListener('input', function() { filterTOC(this.value); });
+    function filterTOC(q) {
+        var groups = document.querySelectorAll('.nt-docs-nav-group');
+        groups.forEach(function(g) {
+            var links = g.querySelectorAll('a');
+            var any = false;
+            links.forEach(function(a) {
+                var match = !q || a.textContent.toLowerCase().includes(q.toLowerCase());
+                a.classList.toggle('hidden', !match);
+                if (match) any = true;
+            });
+            g.classList.toggle('hidden', !any);
+        });
+    }
+    // Scrollspy
+    var headings = document.querySelectorAll('.nt-docs-content h2, .nt-docs-content h3');
+    var rightLinks = document.querySelectorAll('#docs-right-list a');
+    var leftLinks = document.querySelectorAll('.nt-docs-nav-group a');
+    var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+            if (e.isIntersecting) {
+                var id = e.target.id;
+                rightLinks.forEach(function(a) { a.classList.toggle('active', a.getAttribute('href') === '#' + id); });
+                leftLinks.forEach(function(a) { a.classList.toggle('active', a.getAttribute('href') === '#' + id); });
+            }
+        });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    headings.forEach(function(h) { if (h.id) io.observe(h); });
+}());
+</script>

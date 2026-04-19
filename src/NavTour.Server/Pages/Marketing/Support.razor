@@ -1,62 +1,47 @@
 @page "/support"
 @layout MarketingLayout
-@inject IStringLocalizer<NavTour.Server.SharedResources> L
 
-<PageTitle>@L["support_page_title"]</PageTitle>
+<PageTitle>Support &mdash; NavTour</PageTitle>
 <HeadContent>
-    <meta name="description" content="@L["support_meta_desc"].Value" />
+    <meta name="description" content="NavTour support: email, docs, and a dedicated enterprise team. SOC 2 Type II, bilingual EN/ES, response time under 4 hours for paid plans." />
 </HeadContent>
 
-<section class="mkt-section">
-    <div class="mkt-container" style="max-width:720px">
-        <div class="reveal" style="text-align:center">
-            <h1 style="font-size:var(--text-4xl)">@L["support_heading"]</h1>
-            <p style="margin-top:var(--space-4);font-size:var(--text-lg);color:var(--text-secondary);max-width:540px;margin-left:auto;margin-right:auto">
-                @L["support_subheading"]
-            </p>
-        </div>
+<section class="nt-page-hero">
+    <div class="nt-container">
+        <span class="eyebrow">Support</span>
+        <h1>We&rsquo;re here when the<br /><em>demo matters most.</em></h1>
+        <p class="lead">Email support, comprehensive docs, and an enterprise team for complex deployments. Bilingual EN/ES. SOC&nbsp;2 Type&nbsp;II.</p>
+    </div>
+</section>
 
-        <div class="reveal" style="margin-top:var(--space-16);display:flex;flex-direction:column;gap:var(--space-8)">
-
-            <div style="padding:var(--space-8);background:var(--surface-elevated);border:1px solid var(--neutral-200);border-radius:var(--radius-md);box-shadow:var(--shadow-sm)">
-                <div style="display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-4)">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--p4-blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-                    <h3 style="margin:0;font-size:var(--text-xl)">@L["support_email_title"]</h3>
-                </div>
-                <p style="color:var(--text-secondary);margin-bottom:var(--space-5)">@L["support_email_desc"]</p>
-                <a href="mailto:support@navtour.cloud" class="mkt-btn mkt-btn-primary" style="display:inline-flex;align-items:center;gap:var(--space-2)">
-                    support@navtour.cloud
-                </a>
+<section class="nt-section">
+    <div class="nt-container">
+        <div class="nt-card-grid">
+            <div class="nt-card" style="display:flex;flex-direction:column;gap:16px">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--nt-orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                <h3 style="margin:0">Email support</h3>
+                <p style="margin:0;flex:1">Response under 4 hours for paid plans, next business day for Free. All support bilingual EN/ES.</p>
+                <a href="mailto:support@navtour.cloud" class="btn btn-outline" style="align-self:flex-start">support@navtour.cloud</a>
             </div>
-
-            <div style="padding:var(--space-8);background:var(--surface-elevated);border:1px solid var(--neutral-200);border-radius:var(--radius-md);box-shadow:var(--shadow-sm)">
-                <div style="display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-4)">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--p4-blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
-                    <h3 style="margin:0;font-size:var(--text-xl)">@L["support_faq_title"]</h3>
-                </div>
-                <p style="color:var(--text-secondary);margin-bottom:var(--space-5)">@L["support_faq_desc"]</p>
-                <a href="/pricing#faq" class="mkt-btn mkt-btn-secondary" style="display:inline-flex;align-items:center;gap:var(--space-2)">
-                    @L["support_faq_link"]
-                </a>
+            <div class="nt-card" style="display:flex;flex-direction:column;gap:16px">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--nt-orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                <h3 style="margin:0">Documentation</h3>
+                <p style="margin:0;flex:1">Full user manual covering capture, the editor, AI Copilot, analytics, integrations, and the REST API.</p>
+                <a href="/docs" class="btn btn-outline" style="align-self:flex-start">Browse docs &rarr;</a>
             </div>
-
-            <div style="padding:var(--space-8);background:var(--surface-elevated);border:1px solid var(--neutral-200);border-radius:var(--radius-md);box-shadow:var(--shadow-sm)">
-                <div style="display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-4)">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--p4-blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                    <h3 style="margin:0;font-size:var(--text-xl)">@L["support_contact_title"]</h3>
-                </div>
-                <p style="color:var(--text-secondary);margin-bottom:var(--space-5)">@L["support_contact_desc"]</p>
-                <a href="/contact" class="mkt-btn mkt-btn-secondary" style="display:inline-flex;align-items:center;gap:var(--space-2)">
-                    @L["support_contact_link"]
-                </a>
+            <div class="nt-card" style="display:flex;flex-direction:column;gap:16px">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--nt-orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+                <h3 style="margin:0">FAQ</h3>
+                <p style="margin:0;flex:1">Answers to the most common questions about billing, limits, integrations, and security compliance.</p>
+                <a href="/pricing#faq" class="btn btn-outline" style="align-self:flex-start">Read the FAQ &rarr;</a>
             </div>
-
-        </div>
-
-        <div class="reveal" style="margin-top:var(--space-16);text-align:center;padding:var(--space-10);background:var(--p4-blue-subtle);border-radius:var(--radius-md)">
-            <h3 style="margin-bottom:var(--space-3)">@L["support_enterprise_title"]</h3>
-            <p style="color:var(--text-secondary);max-width:480px;margin:0 auto var(--space-6)">@L["support_enterprise_desc"]</p>
-            <a href="/contact" class="mkt-btn mkt-btn-primary">@L["support_enterprise_cta"]</a>
         </div>
     </div>
 </section>
+
+<NtCTABand Headline="Enterprise support, dedicated CSM, custom onboarding."
+           SubText="Our enterprise team handles SSO setup, data residency, custom MSAs, and bilingual onboarding workshops."
+           PrimaryLabel="Talk to the enterprise team &rarr;"
+           PrimaryHref="/contact"
+           SecondaryLabel="Back to pricing"
+           SecondaryHref="/pricing" />
