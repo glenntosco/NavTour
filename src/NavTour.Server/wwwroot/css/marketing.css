@@ -113,7 +113,7 @@
     -moz-osx-font-smoothing: grayscale;
     background: #fff;
 }
-.mkt a { color: var(--text-link); text-decoration: none; }
+.mkt a:not(.btn) { color: var(--text-link); text-decoration: none; }
 .mkt a:hover { color: var(--text-link-hover); }
 .mkt img { max-width: 100%; height: auto; }
 
@@ -1859,7 +1859,7 @@
 
 .nt { background:var(--nt-bg); color:var(--nt-ink); font-family:var(--nt-display); -webkit-font-smoothing:antialiased; overflow-x:hidden; }
 .nt * { box-sizing:border-box; }
-.nt a { color:inherit; text-decoration:none; }
+.nt a:not(.btn) { color:inherit; text-decoration:none; }
 .nt ::selection { background:var(--nt-orange); color:var(--nt-ink); }
 
 /* ANNOUNCE */
