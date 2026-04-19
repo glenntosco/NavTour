@@ -1967,7 +1967,7 @@
 .nt-reel-card p { font-size:13px; color:rgba(255,255,255,0.5); line-height:1.5; margin:0; }
 
 /* FRAMES SECTION */
-.nt-frames-section { padding:clamp(64px,8vw,128px) var(--nt-pad); }
+.nt-frames-section { padding:clamp(48px,5vw,80px) var(--nt-pad); }
 .nt-container { max-width:var(--nt-max); margin:0 auto; }
 .nt-section-head { display:grid; grid-template-columns:1fr 1.2fr; gap:48px; align-items:start; margin-bottom:clamp(48px,6vw,96px); }
 .nt-section-head .num { font-family:var(--nt-mono); font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:var(--nt-muted); margin-bottom:16px; display:block; }
@@ -2245,7 +2245,7 @@
    SIMPLE PAGE HERO — Used by non-Home pages
    ═══════════════════════════════════════════════════════════ */
 
-.nt-page-hero { padding:clamp(64px,8vw,120px) var(--nt-pad) clamp(40px,5vw,72px); max-width:var(--nt-max); margin:0 auto; }
+.nt-page-hero { padding:clamp(48px,5vw,80px) var(--nt-pad) clamp(28px,3vw,44px); max-width:var(--nt-max); margin:0 auto; }
 .nt-page-hero .issue { font-family:var(--nt-mono); font-size:11px; letter-spacing:0.22em; text-transform:uppercase; color:var(--nt-muted); margin-bottom:20px; }
 .nt-page-hero h1 { font-family:var(--nt-display); font-weight:700; font-size:clamp(36px,5.5vw,80px); letter-spacing:-0.03em; line-height:1.0; color:var(--nt-ink); margin:0 0 24px; max-width:20ch; }
 .nt-page-hero h1 em { font-style:italic; color:var(--nt-muted); }
@@ -2257,7 +2257,7 @@
    CONTENT SECTIONS
    ═══════════════════════════════════════════════════════════ */
 
-.nt-section { padding:clamp(64px,8vw,120px) var(--nt-pad); }
+.nt-section { padding:clamp(48px,5vw,80px) var(--nt-pad); }
 .nt-section-inner { max-width:var(--nt-max); margin:0 auto; }
 .nt-section-title .eyebrow { font-family:var(--nt-mono); font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:var(--nt-orange); display:block; margin-bottom:12px; }
 .nt-section-title h2 { font-family:var(--nt-display); font-size:clamp(28px,3.5vw,52px); font-weight:700; letter-spacing:-0.025em; line-height:1.1; color:var(--nt-ink); margin:0 0 16px; }
